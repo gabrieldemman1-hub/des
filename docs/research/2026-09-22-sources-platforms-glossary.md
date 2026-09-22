@@ -13,6 +13,14 @@
 Unless marked, everything below is confirmed against the linked page. Quotes are
 verbatim, including the source's own typos; `[brackets]` mark capitalisation changes.
 
+> **Decisions made after this research (2026-09-22):**
+> - "The XIM guide" is **guide.xim.tech**.
+> - Only **XIM MATRIX** material is used. Everything below marked APEX era, XIM APEX
+>   or XIM4 is kept for the record but **excluded from the app**. That covers
+>   XIM Central's Destiny 2 videos, its 2018–2021 scripts, and the APEX side of the
+>   "contested" items.
+> - The MVP covers controller output only.
+
 These notes are raw material for the knowledge base, not app content. Nothing here
 becomes a recommendation until it goes through the citation model in `CONCEPT.md` §8.
 

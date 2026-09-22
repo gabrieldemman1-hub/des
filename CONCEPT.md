@@ -1,7 +1,7 @@
 # Dialed — XIM MATRIX Setup Guide: App Concept
 
 **Name:** *Dialed*
-**Status:** Concept for review · v0.5 · 2026-09-22
+**Status:** Ready for sign-off · v0.6 · 2026-09-22
 **Research behind this version:** [`docs/research/2026-09-22-sources-platforms-glossary.md`](docs/research/2026-09-22-sources-platforms-glossary.md)
 
 ---
@@ -42,7 +42,7 @@ without a redesign.
 |---|---|
 | A **guide + recommender**: tailored guidance with full rationale and citations | A beginner tutorial or generic "what is XIM" content |
 | **Reference-only**: you apply values yourself in XIM MATRIX Manager | Connected to the device (no Bluetooth, no config-code import/export in v1) |
-| **Evidence-based**: official XIM documentation + trusted community experts (XIM Central) only | A dump of random forum configs or unverified YouTube claims |
+| **Evidence-based**: official XIM documentation + XIM Central, XIM MATRIX-era material only | A dump of random forum configs, unverified YouTube claims, or advice written for older XIM devices |
 | **Destiny 2 first** (Xbox and PC), deep rather than broad | A shallow database of many games (that may come later) |
 | A **concept explainer**: plain-language, sourced definitions of every MATRIX setting | A copy of the manual — explanations are about *why it matters for your aim*, not just what the slider is |
 
@@ -104,19 +104,15 @@ many symptoms map directly:
 | A lag when you first start moving | **Easing** — higher gives a "smoother transition from rest but lower response time" | reasoned from official wording (see the Easing caveat in §6) |
 | Fast turns cap out or slow down | The game's **maximum turn speed** (red flash) | official |
 | Hip-fire and ADS feel inconsistent | **Game Roles** (the ADS light), **ADS Activation Delay**, and **Hip/ADS inheritance** | reasoned (official mechanisms; no official feel mapping) |
-| Fighting aim assist ("bubble") | **Quantization** (officially an option for aim-assist compatibility), plus XIM Central material | official (the option exists) + expert; thin |
-| Mushy / spongy | Too much smoothing | expert (XIM Central, APEX era) |
-| Floaty · overshooting | — | **gap:** no sourced answer yet; the app says so |
+| Fighting aim assist ("bubble") | **Quantization** (officially an option for aim-assist compatibility) | official (the option exists); thin until XIM Central's MATRIX videos are reviewed |
+| Floaty · overshooting · mushy/spongy | — | **gap:** no sourced MATRIX-era answer yet; the app says so |
 
 The "Basis" column uses the §8 confidence labels (*official*, *expert*,
-*reasoned*), plus *gap*. The flow ends with a guardrail:
-- change one thing at a time (the official guide: "Always start with just adjusting
-  Sensitivity. Change other values only if necessary.")
-- stick with a setup long enough to judge it. This is 1–2 weeks according to an
-  APEX-era script that isn't yet confirmed as XIM Central's, so the app shows it as
-  a gap until it's confirmed.
+*reasoned*), plus *gap*. The flow ends with a guardrail: change one thing at a time
+(the official guide: "Always start with just adjusting Sensitivity. Change other
+values only if necessary.").
 
-Whether one or both stages are in the MVP is **open question 1**.
+**Both stages are in the MVP** (your choice).
 
 ### Flow D: Explain a concept ("what does this actually do?")
 A learn/glossary mode for the MATRIX's own vocabulary:
@@ -134,7 +130,7 @@ Each term shows:
 - the official feel description, where the guide gives one (Precision, Response,
   Easing, Stability)
 - which aim styles it likely matters for. This part is labelled *reasoned* (see
-  open question 4), because no source we could read ties settings to aim styles.
+  §8), because no source we could read ties settings to aim styles.
 
 The glossary also untangles confusing names:
 - **"Standard"** is a smoothing mode, a sync method and a velocity-mapping mode,
@@ -169,7 +165,7 @@ because upper layers are meaningless if the lower ones are wrong:
    sensitivity, the required values, everything else default. XIM documents no
    Xbox vs PC difference for Destiny 2.
 2. **MATRIX global settings & hardware foundation.** The device-level footing
-   shared by all configs: output type (see open question 5), mouse DPI entered
+   shared by all configs: controller output, mouse DPI entered
    correctly, the mouse's polling rate, current firmware and Smart Translator, and
    the light notifications Flow C relies on. Which other MATRIX Manager global
    settings belong here is knowledge-base work.
@@ -232,11 +228,14 @@ numbers:
   proven impossible.) Hip vs ADS can have separate smoothing, but pulse rifles and
   hand cannons are normally both fired in ADS, so that split doesn't separate them. Modify
   Aim Sensitivity changes sensitivity only.
-- **So per-weapon smoothing means per-weapon Configs,** loaded mid-match by hotkey or
-  a Load Config Smart Action. Hotkeys need Navigate Mode by default, and loading is
-  slower while Manager is connected.
-- **The alternative is one Config for your whole loadout,** where the app picks a
-  balance point and tells you which weapon it favours. See open question 3.
+- **So different smoothing means different Configs. Your choice: one Config per
+  loadout.** For each loadout you run (say, pulse rifle + shotgun, or hand cannon +
+  sniper), the app builds a separate config sheet. Each is tuned toward that
+  loadout's main aim style, and the sheet says which weapon the balance favours.
+  When you switch loadouts, you load the matching Config in one of three ways:
+  - by hotkey (this needs Navigate Mode by default)
+  - with a Load Config Smart Action
+  - from Manager (loading is slower while Manager is connected)
 
 *(Exact recommended values are intentionally **not** in this concept doc. They are
 the knowledge-base work of the next milestone, where each value gets researched and
@@ -249,12 +248,12 @@ anytime (stored locally in the browser; no account needed):
 
 - **Platform & hardware.** Xbox or PC, the MATRIX output type, and your mouse
   model, DPI and polling rate. Platform decides which setup steps apply (e.g. the
-  Xbox authentication controller in Port 3, or tool conflicts on PC). Which output
-  types the MVP covers is open question 5.
-- **Playstyle & loadout.** Crucible (PvP) vs PvE focus, aggressive vs precise,
-  and the weapon archetypes you actually run (primary/special/heavy). Loadout
-  drives the weapon-aware guidance in §6; the rest changes which trade-offs the
-  app recommends.
+  Xbox authentication controller in Port 3, or tool conflicts on PC). The MVP
+  covers controller output only (your choice).
+- **Playstyle & loadouts.** Crucible (PvP) vs PvE focus, aggressive vs precise,
+  and your loadouts: the weapon combinations you actually run, with the main weapon
+  of each marked. Each loadout gets its own Config (§6); the rest changes which
+  trade-offs the app recommends.
 - **Current config.** Your existing settings as the starting point for Flow B, so
   advice is a diff, not a restart.
 - **Feel preferences.** Snappy vs smooth, high vs low sensitivity targets.
@@ -268,20 +267,20 @@ This is the app's identity, so it's a hard rule, not a style choice.
 
 | Tier | Source | Notes |
 |---|---|---|
-| **Official** | [XIM MATRIX User Guide](https://guide.xim.tech/) (guide.xim.tech) | The canonical reference for every MATRIX setting. It has no Destiny 2 content. It's our best match for "the XIM Guide" / "XIM community guide", pending your confirmation (open question 2). |
+| **Official** | [XIM MATRIX User Guide](https://guide.xim.tech/) (guide.xim.tech) | The guide you named as a trusted source, and the canonical reference for every MATRIX setting. It has no Destiny 2 content. |
 | **Official** (by reference) | XIM's public forum pages: the [Game Settings list](https://community.xim.tech/pub/xim-game-settings) (Destiny 2's required in-game settings) and the [Hardware Compatibility List](https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list) | The guide's "required aim settings" links go to a login-walled forum topic. This page is a public copy of its first post and may differ from it. The Game Settings list's author ("mist") is not confirmed as XIM staff. |
 | **Official** *(inferred)* | OBsIV's posts and the @OBsIV YouTube channel | Part of your original "official XIM docs" choice. OBsIV writes in XIM's voice and hosts XIM's Quick Start video, but no page states their role. |
-| **Community expert** | [XIM Central](https://www.youtube.com/@XIMCentral) (YouTube) | Not XIM's official channel: the creator says so in an older video script, and xim.tech presents its videos as community-made. The richest source of feel-based advice. Its Destiny 2 videos are from the XIM APEX era; see open question 4b for how APEX-era advice is handled. |
+| **Community expert** | [XIM Central](https://www.youtube.com/@XIMCentral) (YouTube) | Not XIM's official channel: the creator says so in an older video script, and xim.tech presents its videos as community-made. **MATRIX-era content only** (your decision). Anything made for XIM APEX or XIM4 is excluded, and that includes every XIM Central Destiny 2 video found so far. Its MATRIX videos (2025–2026) cover smoothing, quantization and curves, but our tools couldn't read their transcripts (see §12). |
 
 **Every recommendation ships with** a plain-language rationale (the mechanism, not
 "trust me"), its source with a link, and one confidence label:
 - *official*: XIM states it
-- *expert*: XIM Central states it (tagged with its device era)
-- *contested*: sources disagree, and both positions are shown. Example: DPI advice
-  differs between XIM Central's APEX-era and MATRIX-era videos.
-- *reasoned* (**proposed**, open question 4a): derived from an official mechanism
-  definition where no source states the recommendation itself. It gives a
-  direction, never an invented number.
+- *expert*: XIM Central states it, in MATRIX-era content
+- *contested*: sources disagree, and both positions are shown (e.g. XIM Central vs
+  the official guide)
+- *reasoned*: derived from an official mechanism definition where no source states
+  the recommendation itself. It gives a direction, never an invented number. This
+  is how the pulse rifle vs hand cannon guidance works (see §12, question 1).
 
 **No orphan values.** If an exact value can't be sourced, it doesn't go in the app.
 Gaps are shown honestly as gaps.
@@ -290,35 +289,43 @@ Gaps are shown honestly as gaps.
 and are cited the same way. Any "which aim style it matters for" part is labelled
 *reasoned*. The app never invents a mechanism to sound authoritative.
 
-## 9. MVP definition (proposed first buildable version)
+## 9. MVP definition (first buildable version)
 
 - Web app, desktop-browser-first (usable on a phone next to the console later).
-- Destiny 2 only, Xbox and PC. Output types per open question 5.
-- Flows A, B and D, plus the config-sheet output. Flow D is in the MVP because it
-  is cheap to build and its explanations double as the rationale text every other
-  flow displays. **Flow C: per open question 1.**
-- Weapon-aware guidance for the core Destiny 2 archetypes (at minimum pulse/auto vs
-  hand cannon). This **depends on open question 4a**. If per-archetype Configs are
-  chosen (open question 3), the MVP produces one config sheet per archetype.
+  *To confirm: see §12, question 2.*
+- Destiny 2 only, Xbox and PC, **controller output only**.
+- **All four flows:** guided setup (A), tune my config (B), troubleshoot by feel
+  (C, both stages), and explain a concept (D), plus the config-sheet output.
+- **One config sheet per loadout,** each with weapon-aware (*reasoned*) guidance
+  for that loadout's aim style: at minimum, pulse/auto (tracking) vs hand cannon
+  (peek).
 - Knowledge base as versioned data files in this repo (e.g., JSON/YAML with a
   `sources` field per value), so it's reviewable, diffable, and updatable when XIM
   firmware or Destiny 2 patches change the ground truth.
-- User profile + entered configs persist in browser local storage. No backend,
-  no accounts.
+- User profile, loadouts and entered configs persist in browser local storage. No
+  backend, no accounts.
 
-**Out of scope for MVP:** other games, config share codes, device connection,
-curve editor/visualizer, community submissions, accounts.
+**Out of scope for MVP:**
+- other games
+- PC mouse-and-keyboard output
+- anything written for XIM APEX or XIM4
+- config share codes
+- device connection
+- curve editor/visualizer
+- side-by-side config comparison
+- community submissions
+- accounts
 
 ## 10. Later (post-MVP direction)
 
 Roughly in order of likely value:
 
-1. **Whatever of Flow C isn't in the MVP** (see open question 1), with stage 2
-   growing as sources fill the gaps.
+1. **Filling Flow C's gaps** (floaty, overshooting, mushy) as MATRIX-era sources
+   cover them.
 2. **Curve visualizer**: preview aiming curves before entering them.
-3. **More games**: the knowledge-base format is per-game from day one, so adding
+3. **Config comparison**: put your per-loadout Configs side by side.
+4. **More games**: the knowledge-base format is per-game from day one, so adding
    a game means adding data, not code.
-4. **Config library**: save and compare multiple named setups.
 5. **Community features**: sharing, and submissions held to the same citation bar.
 
 ## 11. Proposed technical approach
@@ -338,71 +345,54 @@ Roughly in order of likely value:
 
 ## 12. Open questions
 
-1. **How much of troubleshoot-by-feel (Flow C) goes in the MVP?**
+1. **Confirm the *reasoned* label.** You answered "no XIM APEX, only XIM MATRIX",
+   which I've taken as the answer to the APEX half of the question. Your other
+   answers both rely on the *reasoned* label, so the doc treats it as accepted:
+   - troubleshoot-by-feel with both stages
+   - one Config per loadout, with pulse vs hand cannon guidance
 
-   | Option | What you get in v1 | Extra cost |
-   |---|---|---|
-   | (a) None | Nothing for "my aim feels off" until later | — |
-   | (b) Stage 1 only | The setup checklist. It catches setup mistakes but doesn't diagnose feel. **You would not get the "tell it what you feel, get the setting" part you put in scope.** | Small: every item is already researched |
-   | (c) Stages 1 + 2 | The checklist plus the symptom picker in §5: eight symptoms answered, with "floaty" and "overshooting" shown as gaps | Small to moderate: a symptom picker plus a short write-up per symptom, mostly reusing the glossary. Several mappings are *reasoned*, so this depends on 4a. |
+   If you meant "no" to the label as well, weapon-aware guidance and stage 2 of
+   troubleshoot-by-feel leave the MVP. The app could then only say "no source
+   covers this".
+2. **Desktop or phone first?** You'll likely use the app next to your console
+   while entering values in MATRIX Manager, which may mean your phone. Proposed:
+   desktop-first. Say if phone-first fits better.
 
-   **Recommendation: (c) if you accept 4a, otherwise (b).** The knowledge base is
-   built for Flows A and B anyway. The symptom mappings mostly reuse the glossary's
-   official definitions, so stage 2 adds little research, and the gap labels
-   handle what isn't sourced.
-2. **Which guide did you mean by "XIM community guide"?** We found no resource
-   published under that exact name (the login-walled forum couldn't be searched).
-   The best match is the official XIM MATRIX User Guide (guide.xim.tech), which XIM's
-   own community forum links as *the* guide. But you said "community": if you meant
-   something community-written — a forum guide, or XIM's Config Cloud of user
-   configs — send the link. It would go in the community tier, not official.
-3. **Multi-weapon loadouts.** Different smoothing for your pulse rifle and hand
-   cannon means switching Configs mid-match (hotkey or a Load Config Smart Action).
-   Alternatively, run one "loadout compromise" Config. Proposed: default to the
-   compromise, and offer per-archetype Configs (one config sheet each) as an
-   option. Confirm, or tell me if you already switch Configs mid-match.
-4. **Two evidence-policy proposals** (both relax or refine the rules you set, so
-   they're yours to approve):
-   - **(a) The *reasoned* label.** No source we could read gives weapon-specific
-     values, so without it the app can only tell you "no source covers pulse vs
-     hand cannon".
-     With it, the app can say "lower Easing favours peek shots", citing the official
-     Easing definition and clearly marked as reasoning. If no: weapon-aware guidance
-     leaves the MVP, and Flow C shrinks to option (b).
-   - **(b) Handling XIM Central's APEX-era advice.**
-     - APEX-era *smoothing values* are used only through the guide's official
-       Classic-mode mapping (Smooth values match APEX; Decay 9.0; Synch 8 = Default,
-       16 = Common, 32 = Slow, 0 = Off).
-     - APEX-era *sensitivity* values never carry over, because MATRIX uses cm/360.
-     - All other APEX-era advice is shown with its device era. Where MATRIX-era
-       advice disagrees, it is marked *contested*.
-5. **Output types for the MVP.** Proposed: controller output only, on Xbox and PC.
-   Smart Translation and Destiny 2's required settings only exist there. PC
-   mouse-and-keyboard output (and the PC-only "Mouse, Keyboard, Controller" mode)
-   is a different system: velocity calibration, no Smart Translator. If you play PC
-   with mouse-and-keyboard output, say so and it moves into scope.
+**What would help the next milestone** (the Destiny 2 knowledge base). None of this
+blocks anything:
+- **Forum access.** XIM's MATRIX Support FAQ and the full Game Settings topic need a
+  forum login. If you have an account, pasting those pages in fills gaps.
+- **XIM Central's MATRIX videos.** Now that APEX-era material is out, these are the
+  only XIM Central content in scope, and our tools couldn't read their transcripts.
+  Notes or transcripts from you for the smoothing, quantization and "Boost" videos
+  would let the app cite them.
+- **One in-game test.** The official Easing wording is ambiguous (§6). Raising
+  Easing and feeling whether the reticle gets slower to start moving settles which
+  way the hand-cannon advice points.
 
 ## 13. Decision log
 
-Choices made during concept alignment (2026-09-22). Rows marked *proposed* await
-your answer in §12.
+Choices made during concept alignment (2026-09-22):
 
 | Decision | Choice |
 |---|---|
 | Name | Dialed |
 | Category | Gaming utility: XIM MATRIX setup helper |
-| Platform | Web app first |
+| Platform | Web app first (desktop vs phone first: §12 Q2) |
 | Audience | Intermediate–advanced XIM users; author-only for now |
 | First milestone | Concept definition (this document) |
 | Device link | Reference-only — user applies values in XIM MATRIX Manager |
 | First game | Destiny 2 |
 | Platforms | Xbox and PC |
-| Output types | *Proposed:* controller output only in the MVP (Q5) |
-| Knowledge policy | Evidence-based: official XIM documentation + trusted community experts; whitelist, additions require a logged decision |
-| Trusted sources | XIM Central (YouTube) and "the XIM guide" / "XIM community guide". *Proposed:* the guide = guide.xim.tech (Q2) |
-| Evidence-policy refinements | *Proposed:* the *reasoned* label and APEX-era handling (Q4) |
+| Output types | Controller output only (PC mouse-and-keyboard output out of scope) |
+| Knowledge policy | Evidence-based whitelist: official XIM documentation + XIM Central; additions require a logged decision |
+| Official guide | XIM MATRIX User Guide — https://guide.xim.tech |
+| Device generation | XIM MATRIX only — no XIM APEX or XIM4 advice, including XIM Central's older videos |
+| Confidence labels | *official*, *expert*, *contested*, *reasoned* — *reasoned* inferred from your Flow C and loadout answers; confirm (§12 Q1) |
 | Rationale display | Full rationale + source on every value |
-| Guidance scope | In-game D2 settings, MATRIX global settings (with hardware foundation), aim config (Hip/ADS), troubleshooting by feel (MVP extent: Q1) |
-| Personalization inputs | Hardware (incl. platform), playstyle (incl. loadout), current config, feel preferences |
-| Weapon-aware guidance | Yes — pulse rifle (tracking) vs hand cannon (peek) and other aim styles. *MVP inclusion depends on Q4a; delivery on Q3.* |
-| Concept explainer | Yes — Flow D glossary, inline on every setting name. *Proposed:* in the MVP |
+| Guidance scope | In-game D2 settings, MATRIX global settings (with hardware foundation), aim config (Hip/ADS), troubleshooting by feel |
+| Troubleshoot by feel in MVP | Yes — both stages: setup check + symptom → setting |
+| Personalization inputs | Hardware (incl. platform), playstyle (incl. loadouts), current config, feel preferences |
+| Weapon-aware guidance | Yes — pulse rifle (tracking) vs hand cannon (peek) and other aim styles, as *reasoned* guidance |
+| Multiple weapons | Separate Configs per loadout, loaded when you switch loadouts |
+| Concept explainer | Yes — Flow D glossary, inline on every setting name; in the MVP (proposed in v0.3, no objection) |
