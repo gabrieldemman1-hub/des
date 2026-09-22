@@ -1,14 +1,14 @@
 # XIM Matrix Setup Guide — App Concept
 
 **Working title:** *Dialed* (placeholder — rename anytime)
-**Status:** Concept for review · v0.1 · 2026-09-22
+**Status:** Concept for review · v0.2 · 2026-09-22
 
 ---
 
 ## 1. One-liner
 
 A web app that guides intermediate-to-advanced XIM Matrix users to a dialed-in,
-evidence-based configuration for their game — starting with **Destiny 2** — where
+evidence-based configuration for their game — starting with **Destiny 2 on Xbox and PC** — where
 every recommended value comes with the *why* and the *source* behind it.
 
 ## 2. The problem
@@ -42,7 +42,7 @@ without a redesign.
 | A **guide + recommender**: tailored values with full rationale and citations | A beginner tutorial or generic "what is XIM" content |
 | **Reference-only**: you apply values yourself in XIM Matrix Manager | Connected to the device (no Bluetooth, no config-code import/export in v1) |
 | **Evidence-based**: official XIM documentation + trusted community experts only | A dump of random forum configs or unverified YouTube claims |
-| **Destiny 2 first**, deep rather than broad | A shallow database of many games (that may come later) |
+| **Destiny 2 first** (Xbox and PC), deep rather than broad | A shallow database of many games (that may come later) |
 
 ## 5. Core experience — three flows
 
@@ -76,7 +76,9 @@ because upper layers are meaningless if the lower ones are wrong:
 
 1. **In-game Destiny 2 settings** — the controller/sensitivity values the Smart
    Translator was trained against. Wrong values here silently break everything
-   above, so this layer is validated first in every flow.
+   above, so this layer is validated first in every flow. Covered for **Xbox and
+   PC**; where the two platforms differ, values are recorded per platform and the
+   user's platform selects which they see.
 2. **Matrix global/device settings** — polling rate, sync mode, response rate:
    the device-level foundation shared by all configs.
 3. **Aim config (hip & ADS)** — sensitivity, ballistic curves, deadzone,
@@ -94,7 +96,8 @@ and cited properly.)*
 Recommendations are tailored from four inputs, collected once and editable
 anytime (stored locally in the browser; no account needed):
 
-- **Hardware** — mouse model/DPI, mouse polling rate, monitor. Drives the math
+- **Platform & hardware** — Xbox or PC; mouse model/DPI, mouse polling rate,
+  monitor. Platform selects the right in-game values; the rest drives the math
   (e.g., DPI × sensitivity interactions, whether "jumpy" is a settings problem or
   a hardware ceiling).
 - **Playstyle** — Crucible (PvP) vs PvE focus, aggressive vs precise, preferred
@@ -109,8 +112,10 @@ anytime (stored locally in the browser; no account needed):
 This is the app's identity, so it's a hard rule, not a style choice:
 
 - **Allowed sources:** official XIM Technologies documentation and developer
-  guidance (manuals, Smart Translator release notes, OBsIV's posts), and
-  well-established testing/configs from respected XIM community forum experts.
+  guidance (manuals, Smart Translator release notes, OBsIV's posts), plus two
+  named trusted community sources: **XIM Central** (YouTube) and **The XIM
+  Guide**. Any further source is added only by an explicit decision recorded in
+  the decision log — the list is a whitelist, not a starting point.
 - **Every recommended value ships with:** the recommendation, a plain-language
   rationale (the mechanism, not just "trust me"), the source (who/where, with a
   link), and a confidence level — *official*, *expert consensus*, or *contested*
@@ -121,7 +126,7 @@ This is the app's identity, so it's a hard rule, not a style choice:
 ## 9. MVP definition (first buildable version)
 
 - Web app, desktop-browser-first (usable on a phone next to the console later).
-- Destiny 2 only.
+- Destiny 2 only, Xbox and PC.
 - Flows A and B, plus the config-sheet output. (Flow C ships second — it reuses
   the same knowledge base once that exists.)
 - Knowledge base as versioned data files in this repo (e.g., JSON/YAML with a
@@ -162,12 +167,13 @@ Roughly in order of likely value:
 ## 12. Open questions
 
 1. **Name** — is *Dialed* worth keeping, or do you have a name in mind?
-2. **Platform detail** — PlayStation, Xbox, or both for Destiny 2 guidance? (Some
-   in-game settings and STs differ by platform.)
-3. **Trusted experts list** — are there specific community members/creators you
-   already trust (or explicitly *don't*), to seed the allowed-sources list?
-4. **Flow C in MVP?** — included above as fast-follow; say the word if it's
+2. **Flow C in MVP?** — included above as fast-follow; say the word if it's
    actually the feature you'd use most and it moves into MVP.
+3. **The XIM Guide** — confirm the exact document/URL so citations point at one
+   canonical version (to be pinned down at the start of knowledge-base research).
+
+*Resolved:* platform is **Xbox and PC**; trusted community sources are **XIM
+Central** and **The XIM Guide** (see §8 and the decision log).
 
 ## 13. Decision log
 
@@ -181,7 +187,9 @@ Choices made during concept alignment (2026-09-22):
 | First milestone | Concept definition (this document) |
 | Device link | Reference-only — user applies values in XIM Matrix Manager |
 | First game | Destiny 2 |
+| Platforms | Xbox and PC |
 | Knowledge policy | Evidence-based: official XIM docs + trusted community experts |
+| Trusted community sources | XIM Central (YouTube), The XIM Guide — whitelist; additions require a logged decision |
 | Rationale display | Full rationale + source on every value |
 | Guidance scope | In-game D2 settings, Matrix global settings, aim config (hip/ADS), troubleshooting by feel |
 | Personalization inputs | Hardware, playstyle, current config, feel preferences |
