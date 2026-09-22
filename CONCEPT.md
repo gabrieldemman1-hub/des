@@ -1,7 +1,7 @@
 # XIM Matrix Setup Guide — App Concept
 
 **Working title:** *Dialed* (placeholder — rename anytime)
-**Status:** Concept for review · v0.2 · 2026-09-22
+**Status:** Concept for review · v0.3 · 2026-09-22
 
 ---
 
@@ -43,6 +43,7 @@ without a redesign.
 | **Reference-only**: you apply values yourself in XIM Matrix Manager | Connected to the device (no Bluetooth, no config-code import/export in v1) |
 | **Evidence-based**: official XIM documentation + trusted community experts only | A dump of random forum configs or unverified YouTube claims |
 | **Destiny 2 first** (Xbox and PC), deep rather than broad | A shallow database of many games (that may come later) |
+| A **concept explainer**: plain-language, sourced definitions of every Matrix setting | A copy of the manual — explanations are about *why it matters for your aim*, not just what the slider is |
 
 ## 5. Core experience — three flows
 
@@ -65,9 +66,19 @@ jumpy, inconsistent ADS, slow turns, micro-adjust overshoot…*) and the app map
 the symptom to the settings that cause it, explains the mechanism, and suggests
 what to adjust first.
 
-All three flows converge on the same output format: a **config sheet** — the full
-list of values across every layer, each annotated with rationale + source, ready
-to be entered into Matrix Manager and the game.
+### Flow D: Explain a concept ("what does this actually do?")
+A learn/glossary mode for the Matrix's own vocabulary — e.g. *classic vs standard
+smoothing, precision, response, easing, angle, magnitude, quantization, sync,
+steady aim, ballistic curves* — each explained in plain language: what the setting
+changes mechanically, what it feels like when it's too high or too low, and which
+aim styles it matters for. The same explanations are available **inline
+everywhere**: every setting name in Flows A–C is clickable and opens its
+explanation, so the user never has to leave a recommendation to understand it.
+
+Flows A–C converge on the same output format: a **config sheet** — the full list
+of values across every layer, each annotated with rationale + source, ready to be
+entered into Matrix Manager and the game. Flow D feeds the other three: its
+explanations *are* the rationale text shown next to each value.
 
 ## 6. Scope of guidance — the four layers
 
@@ -87,6 +98,26 @@ because upper layers are meaningless if the lower ones are wrong:
 4. **Troubleshooting knowledge** — the symptom → cause → fix mapping that powers
    Flow C and the "why" annotations everywhere else.
 
+### Weapon-archetype awareness (inside layer 3)
+
+Aim config recommendations are **weapon-aware**, because different Destiny 2
+weapon archetypes demand different kinds of aim, and settings like smoothing,
+curves, and ADS sensitivity trade off between them:
+
+| Aim style | Typical archetypes | What the settings need to favour |
+|---|---|---|
+| **Tracking** — hold on target through sustained fire | Pulse rifles, auto rifles, SMGs, trace rifles, machine guns | Stability and consistency: micro-corrections without overshoot |
+| **Snap / flick** — acquire a target seen for a split second, fire, re-peek | Hand cannons, snipers, shotguns, sidearms | Fast, direct acquisition: minimal delay or damping between hand and reticle |
+| **Precision hold** — line up a single deliberate shot | Scout rifles, linear fusions, bows | Fine control at low speed without losing turn speed |
+
+The app asks which archetypes the user runs as primary/special (see §7) and
+recommends per-archetype values where the evidence supports a difference —
+e.g. how much smoothing suits a tracking-heavy pulse loadout versus a hand-cannon
+snap loadout. Each per-archetype recommendation carries the same rationale +
+source as everything else. *(The exact mapping of archetypes to aim styles, and
+the values per style, are knowledge-base work — the table above is the shape,
+not the answer.)*
+
 *(Exact recommended values are intentionally **not** in this concept doc — they are
 the knowledge-base work of the next milestone, where each value gets researched
 and cited properly.)*
@@ -100,8 +131,10 @@ anytime (stored locally in the browser; no account needed):
   monitor. Platform selects the right in-game values; the rest drives the math
   (e.g., DPI × sensitivity interactions, whether "jumpy" is a settings problem or
   a hardware ceiling).
-- **Playstyle** — Crucible (PvP) vs PvE focus, aggressive vs precise, preferred
-  weapon types. Changes which trade-offs the app recommends.
+- **Playstyle & loadout** — Crucible (PvP) vs PvE focus, aggressive vs precise,
+  and the weapon archetypes they actually run (primary/special/heavy). Loadout
+  drives the weapon-aware recommendations in §6; the rest changes which
+  trade-offs the app recommends.
 - **Current config** — existing settings as the starting point for Flow B, so
   advice is a diff, not a restart.
 - **Feel preferences** — snappy vs smooth, high vs low sens targets. Where the
@@ -122,13 +155,21 @@ This is the app's identity, so it's a hard rule, not a style choice:
   (shown when trusted sources genuinely disagree, with both positions).
 - **No orphan values.** If a value can't be sourced, it doesn't go in the app.
   Gaps are shown honestly as gaps.
+- **Explanations are sourced too.** Flow D's definitions (what smoothing,
+  precision, easing, etc. actually do) are drawn from the same allowed sources
+  and cited the same way — the app never invents a mechanism to sound
+  authoritative.
 
 ## 9. MVP definition (first buildable version)
 
 - Web app, desktop-browser-first (usable on a phone next to the console later).
 - Destiny 2 only, Xbox and PC.
-- Flows A and B, plus the config-sheet output. (Flow C ships second — it reuses
-  the same knowledge base once that exists.)
+- Flows A, B and D, plus the config-sheet output. (Flow C ships second — it
+  reuses the same knowledge base once that exists.) Flow D is in the MVP because
+  it is cheap to build and its explanations double as the rationale text every
+  other flow displays.
+- Weapon-aware aim config for the core Destiny 2 archetypes (at minimum the
+  tracking vs snap split: pulse/auto vs hand cannon).
 - Knowledge base as versioned data files in this repo (e.g., JSON/YAML with a
   `sources` field per value) — reviewable, diffable, and updatable when XIM
   firmware or Destiny 2 patches change the ground truth.
@@ -171,6 +212,12 @@ Roughly in order of likely value:
    actually the feature you'd use most and it moves into MVP.
 3. **The XIM Guide** — confirm the exact document/URL so citations point at one
    canonical version (to be pinned down at the start of knowledge-base research).
+4. **Multi-weapon loadouts** — the Matrix can't detect an in-game weapon swap, so
+   weapon-aware settings can only be applied as (a) separate configs/sub-configs
+   the user switches manually, or (b) one "loadout compromise" config tuned for
+   the weapons they run together. Proposed: the app offers both, with (b) as the
+   default and (a) as an option for users who already switch configs mid-match.
+   Confirm or pick one.
 
 *Resolved:* platform is **Xbox and PC**; trusted community sources are **XIM
 Central** and **The XIM Guide** (see §8 and the decision log).
@@ -192,4 +239,6 @@ Choices made during concept alignment (2026-09-22):
 | Trusted community sources | XIM Central (YouTube), The XIM Guide — whitelist; additions require a logged decision |
 | Rationale display | Full rationale + source on every value |
 | Guidance scope | In-game D2 settings, Matrix global settings, aim config (hip/ADS), troubleshooting by feel |
-| Personalization inputs | Hardware, playstyle, current config, feel preferences |
+| Personalization inputs | Platform & hardware, playstyle & loadout, current config, feel preferences |
+| Weapon-aware recommendations | Yes — aim config varies by weapon archetype / aim style (tracking vs snap vs precision hold) |
+| Concept explainer | Yes — Flow D glossary, inline on every setting name, sourced like everything else; in MVP |
