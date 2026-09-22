@@ -1,14 +1,14 @@
 # Dialed — XIM MATRIX Setup Guide: App Concept
 
 **Name:** *Dialed*
-**Status:** Ready for sign-off · v0.6 · 2026-09-22
+**Status:** Concept agreed · v1.0 · 2026-09-22
 **Research behind this version:** [`docs/research/2026-09-22-sources-platforms-glossary.md`](docs/research/2026-09-22-sources-platforms-glossary.md)
 
 ---
 
 ## 1. One-liner
 
-A web app that guides intermediate-to-advanced XIM MATRIX users to a dialed-in,
+A phone-first web app that guides intermediate-to-advanced XIM MATRIX users to a dialed-in,
 evidence-based configuration for their game — starting with **Destiny 2 on Xbox and
 PC** — where every recommendation comes with the *why* and the *source* behind it.
 
@@ -279,8 +279,9 @@ This is the app's identity, so it's a hard rule, not a style choice.
 - *contested*: sources disagree, and both positions are shown (e.g. XIM Central vs
   the official guide)
 - *reasoned*: derived from an official mechanism definition where no source states
-  the recommendation itself. It gives a direction, never an invented number. This
-  is how the pulse rifle vs hand cannon guidance works (see §12, question 1).
+  the recommendation itself. It gives a direction, never an invented number, and
+  is always shown as "worked out from XIM's definitions, not stated by a source".
+  This is how the pulse rifle vs hand cannon guidance works (your decision).
 
 **No orphan values.** If an exact value can't be sourced, it doesn't go in the app.
 Gaps are shown honestly as gaps.
@@ -291,8 +292,8 @@ and are cited the same way. Any "which aim style it matters for" part is labelle
 
 ## 9. MVP definition (first buildable version)
 
-- Web app, desktop-browser-first (usable on a phone next to the console later).
-  *To confirm: see §12, question 2.*
+- **Phone-first** web app (your choice): designed for a phone screen, used next to
+  the console while you enter values in MATRIX Manager. It also works on desktop.
 - Destiny 2 only, Xbox and PC, **controller output only**.
 - **All four flows:** guided setup (A), tune my config (B), troubleshoot by feel
   (C, both stages), and explain a concept (D), plus the config-sheet output.
@@ -332,6 +333,9 @@ Roughly in order of likely value:
 
 *(Recommendation — to confirm before building.)*
 
+- **Phone-first layout:** single-column screens, large tap targets, and config
+  sheets readable at arm's length. It can be made installable to the home screen
+  (a Progressive Web App) so it opens like an app and works offline.
 - **Static single-page web app** (e.g., React + Vite or similar). No server: the
   knowledge base compiles into the app, profiles live in local storage. This
   keeps hosting free (GitHub Pages/Vercel/Netlify), makes the app fast, and
@@ -343,29 +347,17 @@ Roughly in order of likely value:
 - **Repo layout sketch:** `app/` (UI), `knowledge/destiny2/` (the evidence base),
   `docs/` (this concept), `docs/research/` (research notes).
 
-## 12. Open questions
+## 12. Next steps
 
-1. **Confirm the *reasoned* label.** You answered "no XIM APEX, only XIM MATRIX",
-   which I've taken as the answer to the APEX half of the question. Your other
-   answers both rely on the *reasoned* label, so the doc treats it as accepted:
-   - troubleshoot-by-feel with both stages
-   - one Config per loadout, with pulse vs hand cannon guidance
+All concept questions are answered. The next milestone is the **Destiny 2
+knowledge base**: researching and citing each value, definition and symptom
+mapping into data files. None of the following blocks it, but each would help:
 
-   If you meant "no" to the label as well, weapon-aware guidance and stage 2 of
-   troubleshoot-by-feel leave the MVP. The app could then only say "no source
-   covers this".
-2. **Desktop or phone first?** You'll likely use the app next to your console
-   while entering values in MATRIX Manager, which may mean your phone. Proposed:
-   desktop-first. Say if phone-first fits better.
-
-**What would help the next milestone** (the Destiny 2 knowledge base). None of this
-blocks anything:
 - **Forum access.** XIM's MATRIX Support FAQ and the full Game Settings topic need a
   forum login. If you have an account, pasting those pages in fills gaps.
-- **XIM Central's MATRIX videos.** Now that APEX-era material is out, these are the
-  only XIM Central content in scope, and our tools couldn't read their transcripts.
-  Notes or transcripts from you for the smoothing, quantization and "Boost" videos
-  would let the app cite them.
+- **XIM Central's MATRIX videos.** These are the only XIM Central content in scope,
+  and our tools couldn't read their transcripts. Notes or transcripts from you for
+  the smoothing, quantization and "Boost" videos would let the app cite them.
 - **One in-game test.** The official Easing wording is ambiguous (§6). Raising
   Easing and feeling whether the reticle gets slower to start moving settles which
   way the hand-cannon advice points.
@@ -378,9 +370,9 @@ Choices made during concept alignment (2026-09-22):
 |---|---|
 | Name | Dialed |
 | Category | Gaming utility: XIM MATRIX setup helper |
-| Platform | Web app first (desktop vs phone first: §12 Q2) |
+| Platform | Phone-first web app (works on desktop too) |
 | Audience | Intermediate–advanced XIM users; author-only for now |
-| First milestone | Concept definition (this document) |
+| First milestone | Concept definition (this document) — complete |
 | Device link | Reference-only — user applies values in XIM MATRIX Manager |
 | First game | Destiny 2 |
 | Platforms | Xbox and PC |
@@ -388,7 +380,7 @@ Choices made during concept alignment (2026-09-22):
 | Knowledge policy | Evidence-based whitelist: official XIM documentation + XIM Central; additions require a logged decision |
 | Official guide | XIM MATRIX User Guide — https://guide.xim.tech |
 | Device generation | XIM MATRIX only — no XIM APEX or XIM4 advice, including XIM Central's older videos |
-| Confidence labels | *official*, *expert*, *contested*, *reasoned* — *reasoned* inferred from your Flow C and loadout answers; confirm (§12 Q1) |
+| Confidence labels | *official*, *expert*, *contested*, *reasoned* (worked out from XIM's definitions, always clearly marked) |
 | Rationale display | Full rationale + source on every value |
 | Guidance scope | In-game D2 settings, MATRIX global settings (with hardware foundation), aim config (Hip/ADS), troubleshooting by feel |
 | Troubleshoot by feel in MVP | Yes — both stages: setup check + symptom → setting |
