@@ -77,8 +77,8 @@ cm/360-validation and warning-light pages:
   interference; the Hardware Compatibility List)
 - before judging sensitivity, rule out anything that changes real-world cm/360:
   a non-linear curve, quantization, or an Elite 2 stick curve on Xbox. These are
-  features, not faults — quantization is even recommended for aim assist — but
-  they muddy the test.
+  features, not faults (quantization is an official option for aim-assist
+  compatibility), but they muddy the test.
 - light notifications are switched on, and what they say:
   - purple blinking = timing errors (cables, hubs)
   - a quick red flash = you hit the game's maximum turn speed
@@ -86,9 +86,9 @@ cm/360-validation and warning-light pages:
 - on PC with controller output: XIM warns that tools like Steam Input or DS4Windows
   may conflict. It lists this under connection problems.
 
-Every item is sourced, and this is where the official fixes for "jittery",
-"stuttery" and "sensitivity feels wrong" live. If the problem persists, stage 2
-applies.
+Every item is sourced. Together they cover the best-documented setup causes of
+"stuttery" and "sensitivity feels wrong". Hand or hardware jitter is what Smoothing
+is officially for, so that's handled in stage 2.
 
 **Stage 2 — Symptom → setting.** You pick what you feel, and the app points to the
 setting whose official definition describes that feel. It explains the mechanism
@@ -101,17 +101,20 @@ many symptoms map directly:
 | Jitter / shake on small movements | **Smoothing** — its official purpose is countering "hardware and natural hand jitter" | official |
 | Heavy or sluggish on small adjustments | **Precision** — higher is smoother at low speed but "increases the heaviness of the reticle" | reasoned from official wording |
 | Too light / too heavy on fast turns | **Response** — higher gives "a lighter feeling reticle at faster aim speeds" | reasoned from official wording |
-| A lag when you first start moving | **Easing** — higher gives a "smoother transition from rest but lower response time" | reasoned from official wording |
+| A lag when you first start moving | **Easing** — higher gives a "smoother transition from rest but lower response time" | reasoned from official wording (see the Easing caveat in §6) |
 | Fast turns cap out or slow down | The game's **maximum turn speed** (red flash) | official |
-| Hip-fire and ADS feel inconsistent | **Game Roles** (the ADS light), **ADS Activation Delay**, and **Hip/ADS inheritance** | official mechanism, no official feel mapping |
-| Fighting aim assist ("bubble") | **Quantization** (officially for aim-assist compatibility), plus XIM Central material | official + expert, thin |
+| Hip-fire and ADS feel inconsistent | **Game Roles** (the ADS light), **ADS Activation Delay**, and **Hip/ADS inheritance** | reasoned (official mechanisms; no official feel mapping) |
+| Fighting aim assist ("bubble") | **Quantization** (officially an option for aim-assist compatibility), plus XIM Central material | official (the option exists) + expert; thin |
 | Mushy / spongy | Too much smoothing | expert (XIM Central, APEX era) |
 | Floaty · overshooting | — | **gap:** no sourced answer yet; the app says so |
 
-The labels in the "Basis" column are the same confidence labels as §8, plus *gap*.
-The flow ends with a guardrail:
-- change one value at a time (the official guide: "Adjust one value at a time")
-- stick with a setup long enough to judge it (XIM Central, APEX-era advice: 1–2 weeks)
+The "Basis" column uses the §8 confidence labels (*official*, *expert*,
+*reasoned*), plus *gap*. The flow ends with a guardrail:
+- change one thing at a time (the official guide: "Always start with just adjusting
+  Sensitivity. Change other values only if necessary.")
+- stick with a setup long enough to judge it. This is 1–2 weeks according to an
+  APEX-era script that isn't yet confirmed as XIM Central's, so the app shows it as
+  a gap until it's confirmed.
 
 Whether one or both stages are in the MVP is **open question 1**.
 
@@ -131,7 +134,7 @@ Each term shows:
 - the official feel description, where the guide gives one (Precision, Response,
   Easing, Stability)
 - which aim styles it likely matters for. This part is labelled *reasoned* (see
-  open question 4), because no source ties settings to aim styles.
+  open question 4), because no source we could read ties settings to aim styles.
 
 The glossary also untangles confusing names:
 - **"Standard"** is a smoothing mode, a sync method and a velocity-mapping mode,
@@ -139,9 +142,10 @@ The glossary also untangles confusing names:
 - **"Angle" and "Magnitude"** mean different things in quantization, in Smart
   Actions, and in Behavior Variance.
 - **"Response"** (a smoothing setting) is not the mouse "response rate".
-- **"Steady Aim" and "Boost"** were XIM APEX settings. MATRIX has no settings by
-  those names, though XIM Central uses "Steady Aim" loosely for quantization and
-  describes a MATRIX "Boost" feature.
+- **"Steady Aim" and "Boost"** were XIM APEX settings, and the official MATRIX
+  guide lists no settings by those names. XIM Central's video titles use "Steady
+  Aim" for quantization and describe a MATRIX "Boost" feature, which we haven't
+  reviewed yet.
 
 The same explanations appear **inline everywhere**: every setting name in Flows A–C
 opens its explanation.
@@ -207,6 +211,11 @@ numbers:
   onto someone who appears for a split second. The cost is a less smooth start.
   Raising it does the opposite: "smoother transition from rest but lower response
   time".
+
+  *Caveat:* the official text says higher Easing gives "smoother transition from rest but lower
+  response time". We read "lower response time" as *less responsive*, because of the
+  "but". Taken literally, it would mean the opposite, so this direction gets
+  confirmed in-game before the app ships it.
 - **Standard vs Classic.** Standard smoothing "adapts to your current aim speed";
   Classic is static. The reasoned case for Standard is that it can treat slow
   tracking and fast snaps differently within one Config. Weapon-aware directions
@@ -221,7 +230,7 @@ numbers:
 - **Smoothing can't follow your weapon inside one Config.** No documented action
   changes smoothing, curve or quantization within one Config. (Undocumented, not
   proven impossible.) Hip vs ADS can have separate smoothing, but pulse rifles and
-  hand cannons are both fired in ADS, so that split doesn't separate them. Modify
+  hand cannons are normally both fired in ADS, so that split doesn't separate them. Modify
   Aim Sensitivity changes sensitivity only.
 - **So per-weapon smoothing means per-weapon Configs,** loaded mid-match by hotkey or
   a Load Config Smart Action. Hotkeys need Navigate Mode by default, and loading is
@@ -260,8 +269,8 @@ This is the app's identity, so it's a hard rule, not a style choice.
 | Tier | Source | Notes |
 |---|---|---|
 | **Official** | [XIM MATRIX User Guide](https://guide.xim.tech/) (guide.xim.tech) | The canonical reference for every MATRIX setting. It has no Destiny 2 content. It's our best match for "the XIM Guide" / "XIM community guide", pending your confirmation (open question 2). |
-| **Official** | XIM's public forum pages: the [Game Settings list](https://community.xim.tech/pub/xim-game-settings) (Destiny 2's required in-game settings) and the [Hardware Compatibility List](https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list) | The guide's "required aim settings" links lead to this list (via a login-walled forum topic; this is its public copy) |
-| **Official** *(inferred)* | OBsIV's posts and the @OBsIV YouTube channel | OBsIV writes in XIM's voice and hosts XIM's Quick Start video, but no page states their role |
+| **Official** (by reference) | XIM's public forum pages: the [Game Settings list](https://community.xim.tech/pub/xim-game-settings) (Destiny 2's required in-game settings) and the [Hardware Compatibility List](https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list) | The guide's "required aim settings" links go to a login-walled forum topic. This page is a public copy of its first post and may differ from it. The Game Settings list's author ("mist") is not confirmed as XIM staff. |
+| **Official** *(inferred)* | OBsIV's posts and the @OBsIV YouTube channel | Part of your original "official XIM docs" choice. OBsIV writes in XIM's voice and hosts XIM's Quick Start video, but no page states their role. |
 | **Community expert** | [XIM Central](https://www.youtube.com/@XIMCentral) (YouTube) | Not XIM's official channel: the creator says so in an older video script, and xim.tech presents its videos as community-made. The richest source of feel-based advice. Its Destiny 2 videos are from the XIM APEX era; see open question 4b for how APEX-era advice is handled. |
 
 **Every recommendation ships with** a plain-language rationale (the mechanism, not
@@ -335,12 +344,12 @@ Roughly in order of likely value:
    |---|---|---|
    | (a) None | Nothing for "my aim feels off" until later | — |
    | (b) Stage 1 only | The setup checklist. It catches setup mistakes but doesn't diagnose feel. **You would not get the "tell it what you feel, get the setting" part you put in scope.** | Small: every item is already researched |
-   | (c) Stages 1 + 2 | The checklist plus the symptom picker in §5: eight symptoms answered, with "floaty" and "overshooting" shown as gaps | Moderate: a symptom picker plus per-symptom write-ups. Several mappings are *reasoned*, so this depends on 4a. |
+   | (c) Stages 1 + 2 | The checklist plus the symptom picker in §5: eight symptoms answered, with "floaty" and "overshooting" shown as gaps | Small to moderate: a symptom picker plus a short write-up per symptom, mostly reusing the glossary. Several mappings are *reasoned*, so this depends on 4a. |
 
    **Recommendation: (c) if you accept 4a, otherwise (b).** The knowledge base is
    built for Flows A and B anyway. The symptom mappings mostly reuse the glossary's
-   official definitions, so stage 2 costs little extra, and the gap labels handle
-   what isn't sourced.
+   official definitions, so stage 2 adds little research, and the gap labels
+   handle what isn't sourced.
 2. **Which guide did you mean by "XIM community guide"?** We found no resource
    published under that exact name (the login-walled forum couldn't be searched).
    The best match is the official XIM MATRIX User Guide (guide.xim.tech), which XIM's
@@ -354,8 +363,9 @@ Roughly in order of likely value:
    option. Confirm, or tell me if you already switch Configs mid-match.
 4. **Two evidence-policy proposals** (both relax or refine the rules you set, so
    they're yours to approve):
-   - **(a) The *reasoned* label.** No source gives weapon-specific values, so
-     without it the app can only tell you "no source covers pulse vs hand cannon".
+   - **(a) The *reasoned* label.** No source we could read gives weapon-specific
+     values, so without it the app can only tell you "no source covers pulse vs
+     hand cannon".
      With it, the app can say "lower Easing favours peek shots", citing the official
      Easing definition and clearly marked as reasoning. If no: weapon-aware guidance
      leaves the MVP, and Flow C shrinks to option (b).
@@ -394,5 +404,5 @@ your answer in §12.
 | Rationale display | Full rationale + source on every value |
 | Guidance scope | In-game D2 settings, MATRIX global settings (with hardware foundation), aim config (Hip/ADS), troubleshooting by feel (MVP extent: Q1) |
 | Personalization inputs | Hardware (incl. platform), playstyle (incl. loadout), current config, feel preferences |
-| Weapon-aware guidance | Yes — pulse rifle (tracking) vs hand cannon (peek) and other aim styles; *form depends on Q4a; delivery on Q3* |
-| Concept explainer | Yes — Flow D glossary, inline on every setting name; in MVP |
+| Weapon-aware guidance | Yes — pulse rifle (tracking) vs hand cannon (peek) and other aim styles. *MVP inclusion depends on Q4a; delivery on Q3.* |
+| Concept explainer | Yes — Flow D glossary, inline on every setting name. *Proposed:* in the MVP |

@@ -116,7 +116,7 @@ All from [Aim Settings](https://guide.xim.tech/Aim-Settings/) unless noted.
 | **Standard** (smoothing mode) | "dynamic smoothing behavior that adapts to your current aim speed." Settings: Precision, Response, Easing (+ Stability, motion aim only). *"Standard" is also a sync method and a velocity-mapping mode; the three are unrelated.* |
 | **Precision** | "Controls fine aim behavior. Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle." |
 | **Response** | "Controls fast aim behavior. Higher values produces a lighter feeling reticle at faster aim speeds." *(Unrelated to the mouse "response rate" diagnostic tool.)* |
-| **Easing** | "Specifies aim behavior from rest. Higher values result in smoother transition from rest but lower response time." |
+| **Easing** | "Specifies aim behavior from rest. Higher values result in smoother transition from rest but lower response time." *"Lower response time" is ambiguous: because of the "but", we read it as less responsive, but literally it means faster. Confirm in-game.* |
 | **Stability** | "Specifies aim behavior at rest … (motion aim only)." |
 | **Classic** (smoothing mode) | "based on our past generation XIM APEX device which provides static smoothing behavior" — it does *not* adapt to aim speed. Settings: Smooth, Decay, Synch. |
 | **Smooth** | APEX's old "Smoothing": "Higher values increase impact". "Values match XIM APEX behavior." |
@@ -133,7 +133,7 @@ All from [Aim Settings](https://guide.xim.tech/Aim-Settings/) unless noted.
 | **Hip / Aim Down Sight** | Set independently when the game has ADS, which Game Roles detect. Inheritance: *Inherit All* (default), *Sensitivity Only*, *Inherit Nothing*. There is also an *ADS Activation Delay* (optionally with *Smooth ADS Transition*). |
 | **Deadzone** | Inner, outer, axial and drift offsets. "Your game's deadzone settings must match the required settings for your game." |
 | **SAB** (Simulate Analog Behavior) | A controller-output feature. When a game requires it (the public Destiny 2 entry lists no such requirement), a strict checklist applies: no curves, no quantization, smoothing not below the presets, not faster than 20 cm/360 ([SAB](https://guide.xim.tech/Simulate-Analog-Behavior/)). |
-| *Steady Aim, Boost* | **XIM APEX setting names; MATRIX has no settings by those names.** XIM Central's MATRIX quantization video title calls quantization "Aim Stabilizer (Steady Aim)", but no source says the two are equivalent. The guide uses "Vertical Sensitivity Boost" for a recoil technique built on Modify Aim Sensitivity ([Recoil Control](https://guide.xim.tech/Recoil-Control/)). XIM Central has a Jan 2026 MATRIX video, "Boost Feature – Most Hidden XIM Feature", reportedly set in the curve editor; its content is not reviewed yet. |
+| *Steady Aim, Boost* | **XIM APEX setting names; the official MATRIX guide lists no settings by those names.** XIM Central's MATRIX quantization video title calls quantization "Aim Stabilizer (Steady Aim)", but no source says the two are equivalent. The guide uses "Vertical Sensitivity Boost" for a recoil technique built on Modify Aim Sensitivity ([Recoil Control](https://guide.xim.tech/Recoil-Control/)). XIM Central has a Jan 2026 MATRIX video, "Boost Feature – Most Hidden XIM Feature", reportedly set in the curve editor; its content is not reviewed yet. |
 
 ## 4. Troubleshooting: what's sourced
 
@@ -155,7 +155,7 @@ cm/360 validation and the warning-light pages, not from aim-feel guidance. Sourc
 - An out-of-date Smart Translator is flagged in Manager. Fix: "Recreate the Config to update its translation."
 - A wrong DPI in the Config: "If it is wrong, your mouse aim won't be accurate." Use Manager's Check DPI tool.
 - A polling rate lower than what you set, caused by onboard-memory settings or wireless interference. Use the Check Rate tool, move the dongle away with a USB extension, and check the Hardware Compatibility List.
-- **Conditions for the cm/360 accuracy test:** a linear curve, quantization disabled, and on Xbox no Elite 2 stick curve. These are features, not faults (quantization is even recommended for aim assist), but they change real-world cm/360, so rule them out before judging sensitivity. The page adds that accurate cm/360 "isn't strictly necessary".
+- **Conditions for the cm/360 accuracy test:** a linear curve, quantization disabled, and on Xbox no Elite 2 stick curve. These are features, not faults (quantization is an official option for aim-assist compatibility), but they change real-world cm/360, so rule them out before judging sensitivity. The page adds that accurate cm/360 "isn't strictly necessary".
 - **Light cues** (they can be turned off in Identity, so check they're on first):
   - rapid purple blinking = "timing errors"
   - a quick red flash = you hit the game's maximum turn speed
@@ -175,7 +175,7 @@ cm/360 validation and the warning-light pages, not from aim-feel guidance. Sourc
 - "[T]oo much smoothing will make your mouse movements feel spongy and less direct."
 - Stutter makes aim assist feel "like an obstacle".
 - Don't change settings every few days; stick with a setup for 1–2 weeks before judging
-  it. This comes from an anonymous script not yet linked to the channel.
+  it. This comes from an anonymous APEX-era script not yet linked to the channel.
 
 **Contested (sources from different device generations disagree):**
 - DPI: APEX-era 3,000–4,000 vs MATRIX-era "more DPI", up to about 12,000
