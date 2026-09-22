@@ -1,6 +1,6 @@
 # XIM Matrix Setup Guide — App Concept
 
-**Working title:** *Dialed* (placeholder — rename anytime)
+**Name:** *Dialed*
 **Status:** Concept for review · v0.3 · 2026-09-22
 
 ---
