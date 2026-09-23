@@ -244,3 +244,15 @@ describe('Loadouts', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Loadout not found' })).toBeInTheDocument();
   });
 });
+
+describe('Loadout config links', () => {
+  it('links each loadout to its config sheet, build and tune pages', () => {
+    renderApp({ path: '/loadouts', storage: storageWith(sampleData({ loadouts: [sampleLoadout()] })) });
+    const links = within(screen.getByRole('list', { name: 'Pulse + shotgun: config' })).getAllByRole('link');
+    expect(links.map((l) => [l.textContent, l.getAttribute('href')])).toEqual([
+      ['Config sheet', '/loadouts/l1/sheet'],
+      ['Build', '/build/l1'],
+      ['Tune', '/tune/l1'],
+    ]);
+  });
+});

@@ -52,6 +52,17 @@ function LoadoutCard({ loadout }: { loadout: Loadout }) {
       ) : (
         <p className="hint">The main weapon isn’t in the knowledge base any more, so its aim style is unknown.</p>
       )}
+      <ul className="related-links" aria-label={`${loadout.name}: config`}>
+        <li>
+          <Link to={`/loadouts/${encodeURIComponent(loadout.id)}/sheet`}>Config sheet</Link>
+        </li>
+        <li>
+          <Link to={`/build/${encodeURIComponent(loadout.id)}`}>Build</Link>
+        </li>
+        <li>
+          <Link to={`/tune/${encodeURIComponent(loadout.id)}`}>Tune</Link>
+        </li>
+      </ul>
     </li>
   );
 }
