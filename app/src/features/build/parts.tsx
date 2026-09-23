@@ -23,7 +23,7 @@ export function LoadoutNotFound({ back, link }: { back: { to: string; label: str
 /** XIM's guidance on a setting: the first statements straight away, the rest one tap away. */
 export function GuidanceStatements({ item }: { item: GuidanceItem }) {
   return (
-    <>
+    <div className="build-statements">
       {item.lead.map((statement, i) => (
         <StatementView key={i} statement={statement} />
       ))}
@@ -39,7 +39,7 @@ export function GuidanceStatements({ item }: { item: GuidanceItem }) {
           </div>
         </details>
       )}
-    </>
+    </div>
   );
 }
 

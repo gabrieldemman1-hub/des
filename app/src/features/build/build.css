@@ -113,6 +113,12 @@
   gap: 12px;
 }
 
+/* Several statements in a row: a rule between them, so each reads as its own claim. */
+.build-statements > .statement + .statement {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
 .statement-list details .statement-list,
 details.card > .statement-list {
   margin-top: 8px;
