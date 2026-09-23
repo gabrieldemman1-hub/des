@@ -121,6 +121,41 @@ export function currentAimValue(config: CurrentConfig | undefined, termId: strin
   }
 }
 
+export interface CheckContextLine {
+  label: string;
+  value: string;
+  /** True when this value and the one before it should match but don't. */
+  differs?: boolean;
+}
+
+/**
+ * What the player has told Dialed that a setup check is about: the mouse DPI and polling rate
+ * from the profile, and the DPI entered for the Config in Tune my config.
+ */
+export function checkContext(
+  checkId: string,
+  profile: { mouseDpi: number | null; pollingRate: number | null },
+  config: CurrentConfig | undefined,
+): CheckContextLine[] {
+  if (checkId === 'mouse-dpi-matches') {
+    const lines: CheckContextLine[] = [];
+    if (profile.mouseDpi !== null) lines.push({ label: 'Your mouse (profile)', value: `${profile.mouseDpi} DPI` });
+    const configDpi = config?.matrix.configDpi ?? null;
+    if (configDpi !== null) {
+      lines.push({
+        label: 'Your Config (current settings)',
+        value: `${configDpi} DPI`,
+        differs: profile.mouseDpi !== null && profile.mouseDpi !== configDpi,
+      });
+    }
+    return lines;
+  }
+  if (checkId === 'mouse-polling-rate' && profile.pollingRate !== null) {
+    return [{ label: 'Your mouse is set to (profile)', value: `${profile.pollingRate} Hz` }];
+  }
+  return [];
+}
+
 /**
  * The smoothing the player says they use, when it isn't custom Standard (the aim-style
  * directions assume Standard). Null when it is Standard or not entered.

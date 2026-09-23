@@ -1,0 +1,378 @@
+/* Build my config and the config sheet. Phone-first; builds on the shared classes in styles.css. */
+
+/* ---- Build index ------------------------------------------------------------------ */
+
+.build-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.build-card-style {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: 0.92rem;
+}
+
+/* ---- Walkthrough header: step count and step indicator ------------------------------ */
+
+.build-step-of {
+  color: var(--text-muted);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.build-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.build-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 60px;
+  padding: 6px 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 650;
+  line-height: 1.15;
+  text-align: center;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.build-step-number {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.build-step-name {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.build-step.is-complete .build-step-number {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.build-step[aria-current='step'] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--text);
+}
+
+.build-step[aria-current='step'] .build-step-number {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ---- Walkthrough body ---------------------------------------------------------------- */
+
+.build-count {
+  color: var(--accent-text);
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.build-note-title {
+  margin-bottom: 8px;
+}
+
+.build-note {
+  padding: 10px 14px;
+  border: 1px solid var(--warning-border);
+  border-left-width: 4px;
+  border-radius: var(--radius-sm);
+  background: var(--warning-bg);
+  font-size: 0.95rem;
+}
+
+.build-statements {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statement-list details .statement-list,
+details.card > .statement-list {
+  margin-top: 8px;
+}
+
+.build-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.build-direction {
+  color: var(--accent-text);
+}
+
+.build-current,
+.build-context li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.build-current-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.build-context {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag.tag-differs {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.build-summary {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.build-summary li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 4px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.build-summary li.is-complete {
+  border-color: var(--success);
+}
+
+.build-summary a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 650;
+}
+
+.build-summary span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.build-pager {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.build-reset {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* ---- Config sheet ------------------------------------------------------------------- */
+
+.sheet-actions .button {
+  flex: 1 1 140px;
+}
+
+.sheet-copy-status:empty {
+  display: none;
+}
+
+.sheet-copy-status {
+  font-weight: 600;
+}
+
+textarea.sheet-text {
+  width: 100%;
+  min-height: 14rem;
+  padding: 10px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1rem; /* 16px+ stops iOS from zooming into the field */
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.sheet-rows {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sheet-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.sheet-row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2px 12px;
+}
+
+/* Readable at arm's length, next to the console. */
+.sheet-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.sheet-name a {
+  display: inline-block;
+  padding: 2px 0;
+}
+
+.sheet-value {
+  color: var(--text);
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.sheet-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.sheet-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* A shape as well as a colour: filled for done, a bar for needs fixing, a ring for not yet. */
+.sheet-status-mark {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+}
+
+.sheet-status.is-done {
+  color: var(--success);
+}
+
+.sheet-status.is-done .sheet-status-mark {
+  background: currentColor;
+}
+
+.sheet-status.is-problem {
+  color: var(--danger);
+}
+
+.sheet-status.is-problem .sheet-status-mark {
+  height: 4px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.sheet-caveat {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.sheet-statement {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sheet-statement .confidence {
+  margin-right: 4px;
+}
+
+.sheet-favours {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 10px;
+}
+
+.sheet-favours .why {
+  flex: 1 1 200px;
+}
+
+@media (forced-colors: active) {
+  .build-step[aria-current='step'] .build-step-number {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+}
+
+/* ---- Game notes (step 1) ------------------------------------------------------------ */
+
+.build-game-note {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.build-game-note-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 6px 0;
+  color: var(--text);
+}
+
+.build-game-note[open] > .statement {
+  padding-bottom: 10px;
+}
