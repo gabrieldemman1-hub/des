@@ -15,6 +15,7 @@
     "lint": "eslint .",
     "typecheck": "node node_modules/typescript-7/bin/tsc -b",
     "verify:citations": "node scripts/verify-citations.mjs",
+    "check:release": "node scripts/check-release.mjs",
     "icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {

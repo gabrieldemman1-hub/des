@@ -9,6 +9,7 @@ import {
   createBackup,
   getBrowserStorage,
   loadData,
+  migrateToCurrent,
   parseBackup,
   saveData,
   setAsideUnreadable,
@@ -20,6 +21,8 @@ describe('loadData / saveData', () => {
     expect(result).toEqual({ data: defaultData(), issue: null });
     expect(result.data.profile).toEqual({
       platform: null,
+      outputType: null,
+      aimingSources: ['mouse'],
       mouseModel: '',
       mouseDpi: null,
       pollingRate: null,
@@ -116,7 +119,15 @@ describe('loadData / saveData', () => {
     const storage = new MemoryStorage({ [STORAGE_KEY]: JSON.stringify({ version: 1, profile, loadouts: [] }) });
     const result = loadData(storage);
     expect(result.issue).toBe('invalid');
-    expect(result.data.profile).toEqual({ ...profile, feel: null });
+    expect(result.data.profile).toEqual({ ...defaultData().profile, ...profile, feel: null });
+  });
+
+  it('clears an output type that does not fit the stored platform', () => {
+    const profile = { ...defaultData().profile, platform: 'xbox', outputType: 'pc-dualsense' };
+    const storage = new MemoryStorage({ [STORAGE_KEY]: JSON.stringify({ version: 1, profile, loadouts: [] }) });
+    const result = loadData(storage);
+    expect(result.issue).toBe('invalid');
+    expect(result.data.profile).toMatchObject({ platform: 'xbox', outputType: 'xbox-controller' });
   });
 
   it('drops stored loadouts whose id could not be used in a link', () => {
@@ -203,11 +214,28 @@ describe('backup and restore', () => {
     }
   });
 
-  it('rejects a backup from another version', () => {
-    const text = JSON.stringify({ ...JSON.parse(createBackup(data, now)), version: 2 });
-    const result = parseBackup(text);
-    expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.error).toMatch(/different version/);
+  it('rejects a backup from a newer version, and one with no usable version', () => {
+    const newer = parseBackup(JSON.stringify({ ...JSON.parse(createBackup(data, now)), version: 2 }));
+    expect(newer.ok).toBe(false);
+    if (!newer.ok) expect(newer.error).toMatch(/newer version of Dialed/);
+    for (const version of [0, 1.5, '1', undefined]) {
+      const result = parseBackup(JSON.stringify({ ...JSON.parse(createBackup(data, now)), version }));
+      expect(result.ok, String(version)).toBe(false);
+      if (!result.ok) expect(result.error).toMatch(/can’t read/);
+    }
+  });
+
+  it('brings older data up to date one version at a time', () => {
+    const steps = {
+      1: (d: Record<string, unknown> & { version: number }) => ({ ...d, configs: [] }),
+      2: (d: Record<string, unknown> & { version: number }) => ({ ...d, renamed: true }),
+    };
+    expect(migrateToCurrent({ version: 1, profile: {} }, steps, 3)).toEqual({ version: 3, profile: {}, configs: [], renamed: true });
+    expect(migrateToCurrent({ version: 2 }, steps, 3)).toEqual({ version: 3, renamed: true });
+    expect(migrateToCurrent({ version: 3 }, steps, 3)).toEqual({ version: 3 });
+    expect(migrateToCurrent({ version: 1 }, {}, 2)).toBe('no migration from version 1');
+    expect(migrateToCurrent({ version: 4 }, steps, 3)).toBe('newer');
+    expect(migrateToCurrent(null, steps, 3)).toBe('no data');
   });
 
   it('rejects a damaged backup and says where', () => {

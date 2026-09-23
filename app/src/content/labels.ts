@@ -1,4 +1,4 @@
-import type { AimStyleId, Confidence } from '../../../knowledge/index';
+import type { AimingSource, AimStyleId, Confidence, OutputType } from '../../../knowledge/index';
 
 /** Confidence labels and their one-line meanings (CONCEPT.md §5 and §8). */
 export const CONFIDENCE_INFO: Record<Confidence, { label: string; meaning: string }> = {
@@ -26,13 +26,36 @@ export const AIM_STYLE_NAMES: Record<AimStyleId, string> = {
   'precision-hold': 'Precision hold',
 };
 
+/** Shown for a weapon with no aim style (e.g. a sword). */
+export const NO_AIM_STYLE = 'No aim style';
+
 export const PLATFORM_LABELS = { xbox: 'Xbox', pc: 'PC' } as const;
+
+/**
+ * Controller output types, by the names XIM MATRIX Manager uses for its output choices
+ * (https://guide.xim.tech/Gaming-On-Xbox/, https://guide.xim.tech/Gaming-On-PC-Output-C/).
+ * What each one needs is shown from the glossary's sourced Output type statements.
+ */
+export const OUTPUT_TYPE_LABELS: Record<OutputType, { title: string; sub: string }> = {
+  'xbox-controller': { title: 'Controller (Xbox, PS4)', sub: 'Xbox Config' },
+  'pc-xinput': { title: 'XInput controller', sub: 'Controller (PC XInput)' },
+  'pc-xbox-controller': { title: 'Xbox controller', sub: 'Controller (Xbox, PS, PC)' },
+  'pc-dualsense': { title: 'DualSense controller', sub: 'Controller (Xbox, PS, PC)' },
+};
+
+export const AIMING_SOURCE_LABELS: Record<AimingSource, { title: string; sub: string }> = {
+  mouse: { title: 'Mouse', sub: 'Mouse Aim' },
+  gyro: { title: 'Gyro', sub: 'Motion Aim, with a gyro gamepad' },
+  thumbstick: { title: 'Thumbstick', sub: 'Thumbstick Aim, with a gamepad stick' },
+};
 
 export const FOCUS_LABELS = { crucible: 'Crucible', pve: 'PvE', both: 'Both' } as const;
 
-export const STYLE_LABELS = { aggressive: 'Aggressive', balanced: 'Balanced', precise: 'Precise' } as const;
+/** "Deliberate", not "Precise": Precision is a smoothing setting and precision hold an aim style. */
+export const STYLE_LABELS = { aggressive: 'Aggressive', balanced: 'Balanced', precise: 'Deliberate' } as const;
 
-export const SENSITIVITY_LABELS = { low: 'Low', medium: 'Medium', high: 'High' } as const;
+/** Aim speed, not the cm/360 number: a faster aim is a lower cm/360. */
+export const SENSITIVITY_LABELS = { low: 'Slower', medium: 'Medium', high: 'Faster' } as const;
 
-/** Feel preference, 1 (snappy) to 5 (smooth). */
+/** Feel preference, 1 (snappy) to 5 (smooth). Not the Classic Smooth setting. */
 export const FEEL_LABELS = { 1: 'Snappy', 2: 'Lean snappy', 3: 'Middle', 4: 'Lean smooth', 5: 'Smooth' } as const;

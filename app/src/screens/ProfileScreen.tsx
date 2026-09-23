@@ -1,15 +1,20 @@
 import { useId, useState, type ChangeEvent } from 'react';
+import { AIMING_SOURCES, OUTPUT_TYPES_BY_PLATFORM, type AimingSource, type Platform } from '../../../knowledge/index';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { Screen } from '../components/Screen';
 import { SegmentedField } from '../components/SegmentedField';
+import { StatementView } from '../components/StatementView';
 import {
+  AIMING_SOURCE_LABELS,
   FEEL_LABELS,
   FOCUS_LABELS,
+  OUTPUT_TYPE_LABELS,
   PLATFORM_LABELS,
   SENSITIVITY_LABELS,
   STYLE_LABELS,
 } from '../content/labels';
 import { useData, type SaveState } from '../state/data-context';
+import { useKnowledge } from '../state/knowledge-context';
 import { MAX_MOUSE_MODEL_LENGTH, POLLING_RATES, type AppData, type PollingRate } from '../state/schema';
 import { backupFileName, createBackup, parseBackup } from '../state/storage';
 
@@ -36,12 +41,117 @@ function parseDpi(text: string): number | null | undefined {
   return value > 0 && Number.isSafeInteger(value) ? value : undefined;
 }
 
+/** The guide page each platform's controller-output setup is on. */
+const OUTPUT_GUIDE_PAGE: Record<Platform, string> = {
+  xbox: 'guide.xim.tech/Gaming-On-Xbox/',
+  pc: 'guide.xim.tech/Gaming-On-PC-Output-C/',
+};
+
+function OutputTypeField() {
+  const { data, updateProfile } = useData();
+  const { termById } = useKnowledge();
+  const { platform, outputType } = data.profile;
+  const ids = { label: useId(), hint: useId() };
+  // What each output needs, from the glossary's sourced Output type statements for this platform.
+  const needs =
+    platform === null
+      ? []
+      : (termById('output-type')?.explanation ?? []).filter((statement) =>
+          statement.citations.some((c) => c.url.includes(OUTPUT_GUIDE_PAGE[platform])),
+        );
+
+  return (
+    <fieldset className="field" aria-labelledby={ids.label} aria-describedby={ids.hint}>
+      <legend id={ids.label}>Output type</legend>
+      <p className="hint" id={ids.hint}>
+        Controller output only; PC mouse-and-keyboard output is out of scope.
+      </p>
+      {platform === null && <p className="fixed-value">Pick a platform first.</p>}
+      {platform === 'xbox' && (
+        <p className="fixed-value">
+          {OUTPUT_TYPE_LABELS['xbox-controller'].title} <span className="tag">Fixed</span>
+        </p>
+      )}
+      {platform === 'pc' && (
+        <div className="choice-list">
+          {OUTPUT_TYPES_BY_PLATFORM.pc.map((type) => (
+            <label className="choice" key={type}>
+              <input
+                type="radio"
+                name={`${ids.label}-output`}
+                value={type}
+                checked={outputType === type}
+                onChange={() => updateProfile({ outputType: type })}
+              />
+              <span className="choice-text">
+                <span className="choice-title">{OUTPUT_TYPE_LABELS[type].title}</span>
+                <span className="choice-sub">{OUTPUT_TYPE_LABELS[type].sub}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      )}
+      {needs.length > 0 && (
+        <details className="why">
+          <summary>What each output needs</summary>
+          {needs.map((statement) => (
+            <StatementView key={statement.text} statement={statement} />
+          ))}
+        </details>
+      )}
+    </fieldset>
+  );
+}
+
+function AimingSourcesField() {
+  const { data, updateProfile } = useData();
+  const selected = data.profile.aimingSources;
+  const hintId = useId();
+
+  const toggle = (source: AimingSource, on: boolean) => {
+    const next = on ? [...selected, source] : selected.filter((s) => s !== source);
+    // Keep the order of AIMING_SOURCES, and at least one source.
+    if (next.length > 0) updateProfile({ aimingSources: AIMING_SOURCES.filter((s) => next.includes(s)) });
+  };
+
+  return (
+    <fieldset className="field" aria-describedby={hintId}>
+      <legend>What you aim with</legend>
+      <p className="hint" id={hintId}>
+        Pick every aiming source your Configs use. Advice that only applies to gyro aim, such as Stability, shows only if
+        you pick Gyro.
+      </p>
+      <div className="choice-list">
+        {AIMING_SOURCES.map((source) => {
+          const checked = selected.includes(source);
+          const last = checked && selected.length === 1;
+          return (
+            <label className={`choice${last ? ' is-disabled' : ''}`} key={source}>
+              <input
+                type="checkbox"
+                value={source}
+                checked={checked}
+                disabled={last}
+                onChange={(e) => toggle(source, e.target.checked)}
+              />
+              <span className="choice-text">
+                <span className="choice-title">{AIMING_SOURCE_LABELS[source].title}</span>
+                <span className="choice-sub">{AIMING_SOURCE_LABELS[source].sub}</span>
+              </span>
+            </label>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
 function ProfileFields() {
   const { data, updateProfile } = useData();
   const profile = data.profile;
   const [dpiText, setDpiText] = useState(profile.mouseDpi === null ? '' : String(profile.mouseDpi));
   const dpiValue = parseDpi(dpiText);
-  const ids = { output: useId(), model: useId(), dpi: useId(), dpiHint: useId(), dpiError: useId(), rate: useId(), rateHint: useId() };
+  const ids = { model: useId(), dpi: useId(), dpiHint: useId(), dpiError: useId(), rate: useId(), rateHint: useId() };
 
   const onDpiChange = (event: ChangeEvent<HTMLInputElement>) => {
     const text = event.target.value;
@@ -63,15 +173,9 @@ function ProfileFields() {
           onChange={(platform) => updateProfile({ platform })}
         />
 
-        <div className="field" role="group" aria-labelledby={ids.output}>
-          <span className="field-label" id={ids.output}>
-            Output type
-          </span>
-          <p className="fixed-value">
-            Controller output <span className="tag">Fixed</span>
-          </p>
-          <p className="hint">This first version covers controller output only. PC mouse-and-keyboard output is out of scope.</p>
-        </div>
+        <OutputTypeField />
+
+        <AimingSourcesField />
 
         <div className="field">
           <label htmlFor={ids.model}>Mouse model</label>
@@ -142,6 +246,7 @@ function ProfileFields() {
         />
         <SegmentedField
           legend="How you play"
+          hint="Deliberate means careful, patient play. It isn’t the Precision setting."
           options={options(STYLE_LABELS)}
           value={profile.style}
           onChange={(style) => updateProfile({ style })}
@@ -153,12 +258,14 @@ function ProfileFields() {
         <p className="hint">Where the evidence supports a range, these pick the point within it.</p>
         <SegmentedField
           legend="Snappy or smooth"
+          hint="How you like your aim to feel. This isn’t the Smooth or Smoothing setting."
           options={FEEL_OPTIONS}
           value={profile.feel as keyof typeof FEEL_LABELS | null}
           onChange={(feel) => updateProfile({ feel })}
         />
         <SegmentedField
           legend="Sensitivity"
+          hint="How fast you like to aim. Faster means a lower cm/360."
           options={options(SENSITIVITY_LABELS)}
           value={profile.sensitivity}
           onChange={(sensitivity) => updateProfile({ sensitivity })}

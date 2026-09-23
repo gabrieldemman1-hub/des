@@ -42,7 +42,10 @@ const EMPTY_RAW: RawKnowledgeFiles = {
   'matrix/foundation.json': { checks: [] },
   'matrix/glossary-aim.json': { terms: [], nameNotes: [] },
   'matrix/glossary-setup.json': { terms: [], nameNotes: [] },
-  'matrix/symptoms.json': { symptoms: [] },
+  'matrix/symptoms.json': {
+    symptoms: [],
+    guardrail: { text: 'Change one thing at a time.', confidence: 'gap', citations: [] },
+  },
 };
 
 const ARCHETYPES = [
@@ -69,6 +72,12 @@ const ARCHETYPES = [
     name: 'Scout Rifle',
     aimStyle: 'precision-hold',
     mapping: reasoned('Scouts reward deliberate shots.', 'Single shots need fine low-speed control.'),
+  },
+  {
+    id: 'sword',
+    name: 'Sword',
+    aimStyle: null,
+    mapping: { text: 'Swords are melee weapons, so no aim style applies.', confidence: 'gap', citations: [] },
   },
 ];
 

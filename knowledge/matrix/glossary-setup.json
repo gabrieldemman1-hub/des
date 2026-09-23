@@ -100,7 +100,22 @@
       "notToBeConfusedWith": [
         {
           "name": "Smart Actions",
-          "note": "XIM's action engine for bindings (macros such as recoil control). A separate feature, though some actions are built to work with the Smart Translator."
+          "statement": {
+            "text": "XIM's action engine for bindings: sequences of actions, from simple macros to recoil control. A separate feature from the Smart Translator.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/What-Is-XIM-MATRIX/#what-is-xim-matrix",
+                "quote": "Features our proprietary Smart Translator precision aim system and our Smart Actions advanced macro engine."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Editor/#smart-actions-editor",
+                "quote": "Smart Actions are a powerful feature that enables the composition of action sequences to accomplish many different input automation scenarios from simple to complex."
+              }
+            ]
+          }
         },
         {
           "name": "Velocity Calibration",
@@ -119,7 +134,10 @@
         "velocity-calibration",
         "output-type",
         "aiming-curve",
-        "sensitivity"
+        "sensitivity",
+        "sync-manual",
+        "config",
+        "firmware"
       ]
     },
     {
@@ -206,32 +224,51 @@
           ]
         },
         {
-          "text": "For Destiny 2, Dialed uses Standard sync. We found no sign that Destiny 2 supports Custom, and XIM discourages Manual for controller output.",
-          "confidence": "reasoned",
+          "text": "Which methods a Config can use depends on the game. Every game the MATRIX supports has Standard. Custom is only there for games that support it. Manual exists for any controller-output Config, but XIM discourages it.",
+          "confidence": "official",
           "citations": [
             {
-              "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
-              "quote": "This game supports Custom In-Game Settings. Setting values in green can be customized when using this feature.",
-              "note": "How the page marks games that support Custom. Destiny 2's entry has no such line."
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#standard",
+              "quote": "Every game that XIM MATRIX supports has the standard game settings synchronization option."
             },
             {
-              "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
-              "quote": "ADS Sensitivity Modifier: 1.5",
-              "note": "A line from Destiny 2's entry. The entry lists only in-game values: no Input Requirements line and no Custom In-Game Settings line."
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#custom",
+              "quote": "This is the default option for controller Configs when custom is available for the game."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+              "quote": "Or, if you are a controller gamer (and the game has support for it), aim is customized in your game and settings are copied to your Config."
             },
             {
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Game-Settings/#manual",
               "quote": "Manual reticle velocity calibration for Configs that output as controller may not produce accurate results and is thus discouraged from being used."
             }
-          ],
-          "reasoning": "The public Game Settings copy marks games that support Custom with a line saying so. Destiny 2's entry has no such line. The guide discourages Manual calibration for controller output. That leaves Standard, which every supported game has.",
-          "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
+          ]
         }
       ],
-      "aimStyles": [],
+      "aimStyles": [
+        {
+          "text": "Not aim-style specific: it sets the footing every aim style relies on. If the game's settings are out of sync, every aim setting on top of them is off too, whatever weapon you use.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+              "quote": "XIM MATRIX's Smart Translation input system must be synchronized with your game's aim settings for correctness to ensure optimal precision aim."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+              "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
+            }
+          ],
+          "reasoning": "XIM says Smart Translation must be synchronized with the game's aim settings for correct, precise aim. It also says wrong settings hurt aiming. Neither depends on the weapon or the kind of aim. No source ties sync to aim styles."
+        }
+      ],
       "notToBeConfusedWith": [
         {
           "name": "Synch (Classic smoothing)",
@@ -250,7 +287,9 @@
         "sync-manual",
         "required-game-settings",
         "smart-translation",
-        "velocity-calibration"
+        "velocity-calibration",
+        "output-type",
+        "config"
       ]
     },
     {
@@ -351,31 +390,6 @@
               "quote": "Your in-game required settings are correct and all others are default (such as FOV)"
             }
           ]
-        },
-        {
-          "text": "This is Dialed's plan for Destiny 2: maximum in-game sensitivity, the required values, everything else default.",
-          "confidence": "reasoned",
-          "citations": [
-            {
-              "source": "xim-guide",
-              "url": "https://guide.xim.tech/Game-Settings/#standard",
-              "quote": "Every game that XIM MATRIX supports has the standard game settings synchronization option."
-            },
-            {
-              "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
-              "quote": "This game supports Custom In-Game Settings. Setting values in green can be customized when using this feature.",
-              "note": "How the page marks games that support Custom. Destiny 2's entry has no such line."
-            },
-            {
-              "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
-              "quote": "ADS Sensitivity Modifier: 1.5",
-              "note": "A line from Destiny 2's entry. The entry lists only in-game values: no Input Requirements line and no Custom In-Game Settings line."
-            }
-          ],
-          "reasoning": "Every supported game has Standard. The public Game Settings copy doesn't mark Destiny 2 as supporting Custom, and Manual is discouraged for controller output.",
-          "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
         }
       ],
       "aimStyles": [],
@@ -392,7 +406,17 @@
         },
         {
           "name": "Standard (update rate)",
-          "note": "The output connection update rate, which the SAB page says to keep at Standard (the default). Unrelated to Standard sync."
+          "statement": {
+            "text": "The Config's update rate: how fast the MATRIX updates your console or PC. The guide's SAB checklist says to keep it at Standard, the default. Unrelated to Standard sync.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#standard-update-rate-only",
+                "quote": "When configuring the output connection mode of your Config, you can choose how fast you want your XIM MATRIX to update your console. Keep this value at \"Standard\" (which is default)."
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -540,23 +564,33 @@
           ]
         },
         {
-          "text": "Destiny 2: we found no sign that it supports Custom, so Dialed plans on Standard sync.",
+          "text": "Custom is only there for games that support it. To find out whether a game does, look at the Game Settings of a Config for that game in Manager. XIM's public list of game settings marks some games as supporting Custom, but only games that also require SAB, so a game without that mark may still support it.",
           "confidence": "reasoned",
           "citations": [
             {
-              "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
-              "quote": "This game supports Custom In-Game Settings. Setting values in green can be customized when using this feature.",
-              "note": "How the page marks games that support Custom. Destiny 2's entry has no such line."
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+              "quote": "Game Settings support includes three different synchronization methods: Standard, Custom, and Manual."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#custom",
+              "quote": "This is the default option for controller Configs when custom is available for the game."
             },
             {
               "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
-              "quote": "ADS Sensitivity Modifier: 1.5",
-              "note": "A line from Destiny 2's entry. The entry lists only in-game values: no Input Requirements line and no Custom In-Game Settings line."
+              "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
+              "quote": "This game supports Custom In-Game Settings. Setting values in green can be customized when using this feature.",
+              "note": "From the Apex Legends (ALC) entry. The public list has 15 entries with this line, and every one of them also has the SAB line quoted next."
+            },
+            {
+              "source": "xim-game-settings",
+              "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
+              "quote": "Input Requirements: This game has additional input requirements that must be observed in order to play. With a XIM MATRIX, it is required that Simulate Analog Behavior (SAB) be enabled.",
+              "note": "From the same Apex Legends (ALC) entry. The public list has 15 entries with this line: the same 15."
             }
           ],
-          "reasoning": "The public Game Settings copy adds a line to each game that supports Custom In-Game Settings. Destiny 2's entry lists only in-game values and has no such line.",
+          "reasoning": "The guide describes Custom as one of a Config's Game Settings methods, available 'when custom is available for the game'. So a Config's own Game Settings is where to see whether its game has it. On the public list, the line that marks Custom support only ever appears in entries that also require Simulate Analog Behavior (SAB). So a missing line is weak evidence that a game lacks Custom.",
           "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
         }
       ],
@@ -585,7 +619,8 @@
         "sight-modifiers",
         "groups",
         "max-turn-speed",
-        "deadzone"
+        "deadzone",
+        "sync-manual"
       ]
     },
     {
@@ -746,9 +781,9 @@
           "citations": [
             {
               "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
+              "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
               "quote": "Input Requirements: This game has additional input requirements that must be observed in order to play. With a XIM MATRIX, it is required that Simulate Analog Behavior (SAB) be enabled.",
-              "note": "How the page marks games that need SAB. Destiny 2's entry has no such line."
+              "note": "How the page marks games that need SAB, here in the Apex Legends (ALC) entry."
             }
           ],
           "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
@@ -787,7 +822,7 @@
               "quote": "Use the gear icon to review the required in-game settings for the game."
             }
           ],
-          "caveat": "Dialed's Destiny 2 values come from a public copy of XIM's forum list, which may differ from the current list. Treat Manager's list as the one to match."
+          "caveat": "Dialed's per-game values come from a public copy of XIM's forum list, which may differ from the current list. Treat Manager's list as the one to match."
         },
         {
           "text": "When checking cm/360, XIM says the required settings must be correct and all others must be default, such as FOV.",
@@ -957,14 +992,39 @@
               "quote": "When connecting your XIM MATRIX to your PC, do not use the Mouse, Keyboard, Controller (MKC) output type. Rather use one of the other supported output types for PC."
             }
           ],
-          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. The public Game Settings copy does not list SAB as required for Destiny 2."
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
         }
       ],
       "aimStyles": [],
       "notToBeConfusedWith": [
         {
           "name": "Inputs",
-          "note": "The devices you plug into the MATRIX (mouse, keyboard, gamepad). The output type is what the MATRIX sends to the console or PC."
+          "statement": {
+            "text": "The devices you plug into the MATRIX, such as a mouse and keyboard, a gamepad or a gyro gamepad. The output type is what the MATRIX presents as to your console or PC.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Inputs-Outputs/#inputs-and-outputs",
+                "quote": "XIM MATRIX supports any combination of supported input devices."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Inputs-Outputs/#inputs",
+                "quote": "Standard PC gamer mouse and keyboard combination"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Inputs-Outputs/#inputs",
+                "quote": "Console gamer input with gyro (motion) aim"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Inputs-Outputs/#outputs",
+                "quote": "XIM MATRIX can present to your console or PC as controller or mouse and keyboard (or both)."
+              }
+            ]
+          }
         },
         {
           "name": "Velocity Mapping (Controller Output / Mouse Output)",
@@ -978,7 +1038,9 @@
         "velocity-calibration",
         "simulate-analog-behavior",
         "navigate-mode",
-        "rumble-triggers"
+        "rumble-triggers",
+        "config",
+        "warning-lights"
       ]
     },
     {
@@ -1134,7 +1196,7 @@
               "quote": "If you are using a Config that doesn't support custom in-game aim settings, you can recalibrate your aim by performing a Velocity Calibration."
             }
           ],
-          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. The public Game Settings copy does not list SAB as required for Destiny 2."
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
         }
       ],
       "aimStyles": [],
@@ -1164,7 +1226,7 @@
       ],
       "category": "output",
       "location": "Under Mappings, press the \"...\" and select Behavior Simulation.",
-      "summary": "Makes the sticks and triggers the MATRIX sends look more like a human hand. Only for games with extra input requirements; not listed for Destiny 2.",
+      "summary": "Makes the sticks and triggers the MATRIX sends look more like a human hand. Only for games whose entry in XIM's list requires it.",
       "definition": {
         "text": "Simulate Analog Behavior (SAB) simulates natural human behavior patterns. It makes the sticks and triggers sent to your console or PC look more analog.",
         "confidence": "official",
@@ -1286,20 +1348,14 @@
       "feel": [],
       "guidance": [
         {
-          "text": "Destiny 2: the public Game Settings copy doesn't list SAB as required, so Dialed leaves SAB off and skips its checklist.",
-          "confidence": "reasoned",
+          "text": "XIM's per-game list of game settings says which games need SAB: those entries have an 'Input Requirements' line. SAB is off by default.",
+          "confidence": "official",
           "citations": [
             {
               "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
+              "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
               "quote": "Input Requirements: This game has additional input requirements that must be observed in order to play. With a XIM MATRIX, it is required that Simulate Analog Behavior (SAB) be enabled.",
-              "note": "How the page marks games that need SAB. Destiny 2's entry has no such line."
-            },
-            {
-              "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
-              "quote": "ADS Sensitivity Modifier: 1.5",
-              "note": "A line from Destiny 2's entry. The entry lists only in-game values: no Input Requirements line and no Custom In-Game Settings line."
+              "note": "From the Apex Legends (ALC) entry, one of the entries that require SAB."
             },
             {
               "source": "xim-guide",
@@ -1307,8 +1363,7 @@
               "quote": "By default, these values are 0%."
             }
           ],
-          "reasoning": "That page marks each game that needs SAB with an \"Input Requirements\" line. Destiny 2's entry has none. SAB is off by default, so nothing needs changing.",
-          "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen). Game requirements can change, so re-check if XIM's list changes."
+          "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
         },
         {
           "text": "If a game does need SAB, every checklist item must be right. XIM asks you not to report compliance issues unless you followed every item exactly.",
@@ -1673,11 +1728,6 @@
               "quote": "Modern shooters can have the ability to customize ADS transition times. If you can, change it to immediate and remove any delay automatically added in their Configs."
             }
           ]
-        },
-        {
-          "text": "Destiny 2: we found no source saying whether its Config gets a delay automatically, or whether the game's ADS transition can be made immediate.",
-          "confidence": "gap",
-          "citations": []
         }
       ],
       "aimStyles": [
@@ -1697,7 +1747,32 @@
       "notToBeConfusedWith": [
         {
           "name": "Activation (bindings)",
-          "note": "A binding's Activation setting (Active, Hip-only, ADS-only, Inactive) decides when that binding runs. The delay sits under Activation but is a separate setting."
+          "statement": {
+            "text": "A binding's Activation setting decides when that binding runs: always (Active), only in Hip, only in ADS, or never (Inactive). The delay sits under Activation but is a separate setting.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Activation/#activation-states",
+                "quote": "Active: Binding is always active (regardless of aim mode)"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Activation/#activation-states",
+                "quote": "Hip-only: Binding is enabled only when hip aiming"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Activation/#activation-states",
+                "quote": "ADS-only: Binding is enabled only when aiming down sight"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Activation/#activation-states",
+                "quote": "Inactive: Binding is disabled"
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -1750,38 +1825,22 @@
         }
       ],
       "feel": [],
-      "guidance": [
-        {
-          "text": "Destiny 2: expect no Sight Modifier. It needs Custom sync, and we found no sign that Destiny 2 supports Custom.",
-          "confidence": "reasoned",
-          "citations": [
-            {
-              "source": "xim-guide",
-              "url": "https://guide.xim.tech/Aim-Settings/#sight-modifiers",
-              "quote": "If you are using Custom Game Settings, you may have a Sight Modifier setting depending on your current aiming sources."
-            },
-            {
-              "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
-              "quote": "This game supports Custom In-Game Settings. Setting values in green can be customized when using this feature.",
-              "note": "How the page marks games that support Custom. Destiny 2's entry has no such line."
-            },
-            {
-              "source": "xim-game-settings",
-              "url": "https://community.xim.tech/pub/xim-game-settings",
-              "quote": "ADS Sensitivity Modifier: 1.5",
-              "note": "A line from Destiny 2's entry. The entry lists only in-game values: no Input Requirements line and no Custom In-Game Settings line."
-            }
-          ],
-          "reasoning": "The guide offers the setting only with Custom Game Settings. The public Game Settings copy doesn't mark Destiny 2 as supporting Custom.",
-          "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
-        }
-      ],
+      "guidance": [],
       "aimStyles": [],
       "notToBeConfusedWith": [
         {
           "name": "Sight Override (Smart Action)",
-          "note": "An action that temporarily changes the sight of enabled weapon groups. The change is not saved."
+          "statement": {
+            "text": "A Smart Action that overrides the sight of enabled weapon groups. The override is not saved. It is not the Sight Modifier setting.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
+                "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+              }
+            ]
+          }
         },
         {
           "name": "Modify Aim Sensitivity",
@@ -2052,7 +2111,22 @@
         },
         {
           "name": "Global Settings",
-          "note": "Device-wide settings that apply whatever Config is loaded."
+          "statement": {
+            "text": "Device-wide settings that apply whatever Config is loaded. Open them from the vertical \"...\" menu.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Global-Settings/#global-settings",
+                "quote": "XIM MATRIX has several settings that are global (not per-Config)."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Global-Settings/#global-settings",
+                "quote": "To access these settings, press the vertical \"...\" and select Global Settings."
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -2061,7 +2135,10 @@
         "navigate-mode",
         "game-settings-sync",
         "output-type",
-        "smart-translation"
+        "smart-translation",
+        "rumble-triggers",
+        "warning-lights",
+        "firmware"
       ]
     },
     {
@@ -2230,7 +2307,22 @@
         },
         {
           "name": "Input Modifiers",
-          "note": "Button combos that activate other bindings only while held. Not groups."
+          "statement": {
+            "text": "Button combinations that activate other bindings, only while they are held. They reuse buttons; they are not groups.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Input-Modifiers/#input-modifiers",
+                "quote": "Input Modifiers are a convenient way to expand the set of usable buttons of your input devices by allowing the creation of button combinations to activate bindings."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Input-Modifiers/#assign-a-modifier",
+                "quote": "Bindings with modifiers are only active when they are held. They are meant to be active temporarily to quickly perform a function."
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -2238,7 +2330,8 @@
         "load-config",
         "config",
         "modify-aim-sensitivity",
-        "sight-modifiers"
+        "sight-modifiers",
+        "sync-custom"
       ]
     },
     {
@@ -2386,11 +2479,6 @@
               "quote": "There will be cases where the game you are playing uses the same pattern for all weapons. If this is the case, you can still leverage rumble triggers by using it ensure your current selected loadout is synchronized by connecting your rumble trigger to a cycle group reset action."
             }
           ]
-        },
-        {
-          "text": "Destiny 2: no source we could read says whether its weapons have distinct rumble patterns.",
-          "confidence": "gap",
-          "citations": []
         }
       ],
       "aimStyles": [
@@ -2421,7 +2509,17 @@
         },
         {
           "name": "Rumble (Config option)",
-          "note": "A Config option to pass rumble to your gamepad. It does not run bindings."
+          "statement": {
+            "text": "A Config option that turns rumble on for a gamepad you use, on Xbox and PS4 only. It doesn't run bindings.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Identity/#additional-options",
+                "quote": "Select if you want rumble enabled if you are using a gamepad (only available for Xbox and PS4)"
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -2556,7 +2654,17 @@
         },
         {
           "name": "Modify Right Stick Sensitivity",
-          "note": "A different action that reduces right thumbstick sensitivity."
+          "statement": {
+            "text": "A different Smart Action that reduces the right thumbstick's sensitivity. Modify Aim Sensitivity changes your aim sensitivity.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-right-stick-sensitivity",
+                "quote": "Reduce right thumbstick sensitivity."
+              }
+            ]
+          }
         },
         {
           "name": "Sight Modifier",
@@ -2741,7 +2849,22 @@
         },
         {
           "name": "Pasting Configs",
-          "note": "Pastes a Config code over all or part of the current Config. It edits a Config; it does not load a different one."
+          "statement": {
+            "text": "Pastes a Config code over all or part of the current Config: all of it, only the aim settings or only the mappings. It edits a Config; it does not load a different one.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Identity/#pasting-configs",
+                "quote": "Normally when you receive a Config such as from Config Cloud, you simply use New Config to create it. However, there may be time where you'd like to paste over all of part of your current Config."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Identity/#pasting-configs",
+                "quote": "You will be asked how much of the Config you'd like to use: all of it, only aim settings, only mappings."
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -2880,7 +3003,8 @@
         "load-config",
         "config",
         "output-type",
-        "light-notifications"
+        "light-notifications",
+        "motion-aim"
       ]
     },
     {
@@ -3111,7 +3235,27 @@
         },
         {
           "name": "Breathing light",
-          "note": "The slow breathing light shows the loaded Config's color (white in Navigate Mode). Global Settings can turn off the breathing animation and set brightness."
+          "statement": {
+            "text": "The slow breathing light shows the loaded Config's color, and white while Navigate Mode is on. In Global Settings you can turn off the breathing animation and adjust the light's brightness.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Dashboard/#identity",
+                "quote": "The Config's name, game box art, game platform, and color you chose for it are displayed. The color is also displayed on your XIM MATRIX with a \"breathing\" light pattern."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Navigate-Mode/#enabling-navigate-mode",
+                "quote": "Manager will let you know when you are in Navigate Mode and XIM MATRIX's light will be displaying a white breathing sequence."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Global-Settings/#help-tips-and-light-control",
+                "quote": "You can also disable your XIM MATRIX light breathing animations and adjust the light's brightness."
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -3119,7 +3263,8 @@
         "max-turn-speed",
         "game-roles",
         "aiming-modes",
-        "velocity-mapping"
+        "velocity-mapping",
+        "navigate-mode"
       ]
     },
     {
@@ -3278,7 +3423,8 @@
         "light-notifications",
         "firmware",
         "config",
-        "output-type"
+        "output-type",
+        "polling-rate"
       ]
     },
     {
@@ -3391,7 +3537,7 @@
               "quote": "SAB is dependent on your mouse DPI being correct."
             }
           ],
-          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. The public Game Settings copy does not list SAB as required for Destiny 2."
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
         }
       ],
       "aimStyles": [],
@@ -3543,8 +3689,19 @@
           "note": "A Standard smoothing setting for fast aim. Not the mouse response rate."
         },
         {
-          "name": "Standard update rate",
-          "note": "How fast the MATRIX updates your console or PC (the SAB page says keep it at Standard). Not your mouse polling rate."
+          "name": "Update rate (MATRIX output)",
+          "statement": {
+            "text": "How fast the MATRIX updates your console or PC, set in the Config's output connection mode. The guide's SAB checklist says to keep it at Standard, the default. It is not your mouse's polling rate.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#standard-update-rate-only",
+                "quote": "When configuring the output connection mode of your Config, you can choose how fast you want your XIM MATRIX to update your console. Keep this value at \"Standard\" (which is default)."
+              }
+            ],
+            "caveat": "For what XIM Central's 2023 videos call the MATRIX's \"polling rate\", see the update rate in Dialed's foundation settings."
+          }
         }
       ],
       "related": [
@@ -3685,7 +3842,22 @@
         },
         {
           "name": "Games database",
-          "note": "Updated game support that Manager downloads (down-arrow icon). Separate from flashing firmware."
+          "statement": {
+            "text": "The game support Manager downloads: a down-arrow icon appears when an update is available, and Global Settings can force a download. Separate from flashing firmware.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Dashboard/#notifications",
+                "quote": "New Games Database Available: When updated game support is available for your XIM MATRIX, you will see a down arrow icon appear. Press it to download the database."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Global-Settings/#force-games-download",
+                "quote": "Manager notifies you of game updates. However, if you want to force a games database download, you can do that here."
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -3772,14 +3944,30 @@
         },
         {
           "name": "Right Stick Magnitude",
-          "note": "Sets the right stick's deflection directly and doesn't blend with aim."
+          "statement": {
+            "text": "A Smart Action that sets the right stick's deflection directly, for example for radial menus. It doesn't blend with your aim.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-magnitude",
+                "quote": "Set right thumbstick deflection at specified value. Use in scenarios such as automatic radial menu selection. (Use with Right Stick Angle.)"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-magnitude",
+                "quote": "This action does not integrate with aim. Use Aim Magnitude for reticle modification."
+              }
+            ]
+          }
         }
       ],
       "related": [
         "aim-angle-action",
         "behavior-variance",
         "quantization-magnitude",
-        "modify-aim-sensitivity"
+        "modify-aim-sensitivity",
+        "quantization"
       ]
     },
     {
@@ -3843,13 +4031,29 @@
         },
         {
           "name": "Right Stick Angle",
-          "note": "Sets the right stick's angle directly and doesn't blend with aim."
+          "statement": {
+            "text": "A Smart Action that sets the right stick's angle directly, for example for radial menus. It doesn't blend with your aim.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-angle",
+                "quote": "Set right thumbstick angle at specified value. Use in scenarios such as automatic radial menu selection. (Use with Right Stick Magnitude.)"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-angle",
+                "quote": "This action does not integrate with aim. Use Aim Angle for reticle modification."
+              }
+            ]
+          }
         }
       ],
       "related": [
         "aim-magnitude-action",
         "behavior-variance",
-        "quantization-angle"
+        "quantization-angle",
+        "quantization"
       ]
     },
     {
@@ -4002,7 +4206,7 @@
               "quote": "Do not disable variance on bindings"
             }
           ],
-          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. The public Game Settings copy does not list SAB as required for Destiny 2."
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
         }
       ],
       "aimStyles": [],
@@ -4021,18 +4225,54 @@
       "related": [
         "simulate-analog-behavior",
         "aim-magnitude-action",
-        "aim-angle-action"
+        "aim-angle-action",
+        "quantization",
+        "quantization-magnitude",
+        "quantization-angle"
       ]
     }
   ],
   "nameNotes": [
     {
       "name": "Sub-Configs",
-      "note": "An idea from older XIM devices: Configs within a Config. On the MATRIX, Smart Actions and groups replace most of it, and the Config loading actions can jump to another Config and back. See Load Config."
+      "termId": "load-config",
+      "statement": {
+        "text": "An idea from earlier XIM devices: Configs within a Config. On the MATRIX, Smart Actions and groups replace most of it, and the Config loading actions can jump to another Config and back. See Load Config.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+            "quote": "Prior XIM devices had the concept of sub-Configs which can be thought of Configs within your Config."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+            "quote": "While a majority of the benefit of sub-Configs have been replaced by Smart Actions and groups, it can still be useful to quickly jump to a Config and back (\"chaining\") if there are significant changes in gameplay that occur that justify it."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+            "quote": "Use the config loading actions for this."
+          }
+        ]
+      }
     },
     {
       "name": "Recoil Triggers",
-      "note": "The guide uses this name once on the Rumble Triggers page (\"Recoil Triggers are only supported when your XIM MATRIX outputs as a controller\"). It appears to mean Rumble Triggers; there is no separate setting by that name."
+      "termId": "rumble-triggers",
+      "statement": {
+        "text": "The guide uses this name once, on its Rumble Triggers page. It appears to mean Rumble Triggers; the guide has no separate setting by that name.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Rumble-Triggers/#rumble-triggers",
+            "quote": "Recoil Triggers are only supported when your XIM MATRIX outputs as a controller."
+          }
+        ],
+        "reasoning": "The sentence is a note in the Rumble Triggers introduction, right after the guide explains what Rumble Triggers are. No other page of the guide uses the name."
+      }
     }
   ]
 }

@@ -16,7 +16,7 @@ import {
   type KnowledgeFileName,
   type RawKnowledgeFiles,
 } from './index';
-import { collectCitations, findIntegrityProblems, formatProblem } from './integrity';
+import { EASING_CAVEAT, collectCitations, findIntegrityProblems, formatProblem, givesEasingDirection } from './integrity';
 
 const knowledgeDir = fileURLToPath(new URL('.', import.meta.url));
 const fileNames = Object.keys(KNOWLEDGE_SCHEMAS) as KnowledgeFileName[];
@@ -71,6 +71,10 @@ function official(text: string, url = `${GUIDE}#smoothing`, source = 'xim-guide'
   return { text, confidence: 'official', citations: [{ source, url, quote: text }] };
 }
 
+function gap(text: string) {
+  return { text, confidence: 'gap', citations: [] };
+}
+
 function validRaw(): RawKnowledgeFiles {
   return {
     'sources.json': {
@@ -100,6 +104,12 @@ function validRaw(): RawKnowledgeFiles {
       name: 'Destiny 2',
       requiredSettings: [],
       notes: [{ id: 'sync', title: 'Sync', statement: official('Use Standard sync.') }],
+      preferences: [
+        { input: 'feel', termIds: ['precision'], statement: official('Try each preset.') },
+        { input: 'sensitivity', statement: gap('No cm/360 range.') },
+        { input: 'focus', statement: gap('No PvP/PvE difference.') },
+        { input: 'style', statement: gap('No style difference.') },
+      ],
     },
     'destiny2/weapons.json': {
       slots: [
@@ -112,7 +122,13 @@ function validRaw(): RawKnowledgeFiles {
           id: 'pulse-rifle',
           name: 'Pulse Rifle',
           aimStyle: 'tracking',
-          mapping: { text: 'Bursts need tracking.', confidence: 'reasoned', citations: [], reasoning: 'Sustained fire.' },
+          mapping: {
+            text: 'Bursts need tracking.',
+            confidence: 'reasoned',
+            citations: [],
+            reasoning: 'Sustained fire.',
+            caveat: 'No source covers weapons.',
+          },
         },
       ],
     },
@@ -122,12 +138,22 @@ function validRaw(): RawKnowledgeFiles {
           id: 'tracking',
           name: 'Tracking',
           description: 'Hold on target.',
-          favours: { text: 'Stable micro-corrections.', confidence: 'reasoned', citations: [], reasoning: 'Because.' },
+          favours: {
+            text: 'Stable micro-corrections.',
+            confidence: 'reasoned',
+            citations: [{ source: 'xim-guide', url: `${GUIDE}#standard`, quote: 'Controls fine aim behavior' }],
+            reasoning: 'Because.',
+          },
           levers: [
             {
               termId: 'precision',
               direction: 'raise',
-              statement: { text: 'Raise Precision.', confidence: 'reasoned', citations: [], reasoning: 'Fine aim.' },
+              statement: {
+                text: 'Raise Precision.',
+                confidence: 'reasoned',
+                citations: [{ source: 'xim-guide', url: `${GUIDE}#standard`, quote: 'Controls fine aim behavior' }],
+                reasoning: 'Fine aim.',
+              },
             },
           ],
         },
@@ -160,6 +186,16 @@ function validRaw(): RawKnowledgeFiles {
           termIds: ['precision'],
         },
       ],
+      settings: [
+        {
+          id: 'force-games-download',
+          name: 'Force Games Download',
+          scope: 'global',
+          inLayer2: true,
+          statements: [official('Force a games database download.')],
+          termIds: ['check-rate'],
+        },
+      ],
     },
     'matrix/glossary-aim.json': {
       terms: [
@@ -170,10 +206,13 @@ function validRaw(): RawKnowledgeFiles {
           summary: 'Fine aim behavior.',
           definition: official('Precision controls fine aim behavior.'),
           related: ['check-rate'],
-          notToBeConfusedWith: [{ name: 'Check Rate', termId: 'check-rate', note: 'Different thing.' }],
+          notToBeConfusedWith: [
+            { name: 'Check Rate', termId: 'check-rate', note: 'Different thing.' },
+            { name: 'Update rate', statement: official('Keep the update rate at Standard.') },
+          ],
         },
       ],
-      nameNotes: [{ name: 'Steady Aim', note: 'An XIM APEX setting.' }],
+      nameNotes: [{ name: 'Steady Aim', termId: 'precision', statement: gap('Not a MATRIX setting.') }],
     },
     'matrix/glossary-setup.json': {
       terms: [
@@ -183,6 +222,7 @@ function validRaw(): RawKnowledgeFiles {
           category: 'diagnostics',
           summary: 'Measures polling rate.',
           definition: official('Check Rate measures your mouse.'),
+          related: ['precision'],
         },
       ],
       nameNotes: [],
@@ -193,9 +233,11 @@ function validRaw(): RawKnowledgeFiles {
           id: 'jitter',
           label: 'Jitter on small movements',
           termIds: ['precision'],
+          checkIds: ['check-dpi'],
           mapping: official('Smoothing counters hand jitter.'),
         },
       ],
+      guardrail: official('Change one thing at a time.'),
     },
   };
 }
@@ -284,6 +326,103 @@ describe('integrity checks', () => {
     expect(problemsFor(raw)).toContainEqual(expect.stringContaining('without "matrixEra": true'));
   });
 
+  it('flag one-way related links', () => {
+    const raw = withFile('matrix/glossary-setup.json', (f: any) => {
+      f.terms[0].related = [];
+    });
+    expect(problemsFor(raw)).toContainEqual(expect.stringContaining(`related links to "check-rate", but "check-rate" doesn't link back`));
+  });
+
+  it('flag notToBeConfusedWith entries with neither a termId nor a statement', () => {
+    const raw = withFile('matrix/glossary-aim.json', (f: any) => {
+      f.terms[0].notToBeConfusedWith[1] = { name: 'Update rate', note: 'Keep it at Standard.' };
+    });
+    expect(problemsFor(raw)).toContainEqual(expect.stringContaining('("Update rate") has no termId, so it needs a statement'));
+  });
+
+  it('flag unknown checkIds, nameNote termIds and setting termIds', () => {
+    const raw = structuredClone(validRaw()) as any;
+    raw['matrix/symptoms.json'].symptoms[0].checkIds = ['ghost-check'];
+    raw['matrix/glossary-aim.json'].nameNotes[0].termId = 'ghost-term';
+    raw['matrix/foundation.json'].settings[0].termIds = ['ghost-setting'];
+    const problems = problemsFor(raw as RawKnowledgeFiles).join('\n');
+    expect(problems).toContain('unknown foundation check "ghost-check"');
+    expect(problems).toContain('"ghost-term"');
+    expect(problems).toContain('"ghost-setting"');
+  });
+
+  it('flag profile preference inputs the game file says nothing about', () => {
+    const raw = withFile('destiny2/game.json', (f: any) => {
+      f.preferences = (f.preferences as { input: string }[]).filter((p) => p.input !== 'style');
+    });
+    expect(problemsFor(raw)).toContainEqual(expect.stringContaining('no preferences entry for the profile input "style"'));
+  });
+
+  it('accept archetypes with no aim style', () => {
+    const raw = withFile('destiny2/weapons.json', (f: any) => {
+      (f.archetypes as unknown[]).push({ id: 'sword', name: 'Sword', aimStyle: null, mapping: gap('No aim style applies.') });
+    });
+    expect(problemsFor(raw)).toEqual([]);
+  });
+
+  it('flag reasoned statements with no citations and no caveat', () => {
+    const raw = withFile('destiny2/weapons.json', (f: any) => {
+      delete f.archetypes[0].mapping.caveat;
+    });
+    expect(problemsFor(raw)).toContainEqual(expect.stringContaining('cites no definitions, so it needs a caveat'));
+  });
+
+  it('flag contested statements that cite only one source', () => {
+    const raw = withFile('matrix/expert-notes.json', (f: any) => {
+      f.notes[0].statement = {
+        text: 'Two views.',
+        confidence: 'contested',
+        citations: [
+          { source: 'xim-guide', url: GUIDE, quote: 'one' },
+          { source: 'xim-guide', url: GUIDE, quote: 'two' },
+        ],
+      };
+    });
+    expect(problemsFor(raw)).toContainEqual(expect.stringContaining('at least two different sources'));
+  });
+
+  it('flag matrixEra on a source that is not expert', () => {
+    const raw = withFile('matrix/glossary-aim.json', (f: any) => {
+      f.terms[0].definition.citations[0].matrixEra = true;
+    });
+    expect(problemsFor(raw)).toContainEqual(expect.stringContaining('"matrixEra", which only applies to expert sources'));
+  });
+
+  it('flag Easing directions without the Easing caveat', () => {
+    const lever = (caveat?: string) => ({
+      termId: 'precision',
+      direction: 'lower',
+      statement: {
+        text: 'Lower Easing for a faster start.',
+        confidence: 'reasoned',
+        citations: [],
+        reasoning: 'From rest.',
+        ...(caveat ? { caveat } : {}),
+      },
+    });
+    const without = withFile('matrix/aim-styles.json', (f: any) => {
+      (f.styles[0].levers as unknown[]).push(lever());
+    });
+    expect(problemsFor(without)).toContainEqual(expect.stringContaining('gives an Easing direction without the Easing caveat'));
+
+    const withCaveat = withFile('matrix/aim-styles.json', (f: any) => {
+      (f.styles[0].levers as unknown[]).push(lever(`${EASING_CAVEAT} Assumes Standard smoothing.`));
+    });
+    expect(problemsFor(withCaveat)).toEqual([]);
+  });
+
+  it('tell an Easing direction from a plain mention of Easing', () => {
+    const s = (text: string, reasoning?: string) => ({ text, confidence: 'reasoned' as const, citations: [], reasoning });
+    expect(givesEasingDirection(s('Raise Easing a little.'))).toBe(true);
+    expect(givesEasingDirection(s('A start from rest.', 'Higher Easing values give a smoother start.'))).toBe(true);
+    expect(givesEasingDirection(s('Easing handles the start from rest. Raise Precision for jitter.'))).toBe(false);
+  });
+
   it('find citations in every kind of entry', () => {
     const { files } = parseKnowledgeFiles(validRaw());
     const places = collectCitations(files).map((c) => `${c.file} ${c.entryId} ${c.field}`);
@@ -295,6 +434,10 @@ describe('integrity checks', () => {
         'matrix/symptoms.json jitter mapping',
         'matrix/expert-notes.json central-precision statement',
         'destiny2/game.json sync notes.statement',
+        'destiny2/game.json preference:feel preferences.0.statement',
+        'matrix/glossary-aim.json precision notToBeConfusedWith.1.statement',
+        'matrix/foundation.json force-games-download settings.statements.0',
+        'matrix/symptoms.json (guardrail) guardrail',
       ]),
     );
   });
@@ -325,6 +468,8 @@ describe('loader', () => {
     const kb = mergeKnowledge(parseKnowledgeFiles(validRaw()).files);
     expect(kb.glossary.terms.map((t) => t.id)).toEqual(['precision', 'check-rate']);
     expect(kb.glossary.nameNotes).toHaveLength(1);
+    expect(kb.foundationSettings.map((x) => x.id)).toEqual(['force-games-download']);
+    expect(kb.guardrail.text).toBe('Change one thing at a time.');
 
     const find = createLookups(kb);
     expect(find.termById('check-rate')?.name).toBe('Check Rate');

@@ -20,8 +20,17 @@ describe('Profile screen', () => {
     expect(within(platform).getByRole('radio', { name: 'PC' })).not.toBeChecked();
 
     const output = screen.getByRole('group', { name: 'Output type' });
-    expect(output).toHaveTextContent('Controller output');
-    expect(output).toHaveTextContent(/controller output only/);
+    expect(output).toHaveTextContent('Pick a platform first.');
+    expect(output).toHaveAccessibleDescription('Controller output only; PC mouse-and-keyboard output is out of scope.');
+
+    const aim = screen.getByRole('group', { name: 'What you aim with' });
+    const sources = within(aim).getAllByRole('checkbox');
+    expect(sources.map((c) => c.closest('label')?.querySelector('.choice-title')?.textContent)).toEqual([
+      'Mouse',
+      'Gyro',
+      'Thumbstick',
+    ]);
+    expect(sources.map((c) => (c as HTMLInputElement).checked)).toEqual([true, false, false]);
 
     expect(screen.getByRole('textbox', { name: 'Mouse model' })).toHaveValue('');
     expect(screen.getByRole('textbox', { name: 'Mouse DPI' })).toHaveValue('');
@@ -39,13 +48,59 @@ describe('Profile screen', () => {
 
     for (const [group, options] of [
       ['Main focus', ['Crucible', 'PvE', 'Both']],
-      ['How you play', ['Aggressive', 'Balanced', 'Precise']],
+      ['How you play', ['Aggressive', 'Balanced', 'Deliberate']],
       ['Snappy or smooth', ['Snappy', 'Lean snappy', 'Middle', 'Lean smooth', 'Smooth']],
-      ['Sensitivity', ['Low', 'Medium', 'High']],
+      ['Sensitivity', ['Slower', 'Medium', 'Faster']],
     ] as const) {
       const radios = within(screen.getByRole('group', { name: group })).getAllByRole('radio');
       expect(radios.map((r) => r.closest('label')?.textContent)).toEqual(options);
     }
+    // Hints keep the preference names apart from the settings with similar names.
+    expect(screen.getByRole('group', { name: 'Sensitivity' })).toHaveAccessibleDescription(/Faster means a lower cm\/360/);
+    expect(screen.getByRole('group', { name: 'Snappy or smooth' })).toHaveAccessibleDescription(/isn’t the Smooth or Smoothing setting/);
+    expect(screen.getByRole('group', { name: 'How you play' })).toHaveAccessibleDescription(/isn’t the Precision setting/);
+  });
+
+  it('offers the PC output types, and fixes the Xbox one', async () => {
+    const { user, storage } = renderApp({ path: '/profile' });
+
+    await user.click(screen.getByRole('radio', { name: 'PC' }));
+    const output = screen.getByRole('group', { name: 'Output type' });
+    const choices = within(output).getAllByRole('radio');
+    expect(choices.map((c) => c.closest('label')?.querySelector('.choice-title')?.textContent)).toEqual([
+      'XInput controller',
+      'Xbox controller',
+      'DualSense controller',
+    ]);
+    expect(stored(storage).profile.outputType).toBeNull();
+
+    await user.click(within(output).getByRole('radio', { name: /DualSense controller/ }));
+    expect(stored(storage).profile.outputType).toBe('pc-dualsense');
+
+    // Xbox has a single output type, so switching platform sets it.
+    await user.click(screen.getByRole('radio', { name: 'Xbox' }));
+    expect(stored(storage).profile.outputType).toBe('xbox-controller');
+    expect(screen.getByRole('group', { name: 'Output type' })).toHaveTextContent('Controller (Xbox, PS4)');
+    expect(within(screen.getByRole('group', { name: 'Output type' })).queryByRole('radio')).not.toBeInTheDocument();
+
+    // Back on PC, the Xbox output type no longer fits, so it is cleared.
+    await user.click(screen.getByRole('radio', { name: 'PC' }));
+    expect(stored(storage).profile.outputType).toBeNull();
+  });
+
+  it('records what the player aims with, keeping at least one source', async () => {
+    const { user, storage } = renderApp({ path: '/profile' });
+    const aim = screen.getByRole('group', { name: 'What you aim with' });
+    const box = (name: RegExp) => within(aim).getByRole('checkbox', { name });
+
+    expect(box(/^Mouse/)).toBeDisabled(); // the only one picked
+    await user.click(box(/^Gyro/));
+    expect(stored(storage).profile.aimingSources).toEqual(['mouse', 'gyro']);
+    expect(box(/^Mouse/)).toBeEnabled();
+
+    await user.click(box(/^Mouse/));
+    expect(stored(storage).profile.aimingSources).toEqual(['gyro']);
+    expect(box(/^Gyro/)).toBeDisabled();
   });
 
   it('saves each change straight away', async () => {
@@ -58,9 +113,9 @@ describe('Profile screen', () => {
     await user.type(screen.getByRole('textbox', { name: 'Mouse model' }), 'Test Mouse');
     await user.selectOptions(screen.getByRole('combobox', { name: 'Mouse polling rate' }), '4000');
     await user.click(screen.getByRole('radio', { name: 'Crucible' }));
-    await user.click(screen.getByRole('radio', { name: 'Precise' }));
+    await user.click(screen.getByRole('radio', { name: 'Deliberate' }));
     await user.click(screen.getByRole('radio', { name: 'Lean smooth' }));
-    await user.click(screen.getByRole('radio', { name: 'High' }));
+    await user.click(screen.getByRole('radio', { name: 'Faster' }));
 
     expect(stored(storage).profile).toEqual({
       ...defaultProfile(),
@@ -126,6 +181,7 @@ describe('Profile screen', () => {
     expect(screen.getByRole('textbox', { name: 'Mouse DPI' })).toHaveValue('800');
     expect(screen.getByRole('combobox', { name: 'Mouse polling rate' })).toHaveValue('1000');
     expect(screen.getByRole('radio', { name: 'Snappy' })).toBeChecked();
+    expect(screen.getByRole('group', { name: 'Output type' })).toHaveTextContent('Controller (Xbox, PS4)');
   });
 
   it('downloads a backup of everything saved', async () => {

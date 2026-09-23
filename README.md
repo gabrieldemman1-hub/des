@@ -56,7 +56,8 @@ To try the production build on the phone: `npm run build && npm run preview -- -
 | `npm test` | All tests once (Vitest): knowledge base, storage, loadout rules, screens |
 | `npm run lint` | ESLint (type-aware) |
 | `npm run typecheck` | TypeScript 7 type check of the app, knowledge base, scripts and configs |
-| `npm run verify:citations` | Fetches every cited page and checks each quote is on it (manual, needs network) |
+| `npm run verify:citations` | Fetches every cited page and checks each quote and #anchor is on it (manual, needs network) |
+| `npm run check:release` | Release gate: fails while statements still wait on the in-game Easing test (manual, not in CI) |
 | `npm run icons` | Regenerates the PNG icons from the SVGs in `app/icons/` |
 
 CI (`.github/workflows/ci.yml`) runs `npm ci`, lint, typecheck, test and build on Node 22 for
@@ -103,14 +104,26 @@ Everything the app says about the MATRIX or Destiny 2 comes from the JSON files 
   must be on one of that source's `hosts`. Adding a source requires a logged decision
   (CONCEPT.md §8).
 - **Every statement carries a confidence label:** `official` and `expert` need at least one
-  citation, `contested` needs at least two (both positions), `reasoned` must explain its
-  `reasoning` (a direction, never an invented number), and `gap` has no citations.
+  citation, `contested` needs at least two from different sources (both positions), `reasoned`
+  must explain its `reasoning` (a direction, never an invented number) and cite the
+  definitions it relies on, or say in its `caveat` why it can't (e.g. the weapon mappings:
+  no whitelisted source covers Destiny 2 weapons), and `gap` has no citations.
+- **The Easing caveat.** Any statement that gives an Easing direction carries, word for word,
+  the caveat in `EASING_CAVEAT` (`knowledge/integrity.ts`). `npm run check:release` fails while
+  any statement still carries it: the direction is confirmed in-game before Dialed ships.
 - **XIM MATRIX-era only.** Citations of the `expert` source (XIM Central) must set
-  `"matrixEra": true`; nothing written for XIM APEX or XIM4.
+  `"matrixEra": true`, and only those may set it; nothing written for XIM APEX or XIM4.
+- **Explanations are sourced too.** A "not to be confused with" entry that doesn't point at
+  another term (`termId`) carries its own `statement`, and every name note is a `statement`.
 - **Quotes are verbatim** from the cited page (checked by `npm run verify:citations`).
 - **Ids are kebab-case and unique** per collection (the two glossary files count as one), and
-  every reference (`termIds`, `related`, `notToBeConfusedWith.termId`, `symptomIds`, lever
-  `termId`, archetype `aimStyle`) must point at something that exists.
+  every reference (`termIds`, `related`, `notToBeConfusedWith.termId`, name note `termId`,
+  `symptomIds`, symptom `checkIds`, lever `termId`, archetype `aimStyle`) must point at
+  something that exists. `related` links go both ways.
+- **The glossary is game-agnostic.** Destiny 2 guidance lives in `knowledge/destiny2/`: game
+  notes, and `preferences` (what each profile preference can change, with a `gap` statement
+  where no source lets it change anything). The setup checks name Destiny 2 only where the
+  check is about the game itself.
 - **Every JSON file is registered** in `knowledge/index.ts` with its schema; a test fails if a
   file in `knowledge/` isn't.
 
@@ -130,7 +143,8 @@ It collects every citation in `knowledge/**/*.json`, fetches each unique URL onc
 removed), turns the page into text (drops `<script>` and `<style>`, strips tags, decodes HTML
 entities, and includes description meta tags), normalises both the page and the quote (curly
 quotes and apostrophes to straight ones, non-breaking spaces to spaces, whitespace collapsed),
-and checks the quote appears on the page. It prints each failure (file, entry id, URL, quote,
+and checks the quote appears on the page. A cited `#anchor` must exist on the page too (an
+`id`, or a `name` on an `<a>` element, which the forum pages use). It prints each failure (file, entry id, URL, quote,
 reason) and a summary, and exits with code 1 if anything fails.
 
 It is a manual check, not part of CI, because it depends on third-party sites. Requests honour
@@ -140,7 +154,11 @@ It is a manual check, not part of CI, because it depends on third-party sites. R
 ## Data on the phone
 
 The profile and loadouts are stored in `localStorage` under one versioned key, `dialed:v1`,
-and validated with zod whenever they're read. If storage is blocked, the saved data is corrupt,
+and validated with zod whenever they're read. Stored data and backups carry a `version`; data
+from an older version is brought up to date step by step (`MIGRATIONS` in
+`app/src/state/storage.ts`), so a schema change never makes old backups unrestorable. The
+player's current Config values (Flow B's starting point) aren't stored yet: they arrive with
+Flow B, together with a version bump and its migration step. If storage is blocked, the saved data is corrupt,
 or it doesn't match the schema, the app starts from defaults (keeping whatever is still valid),
 shows a small notice, and copies the unreadable data aside to `dialed:v1:unreadable` so it
 isn't lost. Backups are plain JSON files, validated before anything is replaced.

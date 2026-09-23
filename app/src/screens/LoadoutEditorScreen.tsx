@@ -5,7 +5,7 @@ import { AimStyleSummary } from '../components/AimStyleSummary';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { WeaponListMissing } from '../components/EmptyState';
 import { Screen } from '../components/Screen';
-import { AIM_STYLE_NAMES } from '../content/labels';
+import { AIM_STYLE_NAMES, NO_AIM_STYLE } from '../content/labels';
 import { useData } from '../state/data-context';
 import { useKnowledge } from '../state/knowledge-context';
 import {
@@ -21,13 +21,14 @@ import {
 import { MAX_LOADOUT_NAME_LENGTH, type Loadout } from '../state/schema';
 import { useCloseEditor } from './loadout-navigation';
 
-const STYLE_ORDER: AimStyleId[] = ['tracking', 'snap', 'precision-hold'];
+/** Option groups in the weapon pickers; weapons with no aim style (e.g. swords) come last. */
+const STYLE_ORDER: (AimStyleId | null)[] = ['tracking', 'snap', 'precision-hold', null];
 
 function useArchetypeGroups() {
   const { kb, aimStyleById } = useKnowledge();
   return STYLE_ORDER.map((style) => ({
-    style,
-    label: aimStyleById(style)?.name ?? AIM_STYLE_NAMES[style],
+    key: style ?? 'none',
+    label: style === null ? NO_AIM_STYLE : (aimStyleById(style)?.name ?? AIM_STYLE_NAMES[style]),
     archetypes: kb.weapons.archetypes.filter((a) => a.aimStyle === style),
   })).filter((group) => group.archetypes.length > 0);
 }
@@ -119,7 +120,7 @@ function LoadoutForm({ loadout }: { loadout?: Loadout }) {
                 <option value="">Empty</option>
                 {unknown && <option value={selected}>{weaponName(selected)}</option>}
                 {groups.map((group) => (
-                  <optgroup key={group.style} label={group.label}>
+                  <optgroup key={group.key} label={group.label}>
                     {group.archetypes.map((a) => (
                       <option key={a.id} value={a.id}>
                         {a.name}

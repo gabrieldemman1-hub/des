@@ -27,23 +27,39 @@ import {
   SymptomsFile,
   WeaponsFile,
 } from './schema';
-import type { AimStyleId, GlossaryTerm, Source, WeaponArchetype, WeaponSlot } from './schema';
+import type { AimStyleId, GlossaryTerm, Source, Statement, WeaponArchetype, WeaponSlot } from './schema';
 
-export type { AimStyleId, Citation, Confidence, GlossaryTerm, Platform, Source, Statement, WeaponArchetype, WeaponSlot } from './schema';
-export { CONFIDENCE_LEVELS } from './schema';
+export type {
+  AimingSource,
+  AimStyleId,
+  Citation,
+  Confidence,
+  GlossaryTerm,
+  OutputType,
+  Platform,
+  PreferenceInput,
+  Source,
+  Statement,
+  WeaponArchetype,
+  WeaponSlot,
+} from './schema';
+export { AIMING_SOURCES, CONFIDENCE_LEVELS, OUTPUT_TYPES, OUTPUT_TYPES_BY_PLATFORM } from './schema';
 
 export type SourcesData = z.infer<typeof SourcesFile>;
 export type GlossaryData = z.infer<typeof GlossaryFile>;
 export type NameNote = GlossaryData['nameNotes'][number];
 export type FoundationData = z.infer<typeof FoundationFile>;
 export type FoundationCheck = FoundationData['checks'][number];
+export type FoundationSetting = FoundationData['settings'][number];
 export type SymptomsData = z.infer<typeof SymptomsFile>;
 export type Symptom = SymptomsData['symptoms'][number];
 export type AimStylesData = z.infer<typeof AimStylesFile>;
 export type AimStyle = AimStylesData['styles'][number];
+export type Lever = AimStyle['levers'][number];
 export type ExpertNotesData = z.infer<typeof ExpertNotesFile>;
 export type ExpertNote = ExpertNotesData['notes'][number];
 export type Destiny2Game = z.infer<typeof Destiny2GameFile>;
+export type Preference = Destiny2Game['preferences'][number];
 export type WeaponsData = z.infer<typeof WeaponsFile>;
 export type SlotInfo = WeaponsData['slots'][number];
 
@@ -83,17 +99,24 @@ const DEFAULT_SLOTS: SlotInfo[] = [
   { id: 'power', name: 'Power' },
 ];
 
+/** Stands in for Flow C's guardrail when symptoms.json fails validation. */
+const MISSING_GUARDRAIL: Statement = {
+  text: 'Change one thing at a time. (The sourced version of this advice is missing from this build.)',
+  confidence: 'gap',
+  citations: [],
+};
+
 /** What a file becomes when it fails validation: valid, and empty. */
 const EMPTY_FILES: ParsedKnowledgeFiles = {
   'sources.json': { sources: [] },
-  'destiny2/game.json': { game: 'destiny-2', name: 'Destiny 2', requiredSettings: [], notes: [] },
+  'destiny2/game.json': { game: 'destiny-2', name: 'Destiny 2', requiredSettings: [], notes: [], preferences: [] },
   'destiny2/weapons.json': { slots: DEFAULT_SLOTS, archetypes: [] },
   'matrix/aim-styles.json': { styles: [] },
   'matrix/expert-notes.json': { notes: [] },
-  'matrix/foundation.json': { checks: [] },
+  'matrix/foundation.json': { checks: [], settings: [] },
   'matrix/glossary-aim.json': { terms: [], nameNotes: [] },
   'matrix/glossary-setup.json': { terms: [], nameNotes: [] },
-  'matrix/symptoms.json': { symptoms: [] },
+  'matrix/symptoms.json': { symptoms: [], guardrail: MISSING_GUARDRAIL },
 };
 
 export interface KnowledgeIssue {
@@ -126,7 +149,11 @@ export interface KnowledgeBase {
   /** glossary-aim.json and glossary-setup.json merged. */
   glossary: { terms: GlossaryTerm[]; nameNotes: NameNote[] };
   foundation: FoundationCheck[];
+  /** Layer 2 inventory: MATRIX settings outside the aim config, in or out of Dialed's setup. */
+  foundationSettings: FoundationSetting[];
   symptoms: Symptom[];
+  /** Flow C's closing guardrail. */
+  guardrail: Statement;
   aimStyles: AimStyle[];
   expertNotes: ExpertNote[];
   game: Destiny2Game;
@@ -144,7 +171,9 @@ export function mergeKnowledge(files: ParsedKnowledgeFiles): KnowledgeBase {
       nameNotes: [...aim.nameNotes, ...setup.nameNotes],
     },
     foundation: files['matrix/foundation.json'].checks,
+    foundationSettings: files['matrix/foundation.json'].settings,
     symptoms: files['matrix/symptoms.json'].symptoms,
+    guardrail: files['matrix/symptoms.json'].guardrail,
     aimStyles: files['matrix/aim-styles.json'].styles,
     expertNotes: files['matrix/expert-notes.json'].notes,
     game: files['destiny2/game.json'],

@@ -139,7 +139,7 @@
       "name": "Precision hold",
       "description": "Lining up one deliberate shot. For example scout rifles, linear fusion rifles and bows.",
       "favours": {
-        "text": "Fine control at low speed, without making the move onto the target feel heavy. The line-up is slow, fine aim (Precision). Getting there is fast aim (Response). These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic smoothing is static (it doesn't adapt to your aim speed), so Classic users get the definitions but not these directions.",
+        "text": "Fine control at low speed without losing turn speed. The line-up is slow, fine aim (Precision). Getting there is fast aim (Response). A custom aiming curve can make slow movements finer while keeping full speed at the top. These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic smoothing is static (it doesn't adapt to your aim speed), so Classic users get the definitions but not these directions.",
         "confidence": "reasoned",
         "citations": [
           {
@@ -161,9 +161,14 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#classic",
             "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+            "quote": "A curve represents how your reticle speed transitions from 0 to 100% velocity (bottom left of the curve to upper right)."
           }
         ],
-        "reasoning": "A deliberate shot is usually a fast move to the target area, then a slow line-up. Precision \"controls fine aim behavior\" and Response \"controls fast aim behavior\". Standard \"adapts to your current aim speed\", which is what lets a setting target one speed range without changing the others. Classic \"provides static smoothing behavior\", so the speed-based directions don't carry over. No source ties settings to aim styles."
+        "reasoning": "A deliberate shot is usually a fast move to the target area, then a slow line-up. Precision \"controls fine aim behavior\" and Response \"controls fast aim behavior\". An aiming curve maps reticle speed \"from 0 to 100% velocity\", so a curve that stays below the straight line at low speed but still reaches full speed at the top makes slow aim finer without lowering the top speed. Standard \"adapts to your current aim speed\", which is what lets a setting target one speed range without changing the others. Classic \"provides static smoothing behavior\", so the speed-based directions don't carry over. No source ties settings to aim styles."
       },
       "levers": [
         {
@@ -211,8 +216,65 @@
           }
         },
         {
+          "termId": "easing",
+          "direction": "depends",
+          "statement": {
+            "text": "Easing shapes how the line-up starts from a standstill. If that start jerks, raise Easing for a smoother start. If it feels slow to get going, lower it.",
+            "confidence": "reasoned",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Specifies aim behavior from rest"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Higher values result in smoother transition from rest but lower response time."
+              }
+            ],
+            "reasoning": "A careful line-up often starts with the reticle at rest, and Easing \"specifies aim behavior from rest\". Higher values give a \"smoother transition from rest but lower response time\". We read that as a smoother but slower start. Which way helps depends on whether your start jerks or drags.",
+            "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it. Assumes Standard smoothing (Easing is a Standard setting)."
+          }
+        },
+        {
+          "termId": "aiming-curve",
+          "direction": "depends",
+          "statement": {
+            "text": "A custom aiming curve can give finer control on the slow line-up while keeping full speed for the move onto the target. One example: a curve that sits below the straight line at low speed but still reaches full speed at the top. The cost: your cm/360 no longer matches physically.",
+            "confidence": "reasoned",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+                "quote": "A curve represents how your reticle speed transitions from 0 to 100% velocity (bottom left of the curve to upper right)."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+                "quote": "In the linear case, speed in produces the same exact speed out. The default curve is linear (a straight diagonal line)."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+                "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-aiming-curves",
+                "quote": "Do not use any aiming curves other than the default linear."
+              }
+            ],
+            "reasoning": "A curve maps input speed to reticle speed from 0 to 100%, and the default linear curve is one-to-one. Outputting less than linear at low input speed makes slow movements finer. Still reaching 100% keeps the top speed. The guide gives no curve shapes or recommendations, and cm/360 is only exact with a linear curve.",
+            "caveat": "Whether a curve helps depends on its shape and on your feel; the guide recommends none. Use a linear curve when you check your cm/360. XIM's SAB checklist says not to use aiming curves."
+          }
+        },
+        {
           "termId": "stability",
           "direction": "raise",
+          "aimingSources": [
+            "gyro"
+          ],
           "statement": {
             "text": "Motion (gyro) aim only: if the reticle wobbles while you hold still on the spot, raise Stability. It adds steadiness at rest.",
             "confidence": "reasoned",

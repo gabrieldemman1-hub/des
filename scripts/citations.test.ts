@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { collectCitations, htmlToText, normalizeText, pageText, quoteFound, stripAnchor } from './lib/citations.mjs';
+import {
+  anchorOf,
+  anchorTargets,
+  collectCitations,
+  htmlToText,
+  normalizeText,
+  pageText,
+  quoteFound,
+  stripAnchor,
+} from './lib/citations.mjs';
 
 describe('verify-citations helpers', () => {
   it('collects citations with their entry id and JSON path', () => {
@@ -44,6 +53,19 @@ describe('verify-citations helpers', () => {
   it('strips the anchor from urls', () => {
     expect(stripAnchor('https://guide.xim.tech/Aim-Settings/#precision')).toBe('https://guide.xim.tech/Aim-Settings/');
     expect(stripAnchor('https://guide.xim.tech/')).toBe('https://guide.xim.tech/');
+  });
+
+  it('reads the cited anchor', () => {
+    expect(anchorOf('https://guide.xim.tech/Aim-Settings/#precision')).toBe('precision');
+    expect(anchorOf('https://guide.xim.tech/Aim-Settings/')).toBe('');
+    expect(anchorOf('https://guide.xim.tech/x/#')).toBe('');
+    expect(anchorOf('https://example.test/p#caf%C3%A9')).toBe('café');
+  });
+
+  it('finds anchor targets: ids, and names on <a> elements', () => {
+    const html = `<h2 id="standard">Standard</h2><a name="X10D7"></a><p ID='quantization'>Q</p>
+      <input name="search"><!-- <h3 id="hidden"> --><span id="">empty</span>`;
+    expect([...anchorTargets(html)].sort()).toEqual(['X10D7', 'quantization', 'standard']);
   });
 
   it('turns HTML into text: drops script/style/comments, keeps inline words together', () => {

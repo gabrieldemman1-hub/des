@@ -1,5 +1,5 @@
 import type { WeaponArchetype } from '../../../knowledge/index';
-import { AIM_STYLE_NAMES } from '../content/labels';
+import { AIM_STYLE_NAMES, NO_AIM_STYLE } from '../content/labels';
 import { useKnowledge } from '../state/knowledge-context';
 import { ConfidenceBadge } from './ConfidenceBadge';
 import { StatementView } from './StatementView';
@@ -7,8 +7,10 @@ import { StatementView } from './StatementView';
 /** The main weapon's aim style, its confidence, and (on tap) why the weapon maps to it. */
 export function AimStyleSummary({ archetype }: { archetype: WeaponArchetype }) {
   const { aimStyleById } = useKnowledge();
-  const style = aimStyleById(archetype.aimStyle);
-  const name = style?.name ?? AIM_STYLE_NAMES[archetype.aimStyle];
+  const style = archetype.aimStyle === null ? undefined : aimStyleById(archetype.aimStyle);
+  const name = archetype.aimStyle === null ? NO_AIM_STYLE : (style?.name ?? AIM_STYLE_NAMES[archetype.aimStyle]);
+  const question =
+    archetype.aimStyle === null ? `Why no aim style for ${archetype.name}?` : `Why ${name.toLowerCase()} for ${archetype.name}?`;
   return (
     <div className="aim-style">
       <p className="aim-style-line">
@@ -17,9 +19,7 @@ export function AimStyleSummary({ archetype }: { archetype: WeaponArchetype }) {
         <ConfidenceBadge level={archetype.mapping.confidence} />
       </p>
       <details className="why">
-        <summary>
-          Why {name.toLowerCase()} for {archetype.name}?
-        </summary>
+        <summary>{question}</summary>
         <StatementView statement={archetype.mapping} showBadge={false} />
       </details>
     </div>

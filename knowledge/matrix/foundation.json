@@ -117,7 +117,7 @@
         "xbox",
         "pc"
       ],
-      "check": "Open Manager's dashboard. Check that the current Config shows Destiny 2 and the platform you made it for (on PC that is PC, or Xbox if you output as an Xbox controller). Then look for a warning exclamation icon: it means the Config's Smart Translator is out of date.",
+      "check": "Open Manager's dashboard. Check that the current Config shows Destiny 2 and the platform that matches your output. On Xbox, that is Xbox. On PC, it is PC if you output as an XInput controller (including Mouse, Keyboard, Controller), Xbox if you output as an Xbox controller, or PlayStation 5 if you output as a DualSense. On PC, also check that the Config's output is a controller: Controller (PC XInput) or Controller (Xbox, PS, PC). Mouse, Keyboard, Controller also aims through the controller, but Dialed doesn't cover it yet. A mouse-and-keyboard output Config has no Smart Translator. Then look for a warning exclamation icon: it means the Config's Smart Translator is out of date.",
       "why": {
         "text": "Every controller-output Config has a Smart Translator: XIM's per-game aim system that handles reticle speed for you. A game's Smart Translator can be updated when the game's aiming system changes, and Manager warns you when yours is out of date. XIM's cm/360 checklist asks for the Config that matches your game and a translator that isn't out of date.",
         "confidence": "official",
@@ -152,6 +152,48 @@
           },
           {
             "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#custom-configs",
+            "quote": "DualSense Controller Output, select PlayStation 5",
+            "note": "PC players outputting as a DualSense make a PlayStation 5-platform Config (used in the check)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#custom-configs",
+            "quote": "Next, choose your inputs and outputs. For an XInput PC Config, you have two choices: Controller (PC), or Mouse, Keyboard, Controller.",
+            "note": "Mouse, Keyboard, Controller is a PC-platform Config (used in the check)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#controller",
+            "quote": "XInput Output, select Controller (PC XInput)",
+            "note": "The output names used in the check."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#controller",
+            "quote": "Xbox Controller Output, select Controller (Xbox, PS, PC)",
+            "note": "Used in the check."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#controller",
+            "quote": "DualSense Controller Output, select Controller (Xbox, PS, PC)",
+            "note": "Used in the check."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#mouse-keyboard-controller",
+            "quote": "When you choose this method, your XIM MATRIX will present as an XInput controller, mouse, and keyboard. Bindings are still set up for controller aiming.",
+            "note": "Why Mouse, Keyboard, Controller still counts as controller output (used in the check)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#custom-configs",
+            "quote": "Next, choose your inputs and outputs. For an Xbox Config, the output must be Controller (Xbox, PS4).",
+            "note": "Used in the check."
+          },
+          {
+            "source": "xim-guide",
             "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
             "quote": "You use the Config that matches the game you are playing"
           },
@@ -163,13 +205,23 @@
         ]
       },
       "fix": {
-        "text": "If Manager shows a down-arrow icon, press it to download updated game support. Then recreate the Config: press the vertical \"...\", select New Config and build a new Destiny 2 Config.",
+        "text": "If Manager shows a down-arrow icon, press it to download updated game support. You can also force a games database download in Global Settings. Then recreate the Config: press the vertical \"...\", select New Config and build a new Destiny 2 Config.",
         "confidence": "official",
         "citations": [
           {
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Dashboard/#notifications",
             "quote": "New Games Database Available: When updated game support is available for your XIM MATRIX, you will see a down arrow icon appear. Press it to download the database."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Global-Settings/#global-settings",
+            "quote": "To access these settings, press the vertical \"...\" and select Global Settings."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Global-Settings/#force-games-download",
+            "quote": "Manager notifies you of game updates. However, if you want to force a games database download, you can do that here."
           },
           {
             "source": "xim-guide",
@@ -317,7 +369,7 @@
       "platforms": [
         "pc"
       ],
-      "check": "On PC with controller output, check for virtual controller tools that may conflict with the MATRIX, such as Steam Input or DS4Windows. XIM says not to have them installed. Steam Input comes with Steam, and XIM doesn't say how to handle it. XIM lists these tools under connection problems: if the MATRIX won't connect to your PC, check them. If you output as an Xbox controller (not the standard XInput controller), you also need an Xbox controller plugged into Port 3 (●●●) as your authentication controller.",
+      "check": "On PC with controller output, check for virtual controller tools that may conflict with the MATRIX, such as Steam Input or DS4Windows. XIM says not to have them installed. Steam Input comes with Steam, and XIM doesn't say how to handle it. XIM lists these tools under connection problems: if the MATRIX won't connect to your PC, check them. If you output as an Xbox controller or a DualSense (not the standard XInput controller), you also need that controller in Port 3 (●●●): see the PC authentication controller check.",
       "why": {
         "text": "When the MATRIX outputs as a controller on PC, XIM warns that virtual controller tools such as Steam Input or DS4Windows may conflict with it. XIM lists this under connection problems.",
         "confidence": "official",
@@ -330,13 +382,19 @@
           {
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#connect-devices",
-            "quote": "To output as an Xbox controller, you must have an Xbox controller plugged into Port 3 (●●●).",
+            "quote": "To output as an Xbox controller, you must have an Xbox controller plugged into Port 3 (●●●). Likewise, for DualSense output, you must have a DualSense plugged into Port 3 (●●●).",
             "note": "Used in the check."
           },
           {
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/",
             "quote": "Xbox controller (Xbox authentication controller required)",
+            "note": "Used in the check."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#gaming-on-pc-controller-output",
+            "quote": "DualSense controller (DualSense authentication controller required)",
             "note": "Used in the check."
           }
         ],
@@ -363,15 +421,85 @@
       ]
     },
     {
+      "id": "pc-authentication-controller",
+      "title": "Authentication controller for Xbox or DualSense output (PC)",
+      "platforms": [
+        "pc"
+      ],
+      "outputTypes": [
+        "pc-xbox-controller",
+        "pc-dualsense"
+      ],
+      "check": "If your PC Config outputs as an Xbox controller, plug an Xbox controller into Port 3 (●●●) on the back of the MATRIX. If it outputs as a DualSense, plug in a DualSense. XInput output needs no extra device, and Mouse, Keyboard, Controller output doesn't support authentication controllers.",
+      "why": {
+        "text": "On PC, Xbox and DualSense output each need that controller in Port 3 as an authentication controller. If the MATRIX loses contact with it, the light blinks yellow over and over.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#gaming-on-pc-controller-output",
+            "quote": "Xbox controller (Xbox authentication controller required)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#gaming-on-pc-controller-output",
+            "quote": "DualSense controller (DualSense authentication controller required)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#connect-devices",
+            "quote": "To output as an Xbox controller, you must have an Xbox controller plugged into Port 3 (●●●). Likewise, for DualSense output, you must have a DualSense plugged into Port 3 (●●●)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#controller",
+            "quote": "Remember the need for an authentication controller connected to Port 3 (●●●) if outputting as Xbox or DualSense controllers."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Inputs-Outputs/#outputs",
+            "quote": "No additional devices required",
+            "note": "The table row for XInput Controller output on PC (used in the check)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#mouse-keyboard-controller",
+            "quote": "Authentication controllers are not supported with this method.",
+            "note": "Said about Mouse, Keyboard, Controller output (used in the check)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Warning-Lights/#authentication-controller-disconnect",
+            "quote": "Repeated yellow blinking: Your XIM MATRIX has lost communication with your authentication controller."
+          }
+        ]
+      },
+      "fix": {
+        "text": "Yellow blinking: check the controller's USB connection, fix it, and restart the MATRIX.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Warning-Lights/#authentication-controller-disconnect",
+            "quote": "Check the USB connection to your controller (especially if it happened when picking up your authentication controller). Correct any problems and restart your XIM MATRIX."
+          }
+        ]
+      },
+      "termIds": [
+        "output-type",
+        "warning-lights"
+      ]
+    },
+    {
       "id": "destiny2-required-settings",
       "title": "Destiny 2's required in-game settings are exact",
       "platforms": [
         "xbox",
         "pc"
       ],
-      "check": "In Destiny 2, set every required setting exactly as listed on this app's Destiny 2 settings page, and leave every other setting at its default, including field of view. Then press the gear icon on Manager's main screen and compare. If the two lists differ, follow Manager's: our copy comes from a public forum page that may not match XIM's current list.",
+      "check": "In Destiny 2, set every required setting exactly as Dialed lists them (Movement Controls, Button Layout, Look Sensitivity, ADS Sensitivity Modifier, Axial Deadzone, Radial Deadzone). Leave every other aim setting at its default (XIM's cm/360 checklist names field of view as one). Then press the gear icon on Manager's main screen and compare. If the two lists differ, follow Manager's: our copy comes from a public forum page that may not match XIM's current list.",
       "why": {
-        "text": "The MATRIX's Smart Translation must be in sync with your game's aim settings. With Standard sync, that means in-game sensitivity at maximum, every additional required aim setting, and all other aim settings at default. XIM's cm/360 checklist adds that all other settings, such as field of view, should be default too. XIM warns that wrong settings hurt your aim and stop shared Configs from working as intended.",
+        "text": "The MATRIX's Smart Translation must be in sync with your game's aim settings. With Standard sync, that means in-game sensitivity at maximum, every additional required aim setting, and every other aim setting at its default (XIM's cm/360 checklist names field of view as one). XIM warns that wrong settings hurt your aim and stop shared Configs from working as intended.",
         "confidence": "official",
         "citations": [
           {
@@ -622,7 +750,7 @@
         "xbox",
         "pc"
       ],
-      "check": "Edit your Config, press \"...\" in the Identity section, and make sure the light aim speed and mode notifications are not disabled. Then learn the signals. Rapid purple blinking at random times: timing errors. A quick red flash: you hit the game's maximum turn speed. A quick green flash: the MATRIX saw you aim down sights (ADS). A quick yellow flash: you went back to hip fire. Repeated yellow blinking is different: it means the MATRIX lost contact with the authentication controller in Port 3 (on Xbox, see the Xbox controller check).",
+      "check": "Edit your Config, press \"...\" in the Identity section, and make sure the light aim speed and mode notifications are not disabled. Then learn the signals. Rapid purple blinking at random times: timing errors. A quick red flash: you hit the game's maximum turn speed. A quick green flash: the MATRIX saw you aim down sights (ADS). A quick yellow flash: you went back to hip fire. Repeated yellow blinking is different: it means the MATRIX lost contact with the authentication controller in Port 3 (see the authentication controller check for Xbox, or for Xbox and DualSense output on PC). If the light is hard to see, you can adjust its brightness in Global Settings.",
       "why": {
         "text": "The MATRIX's light tells you what it is doing. Rapid purple blinking means timing errors that may hurt performance. With controller output, every console shooter has a maximum turn speed, and the MATRIX flashes red when you hit it. The green and yellow flashes tell you your Config's game roles are set up right, so the MATRIX knows when you aim down sights.",
         "confidence": "official",
@@ -672,6 +800,12 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Warning-Lights/#authentication-controller-disconnect",
             "quote": "Repeated yellow blinking: Your XIM MATRIX has lost communication with your authentication controller.",
+            "note": "Used in the check."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Global-Settings/#help-tips-and-light-control",
+            "quote": "You can also disable your XIM MATRIX light breathing animations and adjust the light's brightness.",
             "note": "Used in the check."
           }
         ]
@@ -829,6 +963,317 @@
         "sensitivity",
         "aiming-curve",
         "quantization"
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "help-tips-and-light-control",
+      "name": "Help Tips and Light Control",
+      "scope": "global",
+      "inLayer2": true,
+      "statements": [
+        {
+          "text": "In Global Settings you can turn Manager's help text off, turn off the MATRIX light's breathing animation, and adjust the light's brightness.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#global-settings",
+              "quote": "To access these settings, press the vertical \"...\" and select Global Settings."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#help-tips-and-light-control",
+              "quote": "Manager includes a lot of help text throughout to assist in its use. You can disable its display here."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#help-tips-and-light-control",
+              "quote": "You can also disable your XIM MATRIX light breathing animations and adjust the light's brightness."
+            }
+          ]
+        },
+        {
+          "text": "Part of Dialed's setup for the light only: the setup check relies on reading the MATRIX's quick flashes, so keep the light bright enough to see them. Help tips don't affect your aim.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#help-tips-and-light-control",
+              "quote": "You can also disable your XIM MATRIX light breathing animations and adjust the light's brightness."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+              "quote": "When you enter Aim Down Sight, your XIM MATRIX will quickly flash green."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+              "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+            }
+          ],
+          "reasoning": "The light notifications are quick flashes. Brightness decides how easy they are to see. No source links brightness to missing a flash; this is a practical reading of what the setting does."
+        }
+      ],
+      "termIds": [
+        "light-notifications",
+        "warning-lights"
+      ]
+    },
+    {
+      "id": "customize-navigate-mode",
+      "name": "Customize Navigate Mode",
+      "scope": "global",
+      "inLayer2": true,
+      "statements": [
+        {
+          "text": "Navigate Mode's settings sit in Global Settings. They include Navigate Only Hotkey Mode: by default, Config hotkeys only work while Navigate Mode is on.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#customize-navigate-mode",
+              "quote": "Navigate Mode has its own dedicated topic."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Navigate-Mode/#loading-configs",
+              "quote": "In addition, you can choose to only allow Config loading via hotkey if Navigate Mode is enabled by using the Navigate Only Hotkey Mode setting."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#additional-options",
+              "quote": "Hotkeys, by default, are only available if Navigate Mode is active. To change, configure Navigate Mode."
+            }
+          ]
+        },
+        {
+          "text": "Part of Dialed's setup: Dialed builds one Config per loadout, and a hotkey is one way to load it. Decide here whether hotkeys should work outside Navigate Mode.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#additional-options",
+              "quote": "Setting a hotkey to automatically load this Config when pressed"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#additional-options",
+              "quote": "Hotkeys, by default, are only available if Navigate Mode is active. To change, configure Navigate Mode."
+            }
+          ],
+          "reasoning": "Switching loadouts means loading another Config. XIM documents hotkeys as one way to load a Config, and this setting decides when they work."
+        }
+      ],
+      "termIds": [
+        "navigate-mode",
+        "load-config"
+      ]
+    },
+    {
+      "id": "force-games-download",
+      "name": "Force Games Download",
+      "scope": "global",
+      "inLayer2": true,
+      "statements": [
+        {
+          "text": "Manager tells you about game updates. You can also force a games database download here.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#force-games-download",
+              "quote": "Manager notifies you of game updates. However, if you want to force a games database download, you can do that here."
+            }
+          ]
+        },
+        {
+          "text": "Part of Dialed's setup: an up-to-date games database is the first step to a current Smart Translator. A Config picks up an updated translator only when you recreate it.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#force-games-download",
+              "quote": "Manager notifies you of game updates. However, if you want to force a games database download, you can do that here."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Dashboard/#notifications",
+              "quote": "Out-of-date Smart Translator: A game's Smart Translator can be updated if the game's aiming system changed. If that happens, you will be notified with a warning exclamation icon. Recreate the Config to update its translation."
+            }
+          ],
+          "reasoning": "Game support comes in the games database, and XIM says to recreate a Config to update its translation. So the download comes first, then the new Config."
+        }
+      ],
+      "termIds": [
+        "smart-translation",
+        "firmware"
+      ]
+    },
+    {
+      "id": "input-condition-timeouts",
+      "name": "Input Condition Timeouts",
+      "scope": "global",
+      "inLayer2": false,
+      "statements": [
+        {
+          "text": "Not part of Dialed's setup: it sets how long double, tap and hold button presses take to count.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#input-condition-timeouts",
+              "quote": "The time-based input conditions are configurable: Double, Tap, and Hold. Set their timeouts (in milliseconds)."
+            }
+          ],
+          "reasoning": "XIM's description of this setting is about bindings or about Manager itself. None of Dialed's aim or setup guidance depends on it."
+        }
+      ],
+      "termIds": []
+    },
+    {
+      "id": "tap-action-duration",
+      "name": "Tap Action Duration",
+      "scope": "global",
+      "inLayer2": false,
+      "statements": [
+        {
+          "text": "Not part of Dialed's setup: it times the press and release of Tap Smart Actions.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#tap-action-duration",
+              "quote": "Tap button Smart Actions enable the press and release of a button or key in a single action."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#tap-action-duration",
+              "quote": "Configure the total amount of time spent for the full press and release."
+            }
+          ],
+          "reasoning": "XIM's description of this setting is about bindings or about Manager itself. None of Dialed's aim or setup guidance depends on it."
+        }
+      ],
+      "termIds": []
+    },
+    {
+      "id": "scroll-input-duration",
+      "name": "Scroll Input Duration",
+      "scope": "global",
+      "inLayer2": false,
+      "statements": [
+        {
+          "text": "Not part of Dialed's setup: it times mouse-wheel inputs used to run bindings.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#scroll-input-duration",
+              "quote": "Mouse Scroll Up and Down inputs are digital inputs that you can use to run bindings."
+            }
+          ],
+          "reasoning": "XIM's description of this setting is about bindings or about Manager itself. None of Dialed's aim or setup guidance depends on it."
+        }
+      ],
+      "termIds": []
+    },
+    {
+      "id": "user-interface-language",
+      "name": "User Interface Language",
+      "scope": "global",
+      "inLayer2": false,
+      "statements": [
+        {
+          "text": "Not part of Dialed's setup: it sets Manager's language.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#user-interface-language",
+              "quote": "By default, XIM MATRIX Manager will automatically choose which language to display based on your phone or PC system settings. If you prefer, you can manually override it here."
+            }
+          ],
+          "reasoning": "XIM's description of this setting is about bindings or about Manager itself. None of Dialed's aim or setup guidance depends on it."
+        }
+      ],
+      "termIds": []
+    },
+    {
+      "id": "light-and-dark-mode",
+      "name": "Light and Dark Mode",
+      "scope": "global",
+      "inLayer2": false,
+      "statements": [
+        {
+          "text": "Not part of Dialed's setup: it sets Manager's display mode.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Global-Settings/#light-and-dark-mode",
+              "quote": "XIM MATRIX Manager has two display modes: light and dark. By default, the mode used will follow your phone or PC system settings. If you would like to keep it in on a display mode, set it here."
+            }
+          ],
+          "reasoning": "XIM's description of this setting is about bindings or about Manager itself. None of Dialed's aim or setup guidance depends on it."
+        }
+      ],
+      "termIds": []
+    },
+    {
+      "id": "output-update-rate",
+      "name": "Update rate (output connection mode)",
+      "scope": "config",
+      "inLayer2": true,
+      "statements": [
+        {
+          "text": "Each Config's output connection mode sets how fast the MATRIX updates your console or PC. The guide's only advice on it is in the SAB checklist: keep it at Standard, the default.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#standard-update-rate-only",
+              "quote": "When configuring the output connection mode of your Config, you can choose how fast you want your XIM MATRIX to update your console. Keep this value at \"Standard\" (which is default)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+              "quote": "Only use standard update rate with your console or PC"
+            }
+          ]
+        },
+        {
+          "text": "XIM gives no update-rate advice outside SAB. Dialed doesn't plan on SAB for Destiny 2 (see the Destiny 2 notes), so it has no sourced reason to change the update rate from its default.",
+          "confidence": "gap",
+          "citations": []
+        },
+        {
+          "text": "XIM Central (2023) describes a MATRIX \"polling rate\" option at the bottom of Manager's Connectivity settings, and recommends 1000Hz for the most responsive mouse movements.",
+          "confidence": "expert",
+          "citations": [
+            {
+              "source": "xim-central",
+              "url": "https://controlc.com/ee24428c",
+              "quote": "To adjust the polling rate of your xim Matrix, go into the top right options, and then click on Connectivity.",
+              "matrixEra": true,
+              "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+            },
+            {
+              "source": "xim-central",
+              "url": "https://controlc.com/ee24428c",
+              "quote": "I recommend to use 1000Hz, because that will give you the most responsive mouse movements.",
+              "matrixEra": true,
+              "note": "Same script. A general recommendation, not tied to Overwatch 2. The script's separate \"feel like a xim Apex\" section also sets 1000Hz; Dialed does not use that section."
+            }
+          ],
+          "caveat": "From a 2023 tutorial, so Manager's menus may have changed. The current guide places an update rate in the Config's output connection mode, with Standard as the default, and gives no Hz values. We can't confirm that XIM Central's \"polling rate\" is the same setting, or what Standard equals. If a game needs SAB, follow the guide and keep Standard."
+        }
+      ],
+      "termIds": [
+        "polling-rate",
+        "simulate-analog-behavior"
       ]
     }
   ]

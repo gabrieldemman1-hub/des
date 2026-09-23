@@ -55,6 +55,7 @@ describe('Loadouts', () => {
       'Tracking',
       'Snap / peek',
       'Precision hold',
+      'No aim style',
     ]);
     await user.selectOptions(kinetic, 'hand-cannon');
     await user.selectOptions(screen.getByRole('combobox', { name: 'Power' }), 'shotgun');
@@ -87,6 +88,15 @@ describe('Loadouts', () => {
       weapons: { kinetic: 'hand-cannon', energy: null, power: 'shotgun' },
       mainSlot: 'kinetic',
     });
+  });
+
+  it('says so when the main weapon has no aim style', async () => {
+    const { user } = renderApp({ path: '/loadouts/new' });
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Power' }), 'sword');
+    expect(screen.getByText('No aim style', { selector: '.aim-style-name' })).toBeInTheDocument();
+    expect(screen.getByText('Gap')).toBeInTheDocument();
+    await user.click(screen.getByText('Why no aim style for Sword?'));
+    expect(screen.getByText('Swords are melee weapons, so no aim style applies.')).toBeVisible();
   });
 
   it('asks for a main weapon when the main one is cleared and two are left', async () => {

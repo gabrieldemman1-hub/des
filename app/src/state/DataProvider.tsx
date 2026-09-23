@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { DataContext, type DataApi, type NoticeKind, type SaveLoadoutResult, type SaveState } from './data-context';
 import { createLoadout, deleteLoadout as removeLoadout, updateLoadout, type LoadoutDraft } from './loadouts';
-import { Profile, type AppData } from './schema';
+import { Profile, normalizeProfile, type AppData } from './schema';
 import { STORAGE_KEY, getBrowserStorage, loadData, saveData, setAsideUnreadable } from './storage';
 
 interface Props {
@@ -59,8 +59,9 @@ export function DataProvider({ storage: storageProp, children }: Props) {
 
   const updateProfile = useCallback(
     (patch: Partial<Profile>) => {
-      // Only valid profiles are saved, so the next launch can read everything back.
-      const profile = Profile.safeParse({ ...latest.current.profile, ...patch });
+      // Only valid profiles are saved, so the next launch can read everything back. A platform
+      // change also sets or clears the output type, so the two always agree.
+      const profile = Profile.safeParse(normalizeProfile({ ...latest.current.profile, ...patch }));
       if (profile.success) commit({ ...latest.current, profile: profile.data });
     },
     [commit],

@@ -349,9 +349,10 @@ Roughly in order of likely value:
 
 ## 12. Next steps
 
-All concept questions are answered. The next milestone is the **Destiny 2
-knowledge base**: researching and citing each value, definition and symptom
-mapping into data files. None of the following blocks it, but each would help:
+All concept questions are answered. Step 2 (the Destiny 2 knowledge base in
+`knowledge/`) and step 3 (the phone-first app foundation in `app/`) are built. The
+next milestone is **step 4: the four flows** (build, tune, troubleshoot, explain).
+None of the following blocks it, but each would help:
 
 - **Forum access.** XIM's MATRIX Support FAQ and the full Game Settings topic need a
   forum login. If you have an account, pasting those pages in fills gaps.
@@ -360,7 +361,8 @@ mapping into data files. None of the following blocks it, but each would help:
   the smoothing, quantization and "Boost" videos would let the app cite them.
 - **One in-game test.** The official Easing wording is ambiguous (§6). Raising
   Easing and feeling whether the reticle gets slower to start moving settles which
-  way the hand-cannon advice points.
+  way the hand-cannon advice points. Until then, `npm run check:release` reports
+  the statements that wait on it.
 
 ## 13. Decision log
 
@@ -376,7 +378,7 @@ Choices made during concept alignment (2026-09-22):
 | Device link | Reference-only — user applies values in XIM MATRIX Manager |
 | First game | Destiny 2 |
 | Platforms | Xbox and PC |
-| Output types | Controller output only (PC mouse-and-keyboard output out of scope) |
+| Output types | Controller output only. Out of scope: PC mouse-and-keyboard output, and the PC-only "Mouse, Keyboard, Controller" mode (it also aims through the controller, per the guide; can be added later) |
 | Knowledge policy | Evidence-based whitelist: official XIM documentation + XIM Central; additions require a logged decision |
 | Official guide | XIM MATRIX User Guide — https://guide.xim.tech |
 | Device generation | XIM MATRIX only — no XIM APEX or XIM4 advice, including XIM Central's older videos |

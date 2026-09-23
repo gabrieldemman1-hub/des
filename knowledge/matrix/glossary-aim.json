@@ -277,7 +277,12 @@
         "thumbstick-aim",
         "motion-aim",
         "modify-aim-sensitivity",
-        "sight-modifiers"
+        "sight-modifiers",
+        "aiming-curve",
+        "quantization",
+        "smart-translation",
+        "velocity-calibration",
+        "max-turn-speed"
       ]
     },
     {
@@ -455,6 +460,11 @@
             }
           ],
           "reasoning": "Inherit All copies all ADS settings from Hip; Sensitivity Only copies all of them except sensitivity; Inherit Nothing copies none. Smoothing is one of those other settings, so only Inherit Nothing leaves ADS smoothing free."
+        },
+        {
+          "text": "The guide doesn't list the smoothing presets' names or what values they use. Check what your Manager offers.",
+          "confidence": "gap",
+          "citations": []
         }
       ],
       "feel": [
@@ -539,7 +549,9 @@
         "easing",
         "stability",
         "ads-inheritance",
-        "simulate-analog-behavior"
+        "simulate-analog-behavior",
+        "smooth",
+        "motion-aim"
       ]
     },
     {
@@ -652,7 +664,17 @@
         },
         {
           "name": "Standard (update rate)",
-          "note": "The output connection's update rate, which the SAB page says to keep at Standard (the default). Unrelated to smoothing."
+          "statement": {
+            "text": "The Config's update rate: how fast the MATRIX updates your console or PC. The guide's SAB checklist says to keep it at Standard, the default. Unrelated to Standard smoothing.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#standard-update-rate-only",
+                "quote": "When configuring the output connection mode of your Config, you can choose how fast you want your XIM MATRIX to update your console. Keep this value at \"Standard\" (which is default)."
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -715,6 +737,11 @@
             }
           ],
           "reasoning": "The guide only describes raising it (smoother, heavier). Lowering it is the reverse of that stated trade-off."
+        },
+        {
+          "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+          "confidence": "gap",
+          "citations": []
         }
       ],
       "feel": [
@@ -867,6 +894,11 @@
             }
           ],
           "reasoning": "The guide only describes raising it (\"a lighter feeling reticle at faster aim speeds\"). Lowering it is the reverse."
+        },
+        {
+          "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+          "confidence": "gap",
+          "citations": []
         }
       ],
       "feel": [
@@ -897,7 +929,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Snap: the main lever for the fast part of a snap or flick. If fast moves feel too heavy, raise Response; if they feel too light, lower it.",
+          "text": "Snap: a secondary lever, for the fast part of a snap or flick. The main snap lever is Easing, which shapes the start from rest. If fast moves feel too heavy, raise Response; if they feel too light, lower it.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -909,9 +941,14 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Aim-Settings/#standard",
               "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior from rest"
             }
           ],
-          "reasoning": "Snaps are fast movements, and Response \"Controls fast aim behavior\", with higher values giving \"a lighter feeling reticle at faster aim speeds\"."
+          "reasoning": "Snaps are fast movements, and Response \"Controls fast aim behavior\", with higher values giving \"a lighter feeling reticle at faster aim speeds\". A snap starts from rest, and Easing \"Specifies aim behavior from rest\", so Dialed treats Easing as the main snap lever and Response as the second."
         },
         {
           "text": "Tracking: matters when the target moves fast or you turn quickly while firing. Slow holds depend more on Precision.",
@@ -953,7 +990,8 @@
         "precision",
         "easing",
         "smoothing",
-        "velocity-mapping"
+        "velocity-mapping",
+        "polling-rate"
       ]
     },
     {
@@ -1004,6 +1042,11 @@
           ],
           "reasoning": "The definition pairs \"smoother transition from rest\" with \"but lower response time\". The \"but\" marks a cost, so we read \"lower response time\" as less responsive.",
           "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+        },
+        {
+          "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+          "confidence": "gap",
+          "citations": []
         }
       ],
       "feel": [
@@ -1158,6 +1201,11 @@
               "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
             }
           ]
+        },
+        {
+          "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+          "confidence": "gap",
+          "citations": []
         }
       ],
       "feel": [
@@ -1199,7 +1247,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Precision hold (motion aim only): the main lever. Waiting on a spot for one careful shot is aim at rest.",
+          "text": "Precision hold (motion aim only): a lever for holding still. Waiting on a spot for one careful shot is aim at rest.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -1341,7 +1389,18 @@
       "notToBeConfusedWith": [
         {
           "name": "XIM APEX smoothing",
-          "note": "Classic is based on the older XIM APEX's smoothing, upgraded for MATRIX. Dialed gives no APEX-era advice."
+          "statement": {
+            "text": "Classic is based on the smoothing of XIM's previous device, the XIM APEX, upgraded for the MATRIX.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#classic",
+                "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+              }
+            ],
+            "caveat": "Dialed covers XIM MATRIX only. It gives no XIM APEX-based values or advice."
+          }
         }
       ],
       "related": [
@@ -1397,6 +1456,11 @@
               "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
             }
           ]
+        },
+        {
+          "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+          "confidence": "gap",
+          "citations": []
         }
       ],
       "feel": [],
@@ -1487,6 +1551,11 @@
             }
           ],
           "reasoning": "If older input values have less impact, the smoothed output is driven more by recent input, and the reverse for lower values."
+        },
+        {
+          "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+          "confidence": "gap",
+          "citations": []
         }
       ],
       "feel": [],
@@ -1565,6 +1634,11 @@
               "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
             }
           ]
+        },
+        {
+          "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+          "confidence": "gap",
+          "citations": []
         }
       ],
       "feel": [],
@@ -1746,7 +1820,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Depends on the shape. For example, a curve that sits below the straight line at low speed but still reaches 100% at the top gives finer control on slow movements (tracking, precision holds) while keeping full speed for snaps and big turns. The cost: cm/360 no longer matches physically.",
+          "text": "Depends on the shape. For example, a curve that sits below the straight line at low speed but still reaches full speed at the top at the top gives finer control on slow movements (tracking, precision holds) while keeping full speed for snaps and big turns. The cost: cm/360 no longer matches physically.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -1770,7 +1844,7 @@
               "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
             }
           ],
-          "reasoning": "A curve maps input speed to reticle speed from 0 to 100%, and linear is one-to-one. A curve that outputs less than linear at low input speed but still reaches 100% makes slow movements finer without lowering the top speed. The guide lists presets and \"a simple acceleration curve\" but doesn't define their shapes or recommend one. cm/360 accuracy needs a linear curve."
+          "reasoning": "A curve maps input speed to reticle speed from 0 to 100%, and linear is one-to-one. A curve that outputs less than linear at low input speed but still reaches full speed at the top makes slow movements finer without lowering the top speed. The guide lists presets and \"a simple acceleration curve\" but doesn't define their shapes or recommend one. cm/360 accuracy needs a linear curve."
         }
       ],
       "notToBeConfusedWith": [
@@ -1781,7 +1855,17 @@
         },
         {
           "name": "Elite 2 controller stick curve",
-          "note": "A curve set on an Xbox Elite 2 controller itself. XIM says to have it off when checking cm/360. It is not the MATRIX Aiming Curve."
+          "statement": {
+            "text": "A curve set on an Xbox Elite 2 controller itself, not in the MATRIX. XIM says to have it off when you check cm/360.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+                "quote": "If using an Elite 2 on Xbox, make sure you don't have a controller stick curve enabled"
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -1789,7 +1873,9 @@
         "custom-stick-behavior",
         "sensitivity",
         "quantization",
-        "simulate-analog-behavior"
+        "simulate-analog-behavior",
+        "y-scale",
+        "smart-translation"
       ]
     },
     {
@@ -1986,7 +2072,10 @@
         "custom-stick-behavior",
         "thumbstick-aim",
         "max-turn-speed",
-        "light-notifications"
+        "light-notifications",
+        "response",
+        "velocity-calibration",
+        "simulate-analog-behavior"
       ]
     },
     {
@@ -2141,7 +2230,11 @@
         },
         {
           "name": "Steady Aim",
-          "note": "An older XIM setting name, not a MATRIX setting. No source we could read says it is the same as Quantization. See the name notes."
+          "statement": {
+            "text": "The official XIM MATRIX guide lists no setting called Steady Aim. A XIM Central MATRIX-era video title uses the name for quantization, but we couldn't review that video, so Dialed can't say whether the two work the same way. For the MATRIX setting, see Quantization.",
+            "confidence": "gap",
+            "citations": []
+          }
         }
       ],
       "related": [
@@ -2150,7 +2243,10 @@
         "sensitivity",
         "aim-magnitude-action",
         "aim-angle-action",
-        "behavior-variance"
+        "behavior-variance",
+        "y-scale",
+        "aiming-curve",
+        "simulate-analog-behavior"
       ]
     },
     {
@@ -2480,7 +2576,8 @@
       "related": [
         "thumbstick-aim",
         "custom-stick-behavior",
-        "required-game-settings"
+        "required-game-settings",
+        "sync-custom"
       ]
     },
     {
@@ -2863,7 +2960,27 @@
       "notToBeConfusedWith": [
         {
           "name": "Engage, Pause and Toggle Motion Aim",
-          "note": "Smart Actions for motion aim. Engage and Pause work only while the action is active. Toggle switches motion aim on or off, and only works with the Custom Toggle activation mode. They are actions, not motion aim settings."
+          "statement": {
+            "text": "Smart Actions for motion aim, not motion aim settings. Engage and Pause work only while the action is active. Toggle switches motion aim on or off, and only works with the Custom Toggle activation mode.",
+            "confidence": "official",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+                "quote": "Enable gyro motion aim. Only enabled while action is active. Use to customize motion enablement beyond the built in motion activation methods. Requires a supported gyro controller."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Reference/#pause-motion-aim",
+                "quote": "Pause gyro motion aim. Only pauses while action is active. Requires a supported gyro controller."
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+                "quote": "Toggles gyro motion aim on/off. Only works with the custom motion toggle activation method. Requires a supported gyro controller."
+              }
+            ]
+          }
         }
       ],
       "related": [
@@ -2878,11 +2995,21 @@
   "nameNotes": [
     {
       "name": "Steady Aim",
-      "note": "Not a setting in the official XIM MATRIX guide. It is a setting name from older XIM devices (XIM APEX). A XIM Central MATRIX-era video title uses \"Steady Aim\" for quantization, but we could not review that video, and no source we could read says the two work the same way. For the MATRIX setting, see Quantization."
+      "termId": "quantization",
+      "statement": {
+        "text": "The official XIM MATRIX guide lists no setting called Steady Aim. A XIM Central MATRIX-era video title uses the name for quantization, but we couldn't review that video, so Dialed can't say whether the two work the same way. For the MATRIX setting, see Quantization.",
+        "confidence": "gap",
+        "citations": []
+      }
     },
     {
       "name": "Boost",
-      "note": "Not a setting in the official XIM MATRIX guide. It is a setting name from older XIM devices (XIM APEX). The guide uses \"Vertical Sensitivity Boost\" only for a recoil-control technique: a Modify Aim Sensitivity action that raises vertical sensitivity while its binding runs. XIM Central has a MATRIX-era video about a \"Boost Feature\", but we could not review its content, so Dialed says nothing about it yet."
+      "termId": "modify-aim-sensitivity",
+      "statement": {
+        "text": "The official XIM MATRIX guide lists no setting called Boost. XIM Central has a MATRIX-era video about a \"Boost Feature\", but we couldn't review it, so Dialed says nothing about it yet. For the guide's \"Vertical Sensitivity Boost\", see Modify Aim Sensitivity.",
+        "confidence": "gap",
+        "citations": []
+      }
     }
   ]
 }

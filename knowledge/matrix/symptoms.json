@@ -14,6 +14,7 @@
         "precision",
         "stability"
       ],
+      "checkIds": [],
       "mapping": {
         "text": "Smoothing is made for this. XIM says input hardware and natural hand jitter can make your input noisy, and Smoothing counters it with extra stability and control. If you aim with gyro (motion aim) and the shake shows while you hold still, Stability is the setting XIM made for that.",
         "confidence": "official",
@@ -67,6 +68,7 @@
         "precision",
         "smoothing-standard"
       ],
+      "checkIds": [],
       "mapping": {
         "text": "Precision controls fine aim. XIM says higher Precision smooths aim at low speeds and \"increases the heaviness of the reticle\". A heavy or sluggish feel on small adjustments matches that wording, so Precision is the first setting to look at.",
         "confidence": "reasoned",
@@ -116,6 +118,7 @@
         "response",
         "smoothing-standard"
       ],
+      "checkIds": [],
       "mapping": {
         "text": "Response controls fast aim. XIM says higher Response gives \"a lighter feeling reticle at faster aim speeds\". So the weight you feel on fast turns is what Response tunes.",
         "confidence": "reasoned",
@@ -165,6 +168,7 @@
         "easing",
         "smoothing-standard"
       ],
+      "checkIds": [],
       "mapping": {
         "text": "Easing sets how aim behaves from rest. XIM says higher Easing gives a \"smoother transition from rest but lower response time\". We read that as a slower start, so a lag as you start moving points to Easing.",
         "confidence": "reasoned",
@@ -217,6 +221,10 @@
         "velocity-mapping",
         "required-game-settings",
         "sync-standard"
+      ],
+      "checkIds": [
+        "destiny2-required-settings",
+        "light-notifications"
       ],
       "mapping": {
         "text": "With controller output, the game has a maximum turn speed it can't exceed. XIM says every console shooter's limit is different, and it also changes with aiming angle. The MATRIX flashes red when you hit it. No MATRIX setting takes you past it, and customising Velocity Mapping can make you hit it more often.",
@@ -291,6 +299,9 @@
         "ads-activation-delay",
         "ads-inheritance",
         "aiming-modes",
+        "light-notifications"
+      ],
+      "checkIds": [
         "light-notifications"
       ],
       "mapping": {
@@ -408,6 +419,7 @@
         "quantization-magnitude",
         "quantization-angle"
       ],
+      "checkIds": [],
       "mapping": {
         "text": "Quantization is the MATRIX option for this. XIM says it can improve compatibility with aim assist, on games that support it. When it is on, your reticle's speed and direction \"snap\" to set steps (Magnitude sets the speed steps, Angle the direction steps), so aim assist is less disrupted by tiny aim changes.",
         "confidence": "official",
@@ -436,8 +448,8 @@
         "caveat": "Thin evidence. XIM says what Quantization is for and how it works, but not how it feels in Destiny 2. XIM Central's MATRIX videos on it haven't been reviewed yet."
       },
       "suggestedChange": {
-        "text": "Quantization is off by default. Try turning it on, then adjust one value (Magnitude or Angle) at a time. Expect a cost: XIM warns it may hurt real-world sensitivity accuracy on mouse or motion aim.",
-        "confidence": "official",
+        "text": "Quantization is off by default. Try turning it on, starting from XIM's suggested Magnitude 25 and Angle 25, then adjust one value at a time. Expect a cost: XIM warns it may hurt real-world sensitivity accuracy on mouse or motion aim.",
+        "confidence": "reasoned",
         "citations": [
           {
             "source": "xim-guide",
@@ -447,7 +459,7 @@
           {
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#quantization",
-            "quote": "Adjust one value at a time to match your preferences."
+            "quote": "To start, set Magnitude to 25 and Angle to 25. Adjust one value at a time to match your preferences."
           },
           {
             "source": "xim-guide",
@@ -460,7 +472,8 @@
             "quote": "Do not enable input quantization (default is off)."
           }
         ],
-        "caveat": "Thin evidence: XIM doesn't say how Quantization feels in Destiny 2. Not with Simulate Analog Behavior (SAB): XIM's SAB checklist says not to enable quantization."
+        "reasoning": "XIM offers Quantization for aim-assist compatibility 'on games that support it'. No source says whether Destiny 2 is one, so this applies the definition.",
+        "caveat": "Thin evidence: XIM doesn't say whether Destiny 2 supports it, or how Quantization feels there. Not with Simulate Analog Behavior (SAB): XIM's SAB checklist says not to enable quantization."
       }
     },
     {
@@ -472,6 +485,18 @@
         "disconnected from my hand"
       ],
       "termIds": [],
+      "checkIds": [
+        "firmware-current",
+        "smart-translator-current",
+        "xbox-authentication-controller",
+        "pc-virtual-controller-tools",
+        "pc-authentication-controller",
+        "destiny2-required-settings",
+        "mouse-dpi-matches",
+        "mouse-polling-rate",
+        "light-notifications",
+        "clean-sensitivity-test"
+      ],
       "mapping": {
         "text": "No XIM MATRIX-era source we can read ties a \"floaty\" feel to a setting, so Dialed won't guess. Run the setup check first, then see if a more specific feel in this list fits better.",
         "confidence": "gap",
@@ -487,6 +512,18 @@
         "over-flicking"
       ],
       "termIds": [],
+      "checkIds": [
+        "firmware-current",
+        "smart-translator-current",
+        "xbox-authentication-controller",
+        "pc-virtual-controller-tools",
+        "pc-authentication-controller",
+        "destiny2-required-settings",
+        "mouse-dpi-matches",
+        "mouse-polling-rate",
+        "light-notifications",
+        "clean-sensitivity-test"
+      ],
       "mapping": {
         "text": "No XIM MATRIX-era source we can read ties overshooting to a setting, so Dialed won't guess. Run the setup check first, then see if a more specific feel in this list fits better.",
         "confidence": "gap",
@@ -502,11 +539,41 @@
         "vague"
       ],
       "termIds": [],
+      "checkIds": [
+        "firmware-current",
+        "smart-translator-current",
+        "xbox-authentication-controller",
+        "pc-virtual-controller-tools",
+        "pc-authentication-controller",
+        "destiny2-required-settings",
+        "mouse-dpi-matches",
+        "mouse-polling-rate",
+        "light-notifications",
+        "clean-sensitivity-test"
+      ],
       "mapping": {
         "text": "No XIM MATRIX-era source we can read ties a \"mushy\" or \"spongy\" feel to a setting, so Dialed won't guess. Run the setup check first, then see if a more specific feel in this list fits better.",
         "confidence": "gap",
         "citations": []
       }
     }
-  ]
+  ],
+  "guardrail": {
+    "text": "Change one thing at a time, and start with Sensitivity. Then you can tell which change made the difference. XIM's advice is to change other values only if necessary.",
+    "confidence": "reasoned",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "Adjust one value at a time to match your preferences.",
+        "note": "Said about Quantization. Dialed applies it to every change."
+      }
+    ],
+    "reasoning": "XIM's mouse-aim advice is to start with Sensitivity alone and change other values only if necessary. For Quantization it says to adjust one value at a time. Doing that for every change keeps cause and effect clear."
+  }
 }

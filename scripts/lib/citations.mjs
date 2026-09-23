@@ -72,6 +72,42 @@ export function stripAnchor(url) {
   return hash === -1 ? url : url.slice(0, hash);
 }
 
+/**
+ * The cited #anchor, decoded, or '' when the URL has none.
+ * @param {string} url
+ */
+export function anchorOf(url) {
+  const hash = url.indexOf('#');
+  if (hash === -1 || hash === url.length - 1) return '';
+  const raw = url.slice(hash + 1);
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
+/**
+ * Every fragment target on an HTML page: `id` attributes, plus `name` on <a> elements (the
+ * older anchor style some forum pages use).
+ * @param {string} html
+ * @returns {Set<string>}
+ */
+export function anchorTargets(html) {
+  /** @type {Set<string>} */
+  const found = new Set();
+  const withoutComments = html.replace(/<!--[\s\S]*?-->/g, ' ');
+  for (const [, value1, value2] of withoutComments.matchAll(/\sid\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)) {
+    found.add(decodeHTML(value1 ?? value2 ?? ''));
+  }
+  for (const [tag] of withoutComments.matchAll(/<a\b[^>]*>/gi)) {
+    const name = /\sname\s*=\s*(?:"([^"]*)"|'([^']*)')/i.exec(tag);
+    if (name) found.add(decodeHTML(name[1] ?? name[2] ?? ''));
+  }
+  found.delete('');
+  return found;
+}
+
 /** Inline elements are removed without a space, so `Smooth<em>ing</em>` stays one word. */
 const INLINE_TAGS = new Set([
   'a', 'abbr', 'b', 'bdi', 'bdo', 'cite', 'code', 'data', 'dfn', 'em', 'font', 'i', 'kbd', 'mark',

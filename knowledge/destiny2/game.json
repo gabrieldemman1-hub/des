@@ -104,7 +104,7 @@
       "id": "max-sensitivity-and-defaults",
       "title": "The general rule: maximum sensitivity, everything else default",
       "statement": {
-        "text": "XIM's rule for every game: set the in-game sensitivity to maximum and leave every other setting at its default, unless the game's entry says otherwise. Destiny 2 is on XIM's list of games that need extra settings, so use its six Destiny 2 values exactly. Getting these wrong hurts your aim and stops shared Configs from working as intended.",
+        "text": "XIM's rule for every game: set the in-game sensitivity to maximum and leave every other aim setting at its default (XIM's cm/360 checklist names field of view as one), unless the game's entry says otherwise. Destiny 2 is on XIM's list of games that need extra settings, so use its six Destiny 2 values exactly. Getting these wrong hurts your aim and stops shared Configs from working as intended.",
         "confidence": "official",
         "citations": [
           {
@@ -119,6 +119,16 @@
           },
           {
             "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Has all other aim settings set to default"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Your in-game required settings are correct and all others are default (such as FOV)"
+          },
+          {
+            "source": "xim-guide",
             "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
             "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
           }
@@ -130,7 +140,7 @@
       "id": "sync-method",
       "title": "Sync method: plan for Standard",
       "statement": {
-        "text": "Plan for Standard sync. In the game: Destiny 2's six required values, and every other aim setting at default. Your aim is then shaped in your Config, not in the game.",
+        "text": "Plan for Standard sync. In the game: Destiny 2's six required values, and every other aim setting at its default (XIM's cm/360 checklist names field of view as one). Your aim is then shaped in your Config, not in the game.",
         "confidence": "reasoned",
         "citations": [
           {
@@ -157,6 +167,11 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Game-Settings/#standard",
             "quote": "Has all other aim settings set to default"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Your in-game required settings are correct and all others are default (such as FOV)"
           },
           {
             "source": "xim-guide",
@@ -190,7 +205,7 @@
             "note": "From the Apex Legends (ALC) entry, one of 15 entries with this line. The Destiny 2 entry has no such line."
           }
         ],
-        "reasoning": "No source says whether Destiny 2 supports Custom sync. XIM's guide says every supported game has Standard sync, and that Standard is the default for new mouse Configs. Custom is the default only for what XIM calls 'controller Configs', meaning Configs where you aim with a controller instead of a mouse, and only when the game has it. For mouse Configs, XIM says Custom is valuable when they use Simulate Analog Behavior. All three sync methods apply only to Configs that output as controller, so 'controller Configs' here does not mean controller output. On the public Game Settings list, 15 entries say 'This game supports Custom In-Game Settings'. The Destiny 2 entry does not. That is weak evidence on its own: those same 15 entries are exactly the ones that require SAB, so the line may mark SAB games rather than every game with Custom support. Standard is the safe plan either way, because every game has it.",
+        "reasoning": "No source says whether Destiny 2 supports Custom sync. Every game the MATRIX supports has Standard sync. Standard is also the default for new mouse and gyro Configs. XIM makes Custom the default only for 'controller Configs', and only when the game has Custom. Here 'controller Configs' means Configs where you aim with a gamepad. It does not mean controller output: all three sync methods are only for Configs that output as a controller. For mouse Configs, XIM calls Custom valuable when they use Simulate Analog Behavior (SAB). On XIM's public Game Settings list, 15 entries say 'This game supports Custom In-Game Settings'. The Destiny 2 entry does not. That is weak evidence: the same 15 entries are exactly the ones that require SAB. So the line may only mark SAB games, not every game with Custom. Standard is the safe plan either way, because every game has it.",
         "caveat": "We found no evidence that Destiny 2 supports Custom sync (copying your in-game aim settings into your Config), but no source rules it out. If Manager offers Custom for your Destiny 2 Config, Destiny 2 does support it. Standard still works, because every game has it, and it is the default for new mouse Configs."
       }
     },
@@ -254,7 +269,7 @@
         "text": "No source we can read documents any difference between Xbox and PC for Destiny 2. The public list has one Destiny 2 entry with no platform notes, so the app uses the same settings for both.",
         "confidence": "gap",
         "citations": [],
-        "caveat": "If you play on both, check the gear-icon list in Manager for each platform's Config."
+        "caveat": "If you play on both, check the gear-icon list in Manager for each platform's Config. We haven't checked whether Destiny 2 on PC uses the same menu names and ranges as console."
       }
     },
     {
@@ -312,6 +327,179 @@
           }
         ],
         "caveat": "This app's Destiny 2 values come from a public copy of XIM's list, which may differ from the login-walled original. If Manager shows different values, use Manager's."
+      }
+    },
+    {
+      "id": "sight-modifiers",
+      "title": "Sight Modifier: only with Custom sync",
+      "statement": {
+        "text": "A Sight Modifier needs Custom sync. We found no evidence that Destiny 2 supports Custom, but no source rules it out. If Manager offers Custom for your Destiny 2 Config, check for a Sight Modifier there.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#sight-modifiers",
+            "quote": "If you are using Custom Game Settings, you may have a Sight Modifier setting depending on your current aiming sources."
+          },
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
+            "quote": "This game supports Custom In-Game Settings. Setting values in green can be customized when using this feature.",
+            "note": "From the Apex Legends (ALC) entry, one of 15 entries with this line. All 15 also carry the SAB Input Requirements line. The Destiny 2 entry has neither."
+          },
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X10D7",
+            "quote": "ADS Sensitivity Modifier: 1.5",
+            "note": "A line from the Destiny 2 entry, which lists only in-game values."
+          }
+        ],
+        "reasoning": "The guide offers a Sight Modifier only 'If you are using Custom Game Settings'. The line that marks Custom support on the public list appears only on the 15 entries that also require SAB, so its absence from the Destiny 2 entry is weak evidence.",
+        "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
+      }
+    },
+    {
+      "id": "ads-activation-delay",
+      "title": "ADS Activation Delay: unknown for Destiny 2",
+      "statement": {
+        "text": "No source we could read says whether a new Destiny 2 Config gets an ADS Activation Delay automatically, or whether Destiny 2's own ADS transition can be made immediate. To see what your Config has, press the \"...\" under Activation.",
+        "confidence": "gap",
+        "citations": []
+      }
+    },
+    {
+      "id": "rumble-patterns",
+      "title": "Rumble patterns: untested for Destiny 2",
+      "statement": {
+        "text": "No source we could read says whether Destiny 2's weapons have distinct rumble patterns. So Dialed doesn't count on Rumble Triggers to follow your weapon.",
+        "confidence": "gap",
+        "citations": []
+      }
+    }
+  ],
+  "preferences": [
+    {
+      "input": "feel",
+      "termIds": [
+        "smoothing"
+      ],
+      "statement": {
+        "text": "No source gives a range of smoothing values to pick a point in. So this preference sets a direction, never a number.",
+        "confidence": "gap",
+        "citations": []
+      }
+    },
+    {
+      "input": "feel",
+      "termIds": [
+        "smoothing"
+      ],
+      "statement": {
+        "text": "Start with XIM's own advice: try each smoothing preset and keep the one that feels most natural. XIM says it's strictly preference.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+          }
+        ]
+      }
+    },
+    {
+      "input": "feel",
+      "termIds": [
+        "precision",
+        "smoothing-standard"
+      ],
+      "statement": {
+        "text": "With custom Standard smoothing: for a smoother feel, raise Precision (slow aim gets smoother, but the reticle gets heavier). For a snappier feel, lower it.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Controls fine aim behavior"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+          }
+        ],
+        "reasoning": "Precision \"controls fine aim behavior\", and higher values give \"a smoother result at low aim speeds\". The same sentence names the cost: a heavier reticle. Lowering it is the reverse. No source links Precision to a snappy or smooth preference.",
+        "caveat": "Assumes Standard smoothing. Precision is a Standard setting; Classic uses Smooth, Decay and Synch instead."
+      }
+    },
+    {
+      "input": "feel",
+      "termIds": [
+        "easing",
+        "smoothing-standard"
+      ],
+      "statement": {
+        "text": "With custom Standard smoothing: for a smoother start from a standstill, raise Easing. For a snappier start, lower it.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Specifies aim behavior from rest"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Higher values result in smoother transition from rest but lower response time."
+          }
+        ],
+        "reasoning": "Easing \"specifies aim behavior from rest\", and higher values give a \"smoother transition from rest but lower response time\". We read that as smoother but slower to get going, so lowering it should give a snappier start. No source links Easing to a snappy or smooth preference.",
+        "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it. Assumes Standard smoothing (Easing is a Standard setting)."
+      }
+    },
+    {
+      "input": "sensitivity",
+      "termIds": [
+        "sensitivity"
+      ],
+      "statement": {
+        "text": "No source gives a cm/360 range, for Destiny 2 or for faster or slower aim. Dialed won't guess one: pick your cm/360 by feel, then check it with XIM's cm/360 test.",
+        "confidence": "gap",
+        "citations": []
+      }
+    },
+    {
+      "input": "sensitivity",
+      "termIds": [
+        "sensitivity"
+      ],
+      "statement": {
+        "text": "XIM: start by adjusting Sensitivity alone. There is no \"right\" set of values; it is preference.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+            "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+          }
+        ]
+      }
+    },
+    {
+      "input": "focus",
+      "termIds": [],
+      "statement": {
+        "text": "No source gives different settings for Crucible (PvP) and PvE. Dialed won't guess, so this choice doesn't change its advice yet.",
+        "confidence": "gap",
+        "citations": []
+      }
+    },
+    {
+      "input": "style",
+      "termIds": [],
+      "statement": {
+        "text": "No source ties aggressive or deliberate play to any setting. Dialed won't guess, so this choice doesn't change its advice yet.",
+        "confidence": "gap",
+        "citations": []
       }
     }
   ]

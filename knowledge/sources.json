@@ -26,8 +26,9 @@
       "publisher": "XIM Community Forum",
       "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
       "hosts": ["community.xim.tech"],
-      "tier": "official",
-      "accessed": "2026-09-22"
+      "tier": "official-by-reference",
+      "accessed": "2026-09-22",
+      "notes": "A public forum page, posted by OBsIV, who writes in XIM's voice (\"our latest firmware\"); no page states their role. CONCEPT.md §8 lists it as official by reference, together with the Game Settings list. Hardware reports come from users and can go out of date, so check the live page."
     },
     {
       "id": "xim-getting-started",

@@ -5,7 +5,7 @@
  * try/catch: unavailable storage, corrupt JSON or invalid data fall back to defaults
  * (keeping whatever is still valid) and report an issue instead of throwing.
  */
-import { AppData, BackupFile, Loadout, Profile, STORAGE_VERSION, defaultData } from './schema';
+import { AppData, BackupFile, Loadout, Profile, STORAGE_VERSION, defaultData, normalizeProfile } from './schema';
 
 export const STORAGE_KEY = 'dialed:v1';
 /** Where unreadable data is copied before it can be overwritten, so it isn't silently lost. */
@@ -66,6 +66,8 @@ function salvage(value: unknown): AppData {
       const field = Profile.shape[key].safeParse(fields[key]);
       if (field.success) profile[key] = field.data;
     }
+    // Fields that are valid one by one can still disagree (an Xbox profile with a PC output).
+    data.profile = normalizeProfile(data.profile);
   }
   if (Array.isArray(record.loadouts)) {
     const seen = new Set<string>();
@@ -99,9 +101,50 @@ export function loadData(storage: Storage | null): LoadResult {
     return { data: defaultData(), issue: 'corrupt', unreadable: raw };
   }
 
-  const parsed = AppData.safeParse(json);
+  const migrated = migrateToCurrent(json);
+  if (typeof migrated === 'string') return { data: salvage(json), issue: 'invalid', unreadable: raw };
+  const parsed = AppData.safeParse(migrated);
   if (parsed.success) return { data: parsed.data, issue: null };
-  return { data: salvage(json), issue: 'invalid', unreadable: raw };
+  return { data: salvage(migrated), issue: 'invalid', unreadable: raw };
+}
+
+// ---------------------------------------------------------------------------------------
+// Versions
+// ---------------------------------------------------------------------------------------
+
+type Versioned = Record<string, unknown> & { version: number };
+export type Migration = (data: Versioned) => Versioned;
+
+/**
+ * One step per storage version: MIGRATIONS[n] turns version-n data (stored data or a backup)
+ * into version n + 1. Add a step with every STORAGE_VERSION bump, so data and backups made by
+ * older versions of Dialed still load. There are none yet: version 1 is the first.
+ */
+export const MIGRATIONS: Readonly<Record<number, Migration>> = {};
+
+/**
+ * Brings stored data or a backup up to `target`, one step at a time. Returns an error message
+ * when it can't: no version number, a version newer than this build, or a missing step.
+ */
+export function migrateToCurrent(
+  value: unknown,
+  migrations: Readonly<Record<number, Migration>> = MIGRATIONS,
+  target: number = STORAGE_VERSION,
+): Versioned | string {
+  if (!value || typeof value !== 'object') return 'no data';
+  let current = value as Record<string, unknown>;
+  const version = current.version;
+  if (typeof version !== 'number' || !Number.isInteger(version) || version < 1) return 'no valid version number';
+  if (version > target) return 'newer';
+  let at = version;
+  while (at < target) {
+    const step = migrations[at];
+    if (!step) return `no migration from version ${at}`;
+    current = step({ ...current, version: at });
+    at += 1;
+    current = { ...current, version: at };
+  }
+  return current as Versioned;
 }
 
 /** Returns false when the data couldn't be written (storage unavailable or full). */
@@ -148,10 +191,14 @@ export function parseBackup(text: string): RestoreResult {
   if (!json || typeof json !== 'object' || (json as { app?: unknown }).app !== 'dialed') {
     return { ok: false, error: 'That file isn’t a Dialed backup.' };
   }
-  if ((json as { version?: unknown }).version !== STORAGE_VERSION) {
-    return { ok: false, error: 'That backup is from a different version of Dialed and can’t be restored here.' };
+  const migrated = migrateToCurrent(json);
+  if (migrated === 'newer') {
+    return { ok: false, error: 'That backup is from a newer version of Dialed. Update Dialed, then restore it.' };
   }
-  const parsed = BackupFile.safeParse(json);
+  if (typeof migrated === 'string') {
+    return { ok: false, error: 'That backup is from a version of Dialed this build can’t read, so it can’t be restored here.' };
+  }
+  const parsed = BackupFile.safeParse(migrated);
   if (!parsed.success) {
     const first = parsed.error.issues[0];
     const where = first?.path.length ? ` (${first.path.join('.')})` : '';

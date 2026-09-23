@@ -6,8 +6,10 @@
 //   npm run verify:citations -- --dir <path>  check another folder (e.g. a test fixture)
 //
 // Each unique URL (anchor stripped) is fetched once. The page is converted to text and both
-// sides are normalised (see scripts/lib/citations.mjs) before a substring check.
-// Exits 1 if any quote is missing, any page can't be fetched, or any file isn't valid JSON.
+// sides are normalised (see scripts/lib/citations.mjs) before a substring check. A cited
+// #anchor must exist on the page (an id, or a name on an <a> element).
+// Exits 1 if any quote or anchor is missing, any page can't be fetched, or any file isn't
+// valid JSON.
 //
 // Networking: requests honour HTTPS_PROXY / HTTP_PROXY / NO_PROXY (undici's
 // EnvHttpProxyAgent), and extra CA certificates come from NODE_EXTRA_CA_CERTS.
@@ -15,7 +17,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { EnvHttpProxyAgent, fetch } from 'undici';
-import { collectCitations, pageText, quoteFound, stripAnchor } from './lib/citations.mjs';
+import { anchorOf, anchorTargets, collectCitations, pageText, quoteFound, stripAnchor } from './lib/citations.mjs';
 
 const repoRoot = fileURLToPath(new URL('..', import.meta.url));
 const args = process.argv.slice(2);
@@ -51,7 +53,7 @@ const dispatcher = new EnvHttpProxyAgent();
 
 /**
  * @param {string} url
- * @returns {Promise<{ ok: true, text: string } | { ok: false, error: string }>}
+ * @returns {Promise<{ ok: true, text: string, anchors: Set<string> } | { ok: false, error: string }>}
  */
 async function fetchPage(url) {
   let lastError = 'unknown error';
@@ -73,7 +75,9 @@ async function fetchPage(url) {
         if (res.status < 500) break; // a 4xx won't fix itself on retry
         continue;
       }
-      return { ok: true, text: pageText(body, res.headers.get('content-type') ?? '') };
+      const contentType = res.headers.get('content-type') ?? '';
+      const isMarkup = /html|xml/i.test(contentType) || /^\s*</.test(body);
+      return { ok: true, text: pageText(body, contentType), anchors: isMarkup ? anchorTargets(body) : new Set() };
     } catch (error) {
       const err = /** @type {Error & { cause?: { message?: string, code?: string } }} */ (error);
       lastError = [err.message, err.cause?.code, err.cause?.message].filter(Boolean).join(': ');
@@ -139,13 +143,16 @@ async function main() {
   let failures = 0;
   for (const c of citations) {
     const page = pages.get(stripAnchor(c.url));
+    const anchor = anchorOf(c.url);
     const problem = !page
       ? 'page was not fetched'
       : !page.ok
         ? `could not fetch the page: ${page.error}`
-        : quoteFound(page.text, c.quote)
-          ? null
-          : 'quote not found on the page';
+        : !quoteFound(page.text, c.quote)
+          ? 'quote not found on the page'
+          : anchor && !page.anchors.has(anchor)
+            ? `anchor #${anchor} not found on the page`
+            : null;
     if (problem) {
       failures++;
       console.log(`✗ ${c.file} › ${c.entryId}`);
