@@ -7,8 +7,10 @@ import { Screen } from '../../components/Screen';
 import { OUTPUT_TYPE_LABELS, PLATFORM_LABELS } from '../../content/labels';
 import { useData } from '../../state/data-context';
 import { useKnowledge } from '../../state/knowledge-context';
+import { progressSummary } from '../../state/progress';
 import type { Loadout, Profile } from '../../state/schema';
-import { buildPlan, planProgress, progressText } from './build-plan';
+import { useEffectiveProgress } from '../../state/use-progress';
+import { buildPlan, planProgress } from './build-plan';
 import { aimStyleName, weaponLines, weaponSummary } from './format';
 import { buildPath } from './use-build-plan';
 import './build.css';
@@ -65,6 +67,7 @@ function ProfileReadiness({ profile }: { profile: Profile }) {
 function LoadoutCard({ loadout }: { loadout: Loadout }) {
   const knowledge = useKnowledge();
   const { data } = useData();
+  const progress = useEffectiveProgress();
   const plan = buildPlan(knowledge, data.profile, loadout);
   const weapons = weaponLines(loadout, knowledge);
 
@@ -78,7 +81,7 @@ function LoadoutCard({ loadout }: { loadout: Loadout }) {
             Aim style: <strong>{aimStyleName(plan.main, plan.style)}</strong>
             {plan.main && <ConfidenceBadge level={plan.main.mapping.confidence} />}
           </span>
-          <span className="flow-card-status">{progressText(planProgress(plan, data.progress), 'steps')}</span>
+          <span className="flow-card-status">{progressSummary(planProgress(plan, progress), 'items')}</span>
         </span>
         <ChevronIcon />
       </Link>
@@ -112,7 +115,7 @@ export function BuildIndexScreen() {
           Choose a loadout
         </h2>
         {loadouts.length === 0 ? (
-          <EmptyState title="No loadouts yet">
+          <EmptyState title="No loadouts yet" level={3}>
             <p>
               Each loadout gets its own Config, tuned toward its main weapon’s aim style, so the build starts from a
               loadout. Add the weapons you run and mark the main one.

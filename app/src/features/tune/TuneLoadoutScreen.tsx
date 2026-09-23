@@ -75,13 +75,15 @@ export function TuneLoadoutScreen() {
   if (!loadout) return <LoadoutNotFound />;
 
   if (tab === undefined) {
-    const start: TabId = hasEnteredSettings(data.configs[loadout.id]) ? 'changes' : 'settings';
+    const start: TabId = hasEnteredSettings(data.configs[loadout.id], data.inGame) ? 'changes' : 'settings';
     return <Navigate replace to={tunePath(loadout.id, start)} />;
   }
   if (!isTab(tab)) return <NotFoundScreen />;
 
   return (
     <Screen
+      // A new screen per tab, so focus moves to the heading like any other navigation.
+      key={tab}
       title={loadout.name}
       documentTitle={`Tune ${loadout.name}`}
       back={{ to: '/tune', label: 'Tune my config' }}

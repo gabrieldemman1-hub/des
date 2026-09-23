@@ -8,9 +8,11 @@ import { OUTPUT_TYPE_LABELS, PLATFORM_LABELS } from '../../content/labels';
 import { useData } from '../../state/data-context';
 import { checksForProfile } from '../../state/guidance';
 import { useKnowledge } from '../../state/knowledge-context';
+import type { ProgressCount } from '../../state/progress';
 import type { Profile } from '../../state/schema';
+import { useEffectiveProgress } from '../../state/use-progress';
 import { SetupChecklist, SetupSummary } from './SetupChecklist';
-import { summarizeChecks, type CheckSummary } from './setup-progress';
+import { summarizeChecks } from './setup-progress';
 import './troubleshoot.css';
 
 /** Which checks are shown, and why: the profile decides, and unset parts keep every check. */
@@ -65,11 +67,12 @@ function SymptomCard({ symptom }: { symptom: Symptom }) {
 }
 
 /** Nudges toward finishing stage 1 first, without blocking stage 2. */
-function stage2Hint({ total, checked, problems }: CheckSummary): string {
+function stage2Hint({ total, done, problem }: ProgressCount): string {
+  const checked = done + problem;
   if (checked < total) {
     return `Best after the setup check (you’ve checked ${checked} of ${total}), but you can pick a feel now.`;
   }
-  if (problems > 0) {
+  if (problem > 0) {
     return 'Every setup check is marked. Fix the ones marked Needs fixing first, then pick the feel that fits best.';
   }
   return 'Setup check done. Pick the feel that fits best.';
@@ -79,11 +82,12 @@ function stage2Hint({ total, checked, problems }: CheckSummary): string {
 export function TroubleshootScreen() {
   const { kb } = useKnowledge();
   const { data } = useData();
+  const progress = useEffectiveProgress();
   const id = useId();
   const stage2Heading = useRef<HTMLHeadingElement>(null);
 
   const checks = checksForProfile(kb.foundation, data.profile);
-  const summary = summarizeChecks(checks, data.progress);
+  const summary = summarizeChecks(checks, progress);
 
   return (
     <Screen
@@ -119,7 +123,7 @@ export function TroubleshootScreen() {
         </p>
         <ProfileNote profile={data.profile} />
         {checks.length === 0 ? (
-          <EmptyState title="No setup checks yet">
+          <EmptyState title="No setup checks yet" level={3}>
             <p>Dialed’s knowledge base has no setup checks for your setup yet, so there’s nothing to check here.</p>
           </EmptyState>
         ) : (
@@ -139,7 +143,7 @@ export function TroubleshootScreen() {
         </h2>
         {checks.length > 0 && <p className="hint">{stage2Hint(summary)}</p>}
         {kb.symptoms.length === 0 ? (
-          <EmptyState title="No symptoms yet">
+          <EmptyState title="No symptoms yet" level={3}>
             <p>Dialed’s knowledge base has no symptoms written yet.</p>
           </EmptyState>
         ) : (

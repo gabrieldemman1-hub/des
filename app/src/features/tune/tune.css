@@ -164,3 +164,14 @@
     color: HighlightText;
   }
 }
+
+/* What a card shows of its statement before "Why, and the source": worked out, and the caveat. */
+.finding-note {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+/* "Change this first" receives focus when its card is gone; it isn't interactive, so no ring. */
+.tune-section > h2[tabindex='-1']:focus {
+  outline: none;
+}

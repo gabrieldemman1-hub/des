@@ -18,8 +18,28 @@ import type {
   Statement,
   WeaponArchetype,
 } from '../../../../knowledge/index';
+import {
+  CURVE_LABELS,
+  STANDARD_SMOOTHING_TERMS,
+  SYNC_LABELS,
+  aimValue,
+  describeQuantization,
+  describeSensitivity,
+  hasConfigValues,
+  smoothingNote,
+  type SmoothingNote,
+} from '../../state/current-values';
 import { checksForProfile, leversForProfile } from '../../state/guidance';
-import { emptyConfig, type CurrentConfig, type Loadout, type Profile } from '../../state/schema';
+import { progressKey } from '../../state/progress';
+import { hasInGameValues } from '../../state/required-settings';
+import {
+  emptyConfig,
+  emptyInGame,
+  type CurrentConfig,
+  type InGameSettings,
+  type Loadout,
+  type Profile,
+} from '../../state/schema';
 
 /** In impact order: what the app shows first comes first. */
 export const FINDING_GROUPS = ['fix', 'setup', 'aim', 'info'] as const;
@@ -53,10 +73,17 @@ export interface Finding {
   /** Something to change (as opposed to something to know). "Change this first" picks from these. */
   actionable: boolean;
   /**
-   * aim levers only: a Standard-smoothing setting while the player's smoothing isn't custom
-   * Standard, so the direction doesn't apply to their Config as it is.
+   * aim levers on a Standard smoothing setting, and the note about them, while the player's
+   * smoothing isn't custom Standard: the directions assume Standard smoothing (the shared
+   * wording from `smoothingNote`). With Classic or Off the lever isn't actionable; with a
+   * preset it still is, since Dialed can't tell which mode a preset uses.
    */
-  assumesStandard?: boolean;
+  smoothing?: SmoothingNote;
+  /**
+   * aim items the player can mark done: the loadout's shared aim progress key, which Build my
+   * config's Aim settings step and config sheet read too.
+   */
+  progressKey?: string;
   /** Glossary terms to link to. Only ids the knowledge base has. */
   termIds: string[];
 }
@@ -79,12 +106,14 @@ import { IN_GAME_TERMS, checkRequiredSettings } from '../../state/required-setti
 // Helpers
 // ---------------------------------------------------------------------------------------
 
-/** True when the player has entered at least one setting for this loadout. */
-export function hasEnteredSettings(config: CurrentConfig | undefined): boolean {
-  if (!config) return false;
-  return [config.inGame, config.matrix, config.aim].some((group) =>
-    Object.values(group).some((value) => value !== null && value !== ''),
-  );
+export { hasConfigValues } from '../../state/current-values';
+
+/**
+ * True when there is something to compare for this loadout: a setting in its Config, or one of
+ * Destiny 2's in-game settings (shared by every loadout).
+ */
+export function hasEnteredSettings(config: CurrentConfig | undefined, inGame: InGameSettings | undefined): boolean {
+  return hasConfigValues(config) || hasInGameValues(inGame);
 }
 
 /** The loadout's main weapon, and its aim style when the knowledge base has one. */
@@ -125,83 +154,12 @@ function statementsOf(...statements: (Statement | undefined)[]): Statement[] {
   return statements.filter((s): s is Statement => s !== undefined);
 }
 
-const SMOOTHING_LABELS = {
-  preset: 'Preset',
-  standard: 'Custom Standard',
-  classic: 'Custom Classic',
-  off: 'Off',
-} as const satisfies Record<NonNullable<CurrentConfig['aim']['smoothing']>, string>;
-
-const SYNC_LABELS = { standard: 'Standard', custom: 'Custom', manual: 'Manual' } as const;
-const CURVE_LABELS = { linear: 'Linear', custom: 'Custom' } as const;
-
-/** The settings of custom Standard smoothing, which the aim-style directions assume. */
-const STANDARD_SMOOTHING_TERMS: ReadonlySet<string> = new Set(['precision', 'response', 'easing', 'stability']);
-
-function num(value: number | null): string | null {
-  return value === null ? null : String(value);
-}
-
-function describeSmoothing(aim: CurrentConfig['aim']): string | null {
-  if (aim.smoothing === null) return null;
-  const label = SMOOTHING_LABELS[aim.smoothing];
-  const preset = aim.presetName.trim();
-  return aim.smoothing === 'preset' && preset ? `${label}: ${preset}` : label;
-}
-
-function describeQuantization(aim: CurrentConfig['aim']): string | null {
-  if (aim.quantization === null) return null;
-  if (!aim.quantization) return 'Off';
-  const parts = [
-    aim.quantizationMagnitude === null ? null : `Magnitude ${aim.quantizationMagnitude}`,
-    aim.quantizationAngle === null ? null : `Angle ${aim.quantizationAngle}`,
-  ].filter((p) => p !== null);
-  return parts.length > 0 ? `On (${parts.join(', ')})` : 'On';
-}
-
-function describeSensitivity(aim: CurrentConfig['aim']): string | null {
-  const parts = [
-    aim.hipSensitivity === null ? null : `Hip ${aim.hipSensitivity} cm/360`,
-    aim.adsSensitivity === null ? null : `ADS ${aim.adsSensitivity} cm/360`,
-  ].filter((p) => p !== null);
-  return parts.length > 0 ? parts.join(' · ') : null;
-}
-
-/**
- * The player's value for the setting a lever names: undefined when Dialed has no field for
- * it (e.g. Stability), null when not entered.
- */
-function leverValue(termId: string, aim: CurrentConfig['aim']): string | null | undefined {
-  switch (termId) {
-    case 'precision':
-      return num(aim.precision);
-    case 'response':
-      return num(aim.response);
-    case 'easing':
-      return num(aim.easing);
-    case 'smooth':
-      return num(aim.smooth);
-    case 'decay':
-      return num(aim.decay);
-    case 'synch':
-      return num(aim.synch);
-    case 'y-scale':
-      return num(aim.yScale);
-    case 'aiming-curve':
-      return aim.aimingCurve === null ? null : CURVE_LABELS[aim.aimingCurve];
-    case 'quantization':
-      return describeQuantization(aim);
-    default:
-      return undefined;
-  }
-}
-
 // ---------------------------------------------------------------------------------------
 // The analysis
 // ---------------------------------------------------------------------------------------
 
-function fixFindings(kb: KnowledgeBase, config: CurrentConfig, known: (ids: readonly string[]) => string[]) {
-  return checkRequiredSettings(kb, config).flatMap((setting): Finding[] => {
+function fixFindings(kb: KnowledgeBase, inGame: InGameSettings, known: (ids: readonly string[]) => string[]) {
+  return checkRequiredSettings(kb, inGame).flatMap((setting): Finding[] => {
     if (setting.state !== 'mismatch' || setting.field === null) return [];
     return [
       {
@@ -328,6 +286,7 @@ function aimFindings(
       current: current ?? undefined,
       status: current === null ? 'missing' : undefined,
       actionable: true,
+      progressKey: progressKey.aim.sensitivity(loadout.id),
       termIds: known(['sensitivity']),
     });
   }
@@ -352,24 +311,29 @@ function aimFindings(
   }
 
   const levers = leversForProfile(style.levers, profile);
-  const notStandard = aim.smoothing !== null && aim.smoothing !== 'standard';
-  if (notStandard && levers.some((l) => STANDARD_SMOOTHING_TERMS.has(l.termId))) {
+  const note = smoothingNote(aim);
+  if (note && levers.some((l) => STANDARD_SMOOTHING_TERMS.has(l.termId))) {
     // The style's own statement says its directions assume Standard smoothing.
     findings.push({
       id: 'aim:smoothing-mode',
       group: 'aim',
-      title: 'These directions assume custom Standard smoothing',
+      title: 'These directions assume Standard smoothing',
       statement: style.favours,
       more: [],
-      current: describeSmoothing(aim) ?? undefined,
+      current: note.current,
       actionable: false,
+      smoothing: note,
       termIds: known(['smoothing', 'smoothing-standard', 'smoothing-classic']),
     });
   }
 
   for (const lever of levers) {
-    const standardOnly = notStandard && STANDARD_SMOOTHING_TERMS.has(lever.termId);
-    const value = standardOnly ? undefined : leverValue(lever.termId, aim);
+    const standardSetting = STANDARD_SMOOTHING_TERMS.has(lever.termId);
+    const leverNote = standardSetting ? smoothingNote(aim, 'one') : null;
+    // Classic or Off: the direction is for a setting their Config doesn't use as it is. A preset
+    // may be Standard, so its directions stay.
+    const ruledOut = leverNote !== null && leverNote.mode !== 'preset';
+    const value = aimValue(aim, lever.termId);
     findings.push({
       id: `aim:${lever.termId}`,
       group: 'aim',
@@ -379,8 +343,9 @@ function aimFindings(
       current: value ?? undefined,
       direction: lever.direction,
       status: value === null ? 'missing' : undefined,
-      actionable: !standardOnly,
-      assumesStandard: standardOnly || undefined,
+      actionable: !ruledOut,
+      smoothing: leverNote ?? undefined,
+      progressKey: ruledOut ? undefined : progressKey.aim.lever(loadout.id, style.id, lever.termId),
       termIds: known([lever.termId]),
     });
   }
@@ -469,13 +434,15 @@ function infoFindings(
 /**
  * What to change in this loadout's Config, ordered by impact: Destiny 2 settings that differ
  * from XIM's list, then setup problems, then the aim settings for the main weapon's aim style,
- * then things worth knowing. An empty or missing config gives only the aim guidance.
+ * then things worth knowing. Destiny 2's in-game settings are shared by every loadout, so they
+ * are passed on their own. Nothing entered gives only the aim guidance.
  */
 export function analyzeConfig(
   kb: KnowledgeBase,
   profile: Profile,
   loadout: Loadout,
   config: CurrentConfig | undefined,
+  inGame: InGameSettings | undefined,
 ): Finding[] {
   const current = config ?? emptyConfig();
   const terms = new Map(kb.glossary.terms.map((t) => [t.id, t] as const));
@@ -483,7 +450,7 @@ export function analyzeConfig(
   const known = (ids: readonly string[]) => ids.filter((id) => terms.has(id));
 
   const findings = [
-    ...fixFindings(kb, current, known),
+    ...fixFindings(kb, inGame ?? emptyInGame(), known),
     ...setupFindings(kb, profile, current, term, known),
     ...aimFindings(kb, profile, loadout, current, term, known),
     ...infoFindings(kb, profile, current, term, known),

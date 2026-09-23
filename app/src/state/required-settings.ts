@@ -1,11 +1,12 @@
 /**
  * Destiny 2's required in-game settings compared with what the player entered in Tune my
- * config. Shared by Tune my config and Build my config, so both always agree.
+ * config. Shared by Tune my config and Build my config, so both always agree. The in-game
+ * settings are one record for every loadout (`AppData.inGame`).
  */
 import type { KnowledgeBase, Statement } from '../../../knowledge/index';
-import type { CurrentConfig } from './schema';
+import type { InGameSettings } from './schema';
 
-type InGame = CurrentConfig['inGame'];
+type InGame = InGameSettings;
 export type InGameField = keyof InGame;
 
 /** The knowledge base's setting names (lower case, single spaces) and the fields they fill. */
@@ -38,6 +39,16 @@ function normalizeName(name: string): string {
 /** The in-game field a required setting's name fills, or null when Dialed has no field for it. */
 export function requiredSettingField(name: string): InGameField | null {
   return REQUIRED_FIELDS[normalizeName(name)] ?? null;
+}
+
+/** The knowledge base's name for an in-game field, when it lists a required setting for it. */
+export function inGameFieldName(kb: Pick<KnowledgeBase, 'game'>, field: InGameField): string | undefined {
+  return kb.game.requiredSettings.find((s) => requiredSettingField(s.name) === field)?.name;
+}
+
+/** True when the player has entered any of Destiny 2's in-game settings. */
+export function hasInGameValues(inGame: InGame | undefined): boolean {
+  return inGame !== undefined && Object.values(inGame).some((value) => value !== null);
 }
 
 function formatInGame(field: InGameField, config: InGame): string | null {
@@ -90,8 +101,7 @@ function compareRequired(field: InGameField, required: string, config: InGame): 
 }
 
 /** Each of Destiny 2's required settings, compared with what the player entered. */
-export function checkRequiredSettings(kb: KnowledgeBase, config: CurrentConfig | undefined): RequiredSettingStatus[] {
-  const inGame = config?.inGame;
+export function checkRequiredSettings(kb: KnowledgeBase, inGame: InGame | undefined): RequiredSettingStatus[] {
   return kb.game.requiredSettings.map((setting) => {
     const field = requiredSettingField(setting.name);
     const base = { name: setting.name, required: setting.value, statement: setting.statement, field };
@@ -106,20 +116,19 @@ export function checkRequiredSettings(kb: KnowledgeBase, config: CurrentConfig |
   });
 }
 
-
 /**
  * One required setting compared with what the player entered: null when Dialed has no field
  * for it or the player hasn't entered it yet.
  */
 export function compareRequiredSetting(
-  config: CurrentConfig | undefined,
+  inGame: InGame | undefined,
   name: string,
   required: string,
 ): { current: string; state: Exclude<RequiredSettingState, 'missing'> } | null {
   const field = requiredSettingField(name);
-  if (!config || field === null) return null;
-  const current = formatInGame(field, config.inGame);
+  if (!inGame || field === null) return null;
+  const current = formatInGame(field, inGame);
   if (current === null) return null;
-  const state = compareRequired(field, required, config.inGame);
+  const state = compareRequired(field, required, inGame);
   return state === 'missing' ? null : { current, state };
 }

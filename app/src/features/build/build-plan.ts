@@ -15,8 +15,16 @@ import type {
 } from '../../../../knowledge/index';
 import type { KnowledgeApi } from '../../state/knowledge-context';
 import { checksForProfile, leversForProfile } from '../../state/guidance';
-import { progressKey } from '../../state/progress';
-import type { Loadout, Profile, ProgressState } from '../../state/schema';
+import {
+  REQUIRED_SETTINGS_CHECK_ID,
+  countProgress,
+  progressKey,
+  type ProgressCount,
+  type ProgressMap,
+} from '../../state/progress';
+import type { Loadout, Profile } from '../../state/schema';
+
+export type { ProgressCount } from '../../state/progress';
 
 export type BuildStepId = 'destiny-2' | 'matrix' | 'aim' | 'sheet';
 /** The steps that are checklists (the last step is the summary). */
@@ -101,9 +109,8 @@ type Lookups = Pick<KnowledgeApi, 'kb' | 'termById' | 'archetypeById' | 'aimStyl
 
 function guidanceItem(
   lookups: Lookups,
-  loadoutId: string,
   termId: string,
-  item: string,
+  key: string,
   extraLead: readonly Statement[] = [],
 ): GuidanceItem | undefined {
   const term = lookups.termById(termId);
@@ -111,7 +118,7 @@ function guidanceItem(
   const [first, ...rest] = term.guidance;
   const lead = [...(first ? [first] : []), ...extraLead];
   if (lead.length === 0) return undefined;
-  return { key: progressKey.loadout(loadoutId, item), term, lead, more: rest };
+  return { key, term, lead, more: rest };
 }
 
 export function buildPlan(lookups: Lookups, profile: Profile, loadout: Loadout): BuildPlan {
@@ -137,13 +144,18 @@ export function buildPlan(lookups: Lookups, profile: Profile, loadout: Loadout):
       value: s.value,
       statement: s.statement,
     })),
-    checks: checksForProfile(kb.foundation, profile).map((check) => ({ key: progressKey.check(check.id), check })),
-    sensitivity: guidanceItem(lookups, loadout.id, 'sensitivity', 'sensitivity', sensitivityGaps),
-    smoothing: guidanceItem(lookups, loadout.id, 'smoothing', 'term:smoothing'),
-    levers: levers.map((lever) => ({ key: progressKey.loadout(loadout.id, `lever:${lever.termId}`), lever })),
+    // The Destiny 2 settings check is layer 1, which the first step covers setting by setting.
+    checks: checksForProfile(kb.foundation, profile)
+      .filter((check) => check.id !== REQUIRED_SETTINGS_CHECK_ID)
+      .map((check) => ({ key: progressKey.check(check.id), check })),
+    sensitivity: guidanceItem(lookups, 'sensitivity', progressKey.aim.sensitivity(loadout.id), sensitivityGaps),
+    smoothing: guidanceItem(lookups, 'smoothing', progressKey.aim.smoothing(loadout.id)),
+    levers: style
+      ? levers.map((lever) => ({ key: progressKey.aim.lever(loadout.id, style.id, lever.termId), lever }))
+      : [],
     hiddenLevers: style ? style.levers.length - levers.length : 0,
     mechanics: MECHANICS_TERM_IDS.flatMap((termId) => {
-      const item = guidanceItem(lookups, loadout.id, termId, `term:${termId}`);
+      const item = guidanceItem(lookups, termId, progressKey.aim.term(loadout.id, termId));
       return item ? [item] : [];
     }),
   };
@@ -163,27 +175,11 @@ export function stepKeys(plan: BuildPlan): Record<ChecklistStepId, string[]> {
   };
 }
 
-export interface ProgressCount {
-  total: number;
-  done: number;
-  problem: number;
-}
-
-export function countProgress(keys: readonly string[], progress: Readonly<Record<string, ProgressState>>): ProgressCount {
-  let done = 0;
-  let problem = 0;
-  for (const key of keys) {
-    if (progress[key] === 'done') done += 1;
-    else if (progress[key] === 'problem') problem += 1;
-  }
-  return { total: keys.length, done, problem };
-}
-
-/** Progress for each checklist step. */
-export function stepProgress(
-  plan: BuildPlan,
-  progress: Readonly<Record<string, ProgressState>>,
-): Record<ChecklistStepId, ProgressCount> {
+/**
+ * Progress for each checklist step. Pass the effective progress (`effectiveProgress`), as every
+ * checklist shows it.
+ */
+export function stepProgress(plan: BuildPlan, progress: ProgressMap): Record<ChecklistStepId, ProgressCount> {
   const keys = stepKeys(plan);
   return {
     'destiny-2': countProgress(keys['destiny-2'], progress),
@@ -193,7 +189,7 @@ export function stepProgress(
 }
 
 /** Progress over the whole walkthrough (the shared steps count for every loadout). */
-export function planProgress(plan: BuildPlan, progress: Readonly<Record<string, ProgressState>>): ProgressCount {
+export function planProgress(plan: BuildPlan, progress: ProgressMap): ProgressCount {
   const keys = stepKeys(plan);
   return countProgress([...keys['destiny-2'], ...keys.matrix, ...keys.aim], progress);
 }
@@ -202,13 +198,7 @@ export function planProgress(plan: BuildPlan, progress: Readonly<Record<string, 
  * Where /build/<loadout> picks up: the first checklist step that isn't fully done, or the
  * config sheet step when everything is.
  */
-export function resumeStep(plan: BuildPlan, progress: Readonly<Record<string, ProgressState>>): BuildStepId {
+export function resumeStep(plan: BuildPlan, progress: ProgressMap): BuildStepId {
   const counts = stepProgress(plan, progress);
   return CHECKLIST_STEPS.find((id) => counts[id].done < counts[id].total) ?? 'sheet';
-}
-
-/** "4 of 17 steps done" (with `unit` "steps") or "4 of 17 done", plus how many need fixing. */
-export function progressText({ total, done, problem }: ProgressCount, unit?: string): string {
-  const base = `${done} of ${total}${unit ? ` ${unit}` : ''} done`;
-  return problem > 0 ? `${base}, ${problem} ${problem === 1 ? 'needs' : 'need'} fixing` : base;
 }

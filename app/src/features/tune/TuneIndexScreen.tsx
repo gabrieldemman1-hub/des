@@ -7,7 +7,8 @@ import { AIM_STYLE_NAMES, NO_AIM_STYLE } from '../../content/labels';
 import { useData } from '../../state/data-context';
 import { useKnowledge } from '../../state/knowledge-context';
 import type { Loadout } from '../../state/schema';
-import { hasEnteredSettings, mainWeapon } from './analysis';
+import { hasInGameValues } from '../../state/required-settings';
+import { hasConfigValues, mainWeapon } from './analysis';
 import './tune.css';
 
 function formatDate(iso: string) {
@@ -26,9 +27,11 @@ function LoadoutChoice({ loadout }: { loadout: Loadout }) {
         : (style?.name ?? AIM_STYLE_NAMES[archetype.aimStyle]);
   const config = data.configs[loadout.id];
   const status =
-    hasEnteredSettings(config) && config?.updatedAt
+    hasConfigValues(config) && config?.updatedAt
       ? `Settings entered · updated ${formatDate(config.updatedAt)}`
-      : 'No settings entered yet';
+      : hasInGameValues(data.inGame)
+        ? 'Destiny 2 settings entered · none for this Config yet'
+        : 'No settings entered yet';
 
   return (
     <li>
@@ -55,7 +58,7 @@ export function TuneIndexScreen() {
   const { loadouts } = data;
 
   return (
-    <Screen title="Tune my config" intro={lede && <p className="lede">{lede}</p>}>
+    <Screen title="Tune my config" back={{ to: '/', label: 'Home' }} intro={lede && <p className="lede">{lede}</p>}>
       {more.map((p) => (
         <p key={p}>{p}</p>
       ))}

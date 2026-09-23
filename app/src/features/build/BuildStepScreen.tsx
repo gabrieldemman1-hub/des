@@ -3,10 +3,10 @@ import { Link, Navigate, useParams } from 'react-router';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { Screen } from '../../components/Screen';
 import { useData } from '../../state/data-context';
-import { loadoutPrefix } from '../../state/progress';
+import { aimProgressPrefix, progressSummary } from '../../state/progress';
+import { useEffectiveProgress } from '../../state/use-progress';
 import {
   BUILD_STEPS,
-  progressText,
   stepById,
   stepProgress,
   type BuildPlan,
@@ -57,7 +57,7 @@ function StepIndicator({
                   {step.short}
                 </span>
                 <span className="visually-hidden">
-                  {`Step ${i + 1}: ${step.title}${count ? `, ${progressText(count)}` : ''}`}
+                  {`Step ${i + 1}: ${step.title}${count ? `, ${progressSummary(count)}` : ''}`}
                 </span>
               </Link>
             </li>
@@ -96,7 +96,10 @@ function StepPager({ plan, index }: { plan: BuildPlan; index: number }) {
   );
 }
 
-/** Clears this loadout's own ticks. The shared Destiny 2 and setup ticks stay. */
+/**
+ * Clears this loadout's aim marks, which Build my config and Tune my config share. The
+ * Destiny 2 and setup ticks, shared by every loadout, stay.
+ */
 function ResetLoadoutSteps({ plan }: { plan: BuildPlan }) {
   const { clearProgress } = useData();
   const [open, setOpen] = useState(false);
@@ -118,14 +121,18 @@ function ResetLoadoutSteps({ plan }: { plan: BuildPlan }) {
         danger
         onCancel={() => setOpen(false)}
         onConfirm={() => {
-          clearProgress(loadoutPrefix(plan.loadout.id));
+          clearProgress(aimProgressPrefix(plan.loadout.id));
           setOpen(false);
-          setMessage(`Cleared the aim settings you ticked for “${name}”.`);
+          setMessage(`Cleared the aim settings marks for “${name}”.`);
         }}
       >
         <p>
-          This clears what you’ve ticked in Aim settings for this loadout. The Destiny 2 settings and MATRIX setup are
-          shared with your other loadouts and with Troubleshoot by feel, so they stay as they are.
+          This clears the marks on the aim settings for this loadout. Build my config and Tune my config share these
+          marks, so the changes you marked Done in Tune my config for this loadout are cleared too.
+        </p>
+        <p>
+          The Destiny 2 settings and MATRIX setup are shared with your other loadouts and with Troubleshoot by feel, so
+          they stay as they are.
         </p>
       </ConfirmDialog>
     </div>
@@ -135,7 +142,7 @@ function ResetLoadoutSteps({ plan }: { plan: BuildPlan }) {
 /** One step of the walkthrough, at /build/<loadoutId>/<stepId>. */
 export function BuildStepScreen() {
   const { loadoutId, stepId } = useParams();
-  const { data } = useData();
+  const progress = useEffectiveProgress();
   const plan = useBuildPlan(loadoutId);
   if (!plan) {
     return (
@@ -149,7 +156,7 @@ export function BuildStepScreen() {
   if (!step) return <Navigate to={buildPath(plan.loadout.id)} replace />;
 
   const index = BUILD_STEPS.indexOf(step);
-  const counts = stepProgress(plan, data.progress);
+  const counts = stepProgress(plan, progress);
   const title = step.id === 'aim' ? `Aim settings for ${plan.loadout.name}` : step.title;
 
   return (

@@ -1,9 +1,17 @@
 import type { ReactNode } from 'react';
 
-export function EmptyState({ title, children }: { title: string; children: ReactNode }) {
+interface Props {
+  title: string;
+  /** The heading level: 2 on its own in a screen, 3 inside a section with an h2. */
+  level?: 2 | 3;
+  children: ReactNode;
+}
+
+export function EmptyState({ title, level = 2, children }: Props) {
+  const Heading = level === 3 ? 'h3' : 'h2';
   return (
     <div className="empty-state">
-      <h2>{title}</h2>
+      <Heading className="empty-state-title">{title}</Heading>
       {children}
     </div>
   );

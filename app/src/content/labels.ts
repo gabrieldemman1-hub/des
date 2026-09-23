@@ -4,6 +4,7 @@ import type {
   Confidence,
   LeverDirection,
   OutputType,
+  Statement,
   TermCategory,
 } from '../../../knowledge/index';
 
@@ -18,6 +19,17 @@ export const CONFIDENCE_INFO: Record<Confidence, { label: string; meaning: strin
   },
   gap: { label: 'Gap', meaning: 'No sourced MATRIX-era answer yet, and the app says so.' },
 };
+
+/**
+ * How a reasoned statement is introduced, on screen and in plain text. With citations it
+ * applies XIM's definitions (CONCEPT.md §8). Without any, it is Dialed's own reading, and the
+ * caveat says why.
+ */
+export function reasonedLabel(statement: Pick<Statement, 'citations'>): string {
+  return statement.citations.length > 0
+    ? 'Worked out from XIM’s definitions, not stated by a source.'
+    : 'Worked out by Dialed, not stated by any source.';
+}
 
 export const SOURCE_TIER_LABELS = {
   official: 'Official',

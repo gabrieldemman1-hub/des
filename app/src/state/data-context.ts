@@ -1,6 +1,6 @@
 import { createContext, use } from 'react';
 import type { DraftErrors, LoadoutDraft } from './loadouts';
-import type { AppData, CurrentConfig, Loadout, Profile, ProgressState } from './schema';
+import type { AppData, CurrentConfig, InGameSettings, Loadout, Profile, ProgressState } from './schema';
 
 export type NoticeKind = 'unavailable' | 'corrupt' | 'invalid' | 'save-failed';
 
@@ -22,7 +22,6 @@ export const NOTICE_TEXT: Record<NoticeKind, string> = {
 export type SaveState = 'idle' | 'saved' | 'failed';
 
 export type ConfigPatch = {
-  inGame?: Partial<CurrentConfig['inGame']>;
   matrix?: Partial<CurrentConfig['matrix']>;
   aim?: Partial<CurrentConfig['aim']>;
 };
@@ -51,6 +50,8 @@ export interface DataApi {
    * `{ aim: { easing: 40 } }` changes only Easing. Ignored for an unknown loadout.
    */
   updateConfig: (loadoutId: string, patch: ConfigPatch) => void;
+  /** Saves (part of) Destiny 2's in-game settings, which every loadout shares. */
+  updateInGame: (patch: Partial<InGameSettings>) => void;
   /** Sets a checklist item (see progress.ts), or clears it with null. */
   setProgress: (key: string, state: ProgressState | null) => void;
   /** Clears every checklist item whose key starts with `prefix`. */

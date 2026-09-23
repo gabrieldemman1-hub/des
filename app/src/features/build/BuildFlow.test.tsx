@@ -4,7 +4,7 @@ import { knowledge } from '../../../../knowledge/index';
 import { EASING_CAVEAT } from '../../../../knowledge/integrity';
 import { createKnowledgeApi } from '../../state/knowledge-context';
 import { progressKey } from '../../state/progress';
-import { emptyConfig, type AppData, type Profile } from '../../state/schema';
+import { emptyConfig, emptyInGame, type AppData, type Profile } from '../../state/schema';
 import { STORAGE_KEY } from '../../state/storage';
 import { sampleData, sampleLoadout } from '../../test/fixtures';
 import { MemoryStorage } from '../../test/memory-storage';
@@ -57,7 +57,7 @@ describe('Build my config: choosing a loadout', () => {
     expect(pulse).toHaveAttribute('href', '/build/l1');
     expect(pulse).toHaveTextContent('Pulse Rifle (main), Shotgun');
     expect(pulse).toHaveTextContent('Aim style: Tracking');
-    expect(pulse).toHaveTextContent(`2 of ${total} steps done`);
+    expect(pulse).toHaveTextContent(`2 of ${total} items done`);
     expect(screen.getByRole('link', { name: /Peek/ })).toHaveTextContent('Aim style: Snap');
 
     const profile = screen.getByRole('region', { name: 'Your profile' });
@@ -75,7 +75,8 @@ describe('Build my config: choosing a loadout', () => {
 
   it('invites you to add a loadout when there are none', () => {
     render('/build', sampleData());
-    expect(screen.getByRole('heading', { name: 'No loadouts yet' })).toBeInTheDocument();
+    // Inside the "Choose a loadout" section, so one level below it.
+    expect(screen.getByRole('heading', { level: 3, name: 'No loadouts yet' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Add a loadout' })).toHaveAttribute('href', '/loadouts/new');
   });
 
@@ -122,13 +123,16 @@ describe('Build my config: the steps', () => {
 
   it('step 1 shows the current value from Tune my config and flags a difference', () => {
     const data = withProfile({});
-    const config = emptyConfig();
-    config.inGame.lookSensitivity = 18;
-    data.configs = { l1: config };
-    render('/build/l1/destiny-2', data);
+    data.inGame = { ...emptyInGame(), lookSensitivity: 18 };
+    const { unmount } = render('/build/l1/destiny-2', data);
     const look = screen.getByRole('listitem', { name: 'Look Sensitivity: 20' });
     expect(look).toHaveTextContent('Your current value: 18');
     expect(within(look).getByText('Differs from 20')).toBeInTheDocument();
+    unmount();
+
+    // Destiny 2's settings are game-wide: the other loadout shows the same value.
+    render('/build/l2/destiny-2', data);
+    expect(screen.getByRole('listitem', { name: 'Look Sensitivity: 20' })).toHaveTextContent('Your current value: 18');
   });
 
   it('step 2 shows the Xbox checks for an Xbox profile', () => {
@@ -151,6 +155,39 @@ describe('Build my config: the steps', () => {
 
     const dpi = screen.getByRole('listitem', { name: checkTitle('mouse-dpi-matches') });
     expect(dpi).toHaveTextContent('Your mouse (profile): 1600 DPI');
+  });
+
+  it('step 2 leaves the Destiny 2 settings check to step 1, and says to check per-Config checks in every Config', () => {
+    render('/build/l1/matrix', withProfile({ platform: 'xbox', outputType: 'xbox-controller' }));
+    expect(screen.queryByRole('listitem', { name: checkTitle('destiny2-required-settings') })).not.toBeInTheDocument();
+    const note = 'Check this in every Config you use — each loadout has its own.';
+    expect(screen.getByRole('listitem', { name: checkTitle('mouse-dpi-matches') })).toHaveTextContent(note);
+    expect(screen.getByRole('listitem', { name: checkTitle('smart-translator-current') })).toHaveTextContent(note);
+    expect(screen.getByRole('listitem', { name: checkTitle('firmware-current') })).not.toHaveTextContent(note);
+  });
+
+  it('step 2 opens “How to fix it” when a check is marked Needs fixing, and counts it', async () => {
+    const { user } = render('/build/l1/matrix', withProfile({ platform: 'xbox', outputType: 'xbox-controller' }));
+    const firmware = screen.getByRole('listitem', { name: checkTitle('firmware-current') });
+    const fix = within(firmware).getByText(knowledge.foundation.find((c) => c.id === 'firmware-current')!.fix!.text);
+    expect(fix).not.toBeVisible();
+    await user.click(within(firmware).getByRole('button', { name: 'Needs fixing' }));
+    expect(fix).toBeVisible();
+    expect(within(firmware).getByRole('button', { name: 'Needs fixing' })).toHaveAccessibleDescription(
+      checkTitle('firmware-current'),
+    );
+    expect(screen.getByText(/^0 of \d+ done · 1 needs fixing$/)).toBeInTheDocument();
+  });
+
+  it('step 1 ticks make up the Destiny 2 settings check in Troubleshoot by feel', async () => {
+    const { user, router } = render('/build/l1/destiny-2', withProfile({ platform: 'xbox', outputType: 'xbox-controller' }));
+    for (const setting of knowledge.game.requiredSettings) {
+      const item = screen.getByRole('listitem', { name: `${setting.name}: ${setting.value}` });
+      await user.click(within(item).getByRole('button', { name: 'Done' }));
+    }
+    await router.navigate('/troubleshoot');
+    const check = await screen.findByRole('listitem', { name: checkTitle('destiny2-required-settings') });
+    expect(within(check).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('step 2 says so when the platform isn’t set', () => {
@@ -177,7 +214,7 @@ describe('Build my config: the steps', () => {
     }
 
     await user.click(within(precision).getByRole('button', { name: 'Done' }));
-    expect(stored(storage).progress[progressKey.loadout('l1', 'lever:precision')]).toBe('done');
+    expect(stored(storage).progress[progressKey.aim.lever('l1', 'tracking', 'precision')]).toBe('done');
   });
 
   it('step 3 tells a hand cannon (snap) loadout to lower Easing, with the Easing caveat', () => {
@@ -217,15 +254,124 @@ describe('Build my config: the steps', () => {
     config.aim.smoothing = 'classic';
     data.configs = { l1: config };
     render('/build/l1/aim', data);
-    expect(screen.getByRole('note')).toHaveTextContent(/smoothing is Custom Classic.*assume Standard smoothing/);
+    expect(screen.getByRole('note')).toHaveTextContent(
+      'Your smoothing is Custom Classic. These directions assume Standard smoothing.',
+    );
+  });
+
+  it('step 3 doesn’t carry a lever’s tick over when the main weapon’s aim style changes', async () => {
+    const { user, router, storage } = render('/build/l1/aim');
+    const sensitivity = screen.getByRole('listitem', { name: 'Start with Sensitivity' });
+    await user.click(within(sensitivity).getByRole('button', { name: 'Done' }));
+    await user.click(within(screen.getByRole('listitem', { name: 'Precision: Raise' })).getByRole('button', { name: 'Done' }));
+
+    // Make the main weapon a scout rifle (precision hold), which has its own Precision direction.
+    await router.navigate('/loadouts/l1');
+    await user.selectOptions(await screen.findByRole('combobox', { name: 'Kinetic' }), 'scout-rifle');
+    await user.click(screen.getByRole('button', { name: 'Save changes' }));
+    await router.navigate('/build/l1/aim');
+
+    const precision = await screen.findByRole('listitem', { name: 'Precision: It depends' });
+    expect(within(precision).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'false');
+    // Sensitivity isn't about the aim style, so it stays ticked.
+    expect(
+      within(screen.getByRole('listitem', { name: 'Start with Sensitivity' })).getByRole('button', { name: 'Done' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+    expect(stored(storage).progress[progressKey.aim.lever('l1', 'tracking', 'precision')]).toBe('done');
+  });
+
+  it('shares the aim marks with Tune my config', async () => {
+    const data = withProfile({});
+    data.inGame = { ...emptyInGame(), lookSensitivity: 20 };
+    const { user, router, storage } = render('/tune/l1/changes', data);
+    // Tune: "Done" on Sensitivity, the first aim change.
+    await user.click(screen.getByRole('button', { name: 'Done: show the next change' }));
+    expect(stored(storage).progress).toEqual({ [progressKey.aim.sensitivity('l1')]: 'done' });
+
+    await router.navigate('/build/l1/aim');
+    const sensitivity = await screen.findByRole('listitem', { name: 'Start with Sensitivity' });
+    expect(within(sensitivity).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'true');
+
+    // Build: ticking Precision moves Tune on to the next change.
+    await user.click(within(screen.getByRole('listitem', { name: 'Precision: Raise' })).getByRole('button', { name: 'Done' }));
+    await router.navigate('/tune/l1/changes');
+    const first = await screen.findByRole('region', { name: 'Change this first' });
+    expect(within(first).queryByRole('heading', { level: 3, name: 'Sensitivity' })).not.toBeInTheDocument();
+    expect(within(first).queryByRole('heading', { level: 3, name: 'Precision' })).not.toBeInTheDocument();
+
+    // Build's reset clears the marks Tune made too.
+    await router.navigate('/build/l1/aim');
+    await user.click(await screen.findByRole('button', { name: 'Reset this loadout’s steps' }));
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Reset' }));
+    expect(stored(storage).progress).toEqual({});
+    await router.navigate('/tune/l1/changes');
+    expect(
+      within(await screen.findByRole('region', { name: 'Change this first' })).getByRole('heading', {
+        level: 3,
+        name: 'Sensitivity',
+      }),
+    ).toBeInTheDocument();
   });
 
   it('step 4 links to the config sheet and to Tune my config', () => {
     render('/build/l1/sheet');
     expect(screen.getByRole('heading', { level: 1, name: 'Your config sheet' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Open the config sheet' })).toHaveAttribute('href', '/loadouts/l1/sheet');
-    expect(screen.getByRole('link', { name: 'Enter your current settings' })).toHaveAttribute('href', '/tune/l1');
+    expect(screen.getByRole('link', { name: 'Enter your current settings' })).toHaveAttribute('href', '/tune/l1/settings');
     expect(screen.getByText(knowledge.guardrail.text)).toBeInTheDocument();
+  });
+
+  it('step 4’s “Enter your current settings” opens Your settings in Tune my config', async () => {
+    const { user, router } = render('/build/l1/sheet');
+    await user.click(screen.getByRole('link', { name: 'Enter your current settings' }));
+    expect(router.state.location.pathname).toBe('/tune/l1/settings');
+    expect(screen.getByRole('link', { name: 'Your settings' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('textbox', { name: 'Look Sensitivity' })).toBeInTheDocument();
+  });
+
+  it('the config sheet opened from step 4 goes back to step 4', async () => {
+    const { user, router } = render('/build/l1/sheet');
+    await user.click(screen.getByRole('link', { name: 'Open the config sheet' }));
+    expect(router.state.location.pathname).toBe('/loadouts/l1/sheet');
+    const back = document.querySelector<HTMLAnchorElement>('.back-link')!;
+    expect(back).toHaveTextContent('Build my config');
+    await user.click(back);
+    expect(router.state.location.pathname).toBe('/build/l1/sheet');
+  });
+
+  it('step 3 shows only the values that belong to the smoothing and quantization entered', () => {
+    const data = withProfile({});
+    const config = emptyConfig();
+    Object.assign(config.aim, {
+      smoothing: 'classic',
+      precision: 40,
+      smooth: 10,
+      decay: 5,
+      quantization: false,
+      quantizationMagnitude: 25,
+    });
+    data.configs = { l1: config };
+    render('/build/l1/aim', data);
+    expect(screen.getByRole('listitem', { name: 'Precision: Raise' })).not.toHaveTextContent('Your current value');
+    expect(screen.getByRole('listitem', { name: 'Smoothing' })).toHaveTextContent(
+      'Your current value: Custom Classic (Smooth 10, Decay 5)',
+    );
+    const quantization = screen.getByRole('listitem', { name: 'Quantization' });
+    // Magnitude and Angle only while quantization is on.
+    expect(within(quantization).getByText('Your current value:').parentElement).toHaveTextContent(
+      /^Your current value: Off$/,
+    );
+  });
+
+  it('step 3 words a preset the same way as Tune my config and the sheet', () => {
+    const data = withProfile({});
+    const config = emptyConfig();
+    Object.assign(config.aim, { smoothing: 'preset', presetName: 'Fast' });
+    data.configs = { l1: config };
+    render('/build/l1/aim', data);
+    expect(screen.getByRole('note')).toHaveTextContent(
+      'Your smoothing is a preset (Fast). Dialed can’t tell which mode a preset uses. These directions assume Standard smoothing.',
+    );
   });
 });
 
@@ -280,19 +426,21 @@ describe('Build my config: moving between steps', () => {
   it('resets only this loadout’s own steps, after confirmation', async () => {
     const data = withProfile({});
     const look = progressKey.requiredSetting('Look Sensitivity');
-    const precision = progressKey.loadout('l1', 'lever:precision');
-    const other = progressKey.loadout('l2', 'lever:easing');
-    data.progress = { [look]: 'done', [precision]: 'done', [other]: 'done' };
+    const precision = progressKey.aim.lever('l1', 'tracking', 'precision');
+    const curve = progressKey.aim.term('l1', 'aiming-curve');
+    const other = progressKey.aim.lever('l2', 'snap', 'easing');
+    data.progress = { [look]: 'done', [precision]: 'done', [curve]: 'problem', [other]: 'done' };
     const { user, storage } = render('/build/l1/aim', data);
 
     await user.click(screen.getByRole('button', { name: 'Reset this loadout’s steps' }));
     const dialog = screen.getByRole('alertdialog', { name: 'Reset the steps for “Pulse + shotgun”?' });
+    expect(dialog).toHaveTextContent('Build my config and Tune my config share these marks');
     await user.click(within(dialog).getByRole('button', { name: 'Cancel' }));
     expect(stored(storage).progress[precision]).toBe('done');
 
     await user.click(screen.getByRole('button', { name: 'Reset this loadout’s steps' }));
     await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Reset' }));
     expect(stored(storage).progress).toEqual({ [look]: 'done', [other]: 'done' });
-    expect(screen.getByRole('status')).toHaveTextContent('Cleared the aim settings you ticked for “Pulse + shotgun”.');
+    expect(screen.getByRole('status')).toHaveTextContent('Cleared the aim settings marks for “Pulse + shotgun”.');
   });
 });

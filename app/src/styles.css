@@ -836,6 +836,10 @@ select[aria-invalid='true'] {
   text-align: center;
 }
 
+.empty-state-title {
+  font-size: 1.15rem;
+}
+
 .empty-state p {
   color: var(--text-muted);
 }
@@ -1273,6 +1277,14 @@ input[type='search'] {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* A setup check about one Config: its mark is shared, but every loadout has its own Config. */
+.per-config-note {
+  padding: 6px 10px;
+  border-left: 3px solid var(--border-strong);
+  color: var(--text-muted);
+  font-size: 0.92rem;
 }
 
 .checklist-actions {

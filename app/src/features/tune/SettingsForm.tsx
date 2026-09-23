@@ -4,7 +4,8 @@ import { SegmentedField } from '../../components/SegmentedField';
 import { TermLink } from '../../components/TermLink';
 import { useData, type ConfigPatch, type SaveState } from '../../state/data-context';
 import { useKnowledge } from '../../state/knowledge-context';
-import { emptyConfig, type CurrentConfig, type Loadout } from '../../state/schema';
+import { inGameFieldName, type InGameField } from '../../state/required-settings';
+import { emptyConfig, type CurrentConfig, type InGameSettings, type Loadout } from '../../state/schema';
 import { CHOICE_LABELS } from './analysis';
 import { parseNumberInput, type NumberRule } from './number-input';
 
@@ -23,6 +24,18 @@ function useHint(text: ReactNode | undefined, termId: string | undefined): React
       {term && <TermLink id={term.id}>{`About ${term.name}`}</TermLink>}
     </>
   );
+}
+
+/**
+ * Field names as the knowledge base spells them: a glossary term's name, or a Destiny 2
+ * required setting's name. The fallback only shows if the knowledge base lacks the entry.
+ */
+function useNames() {
+  const { kb, termById } = useKnowledge();
+  return {
+    term: (id: string, fallback: string) => termById(id)?.name ?? fallback,
+    inGame: (field: InGameField, fallback: string) => inGameFieldName(kb, field) ?? fallback,
+  };
 }
 
 interface ChoiceFieldProps<T extends string> {
@@ -172,47 +185,48 @@ function Section({ title, hint, termId, children }: SectionProps) {
   );
 }
 
-function InGameSection({ config, save }: { config: CurrentConfig['inGame']; save: (patch: ConfigPatch['inGame']) => void }) {
+function InGameSection({ values, save }: { values: InGameSettings; save: (patch: Partial<InGameSettings>) => void }) {
+  const name = useNames();
   return (
     <Section
       title="Destiny 2 settings"
-      hint="Copy these from Destiny 2’s own settings."
+      hint="Copy these from Destiny 2’s own settings. Dialed keeps one set of these for all your loadouts, so what you enter here shows for every loadout."
       termId="required-game-settings"
     >
       <ChoiceField
-        legend="Movement Controls"
+        legend={name.inGame('movementControls', 'Movement Controls')}
         options={CHOICE_OPTIONS}
-        value={config.movementControls}
+        value={values.movementControls}
         onChange={(movementControls) => save({ movementControls })}
       />
       <ChoiceField
-        legend="Button Layout"
+        legend={name.inGame('buttonLayout', 'Button Layout')}
         options={CHOICE_OPTIONS}
-        value={config.buttonLayout}
+        value={values.buttonLayout}
         onChange={(buttonLayout) => save({ buttonLayout })}
       />
       <NumberField
-        label="Look Sensitivity"
-        value={config.lookSensitivity}
+        label={name.inGame('lookSensitivity', 'Look Sensitivity')}
+        value={values.lookSensitivity}
         rule={RULES.lookSensitivity}
         onSave={(lookSensitivity) => save({ lookSensitivity })}
       />
       <NumberField
-        label="ADS Sensitivity Modifier"
-        value={config.adsSensitivityModifier}
+        label={name.inGame('adsSensitivityModifier', 'ADS Sensitivity Modifier')}
+        value={values.adsSensitivityModifier}
         rule={RULES.percent}
         onSave={(adsSensitivityModifier) => save({ adsSensitivityModifier })}
       />
       <NumberField
-        label="Axial Deadzone"
-        value={config.axialDeadzone}
+        label={name.inGame('axialDeadzone', 'Axial Deadzone')}
+        value={values.axialDeadzone}
         rule={RULES.percent}
         termId="deadzone"
         onSave={(axialDeadzone) => save({ axialDeadzone })}
       />
       <NumberField
-        label="Radial Deadzone"
-        value={config.radialDeadzone}
+        label={name.inGame('radialDeadzone', 'Radial Deadzone')}
+        value={values.radialDeadzone}
         rule={RULES.percent}
         termId="deadzone"
         onSave={(radialDeadzone) => save({ radialDeadzone })}
@@ -223,11 +237,12 @@ function InGameSection({ config, save }: { config: CurrentConfig['inGame']; save
 
 function MatrixSection({ config, save }: { config: CurrentConfig['matrix']; save: (patch: ConfigPatch['matrix']) => void }) {
   const { data } = useData();
+  const name = useNames();
   const mouseDpi = data.profile.mouseDpi;
   return (
     <Section title="MATRIX setup" hint="From XIM MATRIX Manager, for the Config you use with this loadout.">
       <NumberField
-        label="DPI in your Config"
+        label={`${name.term('mouse-dpi', 'Mouse DPI')} in your Config`}
         value={config.configDpi}
         rule={RULES.dpi}
         placeholder="e.g. 1600"
@@ -244,7 +259,7 @@ function MatrixSection({ config, save }: { config: CurrentConfig['matrix']; save
         onSave={(configDpi) => save({ configDpi })}
       />
       <ChoiceField
-        legend="Game settings sync"
+        legend={name.term('game-settings-sync', 'Game Settings')}
         hint="The sync method your Config uses."
         termId="game-settings-sync"
         options={SYNC_OPTIONS}
@@ -265,24 +280,26 @@ function MatrixSection({ config, save }: { config: CurrentConfig['matrix']; save
 
 function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (patch: ConfigPatch['aim']) => void }) {
   const presetId = useId();
+  const name = useNames();
+  const sensitivity = name.term('sensitivity', 'Sensitivity');
   return (
     <Section title="Aim settings" hint="From this Config’s aim settings in Manager.">
       <NumberField
-        label="Hip sensitivity (cm/360)"
+        label={`Hip ${sensitivity} (cm/360)`}
         value={config.hipSensitivity}
         rule={RULES.cm360}
         termId="sensitivity"
         onSave={(hipSensitivity) => save({ hipSensitivity })}
       />
       <NumberField
-        label="ADS sensitivity (cm/360)"
+        label={`ADS ${sensitivity} (cm/360)`}
         value={config.adsSensitivity}
         rule={RULES.cm360}
         termId="sensitivity"
         onSave={(adsSensitivity) => save({ adsSensitivity })}
       />
       <ChoiceField
-        legend="ADS inheritance"
+        legend={name.term('ads-inheritance', 'Aim Settings Inheritance')}
         termId="ads-inheritance"
         options={INHERITANCE_OPTIONS}
         value={config.adsInheritance}
@@ -290,7 +307,7 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
       />
 
       <ChoiceField
-        legend="Smoothing"
+        legend={name.term('smoothing', 'Smoothing')}
         hint="A preset, or your own Standard or Classic values."
         termId="smoothing"
         options={SMOOTHING_OPTIONS}
@@ -315,21 +332,21 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
       {config.smoothing === 'standard' && (
         <div className="tune-subfields">
           <NumberField
-            label="Precision"
+            label={name.term('precision', 'Precision')}
             value={config.precision}
             rule={RULES.percent}
             termId="precision"
             onSave={(precision) => save({ precision })}
           />
           <NumberField
-            label="Response"
+            label={name.term('response', 'Response')}
             value={config.response}
             rule={RULES.percent}
             termId="response"
             onSave={(response) => save({ response })}
           />
           <NumberField
-            label="Easing"
+            label={name.term('easing', 'Easing')}
             value={config.easing}
             rule={RULES.percent}
             termId="easing"
@@ -340,21 +357,21 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
       {config.smoothing === 'classic' && (
         <div className="tune-subfields">
           <NumberField
-            label="Smooth"
+            label={name.term('smooth', 'Smooth')}
             value={config.smooth}
             rule={RULES.classic}
             termId="smooth"
             onSave={(smooth) => save({ smooth })}
           />
           <NumberField
-            label="Decay"
+            label={name.term('decay', 'Decay')}
             value={config.decay}
             rule={RULES.classic}
             termId="decay"
             onSave={(decay) => save({ decay })}
           />
           <NumberField
-            label="Synch"
+            label={name.term('synch', 'Synch')}
             value={config.synch}
             rule={RULES.classic}
             termId="synch"
@@ -364,14 +381,14 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
       )}
 
       <ChoiceField
-        legend="Aiming Curve"
+        legend={name.term('aiming-curve', 'Aiming Curve')}
         termId="aiming-curve"
         options={CURVE_OPTIONS}
         value={config.aimingCurve}
         onChange={(aimingCurve) => save({ aimingCurve })}
       />
       <NumberField
-        label="Y Scale"
+        label={name.term('y-scale', 'Y Scale')}
         value={config.yScale}
         rule={RULES.yScale}
         termId="y-scale"
@@ -379,7 +396,7 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
       />
 
       <ChoiceField
-        legend="Quantization"
+        legend={name.term('quantization', 'Quantization')}
         termId="quantization"
         options={OFF_ON}
         value={onOff(config.quantization)}
@@ -388,14 +405,14 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
       {config.quantization === true && (
         <div className="tune-subfields">
           <NumberField
-            label="Magnitude"
+            label={name.term('quantization-magnitude', 'Magnitude Quantization')}
             value={config.quantizationMagnitude}
             rule={RULES.percent}
             termId="quantization-magnitude"
             onSave={(quantizationMagnitude) => save({ quantizationMagnitude })}
           />
           <NumberField
-            label="Angle"
+            label={name.term('quantization-angle', 'Angle Quantization')}
             value={config.quantizationAngle}
             rule={RULES.percent}
             termId="quantization-angle"
@@ -405,7 +422,7 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
       )}
 
       <ChoiceField
-        legend="Velocity Mapping"
+        legend={name.term('velocity-mapping', 'Velocity Mapping')}
         termId="velocity-mapping"
         options={VELOCITY_OPTIONS}
         value={config.velocityMapping}
@@ -416,11 +433,11 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
 }
 
 function SettingsFields({ loadoutId }: { loadoutId: string }) {
-  const { data, updateConfig } = useData();
+  const { data, updateConfig, updateInGame } = useData();
   const config = data.configs[loadoutId] ?? emptyConfig();
   return (
     <>
-      <InGameSection config={config.inGame} save={(inGame) => updateConfig(loadoutId, { inGame })} />
+      <InGameSection values={data.inGame} save={updateInGame} />
       <MatrixSection config={config.matrix} save={(matrix) => updateConfig(loadoutId, { matrix })} />
       <AimSection config={config.aim} save={(aim) => updateConfig(loadoutId, { aim })} />
     </>

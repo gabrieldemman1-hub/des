@@ -1,7 +1,7 @@
 /**
  * What Dialed keeps on this phone: the profile (CONCEPT.md §7), the loadouts, the player's
- * current settings for each loadout (the starting point for Tune my config), and checklist
- * progress. Everything read back from storage or from a backup file is validated with these
+ * current settings (the starting point for Tune my config: Destiny 2's game-wide settings, and
+ * each loadout's Config), and checklist progress. Everything read back from storage or from a backup file is validated with these
  * schemas.
  */
 import { z } from 'zod';
@@ -104,28 +104,39 @@ const Loadouts = z.array(Loadout).refine((list) => new Set(list.map((l) => l.id)
 /** A number the player typed in, or null when left blank. Bounds only reject nonsense. */
 const Num = (min: number, max: number) => z.number().min(min).max(max).nullable().default(null);
 
+/** Destiny 2's in-game settings, all unset. */
+const EMPTY_IN_GAME = {
+  movementControls: null,
+  buttonLayout: null,
+  lookSensitivity: null,
+  adsSensitivityModifier: null,
+  axialDeadzone: null,
+  radialDeadzone: null,
+} as const;
+
 /**
- * The player's current settings for one loadout's Config, as they see them in Destiny 2 and
- * XIM MATRIX Manager. Every field is optional: Tune my config works with whatever is filled in.
+ * The player's Destiny 2 in-game settings, as they see them in the game. They are game-wide,
+ * so Dialed keeps one set for every loadout. Every field is optional.
+ */
+export const InGameSettings = z.object({
+  movementControls: z.enum(['default', 'other']).nullable().default(null),
+  buttonLayout: z.enum(['default', 'other']).nullable().default(null),
+  lookSensitivity: Num(0, 1000),
+  adsSensitivityModifier: Num(0, 100),
+  axialDeadzone: Num(0, 100),
+  radialDeadzone: Num(0, 100),
+});
+export type InGameSettings = z.infer<typeof InGameSettings>;
+
+export function emptyInGame(): InGameSettings {
+  return { ...EMPTY_IN_GAME };
+}
+
+/**
+ * The player's current settings for one loadout's Config, as they see them in XIM MATRIX
+ * Manager. Every field is optional: Tune my config works with whatever is filled in.
  */
 export const CurrentConfig = z.object({
-  inGame: z
-    .object({
-      movementControls: z.enum(['default', 'other']).nullable().default(null),
-      buttonLayout: z.enum(['default', 'other']).nullable().default(null),
-      lookSensitivity: Num(0, 1000),
-      adsSensitivityModifier: Num(0, 100),
-      axialDeadzone: Num(0, 100),
-      radialDeadzone: Num(0, 100),
-    })
-    .default({
-      movementControls: null,
-      buttonLayout: null,
-      lookSensitivity: null,
-      adsSensitivityModifier: null,
-      axialDeadzone: null,
-      radialDeadzone: null,
-    }),
   matrix: z
     .object({
       /** The DPI entered in the Config (it must match the mouse). */
@@ -188,8 +199,8 @@ export function emptyConfig(): CurrentConfig {
 const Configs = z.record(LoadoutId, CurrentConfig);
 
 /**
- * Checklist progress for Build my config and Troubleshoot by feel, by item id (see
- * `progressKey` in progress.ts). 'done': checked and fine. 'problem': checked and needs fixing.
+ * Checklist progress for Build my config, Tune my config and Troubleshoot by feel, by item id
+ * (see `progressKey` in progress.ts). 'done': checked and fine. 'problem': checked and needs fixing.
  */
 export const ProgressState = z.enum(['done', 'problem']);
 export type ProgressState = z.infer<typeof ProgressState>;
@@ -199,6 +210,8 @@ export const AppData = z.object({
   version: z.literal(STORAGE_VERSION),
   profile: Profile,
   loadouts: Loadouts,
+  /** Destiny 2's in-game settings, shared by every loadout. */
+  inGame: InGameSettings.default(EMPTY_IN_GAME),
   configs: Configs.default({}),
   progress: Progress.default({}),
 });
@@ -214,6 +227,7 @@ export const BackupFile = z.object({
   exportedAt: z.iso.datetime(),
   profile: Profile,
   loadouts: Loadouts,
+  inGame: InGameSettings.default(EMPTY_IN_GAME),
   configs: Configs.default({}),
   progress: Progress.default({}),
 });
@@ -224,5 +238,12 @@ export function defaultProfile(): Profile {
 }
 
 export function defaultData(): AppData {
-  return { version: STORAGE_VERSION, profile: defaultProfile(), loadouts: [], configs: {}, progress: {} };
+  return {
+    version: STORAGE_VERSION,
+    profile: defaultProfile(),
+    loadouts: [],
+    inGame: emptyInGame(),
+    configs: {},
+    progress: {},
+  };
 }

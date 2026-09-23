@@ -4,6 +4,7 @@ import type { PreferenceInput, Statement } from '../../../../knowledge/index';
 import { AimStyleSummary } from '../../components/AimStyleSummary';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { ChecklistItem } from '../../components/ChecklistItem';
+import { PerConfigNote } from '../../components/PerConfigNote';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
 import {
@@ -14,23 +15,25 @@ import {
   SENSITIVITY_LABELS,
   STYLE_LABELS,
 } from '../../content/labels';
+import { checkContext, currentAimValue, currentRequiredValue, smoothingNote } from '../../state/current-values';
 import { useData } from '../../state/data-context';
 import { useKnowledge } from '../../state/knowledge-context';
+import { progressSummary } from '../../state/progress';
 import type { Profile } from '../../state/schema';
+import { useEffectiveProgress } from '../../state/use-progress';
 import {
   BUILD_STEPS,
   CHECKLIST_STEPS,
   GAME_NOTE_IDS,
   moreGameNoteIds,
-  progressText,
   stepProgress,
   type BuildPlan,
   type GuidanceItem,
   type ProgressCount,
 } from './build-plan';
-import { checkContext, currentAimValue, currentRequiredValue, nonStandardSmoothing } from './current-values';
-import { CheckContext, CurrentValue, GuidanceStatements, Label } from './parts';
-import { buildPath, sheetPath, tunePath } from './use-build-plan';
+import { CheckContext, CurrentValue, GuidanceStatements, Label, SmoothingNote } from './parts';
+import { sheetLinkState } from './sheet-navigation';
+import { buildPath, sheetPath, tuneSettingsPath } from './use-build-plan';
 import './build.css';
 
 interface StepProps {
@@ -51,7 +54,7 @@ function StepSection({ title, children }: { title: string; children: ReactNode }
 }
 
 function StepCount({ count }: { count: ProgressCount }) {
-  return <p className="build-count">{progressText(count)}</p>;
+  return <p className="build-count">{progressSummary(count)}</p>;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -76,7 +79,6 @@ function GameNote({ title, statement, open = false }: { title: string; statement
 export function GameSettingsStep({ plan, count }: StepProps) {
   const { kb } = useKnowledge();
   const { data } = useData();
-  const config = data.configs[plan.loadout.id];
   const noteById = (id: string) => kb.game.notes.find((n) => n.id === id);
   const notes = GAME_NOTE_IDS.flatMap((id) => noteById(id) ?? []);
   const more = moreGameNoteIds(data.profile.platform).flatMap((id) => noteById(id) ?? []);
@@ -109,14 +111,17 @@ export function GameSettingsStep({ plan, count }: StepProps) {
       )}
 
       <StepSection title="Set these in Destiny 2">
-        <p className="hint">Tick each setting once it matches.</p>
+        <p className="hint">
+          Tick each setting once it matches. Your ticks here count for every loadout, and together they make up the
+          Destiny 2 settings check in Troubleshoot by feel.
+        </p>
         <StepCount count={count} />
         {plan.settings.length === 0 ? (
           <p className="empty-state">Destiny 2’s required settings are missing from this build of the knowledge base.</p>
         ) : (
           <ol className="checklist">
             {plan.settings.map((setting) => {
-              const current = currentRequiredValue(config, setting.name, setting.value);
+              const current = currentRequiredValue(data.inGame, setting.name, setting.value);
               return (
                 <ChecklistItem key={setting.key} itemKey={setting.key} title={`${setting.name}: ${setting.value}`}>
                   {current && (
@@ -143,6 +148,7 @@ export function GameSettingsStep({ plan, count }: StepProps) {
 
 export function MatrixSetupStep({ plan, count }: StepProps) {
   const { data } = useData();
+  const progress = useEffectiveProgress();
   const { profile } = data;
   const config = data.configs[plan.loadout.id];
 
@@ -169,11 +175,13 @@ export function MatrixSetupStep({ plan, count }: StepProps) {
           {plan.checks.map(({ key, check }) => (
             <ChecklistItem key={key} itemKey={key} title={check.title}>
               <p>{check.check}</p>
+              <PerConfigNote checkId={check.id} />
               <CheckContext lines={checkContext(check.id, profile, config)} />
               <Label>Why it matters</Label>
               <StatementView statement={check.why} />
               {check.fix && (
-                <details className="why">
+                // Opens by itself when the check is marked "Needs fixing"; the player can still close it.
+                <details className="why" open={progress[key] === 'problem'}>
                   <summary>How to fix it</summary>
                   <StatementView statement={check.fix} />
                 </details>
@@ -269,7 +277,7 @@ export function AimSettingsStep({ plan, count }: StepProps) {
   const { profile } = data;
   const config = data.configs[plan.loadout.id];
   const { main, style } = plan;
-  const smoothing = style ? nonStandardSmoothing(config) : null;
+  const smoothing = style ? smoothingNote(config?.aim) : null;
   const aimsWith = profile.aimingSources.map((s) => AIMING_SOURCE_LABELS[s].title.toLowerCase()).join(' and ');
 
   return (
@@ -304,14 +312,7 @@ export function AimSettingsStep({ plan, count }: StepProps) {
             </div>
           </>
         )}
-        {smoothing && (
-          <p className="build-note" role="note">
-            <strong>Your current settings for this loadout say smoothing is {smoothing}.</strong> The directions below
-            assume Standard smoothing, as “What the settings should favour” explains above. Read about{' '}
-            <TermLink id="smoothing-standard">Standard</TermLink> and <TermLink id="smoothing-classic">Classic</TermLink>{' '}
-            smoothing.
-          </p>
-        )}
+        {smoothing && <SmoothingNote text={smoothing.text} />}
       </StepSection>
 
       <StepSection title="Work through these in Manager">
@@ -383,8 +384,8 @@ export function AimSettingsStep({ plan, count }: StepProps) {
 
 export function SheetStep({ plan }: { plan: BuildPlan }) {
   const { kb } = useKnowledge();
-  const { data } = useData();
-  const counts = stepProgress(plan, data.progress);
+  const progress = useEffectiveProgress();
+  const counts = stepProgress(plan, progress);
   const id = plan.loadout.id;
 
   return (
@@ -398,7 +399,7 @@ export function SheetStep({ plan }: { plan: BuildPlan }) {
             return (
               <li key={stepId} className={complete ? 'is-complete' : undefined}>
                 <Link to={buildPath(id, stepId)}>{step?.title ?? stepId}</Link>
-                <span>{progressText(count)}</span>
+                <span>{progressSummary(count)}</span>
               </li>
             );
           })}
@@ -410,13 +411,17 @@ export function SheetStep({ plan }: { plan: BuildPlan }) {
           The config sheet puts every value for “{plan.loadout.name}” on one screen, to keep next to you while you work
           in XIM MATRIX Manager and Destiny 2.
         </p>
-        <Link className="button primary block" to={sheetPath(id)}>
+        <Link
+          className="button primary block"
+          to={sheetPath(id)}
+          state={sheetLinkState({ to: buildPath(id, 'sheet'), label: 'Build my config' })}
+        >
           Open the config sheet
         </Link>
         <p className="hint">
           Enter what you have set now in Tune my config. The sheet then shows your current value next to each setting.
         </p>
-        <Link className="button secondary block" to={tunePath(id)}>
+        <Link className="button secondary block" to={tuneSettingsPath(id)}>
           Enter your current settings
         </Link>
       </StepSection>

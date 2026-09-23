@@ -15,6 +15,8 @@ import {
 } from '../content/labels';
 import { useData, type SaveState } from '../state/data-context';
 import { useKnowledge } from '../state/knowledge-context';
+import { hasConfigValues } from '../state/current-values';
+import { hasInGameValues } from '../state/required-settings';
 import { MAX_MOUSE_MODEL_LENGTH, POLLING_RATES, type AppData, type PollingRate } from '../state/schema';
 import { backupFileName, createBackup, parseBackup } from '../state/storage';
 
@@ -280,6 +282,49 @@ interface PendingRestore {
   exportedAt: string;
 }
 
+/** Current settings entered in Tune my config: Destiny 2's, or any loadout's Config. */
+function hasCurrentSettings(data: AppData): boolean {
+  return hasInGameValues(data.inGame) || Object.values(data.configs).some(hasConfigValues);
+}
+
+function hasMarks(data: AppData): boolean {
+  return Object.keys(data.progress).length > 0;
+}
+
+/** What a restore would do, including what it would clear that the backup doesn't have. */
+function RestoreSummary({ backup, current }: { backup: PendingRestore; current: AppData }) {
+  const { data } = backup;
+  const marks = Object.keys(data.progress).length;
+  const has = [
+    plural(data.loadouts.length, 'loadout'),
+    hasCurrentSettings(data) ? 'current settings' : 'no current settings',
+    marks === 0 ? 'no checklist marks' : plural(marks, 'checklist mark'),
+  ];
+  // What the phone has and the backup doesn't: restoring clears it (e.g. a version 1 backup,
+  // made before Dialed kept current settings and marks).
+  const lost = [
+    hasCurrentSettings(current) && !hasCurrentSettings(data) ? 'current settings' : null,
+    hasMarks(current) && !hasMarks(data) ? 'checklist marks' : null,
+  ].filter((part) => part !== null);
+
+  return (
+    <>
+      <p>
+        The backup from {formatDate(backup.exportedAt)} has {has[0]}, {has[1]} and {has[2]}. It will replace the
+        profile, {plural(current.loadouts.length, 'loadout')}, current settings and checklist marks on this phone. This
+        can’t be undone.
+      </p>
+      {lost.length > 0 && (
+        <p>
+          <strong>
+            This backup has no {lost.join(' or ')}, so restoring it clears the {lost.join(' and ')} on this phone.
+          </strong>
+        </p>
+      )}
+    </>
+  );
+}
+
 function BackupSection() {
   const { data, replaceData } = useData();
   const [pending, setPending] = useState<PendingRestore | null>(null);
@@ -327,8 +372,8 @@ function BackupSection() {
     <section className="form-section" aria-labelledby="profile-backup">
       <h2 id="profile-backup">Backup</h2>
       <p className="hint">
-        Your profile and loadouts are saved only on this phone. Download a backup to keep a copy or move them to another
-        device.
+        Your profile, loadouts, current settings and checklist marks are saved only on this phone. Download a backup to
+        keep a copy or move them to another device.
       </p>
       <div className="button-row">
         <button type="button" className="button secondary" onClick={download}>
@@ -357,12 +402,7 @@ function BackupSection() {
         onConfirm={confirmRestore}
         onCancel={() => setPending(null)}
       >
-        {pending && (
-          <p>
-            The backup from {formatDate(pending.exportedAt)} has {plural(pending.data.loadouts.length, 'loadout')}. It
-            will replace the profile and {plural(data.loadouts.length, 'loadout')} on this phone. This can’t be undone.
-          </p>
-        )}
+        {pending && <RestoreSummary backup={pending} current={data} />}
       </ConfirmDialog>
     </section>
   );

@@ -124,13 +124,26 @@ describe('current settings and checklist progress', () => {
     const storage = new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(sampleData({ loadouts: [sampleLoadout()] })) });
     const api = renderProvider(storage);
     act(() => api().updateConfig('l1', { aim: { easing: 40 } }));
-    act(() => api().updateConfig('l1', { aim: { precision: 60 }, inGame: { lookSensitivity: 20 } }));
+    act(() => api().updateConfig('l1', { aim: { precision: 60 }, matrix: { configDpi: 1600 } }));
     act(() => api().updateConfig('missing', { aim: { easing: 10 } }));
     const config = api().data.configs.l1;
     expect(config?.aim).toMatchObject({ easing: 40, precision: 60 });
-    expect(config?.inGame.lookSensitivity).toBe(20);
+    expect(config?.matrix.configDpi).toBe(1600);
     expect(config?.updatedAt).not.toBeNull();
     expect(api().data.configs.missing).toBeUndefined();
+  });
+
+  it('keeps one set of Destiny 2 settings for every loadout, and only saves valid ones', () => {
+    const storage = new MemoryStorage({
+      [STORAGE_KEY]: JSON.stringify(sampleData({ loadouts: [sampleLoadout(), sampleLoadout({ id: 'l2' })] })),
+    });
+    const api = renderProvider(storage);
+    act(() => api().updateInGame({ lookSensitivity: 20 }));
+    act(() => api().updateInGame({ radialDeadzone: 0.13 }));
+    act(() => api().updateInGame({ axialDeadzone: 500 })); // out of range: ignored
+    expect(api().data.inGame).toMatchObject({ lookSensitivity: 20, radialDeadzone: 0.13, axialDeadzone: null });
+    expect(api().data.configs).toEqual({});
+    expect((storage.json(STORAGE_KEY) as AppData).inGame.lookSensitivity).toBe(20);
   });
 
   it('does not save invalid settings', () => {

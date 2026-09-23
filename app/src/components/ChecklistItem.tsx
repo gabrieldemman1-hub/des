@@ -1,6 +1,7 @@
 import { useId, type ReactNode } from 'react';
 import { useData } from '../state/data-context';
 import type { ProgressState } from '../state/schema';
+import { useEffectiveProgress } from '../state/use-progress';
 
 interface Props {
   /** The progress key (see state/progress.ts). */
@@ -12,14 +13,23 @@ interface Props {
 
 const LABELS: Record<ProgressState, string> = { done: 'Done', problem: 'Needs fixing' };
 
+/** Why an item is marked when the player hasn't marked it (only the Destiny 2 settings check). */
+const DERIVED_NOTE: Record<ProgressState, string> = {
+  done: 'Shown as Done because every Destiny 2 setting is marked Done in Build my config.',
+  problem: 'Shown as Needs fixing because a Destiny 2 setting is marked Needs fixing in Build my config.',
+};
+
 /**
  * One checklist step with two toggles: "Done" and "Needs fixing". Tapping the active one
- * again clears it. The state is saved on the phone, so Build my config and Troubleshoot by
- * feel share it.
+ * again clears it. The state is saved on the phone, so Build my config, Tune my config and
+ * Troubleshoot by feel share it. Some items show a state worked out from others (see
+ * `effectiveProgress`); tapping a toggle then marks the item itself.
  */
 export function ChecklistItem({ itemKey, title, children }: Props) {
   const { data, setProgress } = useData();
-  const state = data.progress[itemKey] ?? null;
+  const progress = useEffectiveProgress();
+  const saved = data.progress[itemKey] ?? null;
+  const state = progress[itemKey] ?? null;
   const titleId = useId();
 
   return (
@@ -28,6 +38,7 @@ export function ChecklistItem({ itemKey, title, children }: Props) {
         {title}
       </p>
       {children && <div className="checklist-body">{children}</div>}
+      {saved === null && state !== null && <p className="hint">{DERIVED_NOTE[state]}</p>}
       <div className="checklist-actions" role="group" aria-label="Status">
         {(Object.keys(LABELS) as ProgressState[]).map((s) => (
           <button
@@ -35,7 +46,8 @@ export function ChecklistItem({ itemKey, title, children }: Props) {
             type="button"
             className={`button small ${state === s ? 'primary' : 'secondary'}`}
             aria-pressed={state === s}
-            onClick={() => setProgress(itemKey, state === s ? null : s)}
+            aria-describedby={titleId}
+            onClick={() => setProgress(itemKey, saved === s ? null : s)}
           >
             {LABELS[s]}
           </button>

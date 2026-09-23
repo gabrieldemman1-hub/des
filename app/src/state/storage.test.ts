@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MemoryStorage } from '../test/memory-storage';
 import { sampleData, sampleLoadout } from '../test/fixtures';
-import { STORAGE_VERSION, defaultData, emptyConfig } from './schema';
+import { STORAGE_VERSION, defaultData, emptyConfig, emptyInGame } from './schema';
 import {
   STORAGE_KEY,
   UNREADABLE_KEY,
@@ -278,14 +278,50 @@ describe('version 2: current settings and checklist progress', () => {
     expect(result).toEqual({ ok: true, data: defaultData(), exportedAt: v1.exportedAt });
   });
 
+  it('adds empty Destiny 2 settings when bringing version 1 data up to date', () => {
+    expect(migrateToCurrent({ version: 1, profile: {}, loadouts: [] })).toEqual({
+      version: 2,
+      profile: {},
+      loadouts: [],
+      inGame: emptyInGame(),
+      configs: {},
+      progress: {},
+    });
+    expect(emptyInGame()).toEqual({
+      movementControls: null,
+      buttonLayout: null,
+      lookSensitivity: null,
+      adsSensitivityModifier: null,
+      axialDeadzone: null,
+      radialDeadzone: null,
+    });
+  });
+
   it('round-trips settings and progress through a backup', () => {
     const data = sampleData({
       loadouts: [sampleLoadout()],
+      inGame: { ...emptyInGame(), lookSensitivity: 20, movementControls: 'default' },
       configs: { l1: { ...emptyConfig(), aim: { ...emptyConfig().aim, easing: 40, smoothing: 'standard' } } },
-      progress: { 'check:firmware': 'done', 'loadout:l1:easing': 'problem' },
+      progress: { 'check:firmware': 'done', 'loadout:l1:aim:lever:tracking:precision': 'problem' },
     });
-    const result = parseBackup(createBackup(data));
+    const text = createBackup(data);
+    expect((JSON.parse(text) as { inGame: unknown }).inGame).toEqual(data.inGame);
+    const result = parseBackup(text);
     expect(result.ok && result.data).toEqual(data);
+  });
+
+  it('keeps each valid Destiny 2 setting when another is damaged', () => {
+    const storage = new MemoryStorage({
+      [STORAGE_KEY]: JSON.stringify({
+        version: STORAGE_VERSION,
+        profile: defaultData().profile,
+        loadouts: [],
+        inGame: { lookSensitivity: 20, radialDeadzone: 'lots', buttonLayout: 'default', axialDeadzone: -4 },
+      }),
+    });
+    const { data, issue } = loadData(storage);
+    expect(issue).toBe('invalid');
+    expect(data.inGame).toEqual({ ...emptyInGame(), lookSensitivity: 20, buttonLayout: 'default' });
   });
 
   it('keeps valid settings and progress when other stored data is damaged', () => {

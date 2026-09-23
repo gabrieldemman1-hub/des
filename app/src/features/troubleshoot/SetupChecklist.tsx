@@ -3,22 +3,25 @@ import type { FoundationCheck } from '../../../../knowledge/index';
 import { ChecklistItem } from '../../components/ChecklistItem';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
+import { PerConfigNote } from '../../components/PerConfigNote';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
 import { useData } from '../../state/data-context';
-import { progressKey } from '../../state/progress';
-import { CHECK_PREFIX, describeSummary, hasCheckMarks, summarizeChecks } from './setup-progress';
+import { REQUIRED_SETTINGS_CHECK_ID, progressKey, progressSummary } from '../../state/progress';
+import { useEffectiveProgress } from '../../state/use-progress';
+import { CHECK_PREFIX, hasCheckMarks, summarizeChecks } from './setup-progress';
 import './troubleshoot.css';
 
 /** One setup check: what to do, why (sourced), and how to fix it (sourced). */
 function SetupCheckItem({ check }: { check: FoundationCheck }) {
-  const { data } = useData();
+  const progress = useEffectiveProgress();
   const key = progressKey.check(check.id);
-  const needsFixing = data.progress[key] === 'problem';
+  const needsFixing = progress[key] === 'problem';
 
   return (
     <ChecklistItem itemKey={key} title={check.title}>
       <p>{check.check}</p>
+      <PerConfigNote checkId={check.id} />
       <details className="why">
         <summary>
           Why it matters <ConfidenceBadge level={check.why.confidence} />
@@ -71,17 +74,19 @@ interface SummaryProps {
   allowReset?: boolean;
 }
 
-/** "5 of 10 checked · 1 needs fixing", read out when it changes, and optionally a reset. */
+/** "5 of 10 done · 1 needs fixing", read out when it changes, and optionally a reset. */
 export function SetupSummary({ checks, allowReset = false }: SummaryProps) {
   const { data, clearProgress } = useData();
+  const progress = useEffectiveProgress();
   const [confirming, setConfirming] = useState(false);
-  const summary = summarizeChecks(checks, data.progress);
+  const summary = summarizeChecks(checks, progress);
   const canReset = hasCheckMarks(data.progress);
+  const hasRequiredCheck = checks.some((c) => c.id === REQUIRED_SETTINGS_CHECK_ID);
 
   return (
     <div className="card ts-summary">
       <p className="ts-summary-count" role="status">
-        {describeSummary(summary)}
+        {progressSummary(summary)}
       </p>
       {allowReset && (
         <>
@@ -112,6 +117,11 @@ export function SetupSummary({ checks, allowReset = false }: SummaryProps) {
               This clears every Done and Needs fixing mark in the setup check on this phone. Build my config uses the
               same checklist, so its marks are cleared too.
             </p>
+            {hasRequiredCheck && (
+              <p>
+                The Destiny 2 settings check still follows the Destiny 2 settings you’ve marked in Build my config.
+              </p>
+            )}
           </ConfirmDialog>
         </>
       )}

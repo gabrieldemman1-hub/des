@@ -94,7 +94,8 @@ app/                      the web app (Vite root)
                           styles and tests
     content/              UI text from CONCEPT.md: flow descriptions, labels
     state/                data schema, storage and migrations, loadout rules, checklist
-                          progress keys, the shared Destiny 2 settings comparison, contexts
+                          progress keys, the shared Destiny 2 settings comparison, how current
+                          values read (current-values.ts), contexts
     test/                 test setup, fixtures, render helper
 knowledge/                the evidence base (see below)
   schema.ts               the zod contract (evidence rules from CONCEPT.md §8)
@@ -170,9 +171,11 @@ It is a manual check, not part of CI, because it depends on third-party sites. R
 
 ## Data on the phone
 
-The profile, loadouts, each loadout's current settings (entered in Tune my config) and
-checklist progress (shared by Build my config and Troubleshoot by feel) are stored in
-`localStorage` under one key, `dialed:v1`, and validated with zod whenever they're read. Stored
+The profile, loadouts, current settings (entered in Tune my config: Destiny 2's in-game settings,
+one set shared by every loadout, and each loadout's Config) and checklist progress are stored in
+`localStorage` under one key, `dialed:v1`, and validated with zod whenever they're read. The
+Destiny 2 and setup-check marks are shared by Build my config and Troubleshoot by feel; each
+loadout's aim marks are shared by Build my config and Tune my config (`app/src/state/progress.ts`). Stored
 data and backups carry a `version` (currently 2); data from an older version is brought up to
 date step by step (`MIGRATIONS` in `app/src/state/storage.ts`), so a schema change never makes
 old backups unrestorable. If storage is blocked, the saved data is corrupt,

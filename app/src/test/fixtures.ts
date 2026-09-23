@@ -1,6 +1,6 @@
 import { mergeKnowledge, parseKnowledgeFiles, type RawKnowledgeFiles } from '../../../knowledge/index';
 import { createKnowledgeApi, type KnowledgeApi } from '../state/knowledge-context';
-import { STORAGE_VERSION, defaultProfile, type AppData, type Loadout } from '../state/schema';
+import { STORAGE_VERSION, defaultProfile, emptyInGame, type AppData, type Loadout } from '../state/schema';
 
 const reasoned = (text: string, reasoning: string) => ({ text, confidence: 'reasoned', citations: [], reasoning });
 
@@ -109,5 +109,13 @@ export function sampleLoadout(overrides: Partial<Loadout> = {}): Loadout {
 }
 
 export function sampleData(overrides: Partial<AppData> = {}): AppData {
-  return { version: STORAGE_VERSION, profile: defaultProfile(), loadouts: [], configs: {}, progress: {}, ...overrides };
+  return {
+    version: STORAGE_VERSION,
+    profile: defaultProfile(),
+    loadouts: [],
+    inGame: emptyInGame(),
+    configs: {},
+    progress: {},
+    ...overrides,
+  };
 }

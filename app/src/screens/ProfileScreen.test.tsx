@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { sampleData, sampleLoadout } from '../test/fixtures';
 import { MemoryStorage } from '../test/memory-storage';
 import { renderApp } from '../test/render';
-import { defaultProfile, type AppData } from '../state/schema';
+import { defaultProfile, emptyConfig, emptyInGame, type AppData } from '../state/schema';
 import { STORAGE_KEY, createBackup } from '../state/storage';
 
 function stored(storage: MemoryStorage): AppData {
@@ -201,7 +201,15 @@ describe('Profile screen', () => {
     const link = click.mock.contexts[0] as HTMLAnchorElement;
     expect(link.download).toMatch(/^dialed-backup-\d{4}-\d{2}-\d{2}\.json$/);
     const backup = JSON.parse(await blob!.text()) as Record<string, unknown>;
-    expect(backup).toMatchObject({ app: 'dialed', version: 2, profile: data.profile, loadouts: data.loadouts, configs: {}, progress: {} });
+    expect(backup).toMatchObject({
+      app: 'dialed',
+      version: 2,
+      profile: data.profile,
+      loadouts: data.loadouts,
+      inGame: emptyInGame(),
+      configs: {},
+      progress: {},
+    });
     expect(screen.getByText('Backup downloaded.')).toBeInTheDocument();
   });
 
@@ -229,6 +237,76 @@ describe('Profile screen', () => {
     expect(screen.getByRole('radio', { name: 'PC' })).toBeChecked();
     expect(screen.getByRole('textbox', { name: 'Mouse DPI' })).toHaveValue('3200');
     expect(screen.getByText('Backup restored.')).toBeInTheDocument();
+  });
+
+  it('says the restore replaces current settings and checklist marks too', async () => {
+    const { user } = renderApp({ path: '/profile' });
+    const backup = sampleData({
+      loadouts: [sampleLoadout()],
+      inGame: { ...emptyInGame(), lookSensitivity: 20 },
+      configs: { l1: { ...emptyConfig(), aim: { ...emptyConfig().aim, precision: 40 } } },
+      progress: { 'check:firmware-current': 'done', 'loadout:l1:aim:sensitivity': 'done' },
+    });
+    const file = new File([createBackup(backup, new Date('2026-09-01T00:00:00Z'))], 'backup.json', {
+      type: 'application/json',
+    });
+    await user.upload(screen.getByLabelText('Restore from backup'), file);
+    const dialog = await screen.findByRole('alertdialog', { name: 'Replace your data with this backup?' });
+    expect(dialog).toHaveTextContent('has 1 loadout, current settings and 2 checklist marks.');
+    expect(dialog).toHaveTextContent(
+      'It will replace the profile, 0 loadouts, current settings and checklist marks on this phone.',
+    );
+    expect(dialog).not.toHaveTextContent('restoring it clears');
+    expect(screen.getByText(/Your profile, loadouts, current settings and checklist marks are saved only/)).toBeInTheDocument();
+  });
+
+  it('warns that a backup without current settings or marks (version 1) clears them', async () => {
+    const onPhone = sampleData({
+      loadouts: [sampleLoadout()],
+      inGame: { ...emptyInGame(), lookSensitivity: 20 },
+      progress: { 'required:look-sensitivity': 'done' },
+    });
+    const { user, storage } = renderApp({
+      path: '/profile',
+      storage: new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(onPhone) }),
+    });
+    const v1 = {
+      app: 'dialed',
+      version: 1,
+      exportedAt: '2026-09-01T00:00:00.000Z',
+      profile: defaultProfile(),
+      loadouts: [sampleLoadout()],
+    };
+    await user.upload(
+      screen.getByLabelText('Restore from backup'),
+      new File([JSON.stringify(v1)], 'old.json', { type: 'application/json' }),
+    );
+    const dialog = await screen.findByRole('alertdialog', { name: 'Replace your data with this backup?' });
+    expect(dialog).toHaveTextContent('has 1 loadout, no current settings and no checklist marks.');
+    expect(dialog).toHaveTextContent(
+      'This backup has no current settings or checklist marks, so restoring it clears the current settings and checklist marks on this phone.',
+    );
+
+    await user.click(within(dialog).getByRole('button', { name: 'Replace' }));
+    expect(stored(storage).inGame).toEqual(emptyInGame());
+    expect(stored(storage).progress).toEqual({});
+  });
+
+  it('warns only about what the backup lacks', async () => {
+    const onPhone = sampleData({ progress: { 'check:firmware-current': 'done' } });
+    const { user } = renderApp({
+      path: '/profile',
+      storage: new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(onPhone) }),
+    });
+    const backup = sampleData({ inGame: { ...emptyInGame(), buttonLayout: 'default' } });
+    await user.upload(
+      screen.getByLabelText('Restore from backup'),
+      new File([createBackup(backup)], 'backup.json', { type: 'application/json' }),
+    );
+    const dialog = await screen.findByRole('alertdialog');
+    expect(dialog).toHaveTextContent(
+      'This backup has no checklist marks, so restoring it clears the checklist marks on this phone.',
+    );
   });
 
   it('keeps everything when the restore is cancelled', async () => {

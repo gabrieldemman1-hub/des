@@ -2,13 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { knowledge } from '../../../../knowledge/index';
 import { EASING_CAVEAT } from '../../../../knowledge/integrity';
 import { createKnowledgeApi } from '../../state/knowledge-context';
-import { progressKey } from '../../state/progress';
-import { defaultProfile, emptyConfig, type Profile } from '../../state/schema';
+import { REQUIRED_SETTINGS_CHECK_ID, effectiveProgress, progressKey, progressSummary } from '../../state/progress';
+import { defaultProfile, emptyConfig, emptyInGame, type Profile } from '../../state/schema';
 import { sampleLoadout } from '../../test/fixtures';
-import { buildPlan, planProgress, progressText, resumeStep, stepKeys } from './build-plan';
-import { checkContext, currentAimValue, currentRequiredValue, nonStandardSmoothing } from './current-values';
+import { buildPlan, planProgress, resumeStep, stepKeys } from './build-plan';
 import { weaponLines } from './format';
-import { sharedCaveat, sheetText } from './sheet-text';
+import { sharedCaveat, sheetProgress, sheetText } from './sheet-text';
 
 const real = createKnowledgeApi(knowledge);
 
@@ -25,12 +24,31 @@ describe('buildPlan', () => {
     expect(plan.settings.map((s) => s.key)).toContain(progressKey.requiredSetting('Look Sensitivity'));
   });
 
-  it('keeps the setup checks for the profile’s platform', () => {
+  it('keeps the setup checks for the profile’s platform, leaving the Destiny 2 settings check to step 1', () => {
     const ids = (p: Profile) => buildPlan(real, p, sampleLoadout()).checks.map((c) => c.check.id);
     expect(ids(profile({ platform: 'xbox', outputType: 'xbox-controller' }))).toContain('xbox-authentication-controller');
     expect(ids(profile({ platform: 'xbox', outputType: 'xbox-controller' }))).not.toContain('pc-virtual-controller-tools');
     expect(ids(profile({ platform: 'pc', outputType: 'pc-xinput' }))).not.toContain('xbox-authentication-controller');
-    expect(ids(profile())).toHaveLength(knowledge.foundation.length);
+    expect(knowledge.foundation.map((c) => c.id)).toContain(REQUIRED_SETTINGS_CHECK_ID);
+    expect(ids(profile())).not.toContain(REQUIRED_SETTINGS_CHECK_ID);
+    expect(ids(profile())).toHaveLength(knowledge.foundation.length - 1);
+  });
+
+  it('keys the aim items under the loadout’s shared aim prefix, levers by aim style', () => {
+    const plan = buildPlan(real, profile(), sampleLoadout());
+    expect(stepKeys(plan).aim).toEqual([
+      'loadout:l1:aim:sensitivity',
+      'loadout:l1:aim:smoothing',
+      'loadout:l1:aim:lever:tracking:precision',
+      'loadout:l1:aim:term:aiming-curve',
+      'loadout:l1:aim:term:quantization',
+      'loadout:l1:aim:term:velocity-mapping',
+    ]);
+    // A scout rifle's Precision is another item: its aim style is part of the key.
+    const scout = buildPlan(real, profile(), sampleLoadout({ weapons: { kinetic: 'scout-rifle', energy: null, power: null } }));
+    expect(scout.levers.find((l) => l.lever.termId === 'precision')?.key).toBe(
+      progressKey.aim.lever('l1', 'precision-hold', 'precision'),
+    );
   });
 
   it('gives a pulse rifle the tracking levers and a hand cannon the snap levers', () => {
@@ -65,11 +83,11 @@ describe('buildPlan', () => {
     expect(plan.style).toBeUndefined();
     expect(plan.levers).toEqual([]);
     expect(stepKeys(plan).aim).toEqual([
-      progressKey.loadout('l1', 'sensitivity'),
-      progressKey.loadout('l1', 'term:smoothing'),
-      progressKey.loadout('l1', 'term:aiming-curve'),
-      progressKey.loadout('l1', 'term:quantization'),
-      progressKey.loadout('l1', 'term:velocity-mapping'),
+      progressKey.aim.sensitivity('l1'),
+      progressKey.aim.smoothing('l1'),
+      progressKey.aim.term('l1', 'aiming-curve'),
+      progressKey.aim.term('l1', 'quantization'),
+      progressKey.aim.term('l1', 'velocity-mapping'),
     ]);
   });
 
@@ -100,74 +118,27 @@ describe('progress', () => {
     const count = planProgress(plan, { [a!]: 'done', [b!]: 'problem', 'check:unrelated': 'done' });
     expect(count.done).toBe(1);
     expect(count.problem).toBe(1);
-    expect(progressText(count, 'steps')).toBe(`1 of ${count.total} steps done, 1 needs fixing`);
-    expect(progressText({ total: 6, done: 2, problem: 0 })).toBe('2 of 6 done');
-  });
-});
-
-describe('current values', () => {
-  it('compares Destiny 2 settings exactly with the required value', () => {
-    const config = emptyConfig();
-    expect(currentRequiredValue(config, 'Look Sensitivity', '20')).toBeNull();
-    config.inGame.lookSensitivity = 18;
-    config.inGame.adsSensitivityModifier = 1.5;
-    config.inGame.radialDeadzone = 0.13;
-    config.inGame.movementControls = 'other';
-    config.inGame.buttonLayout = 'default';
-    expect(currentRequiredValue(config, 'Look Sensitivity', '20')).toEqual({ text: '18', comparison: 'differs' });
-    expect(currentRequiredValue(config, 'ADS Sensitivity Modifier', ' 1.5 ')).toEqual({ text: '1.5', comparison: 'same' });
-    expect(currentRequiredValue(config, 'Radial Deadzone', '0.13')?.comparison).toBe('same');
-    expect(currentRequiredValue(config, 'Movement Controls', 'Default')?.comparison).toBe('differs');
-    expect(currentRequiredValue(config, 'Button Layout', 'Default')?.comparison).toBe('same');
-    expect(currentRequiredValue(config, 'Field of View', 'Default')).toBeNull();
-  });
-
-  it('reads aim settings for display', () => {
-    const config = emptyConfig();
-    expect(currentAimValue(config, 'precision')).toBeNull();
-    config.aim.precision = 40;
-    config.aim.hipSensitivity = 32;
-    config.aim.quantization = true;
-    config.aim.quantizationMagnitude = 25;
-    config.aim.aimingCurve = 'linear';
-    config.aim.smoothing = 'preset';
-    config.aim.presetName = 'Balanced';
-    expect(currentAimValue(config, 'precision')).toBe('40');
-    expect(currentAimValue(config, 'sensitivity')).toBe('Hip 32 cm/360');
-    expect(currentAimValue(config, 'quantization')).toBe('On · Magnitude 25');
-    expect(currentAimValue(config, 'aiming-curve')).toBe('Linear');
-    expect(nonStandardSmoothing(config)).toBe('Preset: Balanced');
-    config.aim.smoothing = 'standard';
-    expect(nonStandardSmoothing(config)).toBeNull();
-  });
-
-  it('flags a Config DPI that differs from the mouse', () => {
-    const config = emptyConfig();
-    config.matrix.configDpi = 800;
-    expect(checkContext('mouse-dpi-matches', { mouseDpi: 1600, pollingRate: null }, config)).toEqual([
-      { label: 'Your mouse (profile)', value: '1600 DPI' },
-      { label: 'Your Config (current settings)', value: '800 DPI', differs: true },
-    ]);
-    expect(checkContext('mouse-polling-rate', { mouseDpi: null, pollingRate: 1000 }, undefined)).toEqual([
-      { label: 'Your mouse is set to (profile)', value: '1000 Hz' },
-    ]);
-    expect(checkContext('firmware-current', { mouseDpi: 1600, pollingRate: 1000 }, config)).toEqual([]);
+    expect(progressSummary(count, 'items')).toBe(`1 of ${count.total} items done · 1 needs fixing`);
+    expect(progressSummary({ total: 6, done: 2, problem: 0 })).toBe('2 of 6 done');
   });
 });
 
 describe('sheetText', () => {
+  const termName = (id: string) => real.termById(id)?.name ?? id;
+
   it('keeps every value, confidence label and caveat', () => {
     const loadout = sampleLoadout({ weapons: { kinetic: 'hand-cannon', energy: 'shotgun', power: null } });
     const plan = buildPlan(real, profile(), loadout);
-    const config = emptyConfig();
-    config.inGame.lookSensitivity = 18;
+    const inGame = emptyInGame();
+    inGame.lookSensitivity = 18;
     const text = sheetText({
       plan,
       weapons: weaponLines(loadout, real),
       progress: { [progressKey.requiredSetting('Look Sensitivity')]: 'problem' },
-      config,
+      inGame,
+      config: emptyConfig(),
       profile: profile(),
-      termName: (id) => real.termById(id)?.name ?? id,
+      termName,
     });
     expect(text).toContain('Weapons: Kinetic: Hand Cannon (main) · Energy: Shotgun');
     expect(text).toContain('- Look Sensitivity: 20 [Official] · Needs fixing · Yours: 18 (differs)');
@@ -175,5 +146,88 @@ describe('sheetText', () => {
     expect(text).toContain('- Easing: Lower');
     expect(text).toContain(EASING_CAVEAT);
     for (const check of plan.checks) expect(text).toContain(check.check.title);
+    expect(text).toContain('Progress: 0 of');
+    expect(text).toMatch(/Progress: 0 of \d+ items done · 1 needs fixing/);
+  });
+
+  it('labels every reasoned statement as worked out', () => {
+    const loadout = sampleLoadout({ weapons: { kinetic: 'hand-cannon', energy: null, power: null } });
+    const plan = buildPlan(real, profile(), loadout);
+    const text = sheetText({
+      plan,
+      weapons: weaponLines(loadout, real),
+      progress: {},
+      inGame: emptyInGame(),
+      config: undefined,
+      profile: profile(),
+      termName,
+    });
+    const lines = text.split('\n');
+    const reasoned = lines.filter((line) => line.includes('[Reasoned]'));
+    expect(reasoned.length).toBeGreaterThan(2);
+    // Every [Reasoned] statement is followed by its "worked out" label.
+    lines.forEach((line, i) => {
+      if (line.includes('[Reasoned]') && line.trimStart().startsWith('[Reasoned]')) {
+        expect(lines[i + 1], line).toMatch(/Worked out (from XIM’s definitions|by Dialed), not stated by (a|any) source\./);
+      }
+    });
+    // The Easing lever is reasoned from XIM's definitions.
+    const easing = lines.findIndex((line) => line.startsWith('- Easing: Lower'));
+    expect(lines[easing + 2]).toBe('    Worked out from XIM’s definitions, not stated by a source.');
+  });
+
+  it('includes the smoothing note when smoothing isn’t custom Standard', () => {
+    const loadout = sampleLoadout();
+    const plan = buildPlan(real, profile(), loadout);
+    const config = emptyConfig();
+    const make = () =>
+      sheetText({ plan, weapons: weaponLines(loadout, real), progress: {}, inGame: emptyInGame(), config, profile: profile(), termName });
+
+    config.aim.smoothing = 'standard';
+    expect(make()).not.toContain('Note: ');
+    config.aim.smoothing = 'classic';
+    expect(make()).toContain('Note: Your smoothing is Custom Classic. These directions assume Standard smoothing.');
+    config.aim.smoothing = 'preset';
+    config.aim.presetName = 'Fast';
+    expect(make()).toContain(
+      'Note: Your smoothing is a preset (Fast). Dialed can’t tell which mode a preset uses. These directions assume Standard smoothing.',
+    );
+  });
+
+  it('says to check the per-Config checks in every Config', () => {
+    const loadout = sampleLoadout();
+    const plan = buildPlan(real, profile(), loadout);
+    const text = sheetText({
+      plan,
+      weapons: weaponLines(loadout, real),
+      progress: {},
+      inGame: emptyInGame(),
+      config: undefined,
+      profile: profile(),
+      termName,
+    });
+    const lines = text.split('\n');
+    const dpi = lines.findIndex((line) => line.startsWith(`- ${plan.checks.find((c) => c.check.id === 'mouse-dpi-matches')!.check.title}`));
+    expect(lines[dpi + 1]).toBe('  Check this in every Config you use — each loadout has its own.');
+    const firmware = lines.findIndex((line) => line.startsWith(`- ${plan.checks.find((c) => c.check.id === 'firmware-current')!.check.title}`));
+    expect(lines[firmware + 1]).not.toContain('every Config');
+  });
+});
+
+describe('sheetProgress', () => {
+  it('shows a check whose context differs as Needs fixing, even when ticked Done', () => {
+    const plan = buildPlan(real, profile(), sampleLoadout());
+    const key = progressKey.check('mouse-dpi-matches');
+    const config = emptyConfig();
+    config.matrix.configDpi = 800;
+    const progress = { [key]: 'done' as const };
+    expect(sheetProgress(plan, progress, { mouseDpi: 1600, pollingRate: null }, config)[key]).toBe('problem');
+    expect(sheetProgress(plan, progress, { mouseDpi: 800, pollingRate: null }, config)[key]).toBe('done');
+    expect(sheetProgress(plan, {}, { mouseDpi: null, pollingRate: null }, config)[key]).toBeUndefined();
+  });
+
+  it('works from the effective progress, with the derived Destiny 2 settings check', () => {
+    const all = Object.fromEntries(knowledge.game.requiredSettings.map((s) => [progressKey.requiredSetting(s.name), 'done' as const]));
+    expect(effectiveProgress(all, knowledge)[progressKey.check(REQUIRED_SETTINGS_CHECK_ID)]).toBe('done');
   });
 });

@@ -9,12 +9,14 @@ import {
   AppData,
   BackupFile,
   CurrentConfig,
+  InGameSettings,
   Loadout,
   LoadoutId,
   Profile,
   ProgressState,
   STORAGE_VERSION,
   defaultData,
+  emptyInGame,
   normalizeProfile,
 } from './schema';
 
@@ -90,6 +92,16 @@ function salvage(value: unknown): AppData {
       }
     }
   }
+  // Field by field, like the profile.
+  const storedInGame = record.inGame;
+  if (storedInGame && typeof storedInGame === 'object' && !Array.isArray(storedInGame)) {
+    const fields = storedInGame as Record<string, unknown>;
+    const inGame = data.inGame as Record<keyof InGameSettings, unknown>;
+    for (const key of Object.keys(InGameSettings.shape) as (keyof InGameSettings)[]) {
+      const field = InGameSettings.shape[key].safeParse(fields[key]);
+      if (field.success) inGame[key] = field.data;
+    }
+  }
   // Entry by entry, like the loadouts: settings for a loadout that no longer exists are dropped.
   if (record.configs && typeof record.configs === 'object' && !Array.isArray(record.configs)) {
     const ids = new Set(data.loadouts.map((l) => l.id));
@@ -146,8 +158,9 @@ export type Migration = (data: Versioned) => Versioned;
  * older versions of Dialed still load.
  */
 export const MIGRATIONS: Readonly<Record<number, Migration>> = {
-  // Version 2 adds current settings per loadout and checklist progress, both empty at first.
-  1: (data) => ({ ...data, configs: {}, progress: {} }),
+  // Version 2 adds current settings (Destiny 2's game-wide settings and each loadout's Config)
+  // and checklist progress, all empty at first.
+  1: (data) => ({ ...data, inGame: emptyInGame(), configs: {}, progress: {} }),
 };
 
 /**
@@ -197,6 +210,7 @@ export function createBackup(data: AppData, now: Date = new Date()): string {
     exportedAt: now.toISOString(),
     profile: data.profile,
     loadouts: data.loadouts,
+    inGame: data.inGame,
     configs: data.configs,
     progress: data.progress,
   };
@@ -234,6 +248,6 @@ export function parseBackup(text: string): RestoreResult {
     const where = first?.path.length ? ` (${first.path.join('.')})` : '';
     return { ok: false, error: `That backup is damaged and can’t be restored: ${first?.message ?? 'invalid data'}${where}.` };
   }
-  const { profile, loadouts, configs, progress, exportedAt } = parsed.data;
-  return { ok: true, data: { version: STORAGE_VERSION, profile, loadouts, configs, progress }, exportedAt };
+  const { profile, loadouts, inGame, configs, progress, exportedAt } = parsed.data;
+  return { ok: true, data: { version: STORAGE_VERSION, profile, loadouts, inGame, configs, progress }, exportedAt };
 }

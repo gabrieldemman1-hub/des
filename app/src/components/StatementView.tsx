@@ -1,5 +1,5 @@
 import type { Statement } from '../../../knowledge/index';
-import { SOURCE_TIER_LABELS } from '../content/labels';
+import { SOURCE_TIER_LABELS, reasonedLabel } from '../content/labels';
 import { useKnowledge } from '../state/knowledge-context';
 import { ConfidenceBadge } from './ConfidenceBadge';
 
@@ -7,16 +7,6 @@ interface Props {
   statement: Statement;
   /** Hide the badge when the surrounding UI already shows it. */
   showBadge?: boolean;
-}
-
-/**
- * How a reasoned statement is introduced. With citations it applies XIM's definitions
- * (CONCEPT.md §8). Without any, it is Dialed's own reading, and the caveat says why.
- */
-function reasonedLabel(statement: Statement): string {
-  return statement.citations.length > 0
-    ? 'Worked out from XIM’s definitions, not stated by a source.'
-    : 'Worked out by Dialed, not stated by any source.';
 }
 
 /** A knowledge-base statement with its confidence, reasoning, caveat and citations. */

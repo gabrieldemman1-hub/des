@@ -1,21 +1,25 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useLocation, useParams } from 'react-router';
 import type { Confidence, Statement } from '../../../../knowledge/index';
 import { AimStyleSummary } from '../../components/AimStyleSummary';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
+import { PerConfigNote } from '../../components/PerConfigNote';
 import { Screen } from '../../components/Screen';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
-import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS } from '../../content/labels';
+import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, reasonedLabel } from '../../content/labels';
+import { checkContext, currentAimValue, currentRequiredValue, smoothingNote } from '../../state/current-values';
 import { useData } from '../../state/data-context';
 import { useKnowledge } from '../../state/knowledge-context';
+import { progressSummary } from '../../state/progress';
 import type { ProgressState } from '../../state/schema';
-import { planProgress, progressText, type BuildPlan, type GuidanceItem } from './build-plan';
-import { checkContext, currentAimValue, currentRequiredValue, nonStandardSmoothing } from './current-values';
+import { useEffectiveProgress } from '../../state/use-progress';
+import { planProgress, type BuildPlan, type GuidanceItem } from './build-plan';
 import { STATUS_TEXT, statusOf, weaponLines } from './format';
-import { CheckContext, CurrentValue, Label, LoadoutNotFound } from './parts';
-import { sharedCaveat, sheetText } from './sheet-text';
-import { buildPath, tunePath, useBuildPlan } from './use-build-plan';
+import { CheckContext, CurrentValue, Label, LoadoutNotFound, SmoothingNote } from './parts';
+import { sheetBack } from './sheet-navigation';
+import { sharedCaveat, sheetProgress, sheetText } from './sheet-text';
+import { buildPath, tuneSettingsPath, useBuildPlan } from './use-build-plan';
 import './build.css';
 
 function StatusChip({ state }: { state: ProgressState | 'none' }) {
@@ -69,13 +73,17 @@ function Caveat({ text }: { text: string }) {
   );
 }
 
-/** A statement's text, badge and caveat, for scanning; the reasoning and sources are one tap away. */
+/**
+ * A statement's text, badge, "worked out" label (when reasoned) and caveat, for scanning; the
+ * reasoning and sources are one tap away.
+ */
 function StatementLine({ statement }: { statement: Statement }) {
   return (
     <div className="sheet-statement">
       <p>
         <ConfidenceBadge level={statement.confidence} /> {statement.text}
       </p>
+      {statement.confidence === 'reasoned' && <p className="sheet-caveat">{reasonedLabel(statement)}</p>}
       {statement.caveat && <Caveat text={statement.caveat} />}
     </div>
   );
@@ -174,27 +182,30 @@ function Sheet({ plan }: { plan: BuildPlan }) {
   const knowledge = useKnowledge();
   const { kb, termById } = knowledge;
   const { data } = useData();
-  const { profile, progress } = data;
+  const location = useLocation();
+  const { profile, inGame } = data;
   const { loadout, main, style } = plan;
   const config = data.configs[loadout.id];
+  const ticked = useEffectiveProgress();
+  const progress = sheetProgress(plan, ticked, profile, config);
   const weapons = weaponLines(loadout, knowledge);
   const status = (key: string) => statusOf(progress, key);
   const termName = (id: string) => termById(id)?.name ?? id;
   const shared = sharedCaveat(plan.settings.map((s) => s.statement));
   const confirmNote = kb.game.notes.find((n) => n.id === 'confirm-in-manager');
-  const smoothing = style ? nonStandardSmoothing(config) : null;
+  const smoothing = style ? smoothingNote(config?.aim) : null;
   const aimsWith = profile.aimingSources.map((s) => AIMING_SOURCE_LABELS[s].title.toLowerCase()).join(' and ');
   const textId = useId();
 
   const { state: copyState, copy, textRef } = useCopySheet(() =>
-    sheetText({ plan, weapons, progress, config, profile, termName }),
+    sheetText({ plan, weapons, progress: ticked, inGame, config, profile, termName }),
   );
 
   return (
     <Screen
       title={loadout.name}
       documentTitle={`${loadout.name} config sheet`}
-      back={{ to: '/loadouts', label: 'Loadouts' }}
+      back={sheetBack(location.state)}
       intro={
         <>
           <p className="eyebrow">Config sheet</p>
@@ -214,7 +225,7 @@ function Sheet({ plan }: { plan: BuildPlan }) {
           ) : (
             <p className="hint">The main weapon isn’t in the knowledge base any more, so its aim style is unknown.</p>
           )}
-          <p className="build-count">{progressText(planProgress(plan, progress), 'steps')}</p>
+          <p className="build-count">{progressSummary(planProgress(plan, progress), 'items')}</p>
         </>
       }
     >
@@ -225,8 +236,8 @@ function Sheet({ plan }: { plan: BuildPlan }) {
         <Link className="button secondary" to={buildPath(loadout.id)}>
           Continue building
         </Link>
-        <Link className="button secondary" to={tunePath(loadout.id)}>
-          Enter current settings
+        <Link className="button secondary" to={tuneSettingsPath(loadout.id)}>
+          Enter your current settings
         </Link>
       </div>
       <p className="sheet-copy-status" role="status">
@@ -249,7 +260,7 @@ function Sheet({ plan }: { plan: BuildPlan }) {
         ) : (
           <ul className="sheet-rows">
             {plan.settings.map((setting) => {
-              const current = currentRequiredValue(config, setting.name, setting.value);
+              const current = currentRequiredValue(inGame, setting.name, setting.value);
               return (
                 <SheetRow
                   key={setting.key}
@@ -284,7 +295,11 @@ function Sheet({ plan }: { plan: BuildPlan }) {
           <ul className="sheet-rows">
             {plan.checks.map(({ key, check }) => (
               <SheetRow key={key} name={check.title} confidence={check.why.confidence} state={status(key)}>
+                <PerConfigNote checkId={check.id} />
                 <CheckContext lines={checkContext(check.id, profile, config)} />
+                {ticked[key] === 'done' && progress[key] === 'problem' && (
+                  <p className="sheet-caveat">You marked this Done, but the values above differ.</p>
+                )}
                 <details className="why">
                   <summary>What to check, and why</summary>
                   <div className="build-statements">
@@ -322,12 +337,7 @@ function Sheet({ plan }: { plan: BuildPlan }) {
             why, above).
           </p>
         )}
-        {smoothing && (
-          <p className="build-note" role="note">
-            <strong>Your current settings say smoothing is {smoothing}.</strong> The directions below assume Standard
-            smoothing: see what {style?.name.toLowerCase()} settings should favour, above.
-          </p>
-        )}
+        {smoothing && <SmoothingNote text={smoothing.text} />}
         <ul className="sheet-rows">
           {plan.sensitivity && (
             <GuidanceRow
@@ -356,6 +366,9 @@ function Sheet({ plan }: { plan: BuildPlan }) {
                 state={status(key)}
               >
                 {current && <CurrentValue value={current} />}
+                {lever.statement.confidence === 'reasoned' && (
+                  <p className="sheet-caveat">{reasonedLabel(lever.statement)}</p>
+                )}
                 {lever.statement.caveat && <Caveat text={lever.statement.caveat} />}
                 <Why statements={[lever.statement]} showBadge={false} />
               </SheetRow>

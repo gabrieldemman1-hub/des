@@ -2,7 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { knowledge, type KnowledgeBase, type Statement } from '../../../../knowledge/index';
 import { EASING_CAVEAT } from '../../../../knowledge/integrity';
 import type { ConfigPatch } from '../../state/data-context';
-import { defaultProfile, emptyConfig, type CurrentConfig, type Loadout, type Profile } from '../../state/schema';
+import { progressKey } from '../../state/progress';
+import {
+  defaultProfile,
+  emptyConfig,
+  emptyInGame,
+  type CurrentConfig,
+  type InGameSettings,
+  type Loadout,
+  type Profile,
+} from '../../state/schema';
 import { sampleLoadout } from '../../test/fixtures';
 import {
   analyzeConfig,
@@ -20,14 +29,26 @@ import { parseNumberInput } from './number-input';
 
 const kb = knowledge;
 
-function config(patch: ConfigPatch = {}): CurrentConfig {
+/** A loadout's Config and Destiny 2's in-game settings (shared by every loadout). */
+interface Setup {
+  config: CurrentConfig;
+  inGame: InGameSettings;
+}
+
+function config(patch: ConfigPatch & { inGame?: Partial<InGameSettings> } = {}): Setup {
   const base = emptyConfig();
   return {
-    ...base,
-    inGame: { ...base.inGame, ...patch.inGame },
-    matrix: { ...base.matrix, ...patch.matrix },
-    aim: { ...base.aim, ...patch.aim },
+    config: {
+      ...base,
+      matrix: { ...base.matrix, ...patch.matrix },
+      aim: { ...base.aim, ...patch.aim },
+    },
+    inGame: { ...emptyInGame(), ...patch.inGame },
   };
+}
+
+function analyze(base: KnowledgeBase, p: Profile, loadout: Loadout, setup: Setup | undefined): Finding[] {
+  return analyzeConfig(base, p, loadout, setup?.config, setup?.inGame);
 }
 
 function profile(patch: Partial<Profile> = {}): Profile {
@@ -44,8 +65,8 @@ const HAND_CANNON = loadoutWith('hand-cannon');
 const SCOUT = loadoutWith('scout-rifle');
 
 /** The in-game settings exactly as the knowledge base requires them. */
-function requiredInGame(): CurrentConfig['inGame'] {
-  const inGame = emptyConfig().inGame;
+function requiredInGame(): InGameSettings {
+  const inGame = emptyInGame();
   for (const setting of kb.game.requiredSettings) {
     const field = requiredSettingField(setting.name);
     if (field === 'movementControls' || field === 'buttonLayout') inGame[field] = 'default';
@@ -113,18 +134,18 @@ describe('Destiny 2 required settings', () => {
 
   it('finds nothing to fix when every setting matches, and says so', () => {
     const current = config({ inGame: requiredInGame() });
-    expect(groupFindings(analyzeConfig(kb, profile(), PULSE, current)).fix).toEqual([]);
-    expect(checkRequiredSettings(kb, current).map((s) => s.state)).toEqual(kb.game.requiredSettings.map(() => 'ok'));
+    expect(groupFindings(analyze(kb, profile(), PULSE, current)).fix).toEqual([]);
+    expect(checkRequiredSettings(kb, current.inGame).map((s) => s.state)).toEqual(kb.game.requiredSettings.map(() => 'ok'));
   });
 
   it('matches the exact values, including decimals', () => {
     expect(required('adsSensitivityModifier').value).toBe('1.5');
     expect(required('radialDeadzone').value).toBe('0.13');
     const exact = config({ inGame: { adsSensitivityModifier: 1.5, radialDeadzone: 0.13 } });
-    expect(groupFindings(analyzeConfig(kb, profile(), PULSE, exact)).fix).toEqual([]);
+    expect(groupFindings(analyze(kb, profile(), PULSE, exact)).fix).toEqual([]);
 
     const close = config({ inGame: { adsSensitivityModifier: 1.4, radialDeadzone: 0.1 } });
-    expect(ids(groupFindings(analyzeConfig(kb, profile(), PULSE, close)).fix)).toEqual([
+    expect(ids(groupFindings(analyze(kb, profile(), PULSE, close)).fix)).toEqual([
       'fix:adsSensitivityModifier',
       'fix:radialDeadzone',
     ]);
@@ -138,7 +159,7 @@ describe('Destiny 2 required settings', () => {
   ] as const)('flags %s when it differs', (field, wrong) => {
     const setting = required(field);
     expect(Number(setting.value)).not.toBe(wrong);
-    const findings = analyzeConfig(kb, profile(), PULSE, config({ inGame: { ...requiredInGame(), [field]: wrong } }));
+    const findings = analyze(kb, profile(), PULSE, config({ inGame: { ...requiredInGame(), [field]: wrong } }));
     const fix = groupFindings(findings).fix;
     expect(fix).toHaveLength(1);
     expect(fix[0]).toMatchObject({
@@ -157,21 +178,21 @@ describe('Destiny 2 required settings', () => {
 
   it.each(['movementControls', 'buttonLayout'] as const)('compares %s with "Default"', (field) => {
     expect(required(field).value).toBe('Default');
-    const other = analyzeConfig(kb, profile(), PULSE, config({ inGame: { [field]: 'other' } }));
+    const other = analyze(kb, profile(), PULSE, config({ inGame: { [field]: 'other' } }));
     expect(byId(other, `fix:${field}`)).toMatchObject({ current: 'Not default', required: 'Default', status: 'mismatch' });
 
-    const same = analyzeConfig(kb, profile(), PULSE, config({ inGame: { [field]: 'default' } }));
+    const same = analyze(kb, profile(), PULSE, config({ inGame: { [field]: 'default' } }));
     expect(groupFindings(same).fix).toEqual([]);
   });
 
   it('links the deadzone settings to the Deadzone explanation', () => {
-    const findings = analyzeConfig(kb, profile(), PULSE, config({ inGame: { axialDeadzone: 3 } }));
+    const findings = analyze(kb, profile(), PULSE, config({ inGame: { axialDeadzone: 3 } }));
     expect(byId(findings, 'fix:axialDeadzone').termIds).toEqual(['required-game-settings', 'deadzone']);
   });
 
   it('reports settings not entered yet without turning them into findings', () => {
     const current = config({ inGame: { lookSensitivity: 20 } });
-    const states = checkRequiredSettings(kb, current);
+    const states = checkRequiredSettings(kb, current.inGame);
     expect(states.find((s) => s.field === 'lookSensitivity')?.state).toBe('ok');
     expect(states.filter((s) => s.state === 'missing').map((s) => s.field)).toEqual([
       'movementControls',
@@ -180,7 +201,7 @@ describe('Destiny 2 required settings', () => {
       'axialDeadzone',
       'radialDeadzone',
     ]);
-    expect(groupFindings(analyzeConfig(kb, profile(), PULSE, current)).fix).toEqual([]);
+    expect(groupFindings(analyze(kb, profile(), PULSE, current)).fix).toEqual([]);
     // With nothing saved at all, every setting is missing.
     expect(checkRequiredSettings(kb, undefined).every((s) => s.state === 'missing')).toBe(true);
   });
@@ -198,16 +219,16 @@ describe('Destiny 2 required settings', () => {
       },
     };
     const current = config({ inGame: { lookSensitivity: 7 } });
-    const states = checkRequiredSettings(extra, current);
+    const states = checkRequiredSettings(extra, current.inGame);
     expect(states.slice(-2).map((s) => s.state)).toEqual(['unknown', 'unknown']);
     // Only the real Look Sensitivity requirement produces a finding.
-    expect(ids(groupFindings(analyzeConfig(extra, profile(), PULSE, current)).fix)).toEqual(['fix:lookSensitivity']);
+    expect(ids(groupFindings(analyze(extra, profile(), PULSE, current)).fix)).toEqual(['fix:lookSensitivity']);
   });
 });
 
 describe('Setup', () => {
   it('flags a Config DPI that differs from the mouse DPI in the profile', () => {
-    const findings = analyzeConfig(kb, profile({ mouseDpi: 1600 }), PULSE, config({ matrix: { configDpi: 800 } }));
+    const findings = analyze(kb, profile({ mouseDpi: 1600 }), PULSE, config({ matrix: { configDpi: 800 } }));
     const dpi = byId(findings, 'setup:dpi');
     expect(dpi).toMatchObject({ group: 'setup', status: 'mismatch', actionable: true });
     expect(dpi.current).toContain('800');
@@ -219,25 +240,25 @@ describe('Setup', () => {
 
   it('says nothing about DPI when they match or one is missing', () => {
     const run = (mouseDpi: number | null, configDpi: number | null) =>
-      ids(analyzeConfig(kb, profile({ mouseDpi }), PULSE, config({ matrix: { configDpi } })));
+      ids(analyze(kb, profile({ mouseDpi }), PULSE, config({ matrix: { configDpi } })));
     expect(run(1600, 1600)).not.toContain('setup:dpi');
     expect(run(null, 800)).not.toContain('setup:dpi');
     expect(run(1600, null)).not.toContain('setup:dpi');
   });
 
   it('flags an out-of-date Smart Translator with the setup check and its fix', () => {
-    const findings = analyzeConfig(kb, profile(), PULSE, config({ matrix: { translatorWarning: true } }));
+    const findings = analyze(kb, profile(), PULSE, config({ matrix: { translatorWarning: true } }));
     const translator = byId(findings, 'setup:smart-translator');
     expect(translator.statement).toBe(check('smart-translator-current').why);
     expect(translator.more).toEqual([check('smart-translator-current').fix]);
     expect(translator.actionable).toBe(true);
-    expect(ids(analyzeConfig(kb, profile(), PULSE, config({ matrix: { translatorWarning: false } })))).not.toContain(
+    expect(ids(analyze(kb, profile(), PULSE, config({ matrix: { translatorWarning: false } })))).not.toContain(
       'setup:smart-translator',
     );
   });
 
   it('discourages Manual sync with the glossary’s guidance', () => {
-    const findings = analyzeConfig(kb, profile(), PULSE, config({ matrix: { syncMethod: 'manual' } }));
+    const findings = analyze(kb, profile(), PULSE, config({ matrix: { syncMethod: 'manual' } }));
     const manual = byId(findings, 'setup:sync-manual');
     expect(manual.statement).toBe(term('sync-manual').guidance[0]);
     expect(manual.statement.confidence).toBe('official');
@@ -248,7 +269,7 @@ describe('Setup', () => {
   });
 
   it('explains Custom sync with the Destiny 2 note, without calling it a fault', () => {
-    const findings = analyzeConfig(kb, profile(), PULSE, config({ matrix: { syncMethod: 'custom' } }));
+    const findings = analyze(kb, profile(), PULSE, config({ matrix: { syncMethod: 'custom' } }));
     const custom = byId(findings, 'setup:sync-custom');
     expect(custom.statement).toBe(kb.game.notes.find((n) => n.id === 'sync-method')!.statement);
     expect(custom.statement.caveat).toBeTruthy();
@@ -257,14 +278,14 @@ describe('Setup', () => {
   });
 
   it('says nothing about Standard sync', () => {
-    const findings = analyzeConfig(kb, profile(), PULSE, config({ matrix: { syncMethod: 'standard' } }));
+    const findings = analyze(kb, profile(), PULSE, config({ matrix: { syncMethod: 'standard' } }));
     expect(groupFindings(findings).setup).toEqual([]);
   });
 });
 
 describe('Aim settings', () => {
   it('starts with Sensitivity, then the tracking levers for a pulse rifle', () => {
-    const findings = groupFindings(analyzeConfig(kb, profile(), PULSE, config())).aim;
+    const findings = groupFindings(analyze(kb, profile(), PULSE, config())).aim;
     expect(ids(findings)).toEqual(['aim:sensitivity', ...style('tracking').levers.map((l) => `aim:${l.termId}`)]);
     expect(findings[0]!.statement).toBe(term('sensitivity').guidance[0]);
     const precision = byId(findings, 'aim:precision');
@@ -274,14 +295,14 @@ describe('Aim settings', () => {
 
   it('shows the player’s value for each lever and never judges it', () => {
     const current = config({ aim: { smoothing: 'standard', precision: 40, hipSensitivity: 30, adsSensitivity: 28 } });
-    const findings = analyzeConfig(kb, profile(), PULSE, current);
+    const findings = analyze(kb, profile(), PULSE, current);
     expect(byId(findings, 'aim:precision')).toMatchObject({ current: '40', status: undefined, direction: 'raise' });
     expect(byId(findings, 'aim:sensitivity')).toMatchObject({ current: 'Hip 30 cm/360 · ADS 28 cm/360', status: undefined });
     for (const finding of findings) expect(finding.status).not.toBe('mismatch');
   });
 
   it('gives a snap loadout Easing → lower, with the Easing caveat', () => {
-    const findings = analyzeConfig(kb, profile(), HAND_CANNON, config({ aim: { smoothing: 'standard', easing: 55 } }));
+    const findings = analyze(kb, profile(), HAND_CANNON, config({ aim: { smoothing: 'standard', easing: 55 } }));
     const easing = byId(findings, 'aim:easing');
     expect(easing).toMatchObject({ direction: 'lower', current: '55', actionable: true });
     expect(easing.statement.caveat).toContain(EASING_CAVEAT);
@@ -290,55 +311,91 @@ describe('Aim settings', () => {
   });
 
   it('hides the gyro-only lever from a mouse-only profile', () => {
-    const mouse = ids(analyzeConfig(kb, profile(), SCOUT, config()));
+    const mouse = ids(analyze(kb, profile(), SCOUT, config()));
     expect(mouse).not.toContain('aim:stability');
     expect(mouse).toContain('aim:aiming-curve');
 
-    const gyro = analyzeConfig(kb, profile({ aimingSources: ['mouse', 'gyro'] }), SCOUT, config());
+    const gyro = analyze(kb, profile({ aimingSources: ['mouse', 'gyro'] }), SCOUT, config());
     expect(byId(gyro, 'aim:stability').direction).toBe('raise');
     // Dialed has no field for Stability, so there is no value to show.
     expect(byId(gyro, 'aim:stability').current).toBeUndefined();
     expect(byId(gyro, 'aim:stability').status).toBeUndefined();
   });
 
-  it.each(['classic', 'preset', 'off'] as const)(
-    'explains that the directions assume Standard smoothing when smoothing is %s',
-    (smoothing) => {
-      const findings = analyzeConfig(kb, profile(), SCOUT, config({ aim: { smoothing, precision: 50 } }));
-      const aim = groupFindings(findings).aim;
-      const note = byId(aim, 'aim:smoothing-mode');
-      expect(note.statement).toBe(style('precision-hold').favours);
-      expect(note.statement.text).toMatch(/Standard/);
-      expect(note.actionable).toBe(false);
-      // It comes before the levers it is about.
-      expect(ids(aim).indexOf('aim:smoothing-mode')).toBeLessThan(ids(aim).indexOf('aim:precision'));
+  it.each([
+    ['classic', 'Your smoothing is Custom Classic. These directions assume Standard smoothing.'],
+    ['off', 'Your smoothing is Off. These directions assume Standard smoothing.'],
+  ] as const)('explains that the directions assume Standard smoothing when smoothing is %s', (smoothing, text) => {
+    const findings = analyze(kb, profile(), SCOUT, config({ aim: { smoothing, precision: 50 } }));
+    const aim = groupFindings(findings).aim;
+    const note = byId(aim, 'aim:smoothing-mode');
+    expect(note.title).toBe('These directions assume Standard smoothing');
+    expect(note.statement).toBe(style('precision-hold').favours);
+    expect(note.statement.text).toMatch(/These directions assume Standard smoothing/);
+    expect(note.actionable).toBe(false);
+    expect(note.smoothing?.text).toBe(text);
+    // It comes before the levers it is about.
+    expect(ids(aim).indexOf('aim:smoothing-mode')).toBeLessThan(ids(aim).indexOf('aim:precision'));
 
-      for (const id of ['aim:precision', 'aim:response', 'aim:easing']) {
-        expect(byId(aim, id)).toMatchObject({ actionable: false, assumesStandard: true, current: undefined });
-      }
-      // The aiming curve isn't a smoothing setting, so its direction still applies.
-      expect(byId(aim, 'aim:aiming-curve')).toMatchObject({ actionable: true, assumesStandard: undefined });
-    },
-  );
+    for (const id of ['aim:precision', 'aim:response', 'aim:easing']) {
+      const lever = byId(aim, id);
+      expect(lever).toMatchObject({ actionable: false, current: undefined, progressKey: undefined });
+      expect(lever.smoothing?.text).toMatch(/This direction assumes Standard smoothing\.$/);
+    }
+    // The aiming curve isn't a smoothing setting, so its direction still applies.
+    expect(byId(aim, 'aim:aiming-curve')).toMatchObject({ actionable: true, smoothing: undefined });
+  });
 
-  it('adds no smoothing note for custom Standard or when smoothing isn’t entered', () => {
-    for (const smoothing of ['standard', null] as const) {
-      const findings = analyzeConfig(kb, profile(), PULSE, config({ aim: { smoothing } }));
-      expect(ids(findings)).not.toContain('aim:smoothing-mode');
-      expect(byId(findings, 'aim:precision').actionable).toBe(true);
+  it('doesn’t rule the directions out for a preset, since Dialed can’t tell its mode', () => {
+    const findings = analyze(kb, profile(), SCOUT, config({ aim: { smoothing: 'preset', presetName: 'Fast', precision: 50 } }));
+    const aim = groupFindings(findings).aim;
+    const note = byId(aim, 'aim:smoothing-mode');
+    expect(note.current).toBe('Preset: Fast');
+    expect(note.smoothing?.text).toBe(
+      'Your smoothing is a preset (Fast). Dialed can’t tell which mode a preset uses. These directions assume Standard smoothing.',
+    );
+    for (const id of ['aim:precision', 'aim:response', 'aim:easing']) {
+      const lever = byId(aim, id);
+      // Still a change to try, but the Standard value isn't shown: a preset has no values in Dialed.
+      expect(lever).toMatchObject({ actionable: true, current: undefined, status: undefined });
+      expect(lever.progressKey).toBe(progressKey.aim.lever('l1', 'precision-hold', id.slice(4)));
+      expect(lever.smoothing?.text).toMatch(/can’t tell which mode a preset uses\. This direction assumes Standard/);
     }
   });
 
-  it('names the preset in the smoothing note', () => {
-    const findings = analyzeConfig(kb, profile(), PULSE, config({ aim: { smoothing: 'preset', presetName: 'Fast' } }));
-    expect(byId(findings, 'aim:smoothing-mode').current).toBe('Preset: Fast');
+  it('adds no smoothing note for custom Standard or when smoothing isn’t entered', () => {
+    for (const smoothing of ['standard', null] as const) {
+      const findings = analyze(kb, profile(), PULSE, config({ aim: { smoothing } }));
+      expect(ids(findings)).not.toContain('aim:smoothing-mode');
+      expect(byId(findings, 'aim:precision').actionable).toBe(true);
+      expect(byId(findings, 'aim:precision').smoothing).toBeUndefined();
+    }
+  });
+
+  it('shows Standard values only with custom Standard smoothing (or none entered)', () => {
+    const run = (smoothing: CurrentConfig['aim']['smoothing']) =>
+      byId(analyze(kb, profile(), PULSE, config({ aim: { smoothing, precision: 40 } })), 'aim:precision').current;
+    expect(run('standard')).toBe('40');
+    expect(run(null)).toBe('40');
+    expect(run('classic')).toBeUndefined();
+    expect(run('preset')).toBeUndefined();
+    expect(run('off')).toBeUndefined();
+  });
+
+  it('marks aim items with the loadout’s shared aim keys, including the aim style for levers', () => {
+    const findings = analyze(kb, profile(), PULSE, config());
+    expect(byId(findings, 'aim:sensitivity').progressKey).toBe(progressKey.aim.sensitivity('l1'));
+    expect(byId(findings, 'aim:precision').progressKey).toBe('loadout:l1:aim:lever:tracking:precision');
+    for (const finding of findings) {
+      if (finding.group !== 'aim' || !finding.actionable) expect(finding.progressKey).toBeUndefined();
+    }
   });
 
   it('uses the archetype’s mapping when the main weapon has no aim style', () => {
     const sword = sampleLoadout({ weapons: { kinetic: 'pulse-rifle', energy: null, power: 'sword' }, mainSlot: 'power' });
     const archetype = kb.weapons.archetypes.find((a) => a.id === 'sword')!;
     expect(archetype.aimStyle).toBeNull();
-    const aim = groupFindings(analyzeConfig(kb, profile(), sword, config())).aim;
+    const aim = groupFindings(analyze(kb, profile(), sword, config())).aim;
     expect(ids(aim)).toEqual(['aim:sensitivity', 'aim:no-style']);
     expect(byId(aim, 'aim:no-style').statement).toBe(archetype.mapping);
     expect(byId(aim, 'aim:no-style').actionable).toBe(false);
@@ -346,24 +403,24 @@ describe('Aim settings', () => {
 
   it('degrades when the aim style or the archetype is missing from the knowledge base', () => {
     const noStyles: KnowledgeBase = { ...kb, aimStyles: [] };
-    const aim = groupFindings(analyzeConfig(noStyles, profile(), PULSE, config())).aim;
+    const aim = groupFindings(analyze(noStyles, profile(), PULSE, config())).aim;
     expect(ids(aim)).toEqual(['aim:sensitivity', 'aim:no-style']);
 
     const unknown = loadoutWith('laser-sword');
     expect(mainWeapon(kb, unknown)).toEqual({ archetype: undefined, style: undefined });
-    expect(ids(groupFindings(analyzeConfig(kb, profile(), unknown, config())).aim)).toEqual(['aim:sensitivity']);
+    expect(ids(groupFindings(analyze(kb, profile(), unknown, config())).aim)).toEqual(['aim:sensitivity']);
   });
 });
 
 describe('Good to know', () => {
   it('explains that a custom curve and quantization change real-world cm/360', () => {
     const clean = check('clean-sensitivity-test');
-    const curve = byId(analyzeConfig(kb, profile(), PULSE, config({ aim: { aimingCurve: 'custom' } })), 'info:cm360');
+    const curve = byId(analyze(kb, profile(), PULSE, config({ aim: { aimingCurve: 'custom' } })), 'info:cm360');
     expect(curve).toMatchObject({ group: 'info', actionable: false, current: 'Aiming Curve: Custom' });
     expect(curve.statement).toBe(clean.why);
     expect(curve.more).toEqual([clean.fix]);
 
-    const both = analyzeConfig(
+    const both = analyze(
       kb,
       profile(),
       PULSE,
@@ -373,22 +430,22 @@ describe('Good to know', () => {
     expect(byId(both, 'info:cm360').current).toBe('Aiming Curve: Custom · Quantization: On (Magnitude 25, Angle 20)');
     expect(byId(both, 'info:cm360').termIds).toEqual(['aiming-curve', 'quantization']);
 
-    const off = analyzeConfig(kb, profile(), PULSE, config({ aim: { aimingCurve: 'linear', quantization: false } }));
+    const off = analyze(kb, profile(), PULSE, config({ aim: { aimingCurve: 'linear', quantization: false } }));
     expect(groupFindings(off).info).toEqual([]);
   });
 
   it('falls back to the glossary guidance without the setup check', () => {
     const noChecks: KnowledgeBase = { ...kb, foundation: [] };
-    const findings = analyzeConfig(noChecks, profile(), PULSE, config({ aim: { quantization: true } }));
+    const findings = analyze(noChecks, profile(), PULSE, config({ aim: { quantization: true } }));
     expect(byId(findings, 'info:quantization').statement).toBe(term('quantization').guidance[0]);
   });
 
   it('points out a Velocity Mapping that isn’t Standard, with its default', () => {
-    const findings = analyzeConfig(kb, profile(), PULSE, config({ aim: { velocityMapping: 'other' } }));
+    const findings = analyze(kb, profile(), PULSE, config({ aim: { velocityMapping: 'other' } }));
     const mapping = byId(findings, 'info:velocity-mapping');
     expect(mapping.statement).toBe(term('velocity-mapping').guidance[0]);
     expect(mapping.more).toEqual(term('velocity-mapping').guidance.slice(1));
-    expect(ids(analyzeConfig(kb, profile(), PULSE, config({ aim: { velocityMapping: 'standard' } })))).not.toContain(
+    expect(ids(analyze(kb, profile(), PULSE, config({ aim: { velocityMapping: 'standard' } })))).not.toContain(
       'info:velocity-mapping',
     );
   });
@@ -400,7 +457,7 @@ describe('Ordering and invariants', () => {
     matrix: { configDpi: 800, syncMethod: 'manual', translatorWarning: true },
     aim: { smoothing: 'standard', aimingCurve: 'custom', velocityMapping: 'other' },
   });
-  const findings = analyzeConfig(kb, profile({ mouseDpi: 1600, aimingSources: ['mouse', 'gyro'] }), SCOUT, everything);
+  const findings = analyze(kb, profile({ mouseDpi: 1600, aimingSources: ['mouse', 'gyro'] }), SCOUT, everything);
 
   it('orders findings fix → setup → aim → info, by impact within each group', () => {
     const order = findings.map((f) => FINDING_GROUPS.indexOf(f.group));
@@ -414,7 +471,7 @@ describe('Ordering and invariants', () => {
 
   it('picks the first actionable change, skipping ones marked done', () => {
     expect(firstChange(findings)?.id).toBe('fix:lookSensitivity');
-    const aimOnly = analyzeConfig(kb, profile(), PULSE, config({ inGame: requiredInGame() }));
+    const aimOnly = analyze(kb, profile(), PULSE, config({ inGame: requiredInGame() }));
     expect(firstChange(aimOnly)?.id).toBe('aim:sensitivity');
     expect(firstChange(aimOnly, (f) => f.id === 'aim:sensitivity')?.id).toBe('aim:precision');
     expect(firstChange(aimOnly, () => true)).toBeUndefined();
@@ -432,12 +489,16 @@ describe('Ordering and invariants', () => {
   });
 
   it('works with nothing entered', () => {
-    const none = analyzeConfig(kb, profile(), PULSE, undefined);
+    const none = analyze(kb, profile(), PULSE, undefined);
     expect(none.every((f) => f.group === 'aim')).toBe(true);
-    expect(hasEnteredSettings(undefined)).toBe(false);
-    expect(hasEnteredSettings(config())).toBe(false);
-    expect(hasEnteredSettings(config({ aim: { presetName: 'Fast' } }))).toBe(true);
-    expect(hasEnteredSettings(config({ matrix: { translatorWarning: false } }))).toBe(true);
+    const entered = (setup: Setup) => hasEnteredSettings(setup.config, setup.inGame);
+    expect(hasEnteredSettings(undefined, undefined)).toBe(false);
+    expect(entered(config())).toBe(false);
+    expect(entered(config({ aim: { presetName: 'Fast' } }))).toBe(true);
+    expect(entered(config({ matrix: { translatorWarning: false } }))).toBe(true);
+    // Destiny 2's settings count for every loadout, with or without a Config of its own.
+    expect(entered(config({ inGame: { lookSensitivity: 20 } }))).toBe(true);
+    expect(hasEnteredSettings(undefined, config({ inGame: { buttonLayout: 'other' } }).inGame)).toBe(true);
   });
 });
 

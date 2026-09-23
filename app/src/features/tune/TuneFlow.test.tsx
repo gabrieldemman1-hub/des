@@ -1,8 +1,10 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { knowledge } from '../../../../knowledge/index';
+import { EASING_CAVEAT } from '../../../../knowledge/integrity';
 import { createKnowledgeApi } from '../../state/knowledge-context';
-import { emptyConfig, type AppData, type CurrentConfig } from '../../state/schema';
+import { progressKey } from '../../state/progress';
+import { emptyConfig, emptyInGame, type AppData, type CurrentConfig, type InGameSettings } from '../../state/schema';
 import { STORAGE_KEY } from '../../state/storage';
 import { sampleData, sampleLoadout } from '../../test/fixtures';
 import { MemoryStorage } from '../../test/memory-storage';
@@ -20,18 +22,18 @@ function stored(storage: MemoryStorage): AppData {
   return storage.json(STORAGE_KEY) as AppData;
 }
 
-function configWith(patch: {
-  inGame?: Partial<CurrentConfig['inGame']>;
-  matrix?: Partial<CurrentConfig['matrix']>;
-  aim?: Partial<CurrentConfig['aim']>;
-}): CurrentConfig {
+function configWith(patch: { matrix?: Partial<CurrentConfig['matrix']>; aim?: Partial<CurrentConfig['aim']> }): CurrentConfig {
   const base = emptyConfig();
   return {
-    inGame: { ...base.inGame, ...patch.inGame },
     matrix: { ...base.matrix, ...patch.matrix },
     aim: { ...base.aim, ...patch.aim },
     updatedAt: '2026-09-22T12:00:00.000Z',
   };
+}
+
+/** Destiny 2's in-game settings, which every loadout shares. */
+function inGameWith(patch: Partial<InGameSettings>): InGameSettings {
+  return { ...emptyInGame(), ...patch };
 }
 
 /** Destiny 2's in-game settings as the real knowledge base requires them. */
@@ -75,7 +77,8 @@ describe('Tune my config: picking a loadout', () => {
       '/tune',
       storageWith({
         loadouts: [sampleLoadout(), second],
-        configs: { l2: configWith({ inGame: { lookSensitivity: 20 } }) },
+        inGame: inGameWith({ lookSensitivity: 20 }),
+        configs: { l2: configWith({ matrix: { configDpi: 1600 } }) },
       }),
     );
     const list = screen.getByRole('list', { name: 'Pick a loadout' });
@@ -83,7 +86,7 @@ describe('Tune my config: picking a loadout', () => {
     expect(links).toHaveLength(2);
     expect(links[0]).toHaveTextContent('Pulse + shotgun');
     expect(links[0]).toHaveTextContent('Main weapon: Pulse Rifle · Tracking');
-    expect(links[0]).toHaveTextContent('No settings entered yet');
+    expect(links[0]).toHaveTextContent('Destiny 2 settings entered · none for this Config yet');
     expect(links[0]).toHaveAttribute('href', '/tune/l1');
     expect(links[1]).toHaveTextContent('Main weapon: Hand Cannon · Snap');
     expect(links[1]).toHaveTextContent(/Settings entered · updated/);
@@ -97,7 +100,7 @@ describe('Tune my config: picking a loadout', () => {
     expect(tabs().getByRole('link', { name: 'Your settings' })).toHaveAttribute('aria-current', 'page');
     empty.unmount();
 
-    const entered = render('/tune/l1', storageWith({ configs: { l1: configWith({ inGame: { lookSensitivity: 20 } }) } }));
+    const entered = render('/tune/l1', storageWith({ inGame: inGameWith({ lookSensitivity: 20 }) }));
     expect(entered.router.state.location.pathname).toBe('/tune/l1/changes');
     expect(tabs().getByRole('link', { name: 'What to change' })).toHaveAttribute('aria-current', 'page');
   });
@@ -127,7 +130,7 @@ describe('Tune my config: your settings', () => {
   it('saves Look Sensitivity as you type, and flags it in What to change', async () => {
     const { user, storage } = render('/tune/l1/settings');
     await user.type(screen.getByRole('textbox', { name: 'Look Sensitivity' }), '15');
-    expect(stored(storage).configs.l1?.inGame.lookSensitivity).toBe(15);
+    expect(stored(storage).inGame.lookSensitivity).toBe(15);
     expect(screen.getByText('Saved on this phone.')).toBeInTheDocument();
 
     await user.click(tabs().getByRole('link', { name: 'What to change' }));
@@ -146,30 +149,30 @@ describe('Tune my config: your settings', () => {
     const { user, storage } = render('/tune/l1/settings');
     const look = screen.getByRole('textbox', { name: 'Look Sensitivity' });
     await user.type(look, '20');
-    expect(stored(storage).configs.l1?.inGame.lookSensitivity).toBe(20);
+    expect(stored(storage).inGame.lookSensitivity).toBe(20);
 
     await user.type(look, 'x');
     expect(look).toHaveValue('20x');
     expect(look).toHaveAttribute('aria-invalid', 'true');
     expect(look).toHaveAccessibleDescription('Enter a number from 0 to 1,000.');
-    expect(stored(storage).configs.l1?.inGame.lookSensitivity).toBe(20);
+    expect(stored(storage).inGame.lookSensitivity).toBe(20);
 
     const ads = screen.getByRole('textbox', { name: 'ADS Sensitivity Modifier' });
     await user.type(ads, '150');
     expect(ads).toHaveAccessibleDescription('Enter a number from 0 to 100.');
-    expect(stored(storage).configs.l1?.inGame.adsSensitivityModifier).toBe(15);
+    expect(stored(storage).inGame.adsSensitivityModifier).toBe(15);
 
     // Clearing a field saves "not entered".
     await user.clear(look);
     expect(look).toHaveAttribute('aria-invalid', 'false');
     expect(screen.queryByText('Enter a number from 0 to 1,000.')).not.toBeInTheDocument();
-    expect(stored(storage).configs.l1?.inGame.lookSensitivity).toBeNull();
+    expect(stored(storage).inGame.lookSensitivity).toBeNull();
   });
 
   it('accepts a decimal comma', async () => {
     const { user, storage } = render('/tune/l1/settings');
     await user.type(screen.getByRole('textbox', { name: 'Radial Deadzone' }), '0,13');
-    expect(stored(storage).configs.l1?.inGame.radialDeadzone).toBe(0.13);
+    expect(stored(storage).inGame.radialDeadzone).toBe(0.13);
   });
 
   it('asks for a whole number of DPI, and compares it with the profile', async () => {
@@ -177,7 +180,7 @@ describe('Tune my config: your settings', () => {
       '/tune/l1/settings',
       storageWith({ profile: { ...sampleData().profile, mouseDpi: 1600 } }),
     );
-    const dpi = screen.getByRole('textbox', { name: 'DPI in your Config' });
+    const dpi = screen.getByRole('textbox', { name: 'Mouse DPI in your Config' });
     expect(dpi).toHaveAccessibleDescription(/Your profile says your mouse is set to 1600 DPI/);
     await user.type(dpi, '800.5');
     expect(dpi).toHaveAccessibleDescription(/Enter a whole number from 1 to 1,000,000\./);
@@ -224,24 +227,24 @@ describe('Tune my config: your settings', () => {
   it('shows Magnitude and Angle only while quantization is on', async () => {
     const { user, storage } = render('/tune/l1/settings');
     const quantization = screen.getByRole('group', { name: 'Quantization' });
-    expect(screen.queryByRole('textbox', { name: 'Magnitude' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: 'Magnitude Quantization' })).not.toBeInTheDocument();
     await user.click(within(quantization).getByRole('radio', { name: 'On' }));
     expect(stored(storage).configs.l1?.aim.quantization).toBe(true);
-    await user.type(screen.getByRole('textbox', { name: 'Magnitude' }), '25');
-    expect(screen.getByRole('textbox', { name: 'Angle' })).toBeInTheDocument();
+    await user.type(screen.getByRole('textbox', { name: 'Magnitude Quantization' }), '25');
+    expect(screen.getByRole('textbox', { name: 'Angle Quantization' })).toBeInTheDocument();
     expect(stored(storage).configs.l1?.aim.quantizationMagnitude).toBe(25);
     await user.click(within(quantization).getByRole('radio', { name: 'Off' }));
-    expect(screen.queryByRole('textbox', { name: 'Magnitude' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: 'Magnitude Quantization' })).not.toBeInTheDocument();
   });
 
   it('saves the choices, and links each setting to its explanation', async () => {
     const { user, storage } = render('/tune/l1/settings');
     await user.click(within(screen.getByRole('group', { name: 'Movement Controls' })).getByRole('radio', { name: 'Not default' }));
-    await user.click(within(screen.getByRole('group', { name: 'Game settings sync' })).getByRole('radio', { name: 'Manual' }));
+    await user.click(within(screen.getByRole('group', { name: 'Game Settings' })).getByRole('radio', { name: 'Manual' }));
     await user.click(within(screen.getByRole('group', { name: 'Smart Translator warning' })).getByRole('radio', { name: 'Yes' }));
     await user.click(within(screen.getByRole('group', { name: 'Aiming Curve' })).getByRole('radio', { name: 'Custom' }));
     const config = stored(storage).configs.l1!;
-    expect(config.inGame.movementControls).toBe('other');
+    expect(stored(storage).inGame.movementControls).toBe('other');
     expect(config.matrix).toMatchObject({ syncMethod: 'manual', translatorWarning: true });
     expect(config.aim.aimingCurve).toBe('custom');
 
@@ -268,9 +271,9 @@ describe('Tune my config: what to change', () => {
       '/tune/l1/changes',
       storageWith({
         profile: { ...sampleData().profile, mouseDpi: 1600 },
+        inGame: inGameWith({ ...REQUIRED_IN_GAME, lookSensitivity: 15, axialDeadzone: 5 }),
         configs: {
           l1: configWith({
-            inGame: { ...REQUIRED_IN_GAME, lookSensitivity: 15, axialDeadzone: 5 },
             matrix: { configDpi: 800 },
             aim: { smoothing: 'standard', precision: 40, aimingCurve: 'custom' },
           }),
@@ -319,7 +322,7 @@ describe('Tune my config: what to change', () => {
   });
 
   it('lists the Destiny 2 settings not entered yet', () => {
-    render('/tune/l1/changes', storageWith({ configs: { l1: configWith({ inGame: { lookSensitivity: 20 } }) } }));
+    render('/tune/l1/changes', storageWith({ inGame: inGameWith({ lookSensitivity: 20 }) }));
     const destiny = section('Destiny 2 settings');
     expect(destiny).toHaveTextContent('Already the same as XIM’s list: Look Sensitivity.');
     expect(destiny).toHaveTextContent(
@@ -334,14 +337,14 @@ describe('Tune my config: what to change', () => {
   it('steps through the aim changes one at a time', async () => {
     const { user, storage } = render(
       '/tune/l1/changes',
-      storageWith({ configs: { l1: configWith({ inGame: REQUIRED_IN_GAME, aim: { smoothing: 'standard' } }) } }),
+      storageWith({ inGame: inGameWith(REQUIRED_IN_GAME), configs: { l1: configWith({ aim: { smoothing: 'standard' } }) } }),
     );
     const first = () => section('Change this first');
     expect(within(first()).getByRole('heading', { level: 3, name: 'Sensitivity' })).toBeInTheDocument();
 
     await user.click(within(first()).getByRole('button', { name: 'Done: show the next change' }));
     expect(within(first()).getByRole('heading', { level: 3, name: 'Precision' })).toBeInTheDocument();
-    expect(Object.keys(stored(storage).progress)).toEqual(['loadout:l1:tune:aim:sensitivity']);
+    expect(Object.keys(stored(storage).progress)).toEqual([progressKey.aim.sensitivity('l1')]);
 
     // Sensitivity is now in the list, marked done, and can be undone.
     const aim = section('Aim settings for tracking');
@@ -368,9 +371,10 @@ describe('Tune my config: what to change', () => {
   it('explains that the directions assume Standard smoothing for Classic users', () => {
     render('/tune/l1/changes', storageWith({ configs: { l1: configWith({ aim: { smoothing: 'classic' } }) } }));
     const aim = section('Aim settings for tracking');
-    expect(within(aim).getByRole('heading', { level: 3, name: 'These directions assume custom Standard smoothing' })).toBeInTheDocument();
+    const note = within(aim).getByRole('heading', { level: 3, name: 'These directions assume Standard smoothing' }).closest('li')!;
+    expect(note).toHaveTextContent('Your smoothing is Custom Classic. These directions assume Standard smoothing.');
     const precision = within(aim).getByRole('heading', { level: 3, name: 'Precision' }).closest('li')!;
-    expect(precision).toHaveTextContent('This direction is for custom Standard smoothing');
+    expect(precision).toHaveTextContent('Your smoothing is Custom Classic. This direction assumes Standard smoothing.');
     expect(within(precision).queryByRole('button')).not.toBeInTheDocument();
   });
 
@@ -385,5 +389,191 @@ describe('Tune my config: what to change', () => {
     const aim = section('Aim settings for precision hold');
     expect(within(aim).queryByRole('heading', { level: 3, name: 'Stability' })).not.toBeInTheDocument();
     expect(aim).toHaveTextContent('One setting for other ways of aiming is hidden, because your profile says you aim with mouse.');
+  });
+});
+
+const HAND_CANNON = sampleLoadout({ weapons: { kinetic: 'hand-cannon', energy: null, power: null } });
+
+function term(id: string) {
+  const found = knowledge.glossary.terms.find((t) => t.id === id);
+  if (!found) throw new Error(`No term ${id}`);
+  return found;
+}
+
+describe('Tune my config: moving around', () => {
+  it('has a back link to Home', () => {
+    render('/tune');
+    const back = document.querySelector('.back-link');
+    expect(back).toHaveTextContent('Home');
+    expect(back).toHaveAttribute('href', '/');
+  });
+
+  it('moves focus to the heading when you switch between Your settings and What to change', async () => {
+    const { user, router } = render('/tune/l1/settings');
+    const heading = () => screen.getByRole('heading', { level: 1, name: 'Pulse + shotgun' });
+
+    await user.click(tabs().getByRole('link', { name: 'What to change' }));
+    expect(router.state.location.pathname).toBe('/tune/l1/changes');
+    expect(heading()).toHaveFocus();
+
+    await user.click(tabs().getByRole('link', { name: 'Your settings' }));
+    expect(heading()).toHaveFocus();
+
+    await user.click(screen.getByRole('link', { name: 'See what to change' }));
+    expect(router.state.location.pathname).toBe('/tune/l1/changes');
+    expect(heading()).toHaveFocus();
+
+    await user.click(screen.getByRole('link', { name: 'Enter your settings' }));
+    expect(router.state.location.pathname).toBe('/tune/l1/settings');
+    expect(heading()).toHaveFocus();
+    expect(document.activeElement).not.toBe(document.body);
+  });
+
+  it('moves focus to the heading from “Update your settings” and “Enter them”', async () => {
+    const { user, router } = render(
+      '/tune/l1/changes',
+      storageWith({ inGame: inGameWith({ lookSensitivity: 15 }) }),
+    );
+    await user.click(screen.getByRole('link', { name: 'Update your settings' }));
+    expect(router.state.location.pathname).toBe('/tune/l1/settings');
+    expect(screen.getByRole('heading', { level: 1, name: 'Pulse + shotgun' })).toHaveFocus();
+
+    await user.click(tabs().getByRole('link', { name: 'What to change' }));
+    await user.click(screen.getByRole('link', { name: 'Enter them' }));
+    expect(router.state.location.pathname).toBe('/tune/l1/settings');
+    expect(screen.getByRole('heading', { level: 1, name: 'Pulse + shotgun' })).toHaveFocus();
+  });
+});
+
+describe('Tune my config: marking changes done', () => {
+  it('announces the next change after “Done: show the next change”', async () => {
+    const { user } = render(
+      '/tune/l1/changes',
+      storageWith({
+        loadouts: [HAND_CANNON],
+        inGame: inGameWith(REQUIRED_IN_GAME),
+        configs: { l1: configWith({ aim: { smoothing: 'standard' } }) },
+      }),
+    );
+    const first = section('Change this first');
+    const status = within(first).getByRole('status');
+    expect(status).toBeEmptyDOMElement();
+
+    const done = within(first).getByRole('button', { name: 'Done: show the next change' });
+    await user.click(done);
+    expect(status).toHaveTextContent('Next: Easing, Lower');
+    expect(within(first).getByRole('heading', { level: 3, name: 'Easing' })).toBeInTheDocument();
+    // The button stays for the next change, and keeps focus.
+    expect(done).toHaveFocus();
+
+    await user.click(done);
+    expect(status).toHaveTextContent('Next: Response, It depends');
+  });
+
+  it('moves focus to “Change this first” when there is no next change to mark', async () => {
+    const { user } = render(
+      '/tune/l1/changes',
+      storageWith({ inGame: inGameWith(REQUIRED_IN_GAME), configs: { l1: configWith({ aim: { smoothing: 'standard' } }) } }),
+    );
+    const first = section('Change this first');
+    await user.click(within(first).getByRole('button', { name: 'Done: show the next change' })); // Sensitivity
+    await user.click(within(first).getByRole('button', { name: 'Done: show the next change' })); // Precision
+    expect(within(first).getByRole('status')).toHaveTextContent('Dialed has no other change to suggest');
+    await waitFor(() => expect(within(first).getByRole('heading', { level: 2 })).toHaveFocus());
+  });
+
+  it('asks before starting the aim changes again, and clears the marks Build my config shares', async () => {
+    const { user, storage } = render(
+      '/tune/l1/changes',
+      storageWith({
+        inGame: inGameWith(REQUIRED_IN_GAME),
+        configs: { l1: configWith({ aim: { smoothing: 'standard' } }) },
+        progress: {
+          [progressKey.aim.sensitivity('l1')]: 'done',
+          [progressKey.aim.term('l1', 'aiming-curve')]: 'problem',
+          [progressKey.aim.sensitivity('l2')]: 'done',
+          'check:firmware-current': 'done',
+        },
+      }),
+    );
+    await user.click(screen.getByRole('button', { name: 'Start the aim changes again' }));
+    const dialog = screen.getByRole('alertdialog', { name: 'Start the aim changes again?' });
+    expect(dialog).toHaveTextContent('Build my config and Tune my config share these marks');
+    await user.click(within(dialog).getByRole('button', { name: 'Cancel' }));
+    expect(stored(storage).progress[progressKey.aim.sensitivity('l1')]).toBe('done');
+
+    await user.click(screen.getByRole('button', { name: 'Start the aim changes again' }));
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Start again' }));
+    expect(stored(storage).progress).toEqual({
+      [progressKey.aim.sensitivity('l2')]: 'done',
+      'check:firmware-current': 'done',
+    });
+  });
+});
+
+describe('Tune my config: cards', () => {
+  it('shows every card’s confidence, and the caveat and “worked out” label outside “Why”', () => {
+    render(
+      '/tune/l1/changes',
+      storageWith({
+        loadouts: [HAND_CANNON],
+        profile: { ...sampleData().profile, mouseDpi: 1600 },
+        inGame: inGameWith({ ...REQUIRED_IN_GAME, axialDeadzone: 5 }),
+        configs: { l1: configWith({ matrix: { configDpi: 800 }, aim: { smoothing: 'standard', easing: 60 } }) },
+      }),
+    );
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('li.finding'));
+    expect(cards.length).toBeGreaterThan(3);
+    for (const card of cards) expect(card.querySelector('.finding-head .badge'), card.textContent ?? '').not.toBeNull();
+
+    const easing = within(section('Aim settings for snap')).getByRole('heading', { level: 3, name: 'Easing' }).closest('li')!;
+    expect(easing.querySelector('.finding-head .badge')).toHaveTextContent('Reasoned');
+    expect(easing.querySelector('.finding-head .badge')).toBeVisible();
+    const notes = Array.from(easing.querySelectorAll<HTMLElement>(':scope > .finding-note'));
+    expect(notes.map((n) => n.textContent)).toEqual([
+      'Worked out from XIM’s definitions, not stated by a source.',
+      `Caveat: ${EASING_CAVEAT}`,
+    ]);
+    for (const note of notes) expect(note).toBeVisible();
+    // The full statement stays one tap away.
+    expect(within(easing).getByText('Why, and the source').closest('details')).not.toHaveAttribute('open');
+
+    const setup = section('Setup');
+    const dpi = within(setup).getByRole('heading', { level: 3, name: /DPI in your Config differs/ }).closest('li')!;
+    expect(dpi.querySelector('.finding-head .badge')).toHaveTextContent('Official');
+    expect(dpi.querySelector('.finding-head .badge')).toBeVisible();
+  });
+
+  it('keeps one set of Destiny 2 settings for every loadout', async () => {
+    const second = sampleLoadout({ id: 'l2', name: 'Peek', weapons: { kinetic: 'hand-cannon', energy: null, power: null } });
+    const { user, router, storage } = render('/tune/l1/settings', storageWith({ loadouts: [sampleLoadout(), second] }));
+    expect(screen.getByRole('region', { name: 'Destiny 2 settings' })).toHaveTextContent(
+      'Dialed keeps one set of these for all your loadouts',
+    );
+    await user.type(screen.getByRole('textbox', { name: 'Look Sensitivity' }), '18');
+    expect(stored(storage).inGame.lookSensitivity).toBe(18);
+    expect(stored(storage).configs).toEqual({});
+
+    await router.navigate('/tune/l2/settings');
+    expect(await screen.findByRole('heading', { level: 1, name: 'Peek' })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Look Sensitivity' })).toHaveValue('18');
+
+    await router.navigate('/tune/l2/changes');
+    const first = await screen.findByRole('region', { name: 'Change this first' });
+    expect(within(first).getByRole('heading', { level: 3, name: 'Look Sensitivity' })).toBeInTheDocument();
+    expect(within(first).getByText('Yours').nextSibling).toHaveTextContent('18');
+  });
+
+  it('names the fields as the knowledge base does', () => {
+    render('/tune/l1/settings');
+    for (const id of ['ads-inheritance', 'game-settings-sync', 'smoothing', 'aiming-curve', 'quantization', 'velocity-mapping']) {
+      expect(screen.getByRole('group', { name: term(id).name }), id).toBeInTheDocument();
+    }
+    expect(term('ads-inheritance').name).toBe('Aim Settings Inheritance');
+    expect(screen.getByRole('textbox', { name: `${term('mouse-dpi').name} in your Config` })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: `Hip ${term('sensitivity').name} (cm/360)` })).toBeInTheDocument();
+    for (const setting of knowledge.game.requiredSettings) {
+      expect(screen.getByRole(/Controls|Layout/.test(setting.name) ? 'group' : 'textbox', { name: setting.name })).toBeInTheDocument();
+    }
   });
 });

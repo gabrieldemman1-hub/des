@@ -2,8 +2,9 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { Screen } from '../../components/Screen';
 import { StatementView } from '../../components/StatementView';
+import { TermLink } from '../../components/TermLink';
 import type { GuidanceItem } from './build-plan';
-import type { CheckContextLine } from './current-values';
+import type { CheckContextLine } from '../../state/current-values';
 import './build.css';
 
 /** Shown for an address whose loadout isn't saved on this phone. */
@@ -65,6 +66,19 @@ export function CheckContext({ lines }: { lines: readonly CheckContextLine[] }) 
         </li>
       ))}
     </ul>
+  );
+}
+
+/**
+ * The player's smoothing isn't custom Standard: the shared wording (see `smoothingNote`), and
+ * where to read more.
+ */
+export function SmoothingNote({ text }: { text: string }) {
+  return (
+    <p className="build-note" role="note">
+      <strong>{text}</strong> Read about <TermLink id="smoothing-standard">Standard</TermLink> and{' '}
+      <TermLink id="smoothing-classic">Classic</TermLink> smoothing.
+    </p>
   );
 }
 

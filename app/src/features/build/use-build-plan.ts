@@ -22,3 +22,8 @@ export function sheetPath(loadoutId: string): string {
 export function tunePath(loadoutId: string): string {
   return `/tune/${encodeURIComponent(loadoutId)}`;
 }
+
+/** Tune my config's "Your settings", where the player enters what they have set now. */
+export function tuneSettingsPath(loadoutId: string): string {
+  return `${tunePath(loadoutId)}/settings`;
+}

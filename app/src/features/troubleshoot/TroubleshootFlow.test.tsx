@@ -5,6 +5,7 @@ import { EASING_CAVEAT } from '../../../../knowledge/integrity';
 import type { OutputType, Platform } from '../../../../knowledge/schema';
 import { checksForProfile } from '../../state/guidance';
 import { createKnowledgeApi } from '../../state/knowledge-context';
+import { progressKey } from '../../state/progress';
 import type { AppData } from '../../state/schema';
 import { STORAGE_KEY } from '../../state/storage';
 import { sampleData } from '../../test/fixtures';
@@ -61,7 +62,7 @@ describe('Troubleshoot by feel: stage 1, setup check', () => {
     expect(listedChecks(stage1())).toEqual(expected.map((c) => c.title));
     expect(listedChecks(stage1())).toContain(checkById('xbox-authentication-controller').title);
     expect(listedChecks(stage1())).not.toContain(checkById('pc-virtual-controller-tools').title);
-    expect(within(stage1()).getByRole('status')).toHaveTextContent(`0 of ${expected.length} checked`);
+    expect(within(stage1()).getByRole('status')).toHaveTextContent(`0 of ${expected.length} done`);
     expect(within(stage1()).getByText(/Showing checks for Xbox/)).toBeInTheDocument();
   });
 
@@ -113,12 +114,12 @@ describe('Troubleshoot by feel: stage 1, setup check', () => {
     await user.click(within(firmware).getByRole('button', { name: 'Done' }));
     expect(storedProgress(storage)['check:firmware-current']).toBe('done');
     expect(within(firmware).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'true');
-    expect(within(stage1()).getByRole('status')).toHaveTextContent(`1 of ${total} checked`);
+    expect(within(stage1()).getByRole('status')).toHaveTextContent(`1 of ${total} done`);
 
     const dpi = checkItem(checkById('mouse-dpi-matches').title);
     await user.click(within(dpi).getByRole('button', { name: 'Needs fixing' }));
     expect(storedProgress(storage)['check:mouse-dpi-matches']).toBe('problem');
-    expect(within(stage1()).getByRole('status')).toHaveTextContent(`2 of ${total} checked · 1 needs fixing`);
+    expect(within(stage1()).getByRole('status')).toHaveTextContent(`1 of ${total} done · 1 needs fixing`);
     expect(within(stage2()).getByText(/^Best after the setup check/)).toHaveTextContent(
       `you’ve checked 2 of ${total}`,
     );
@@ -126,7 +127,7 @@ describe('Troubleshoot by feel: stage 1, setup check', () => {
     // Tapping the active toggle again clears the mark.
     await user.click(within(firmware).getByRole('button', { name: 'Done' }));
     expect(storedProgress(storage)).not.toHaveProperty('check:firmware-current');
-    expect(within(stage1()).getByRole('status')).toHaveTextContent(`1 of ${total} checked · 1 needs fixing`);
+    expect(within(stage1()).getByRole('status')).toHaveTextContent(`0 of ${total} done · 1 needs fixing`);
   });
 
   it('opens “How to fix it” when a check is marked Needs fixing', async () => {
@@ -164,7 +165,7 @@ describe('Troubleshoot by feel: stage 1, setup check', () => {
     });
     const { user } = renderApp({ path: '/troubleshoot', knowledge: real, storage });
     const total = checksForProfile(knowledge.foundation, XBOX).length;
-    expect(within(stage1()).getByRole('status')).toHaveTextContent(`2 of ${total} checked · 1 needs fixing`);
+    expect(within(stage1()).getByRole('status')).toHaveTextContent(`1 of ${total} done · 1 needs fixing`);
 
     const reset = within(stage1()).getByRole('button', { name: 'Clear all marks' });
     await user.click(reset);
@@ -179,13 +180,69 @@ describe('Troubleshoot by feel: stage 1, setup check', () => {
     await user.click(within(dialog).getByRole('button', { name: 'Clear marks' }));
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
     expect(storedProgress(storage)).toEqual({ 'required:look-sensitivity': 'done' });
-    expect(within(stage1()).getByRole('status')).toHaveTextContent(`0 of ${total} checked`);
+    expect(within(stage1()).getByRole('status')).toHaveTextContent(`0 of ${total} done`);
 
     // Nothing left to clear: the button stays (focus returns to it) but does nothing.
     expect(reset).toHaveFocus();
     expect(reset).toHaveAttribute('aria-disabled', 'true');
     await user.click(reset);
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+  });
+
+  it('shows the Destiny 2 settings check as Done once every required setting is Done in Build my config', async () => {
+    const required = knowledge.game.requiredSettings.map((s) => progressKey.requiredSetting(s.name));
+    const allDone: AppData['progress'] = Object.fromEntries(required.map((k) => [k, 'done']));
+    const storage = storageWith(XBOX, allDone);
+    const { user } = renderApp({ path: '/troubleshoot', knowledge: real, storage });
+    const total = checksForProfile(knowledge.foundation, XBOX).length;
+
+    const item = checkItem(checkById('destiny2-required-settings').title);
+    expect(within(item).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'true');
+    expect(item).toHaveTextContent('Shown as Done because every Destiny 2 setting is marked Done in Build my config.');
+    expect(within(stage1()).getByRole('status')).toHaveTextContent(`1 of ${total} done`);
+    // Nothing is saved for it: it follows the settings.
+    expect(storedProgress(storage)).not.toHaveProperty('check:destiny2-required-settings');
+
+    // Tapping it still sets its own mark.
+    await user.click(within(item).getByRole('button', { name: 'Needs fixing' }));
+    expect(storedProgress(storage)['check:destiny2-required-settings']).toBe('problem');
+    expect(within(item).getByRole('button', { name: 'Needs fixing' })).toHaveAttribute('aria-pressed', 'true');
+    expect(item).not.toHaveTextContent('Shown as Done');
+    expect(within(stage1()).getByRole('status')).toHaveTextContent(`0 of ${total} done · 1 needs fixing`);
+  });
+
+  it('shows the Destiny 2 settings check as Needs fixing when a required setting needs fixing', () => {
+    const storage = storageWith(XBOX, { [progressKey.requiredSetting('Look Sensitivity')]: 'problem' });
+    renderApp({ path: '/troubleshoot', knowledge: real, storage });
+    const item = checkItem(checkById('destiny2-required-settings').title);
+    expect(within(item).getByRole('button', { name: 'Needs fixing' })).toHaveAttribute('aria-pressed', 'true');
+    // Like a mark the player set, it opens the fix.
+    expect(within(item).getByText(checkById('destiny2-required-settings').fix!.text)).toBeVisible();
+  });
+
+  it('says to check the per-Config checks in every Config', () => {
+    renderApp({ path: '/troubleshoot', knowledge: real, storage: storageWith(XBOX) });
+    const note = 'Check this in every Config you use — each loadout has its own.';
+    for (const id of ['mouse-dpi-matches', 'smart-translator-current', 'light-notifications', 'clean-sensitivity-test']) {
+      expect(checkItem(checkById(id).title), id).toHaveTextContent(note);
+    }
+    for (const id of ['firmware-current', 'mouse-polling-rate', 'destiny2-required-settings']) {
+      expect(checkItem(checkById(id).title), id).not.toHaveTextContent(note);
+    }
+  });
+
+  it('gives the Done and Needs fixing buttons the check’s title as their description', () => {
+    renderApp({ path: '/troubleshoot', knowledge: real, storage: storageWith(XBOX) });
+    const title = checkById('firmware-current').title;
+    const item = checkItem(title);
+    expect(within(item).getByRole('button', { name: 'Done' })).toHaveAccessibleDescription(title);
+    expect(within(item).getByRole('button', { name: 'Needs fixing' })).toHaveAccessibleDescription(title);
+  });
+
+  it('puts the empty-state headings under the stage headings', () => {
+    renderApp({ path: '/troubleshoot' });
+    expect(screen.getByRole('heading', { level: 3, name: 'No setup checks yet' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: 'No symptoms yet' })).toBeInTheDocument();
   });
 });
 

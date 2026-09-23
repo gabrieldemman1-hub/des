@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes, useParams } from 'react-router';
 import { NotFoundScreen } from '../../screens/NotFoundScreen';
-import { useData } from '../../state/data-context';
+import { useEffectiveProgress } from '../../state/use-progress';
 import { resumeStep } from './build-plan';
 import { BuildIndexScreen } from './BuildIndexScreen';
 import { BuildStepScreen } from './BuildStepScreen';
@@ -10,7 +10,7 @@ import { buildPath, useBuildPlan } from './use-build-plan';
 /** /build/<loadoutId>: picks up at the first step that isn't fully done. */
 function ResumeBuild() {
   const { loadoutId } = useParams();
-  const { data } = useData();
+  const progress = useEffectiveProgress();
   const plan = useBuildPlan(loadoutId);
   if (!plan) {
     return (
@@ -20,7 +20,7 @@ function ResumeBuild() {
       />
     );
   }
-  return <Navigate to={buildPath(plan.loadout.id, resumeStep(plan, data.progress))} replace />;
+  return <Navigate to={buildPath(plan.loadout.id, resumeStep(plan, progress))} replace />;
 }
 
 /**

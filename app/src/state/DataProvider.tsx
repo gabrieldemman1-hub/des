@@ -9,7 +9,7 @@ import {
 } from './data-context';
 import { createLoadout, deleteLoadout as removeLoadout, updateLoadout, type LoadoutDraft } from './loadouts';
 import { loadoutPrefix } from './progress';
-import { CurrentConfig, Profile, ProgressState, emptyConfig, normalizeProfile, type AppData } from './schema';
+import { CurrentConfig, InGameSettings, Profile, ProgressState, emptyConfig, normalizeProfile, type AppData } from './schema';
 import { STORAGE_KEY, getBrowserStorage, loadData, saveData, setAsideUnreadable } from './storage';
 
 interface Props {
@@ -105,12 +105,20 @@ export function DataProvider({ storage: storageProp, children }: Props) {
       const base = current.configs[loadoutId] ?? emptyConfig();
       // Only valid settings are saved, like the profile.
       const next = CurrentConfig.safeParse({
-        inGame: { ...base.inGame, ...patch.inGame },
         matrix: { ...base.matrix, ...patch.matrix },
         aim: { ...base.aim, ...patch.aim },
         updatedAt: new Date().toISOString(),
       });
       if (next.success) commit({ ...current, configs: { ...current.configs, [loadoutId]: next.data } });
+    },
+    [commit],
+  );
+
+  const updateInGame = useCallback(
+    (patch: Partial<InGameSettings>) => {
+      // Only valid settings are saved, like the profile.
+      const next = InGameSettings.safeParse({ ...latest.current.inGame, ...patch });
+      if (next.success) commit({ ...latest.current, inGame: next.data });
     },
     [commit],
   );
@@ -156,6 +164,7 @@ export function DataProvider({ storage: storageProp, children }: Props) {
       saveLoadout,
       deleteLoadout,
       updateConfig,
+      updateInGame,
       setProgress,
       clearProgress,
       replaceData,
@@ -170,6 +179,7 @@ export function DataProvider({ storage: storageProp, children }: Props) {
       saveLoadout,
       deleteLoadout,
       updateConfig,
+      updateInGame,
       setProgress,
       clearProgress,
       replaceData,
