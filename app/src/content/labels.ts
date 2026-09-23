@@ -1,4 +1,11 @@
-import type { AimingSource, AimStyleId, Confidence, OutputType } from '../../../knowledge/index';
+import type {
+  AimingSource,
+  AimStyleId,
+  Confidence,
+  LeverDirection,
+  OutputType,
+  TermCategory,
+} from '../../../knowledge/index';
 
 /** Confidence labels and their one-line meanings (CONCEPT.md §5 and §8). */
 export const CONFIDENCE_INFO: Record<Confidence, { label: string; meaning: string }> = {
@@ -59,3 +66,25 @@ export const SENSITIVITY_LABELS = { low: 'Slower', medium: 'Medium', high: 'Fast
 
 /** Feel preference, 1 (snappy) to 5 (smooth). Not the Classic Smooth setting. */
 export const FEEL_LABELS = { 1: 'Snappy', 2: 'Lean snappy', 3: 'Middle', 4: 'Lean smooth', 5: 'Smooth' } as const;
+
+/** Glossary categories, in the order Explain a concept lists them. */
+export const TERM_CATEGORY_LABELS: Record<TermCategory, string> = {
+  smoothing: 'Smoothing',
+  sensitivity: 'Sensitivity',
+  mechanics: 'Curves and mechanics',
+  quantization: 'Quantization',
+  deadzone: 'Deadzone',
+  ads: 'Hip-fire and aiming down sights',
+  sync: 'Game settings sync',
+  output: 'Output and connection',
+  hardware: 'Mouse and hardware',
+  'config-switching': 'Switching configs and groups',
+  diagnostics: 'Lights and diagnostics',
+  other: 'Other',
+};
+
+export const LEVER_DIRECTION_LABELS: Record<LeverDirection, string> = {
+  raise: 'Raise',
+  lower: 'Lower',
+  depends: 'It depends',
+};

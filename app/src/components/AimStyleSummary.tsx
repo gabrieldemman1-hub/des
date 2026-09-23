@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import type { WeaponArchetype } from '../../../knowledge/index';
 import { AIM_STYLE_NAMES, NO_AIM_STYLE } from '../content/labels';
 import { useKnowledge } from '../state/knowledge-context';
@@ -22,6 +23,7 @@ export function AimStyleSummary({ archetype }: { archetype: WeaponArchetype }) {
         <summary>{question}</summary>
         <StatementView statement={archetype.mapping} showBadge={false} />
       </details>
+      {style && <Link to={`/learn/styles/${style.id}`}>How to tune for {style.name.toLowerCase()}</Link>}
     </div>
   );
 }

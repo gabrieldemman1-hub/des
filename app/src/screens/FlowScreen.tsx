@@ -1,12 +1,13 @@
-import { Link, useParams } from 'react-router';
+import { Link, Navigate, useParams } from 'react-router';
 import { Screen } from '../components/Screen';
 import { flowById } from '../content/flows';
 import { NotFoundScreen } from './NotFoundScreen';
 
-/** Placeholder for a flow: explains what it will do. The flows are built in the next step. */
+/** Placeholder for a flow that isn't built yet: explains what it will do. */
 export function FlowScreen() {
   const flow = flowById(useParams().flowId);
   if (!flow) return <NotFoundScreen />;
+  if (flow.available) return <Navigate to={flow.to} replace />;
 
   return (
     <Screen

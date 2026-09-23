@@ -289,7 +289,8 @@ h1[tabindex='-1']:focus {
 
 .tabbar ul {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
   max-width: calc(var(--content-width) + 2 * var(--gutter));
   margin: 0 auto;
   padding: 0;
@@ -1182,4 +1183,59 @@ select[aria-invalid='true'] {
   .tabbar {
     background: Canvas;
   }
+}
+
+/* ---- Explain a concept --------------------------------------------------------------- */
+
+.learn-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input[type='search'] {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 1rem; /* 16px+ stops iOS from zooming into the field */
+}
+
+.statement-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lever-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.related-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.related-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  text-decoration: none;
 }

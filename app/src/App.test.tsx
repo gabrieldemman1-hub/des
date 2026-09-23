@@ -12,7 +12,7 @@ describe('app shell', () => {
     const { user } = renderApp();
     const nav = screen.getByRole('navigation', { name: 'Main' });
     const tabs = within(nav).getAllByRole('link');
-    expect(tabs.map((t) => t.textContent)).toEqual(['Home', 'Loadouts', 'Profile', 'Sources']);
+    expect(tabs.map((t) => t.textContent)).toEqual(['Home', 'Learn', 'Loadouts', 'Profile', 'Sources']);
     expect(within(nav).getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
 
     await user.click(within(nav).getByRole('link', { name: 'Sources' }));
@@ -30,13 +30,13 @@ describe('app shell', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Dialed' })).toBeInTheDocument();
     expect(screen.getByText(/Evidence-based XIM MATRIX setup for Destiny 2/)).toBeInTheDocument();
     expect(screen.getByText(/Saved on this phone:/).closest('p')).toHaveTextContent('Saved on this phone: Xbox · 2 loadouts');
-    const flows = screen.getAllByRole('link', { name: /Coming in the next step/ });
-    expect(flows.map((f) => f.querySelector('.flow-card-title')?.textContent)).toEqual([
+    const coming = screen.getAllByRole('link', { name: /Coming in the next step/ });
+    expect(coming.map((f) => f.querySelector('.flow-card-title')?.textContent)).toEqual([
       'Build my config',
       'Tune my config',
       'Troubleshoot by feel',
-      'Explain a concept',
     ]);
+    expect(screen.getByRole('link', { name: /Explain a concept.*Ready to use/ })).toHaveAttribute('href', '/learn');
   });
 
   it('home points to the profile when nothing is saved', () => {

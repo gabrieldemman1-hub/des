@@ -41,10 +41,20 @@ Things to know:
   **Profile › Download backup** to keep a copy, and **Restore from backup** to bring it back.
 - **Install and offline need HTTPS.** Browsers only run service workers on `https://` or
   `localhost`, so over `http://192.168.…` the app works but can't be installed or used offline.
-  That works once the built app is hosted on HTTPS (GitHub Pages is planned; the build uses a
-  relative base, so it works from any subpath).
+  That works once the built app is hosted on HTTPS (see below; the build uses a relative base,
+  so it works from any subpath).
 
 To try the production build on the phone: `npm run build && npm run preview -- --host`.
+
+## Publishing to GitHub Pages
+
+`.github/workflows/pages.yml` builds, tests and publishes the app to GitHub Pages. It runs only
+when started by hand (**Actions › Publish to GitHub Pages › Run workflow**), because Pages has to be
+switched on first:
+
+1. **Settings › Pages › Source: GitHub Actions.** Private repositories need a paid GitHub plan
+   for Pages. A Pages site is public to anyone with the link, even when the repository is private.
+2. Run the workflow. The site's address appears on the run's summary.
 
 ## Scripts
 

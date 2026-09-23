@@ -1,6 +1,6 @@
 /**
- * The four flows, described in CONCEPT.md §5 wording. They are placeholders in this step:
- * the screens explain what each flow will do.
+ * The four flows, described in CONCEPT.md §5 wording. Explain a concept is built; the others
+ * are placeholders whose screens explain what each flow will do.
  */
 export type FlowId = 'build' | 'tune' | 'troubleshoot' | 'learn';
 
@@ -20,12 +20,18 @@ export interface Flow {
   question: string;
   /** One line for the Home card. */
   summary: string;
+  /** Built and usable, rather than a placeholder. */
+  available: boolean;
+  /** Where the Home card leads. */
+  to: string;
   sections: FlowSection[];
 }
 
 export const FLOWS: readonly Flow[] = [
   {
     id: 'build',
+    available: false,
+    to: '/flows/build',
     code: 'Flow A',
     title: 'Build my config',
     question: '"Build my config"',
@@ -56,6 +62,8 @@ export const FLOWS: readonly Flow[] = [
   },
   {
     id: 'tune',
+    available: false,
+    to: '/flows/tune',
     code: 'Flow B',
     title: 'Tune my config',
     question: '"What should I change?"',
@@ -71,6 +79,8 @@ export const FLOWS: readonly Flow[] = [
   },
   {
     id: 'troubleshoot',
+    available: false,
+    to: '/flows/troubleshoot',
     code: 'Flow C',
     title: 'Troubleshoot by feel',
     question: '"My aim feels…"',
@@ -105,6 +115,8 @@ export const FLOWS: readonly Flow[] = [
   },
   {
     id: 'learn',
+    available: true,
+    to: '/learn',
     code: 'Flow D',
     title: 'Explain a concept',
     question: '"What does this actually do?"',

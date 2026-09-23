@@ -45,11 +45,11 @@ export function HomeScreen() {
       <ul className="flow-cards">
         {FLOWS.map((flow) => (
           <li key={flow.id}>
-            <Link className="flow-card" to={`/flows/${flow.id}`}>
+            <Link className="flow-card" to={flow.to}>
               <span className="flow-card-text">
                 <span className="flow-card-title">{flow.title}</span>
                 <span className="flow-card-summary">{flow.summary}</span>
-                <span className="flow-card-status">Coming in the next step</span>
+                <span className="flow-card-status">{flow.available ? 'Ready to use' : 'Coming in the next step'}</span>
               </span>
               <ChevronIcon />
             </Link>
