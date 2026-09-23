@@ -10,7 +10,7 @@ import { checksForProfile } from '../../state/guidance';
 import { useKnowledge } from '../../state/knowledge-context';
 import type { Profile } from '../../state/schema';
 import { SetupChecklist, SetupSummary } from './SetupChecklist';
-import { summarizeChecks } from './setup-progress';
+import { summarizeChecks, type CheckSummary } from './setup-progress';
 import './troubleshoot.css';
 
 /** Which checks are shown, and why: the profile decides, and unset parts keep every check. */
@@ -64,6 +64,17 @@ function SymptomCard({ symptom }: { symptom: Symptom }) {
   );
 }
 
+/** Nudges toward finishing stage 1 first, without blocking stage 2. */
+function stage2Hint({ total, checked, problems }: CheckSummary): string {
+  if (checked < total) {
+    return `Best after the setup check (you’ve checked ${checked} of ${total}), but you can pick a feel now.`;
+  }
+  if (problems > 0) {
+    return 'Every setup check is marked. Fix the ones marked Needs fixing first, then pick the feel that fits best.';
+  }
+  return 'Setup check done. Pick the feel that fits best.';
+}
+
 /** Flow C: rule out setup mistakes (stage 1), then go from a feel to a setting (stage 2). */
 export function TroubleshootScreen() {
   const { kb } = useKnowledge();
@@ -73,11 +84,11 @@ export function TroubleshootScreen() {
 
   const checks = checksForProfile(kb.foundation, data.profile);
   const summary = summarizeChecks(checks, data.progress);
-  const stage1Done = summary.total > 0 && summary.checked === summary.total;
 
   return (
     <Screen
       title="Troubleshoot by feel"
+      back={{ to: '/', label: 'Home' }}
       intro={
         <>
           <p className="lede">
@@ -126,13 +137,7 @@ export function TroubleshootScreen() {
           </span>{' '}
           What do you feel?
         </h2>
-        {checks.length > 0 && (
-          <p className="hint">
-            {stage1Done
-              ? 'Setup check done. Pick the feel that fits best.'
-              : `Best after the setup check (you’ve checked ${summary.checked} of ${summary.total}), but you can pick a feel now.`}
-          </p>
-        )}
+        {checks.length > 0 && <p className="hint">{stage2Hint(summary)}</p>}
         {kb.symptoms.length === 0 ? (
           <EmptyState title="No symptoms yet">
             <p>Dialed’s knowledge base has no symptoms written yet.</p>
