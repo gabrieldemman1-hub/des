@@ -1,1 +1,255 @@
-{ "notes": [] }
+{
+  "notes": [
+    {
+      "id": "central-mouse-dpi-higher",
+      "termIds": [
+        "mouse-dpi"
+      ],
+      "symptomIds": [],
+      "statement": {
+        "text": "XIM Central says the MATRIX gives better mouse movement at a higher DPI. XIM Central noticed no improvement above 12,000 DPI and says more is not really needed. XIM Central also warns that some mousepads do not work well with high DPI. Whatever DPI you choose, the official guide says to enter the same value in your Config.",
+        "confidence": "expert",
+        "citations": [
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ee24428c",
+            "quote": "Matrix will provide better mouse movements when using more DPI.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). The DPI advice is general, not tied to Overwatch 2."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ee24428c",
+            "quote": "Personally, I have not noticed any improvements when using values above 12,000 DPI, so more is not really needed.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ee24428c",
+            "quote": "Also, some mousepads do not work well with high DPI.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/2a9abfe4",
+            "quote": "Personally, I have not noticed any improvements beyond 12,000 DPI, so more is not really needed.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). The same DPI advice appears in both 2023 tutorials."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#mouse-dpi",
+            "quote": "Make sure this value matches your mouse DPI.",
+            "note": "Official rule for the DPI value in your Config."
+          }
+        ],
+        "caveat": "This is one creator's experience with 2023 firmware, not an XIM rule. XIM Central's newer MATRIX videos about DPI could not be read, so the current view may differ."
+      }
+    },
+    {
+      "id": "central-smart-translator-refresh",
+      "termIds": [
+        "smart-translation",
+        "config"
+      ],
+      "symptomIds": [],
+      "statement": {
+        "text": "XIM Central's way to get the newest Smart Translator: in Manager's global settings, force a download of the games database. Then create a new Config for the game. XIM Central says only a newly created Config uses the latest Smart Translator. This matches the official guide, which says to recreate the Config when Manager flags an out-of-date Smart Translator.",
+        "confidence": "expert",
+        "citations": [
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/2a9abfe4",
+            "quote": "In order to get the latest Smart Translator, just go into the global settings in your Matrix manager. Click on the force download button, and confirm your choice in the next screen.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). These steps are general Manager steps, not specific to Rainbow Six Siege."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/2a9abfe4",
+            "quote": "Once the download has finished, you must create a new configuration. Only that way, you will use the latest Smart Translator.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Global-Settings/#force-games-download",
+            "quote": "Manager notifies you of game updates. However, if you want to force a games database download, you can do that here."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#notifications",
+            "quote": "Recreate the Config to update its translation."
+          }
+        ],
+        "caveat": "From a 2023 tutorial, so Manager's menus may have moved since. Write down your current values before you recreate a Config."
+      }
+    },
+    {
+      "id": "central-light-smoothing-preset",
+      "termIds": [
+        "smoothing"
+      ],
+      "symptomIds": [
+        "jitter"
+      ],
+      "statement": {
+        "text": "XIM Central found that the Light smoothing preset gives far better micro movements (very small aim adjustments) than the Off preset. In another 2023 tutorial, XIM Central called both Light and Deactivated good presets. The official guide leaves the choice to you: try each preset and keep the one that feels most natural.",
+        "confidence": "expert",
+        "citations": [
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/2a9abfe4",
+            "quote": "It provides far better micro movements than the off preset",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). The recommendation to use Light was made for Rainbow Six Siege; only this comparison with the off preset is general."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ee24428c",
+            "quote": "While Light, and Deactivated are good presets, I prefer the aim assist when using custom smoothing.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). The preference for custom smoothing concerns aim assist in Overwatch 2 and is not used here."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+          }
+        ],
+        "caveat": "The preset names come from 2023 versions of Manager. The official guide does not list preset names, so check what your Manager offers. XIM Central's newer MATRIX smoothing video could not be read."
+      }
+    },
+    {
+      "id": "central-groups-weapon-loadouts",
+      "termIds": [
+        "groups"
+      ],
+      "symptomIds": [],
+      "statement": {
+        "text": "XIM Central uses Groups to keep per-weapon bindings, such as recoil Smart Actions, inside one Config. To keep the active group matched to the weapon in your hands, XIM Central binds the group cycle action to the same button used to switch weapons. If the groups get out of step, press the key that selects your loadout again. The official guide describes the same method. Officially, Groups turn sets of bindings on and off.",
+        "confidence": "expert",
+        "citations": [
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/cb56be03",
+            "quote": "It allows you to create a group within a group. This is ideal to for example handle several recoil profiles within one configuration.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/cb56be03\" in the description of XIM Central's video \"XIM Matrix - Smart Action Groups Guide - Use Several Weapon Loadouts Within One Config\" (https://www.youtube.com/watch?v=3JtCvCplypg, 4 Nov 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/cb56be03",
+            "quote": "The cycle next action is bound to the same button with which I switch my weapon. So whenever I switch a weapon, the cycle will automatically switch back and forth between my primary and pistol group.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/cb56be03\" in the description of XIM Central's video \"XIM Matrix - Smart Action Groups Guide - Use Several Weapon Loadouts Within One Config\" (https://www.youtube.com/watch?v=3JtCvCplypg, 4 Nov 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/cb56be03",
+            "quote": "If you ever get desynced, just press your cycle button again.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/cb56be03\" in the description of XIM Central's video \"XIM Matrix - Smart Action Groups Guide - Use Several Weapon Loadouts Within One Config\" (https://www.youtube.com/watch?v=3JtCvCplypg, 4 Nov 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). In the video's example, this key is the one that selects the loadout."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Groups/#group-cycling",
+            "quote": "If weapon tracking ever gets out of sync, all they need to do is press 1 or 2 again, or, use a Cycle Reset action"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Groups/#groups",
+            "quote": "Group Membership is a powerful tool that allows you to selectively enable and disable sets of bindings using actions."
+          }
+        ],
+        "caveat": "XIM Central's example is Rainbow Six Siege (2023). We found no source that confirms this method with Destiny 2's weapon switching. Group features have been added since, such as the official Cycle Reset action."
+      }
+    },
+    {
+      "id": "central-aim-angle-directions",
+      "termIds": [
+        "aim-angle-action"
+      ],
+      "symptomIds": [],
+      "statement": {
+        "text": "XIM Central's Aim Angle examples show which way each angle moves your aim: 180° pulls it down, 90° pushes it right and 270° pulls it left. The official guide defines Aim Angle but does not list these directions.",
+        "confidence": "expert",
+        "citations": [
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ea04f28f",
+            "quote": "So 180° means peg the stick downwards.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ea04f28f\" in the description of XIM Central's video \"XIM Matrix - Best Anti Recoil Setup Guide - Zero Recoil For All Guns With Smart Actions - No Recoil\" (https://www.youtube.com/watch?v=VQ_5itO2ZVs, 10 Jun 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). Angle directions are general; the recoil values in the video are for one Apex Legends weapon and are not used here."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ea04f28f",
+            "quote": "I will change the first clock to 500 milliseconds, and then I will change the angle to 90, and the magnitude to 20. This is a trick that will let me find the perfect moment at which the recoil is changing. After 500 milliseconds it will make my weapon flick to the right side.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ea04f28f\" in the description of XIM Central's video \"XIM Matrix - Best Anti Recoil Setup Guide - Zero Recoil For All Guns With Smart Actions - No Recoil\" (https://www.youtube.com/watch?v=VQ_5itO2ZVs, 10 Jun 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ea04f28f",
+            "quote": "I will add the same actions as before now, with the only difference that I will change the angle to 270. This will result in the Smart Action to pull the crosshair to the left side.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ea04f28f\" in the description of XIM Central's video \"XIM Matrix - Best Anti Recoil Setup Guide - Zero Recoil For All Guns With Smart Actions - No Recoil\" (https://www.youtube.com/watch?v=VQ_5itO2ZVs, 10 Jun 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#aim-angle",
+            "quote": "Move reticle at specified angle. Seamlessly integrates with user aim."
+          }
+        ],
+        "caveat": "From a 2023 recoil tutorial. Use it only for direction: the tutorial sets magnitude in %, while the current guide sets Aim Magnitude in degrees per second. This is the Aim Angle Smart Action; Quantization Angle and Behavior Variance use \"Angle\" for different things."
+      }
+    },
+    {
+      "id": "central-unlisted-game-settings",
+      "termIds": [
+        "required-game-settings",
+        "sync-standard"
+      ],
+      "symptomIds": [],
+      "statement": {
+        "text": "Sources disagree about in-game settings that the required list does not mention. The official guide (Standard sync): set sensitivity to maximum, follow every required aim setting, and leave all other aim settings at default. XIM Central (2023): use only the listed values, and anything the list does not show can be set to your preference. In that tutorial XIM Central also tuned the game's own aim assist settings. Both agree that the listed values are mandatory.",
+        "confidence": "contested",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Sensitivity is set to maximum"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Follows all additional required aim settings"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Has all other aim settings set to default"
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ee24428c",
+            "quote": "Only use these ingame settings, otherwise your xim will not work as intended. Anything that isn’t displayed here can be customized to your personal preference.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). Said about the required in-game settings list that Manager opens; the statement is general."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ee24428c",
+            "quote": "For Overwatch, I always recommend to dial in the aim assist settings of the game, before doing any bigger changes in your xim configuration.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). Cited only to show that XIM Central's 'preference' includes aim settings; the Overwatch values are not used."
+          }
+        ],
+        "caveat": "Dialed's Destiny 2 settings follow the official rule: aim settings that are not on the required list stay at default. XIM Central's comment comes from an Overwatch 2 tutorial."
+      }
+    }
+  ]
+}

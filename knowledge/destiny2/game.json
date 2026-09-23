@@ -1,1 +1,292 @@
-{ "game": "destiny-2", "name": "Destiny 2", "requiredSettings": [], "notes": [] }
+{
+  "game": "destiny-2",
+  "name": "Destiny 2",
+  "requiredSettings": [
+    {
+      "name": "Movement Controls",
+      "value": "Default",
+      "statement": {
+        "text": "Set Movement Controls to Default, as XIM's Destiny 2 list requires.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X10D7",
+            "quote": "Movement Controls: Default"
+          }
+        ],
+        "caveat": "This value comes from the public copy of XIM's Game Settings list, which may differ from the login-walled original. Confirm it in XIM MATRIX Manager: press the gear icon on the main screen."
+      }
+    },
+    {
+      "name": "Button Layout",
+      "value": "Default",
+      "statement": {
+        "text": "Set Button Layout to Default, as XIM's Destiny 2 list requires.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X10D7",
+            "quote": "Button Layout: Default"
+          }
+        ],
+        "caveat": "This value comes from the public copy of XIM's Game Settings list, which may differ from the login-walled original. Confirm it in XIM MATRIX Manager: press the gear icon on the main screen."
+      }
+    },
+    {
+      "name": "Look Sensitivity",
+      "value": "20",
+      "statement": {
+        "text": "Set Look Sensitivity to 20, as XIM's Destiny 2 list requires.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X10D7",
+            "quote": "Look Sensitivity: 20"
+          }
+        ],
+        "caveat": "This value comes from the public copy of XIM's Game Settings list, which may differ from the login-walled original. Confirm it in XIM MATRIX Manager: press the gear icon on the main screen."
+      }
+    },
+    {
+      "name": "ADS Sensitivity Modifier",
+      "value": "1.5",
+      "statement": {
+        "text": "Set ADS Sensitivity Modifier to 1.5, as XIM's Destiny 2 list requires.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X10D7",
+            "quote": "ADS Sensitivity Modifier: 1.5"
+          }
+        ],
+        "caveat": "This value comes from the public copy of XIM's Game Settings list, which may differ from the login-walled original. Confirm it in XIM MATRIX Manager: press the gear icon on the main screen."
+      }
+    },
+    {
+      "name": "Axial Deadzone",
+      "value": "0",
+      "statement": {
+        "text": "Set Axial Deadzone to 0, as XIM's Destiny 2 list requires.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X10D7",
+            "quote": "Axial Deadzone: 0"
+          }
+        ],
+        "caveat": "This value comes from the public copy of XIM's Game Settings list, which may differ from the login-walled original. Confirm it in XIM MATRIX Manager: press the gear icon on the main screen."
+      }
+    },
+    {
+      "name": "Radial Deadzone",
+      "value": "0.13",
+      "statement": {
+        "text": "Set Radial Deadzone to 0.13, as XIM's Destiny 2 list requires.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X10D7",
+            "quote": "Radial Deadzone: 0.13"
+          }
+        ],
+        "caveat": "This value comes from the public copy of XIM's Game Settings list, which may differ from the login-walled original. Confirm it in XIM MATRIX Manager: press the gear icon on the main screen."
+      }
+    }
+  ],
+  "notes": [
+    {
+      "id": "max-sensitivity-and-defaults",
+      "title": "The general rule: maximum sensitivity, everything else default",
+      "statement": {
+        "text": "XIM's rule for every game: set the in-game sensitivity to maximum and leave every other setting at its default, unless the game's entry says otherwise. Destiny 2 is on XIM's list of games that need extra settings, so use the six values above exactly. Getting these wrong hurts your aim and stops shared Configs from working as intended.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings",
+            "quote": "XIM’s Smart Translation technology requires that your game be set up to its maximum in-game sensitivity and all other values as default unless otherwise stated for accurate aim response."
+          },
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings",
+            "quote": "The following games require additional in-game settings (failure to do so will result sub-optimal aiming performance):"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+            "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
+          }
+        ],
+        "caveat": "The Destiny 2 values come from the public copy of XIM's Game Settings list, which may differ from the login-walled original. Confirm them in Manager (gear icon)."
+      }
+    },
+    {
+      "id": "sync-method",
+      "title": "Sync method: plan for Standard",
+      "statement": {
+        "text": "Plan for Standard sync. In the game: the required values above, and every other aim setting at default. Your aim is then shaped in your Config, not in the game.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Every game that XIM MATRIX supports has the standard game settings synchronization option."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Sensitivity is set to maximum"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Follows all additional required aim settings"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Has all other aim settings set to default"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Your aiming behavior is then set through your Config."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "This is the default option for all new mouse and gyro Configs."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#custom",
+            "quote": "This is the default option for controller Configs when custom is available for the game."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#custom",
+            "quote": "This means a Config can work with different in-game aim settings without modification. This is highly beneficial for controller Configs, but, also valuable for mouse Configs that are using Simulate Analog Behavior."
+          },
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
+            "quote": "This game supports Custom In-Game Settings. Setting values in green can be customized when using this feature.",
+            "note": "From the Apex Legends (ALC) entry, one of 15 entries with this line. The Destiny 2 entry has no such line."
+          }
+        ],
+        "reasoning": "No source says which sync methods Destiny 2 supports. XIM's guide says every supported game has Standard sync, and that Standard is the default for new mouse Configs. Custom is the default only for controller Configs, and only when the game has it; for mouse Configs, XIM ties its value to Simulate Analog Behavior. On the public Game Settings list, 15 entries say 'This game supports Custom In-Game Settings'. The Destiny 2 entry does not. That is weak evidence on its own: those same 15 entries are exactly the ones that require SAB, so the line may mark SAB games rather than every game with Custom support. Standard is the safe plan either way, because every game has it.",
+        "caveat": "We found no evidence that Destiny 2 supports Custom sync, but no source rules it out. If Manager offers Custom for your Destiny 2 Config, the public list may be out of date."
+      }
+    },
+    {
+      "id": "simulate-analog-behavior",
+      "title": "Simulate Analog Behavior (SAB): not required",
+      "statement": {
+        "text": "The public list sets no SAB requirement for Destiny 2, so the plan leaves SAB off (its default). SAB makes the stick and trigger output look more analog. Other entries do require it: Apex Legends, Arc Raiders, Battlefield 6, Call of Duty: Black Ops 6 and Black Ops 7, and Fortnite.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
+            "quote": "With a XIM MATRIX, it is required that Simulate Analog Behavior (SAB) be enabled.",
+            "note": "From the Apex Legends (ALC) entry. The Arc Raiders, Battlefield 6, Black Ops 6, Black Ops 7 and Fortnite entries carry the same line. The Destiny 2 entry does not."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/",
+            "quote": "It will make the sticks and triggers being sent to your console or PC appear more analog."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#when-to-use",
+            "quote": "Some games include additional input requirements that define how a controller can physically interact with the game. Using SAB and following this checklist of hardware and additional Config requirements will allow you to play within the game's rules."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#turn-sab-on",
+            "quote": "By default, these values are 0%."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+            "quote": "Do not use maximum in-game sensitivity"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+            "quote": "Do not use aiming curves"
+          }
+        ],
+        "reasoning": "This is inferred from what the entry leaves out. Games that need SAB say so in an 'Input Requirements' line on the list; the Destiny 2 entry has none. XIM's guide says SAB is for games with additional input requirements. Turning it on anyway would pull in XIM's SAB checklist, which changes other parts of the plan: for example, it says not to use maximum in-game sensitivity and not to use aiming curves.",
+        "caveat": "Not stated by XIM. If Manager's gear-icon list shows an SAB requirement for Destiny 2, follow XIM's SAB checklist instead."
+      }
+    },
+    {
+      "id": "xbox-vs-pc",
+      "title": "Xbox vs PC",
+      "statement": {
+        "text": "No source we can read documents any difference between Xbox and PC for Destiny 2. The public list has one Destiny 2 entry with no platform notes, so the app uses the same settings for both.",
+        "confidence": "gap",
+        "citations": [],
+        "caveat": "If you play on both, check the gear-icon list in Manager for each platform's Config."
+      }
+    },
+    {
+      "id": "pc-tool-conflicts",
+      "title": "PC: controller emulation tools can conflict",
+      "statement": {
+        "text": "On PC with controller output, XIM warns that virtual controller tools such as Steam Input or DS4Windows may conflict with the MATRIX. XIM lists this under connection problems, so check it first if the MATRIX won't connect to your PC.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-PC/#matrix-connection-problems",
+            "quote": "If your XIM MATRIX is outputting as a controller, make sure you don't have any virtual controller emulation tools (such as Steam Input or DS4Windows) installed that may conflict."
+          }
+        ],
+        "caveat": "XIM's wording is about having these tools installed. It doesn't say what to do when the game itself runs through Steam, or whether turning Steam Input off for one game is enough."
+      }
+    },
+    {
+      "id": "pc-destiny-specific",
+      "title": "PC: no Destiny 2-specific guidance",
+      "statement": {
+        "text": "XIM gives no Destiny 2-specific advice for PC with controller output. The Destiny 2 entry names no output type and says nothing about Steam Input. The app uses XIM's general PC steps and the same required settings as on Xbox.",
+        "confidence": "gap",
+        "citations": []
+      }
+    },
+    {
+      "id": "confirm-in-manager",
+      "title": "Confirm the required settings in Manager",
+      "statement": {
+        "text": "Check Destiny 2's required in-game settings in XIM MATRIX Manager: press the gear icon on Manager's main screen.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+            "quote": "If you need to check required in-game settings at a later time, press the gear icon on Manager's main screen."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#required-game-settings",
+            "quote": "If you need to check required in-game settings at a later time, press the gear icon on Manager's main screen."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#identity",
+            "quote": "Use the gear icon to review the required in-game settings for the game."
+          }
+        ],
+        "caveat": "This app's Destiny 2 values come from a public copy of XIM's list, which may differ from the login-walled original. If Manager shows different values, use Manager's."
+      }
+    }
+  ]
+}

@@ -1,1 +1,2885 @@
-{ "terms": [], "nameNotes": [] }
+{
+  "terms": [
+    {
+      "id": "sensitivity",
+      "name": "Sensitivity",
+      "aliases": [
+        "cm/360",
+        "mouse sensitivity"
+      ],
+      "category": "sensitivity",
+      "location": "Mouse Aim, in your Config's aim settings (Hip and ADS). Motion Aim has its own Sensitivity.",
+      "summary": "How far you move the mouse for one full turn in game, in centimeters. Lower is faster.",
+      "definition": {
+        "text": "Mouse sensitivity is in cm/360 or \"distance (in centimeters) to perform a full turn\". That means, lower values produce faster aiming speeds.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+            "quote": "Mouse sensitivity is in cm/360 or \"distance (in centimeters) to perform a full turn\". That means, lower values produce faster aiming speeds."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+            "quote": "Mouse sensitivity is set in centimeters-per-360 (cm/360)"
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "The number is a real distance. At 35 cm/360, moving the mouse 35 cm turns you all the way around in game.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "For example, if your sensitivity is set at 35 cm/360, it means you will turn all the way around in game if you move your mouse 35 centimeters."
+            }
+          ]
+        },
+        {
+          "text": "That only holds if the layers underneath are right. On controller output, your game settings must be set up correctly. The mouse DPI in your Config must also match your mouse.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+              "quote": "Accurate real world velocity requires your game settings be configured correctly if outputting as controller, or, your velocity be calibrated correctly if outputting as mouse."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#mouse-dpi",
+              "quote": "Accurate real world units require your mouse DPI be set correctly in your Config. Make sure this value matches your mouse DPI."
+            }
+          ]
+        },
+        {
+          "text": "With Standard sync, you set the game's own sensitivity as XIM requires (normally its maximum). Your real aim speed is then set here, in the Config.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+              "quote": "When a new Xbox Config is added to your XIM MATRIX, you may be reminded that you must set your game's in-game sensitivity to maximum (aim sensitivity is then customized in your Config)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#required-game-settings",
+              "quote": "When a new PC XInput Config is added to your XIM MATRIX, you may be reminded that you must set your game's in-game sensitivity to maximum (aim sensitivity is then customized in your Config)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#standard",
+              "quote": "Your aiming behavior is then set through your Config."
+            }
+          ]
+        },
+        {
+          "text": "If your game has an ADS mode, Hip and ADS each have their own aim settings. By default ADS inherits everything from Hip. Choose \"Sensitivity Only\" to keep Hip's other settings but give ADS its own sensitivity.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+              "quote": "If your game supports an Aim Down Sight mode, then, you'll be able to set both Hip and Aim Down Sight aiming independently. Otherwise, you'll have a single set of aim settings."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+              "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+              "quote": "Sensitivity Only: Inherit all ADS settings from Hip except sensitivity"
+            }
+          ]
+        },
+        {
+          "text": "A custom curve or quantization changes the real turn distance. cm/360 is only exact with the default linear curve and quantization off.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Applying quantization to your mouse or motion aim may negatively affect real world sensitivity accuracy."
+            }
+          ]
+        },
+        {
+          "text": "Motion (gyro) aim has its own sensitivity, measured in times-degrees-per-second instead of cm/360.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+              "quote": "Motion (gyro) sensitivity is set in times-degrees-per-second"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+              "quote": "Mouse sensitivity is set in centimeters-per-360 (cm/360)"
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "Start with Sensitivity alone. Change other values only if you need to. XIM says there is no \"right\" set of values: it's preference.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+              "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+            }
+          ]
+        },
+        {
+          "text": "To check that your cm/360 is accurate, XIM's test is: set 40 cm/360, go somewhere without enemies (aim assist slows the reticle), then move the mouse 10 cm at moderate speed. You should turn a quarter turn (90 degrees). Use a linear curve and switch quantization off first. On Xbox with an Elite 2 controller, turn off its stick curve.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "Set your mouse sensitivity to 40 cm/360"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "Start your game in a training area or private match (without enemies that can cause aim assist slowdown)"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "Move your mouse at a moderate speed horizontally 10 centimeters (which is a quarter turn, 90-degrees)"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "You are testing with a linear aiming curve (not a custom one)"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "You have quantization disabled"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "If using an Elite 2 on Xbox, make sure you don't have a controller stick curve enabled"
+            }
+          ]
+        },
+        {
+          "text": "Exact cm/360 isn't needed to enjoy the MATRIX. It matters if you want the same sensitivity across your Configs, or want to use Configs from others.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "Although an accurate cm/360 isn't strictly necessary to be able to use and enjoy you XIM MATRIX, it is required if you want:"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "Consistent sensitivity between your Configs"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "To effectively share and use Configs from others"
+            }
+          ]
+        },
+        {
+          "text": "Only if you use Simulate Analog Behavior (SAB): don't go faster than 20 cm/360. Remember that higher cm/360 values are slower.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#ensure-mouse-sensitivity",
+              "quote": "Make sure your mouse sensitivity isn't faster than 20 cm/360."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#ensure-mouse-sensitivity",
+              "quote": "Remember that higher cm/360 values are slower."
+            }
+          ],
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "All aim styles, in different directions. A lower cm/360 turns you further per centimeter, which helps big turns and snaps. A higher cm/360 gives more mouse travel per degree, which helps the small, careful corrections of tracking and precision holds. Where you land is personal.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+              "quote": "Mouse sensitivity is in cm/360 or \"distance (in centimeters) to perform a full turn\". That means, lower values produce faster aiming speeds."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+              "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+            }
+          ],
+          "reasoning": "cm/360 is the mouse distance for a full turn, and lower values are faster (official definition). More distance per degree means a small hand movement moves the reticle less; less distance means a big turn needs less hand movement. No source ties a sensitivity value to an aim style, and XIM says there is no \"right\" set of values."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "In-game look sensitivity",
+          "termId": "required-game-settings",
+          "note": "The game's own sensitivity setting. With Standard sync it stays at the value XIM requires; you tune your aim speed with this MATRIX Sensitivity instead."
+        },
+        {
+          "name": "Thumbstick sensitivity",
+          "termId": "thumbstick-aim",
+          "note": "Aim speed for a physical stick, set as a percentage of the game's maximum turn speed, not in cm/360."
+        },
+        {
+          "name": "Modify Aim Sensitivity",
+          "termId": "modify-aim-sensitivity",
+          "note": "A Smart Action that changes sensitivity only while its binding runs (for example in vehicles). It doesn't change this base value."
+        },
+        {
+          "name": "Sight Modifiers",
+          "termId": "sight-modifiers",
+          "note": "Per-scope sensitivity changes, available with Custom Game Settings."
+        }
+      ],
+      "related": [
+        "y-scale",
+        "mouse-dpi",
+        "aiming-modes",
+        "ads-inheritance",
+        "sync-standard",
+        "thumbstick-aim",
+        "motion-aim",
+        "modify-aim-sensitivity",
+        "sight-modifiers"
+      ]
+    },
+    {
+      "id": "y-scale",
+      "name": "Y Scale",
+      "aliases": [
+        "vertical sensitivity"
+      ],
+      "category": "sensitivity",
+      "location": "Mouse Aim or Motion Aim: press the \"...\" for additional options.",
+      "summary": "Changes vertical aim sensitivity only, so up-down speed can differ from left-right.",
+      "definition": {
+        "text": "Y Scale is \"vertical only sensitivity\". It sits with the Aiming Curve and Quantization under the \"...\" additional options.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+            "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+            "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "It changes how fast the reticle moves up and down. Left-right speed stays as your Sensitivity sets it.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+              "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+            }
+          ]
+        },
+        {
+          "text": "The guide doesn't explain Y Scale's unit, range or default. Check what Manager shows before you change it.",
+          "confidence": "gap",
+          "citations": []
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "XIM's advice for mouse aim: start with Sensitivity alone, and change other values, such as Y Scale, only if necessary.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+              "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Mostly tracking. Holding on a target through sustained fire means constant vertical correction against recoil. The guide links more vertical sensitivity to recoil control, though through a temporary Smart Action rather than Y Scale.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+              "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Recoil-Control/#vertical-sensitivity-boost",
+              "quote": "If you prefer simply increasing your vertical aim sensitivity temporarily as a form of recoil control, you use can use a vertical only aim sensitivity modifier action."
+            }
+          ],
+          "reasoning": "Y Scale is vertical-only sensitivity. The guide's \"Vertical Sensitivity Boost\" raises vertical sensitivity temporarily \"as a form of recoil control\", so vertical speed matters most where recoil does: sustained fire. No source recommends a Y Scale value for any aim style."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Vertical Sensitivity Boost",
+          "termId": "modify-aim-sensitivity",
+          "note": "A recoil technique in the guide: a Modify Aim Sensitivity action (Y Only) that raises vertical sensitivity only while its binding runs. Y Scale is a permanent Config setting."
+        }
+      ],
+      "related": [
+        "sensitivity",
+        "aiming-curve",
+        "quantization",
+        "modify-aim-sensitivity"
+      ]
+    },
+    {
+      "id": "smoothing",
+      "name": "Smoothing",
+      "aliases": [
+        "input smoothing",
+        "aim smoothing"
+      ],
+      "category": "smoothing",
+      "location": "Mouse Aim and Motion Aim, in your Config's aim settings.",
+      "summary": "Filters out noise from your hardware and your hand. Pick a preset, or tune Standard or Classic mode.",
+      "definition": {
+        "text": "Gaming input hardware and natural hand jitter can cause an noisy input environment. Smoothing solves this by providing additional stability and control to your aim.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "Gaming input hardware and natural hand jitter can cause an noisy input environment. Smoothing solves this by providing additional stability and control to your aim."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "XIM MATRIX includes an advanced aim smoothing system that enables the gamer to tune their aim response to their preference."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "There are two modes. Standard adapts to how fast you are aiming. Classic applies fixed (static) smoothing. Press the smoothing button (it reads STANDARD or CLASSIC) to switch.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+            }
+          ]
+        },
+        {
+          "text": "Mouse aim and motion aim each have their own smoothing presets.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        },
+        {
+          "text": "Hip and ADS can only have different smoothing with the \"Inherit Nothing\" option. \"Inherit All\" (the default) and \"Sensitivity Only\" both copy Hip's smoothing to ADS.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+              "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+              "quote": "Sensitivity Only: Inherit all ADS settings from Hip except sensitivity"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+              "quote": "Inherit Nothing: Inherit no ADS settings from Hip"
+            }
+          ],
+          "reasoning": "Inherit All copies all ADS settings from Hip; Sensitivity Only copies all of them except sensitivity; Inherit Nothing copies none. Smoothing is one of those other settings, so only Inherit Nothing leaves ADS smoothing free."
+        }
+      ],
+      "feel": [
+        {
+          "text": "What it's for: aim that looks noisy or shaky because of your hardware or natural hand jitter. Smoothing adds stability and control.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Gaming input hardware and natural hand jitter can cause an noisy input environment. Smoothing solves this by providing additional stability and control to your aim."
+            }
+          ]
+        }
+      ],
+      "guidance": [
+        {
+          "text": "Start with the presets. Try each one and keep what feels most natural. XIM says it's strictly preference.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        },
+        {
+          "text": "Only if you use Simulate Analog Behavior (SAB): keep smoothing on. Use a preset, or if you use custom values, don't go below the presets' smoothing intensity.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+              "quote": "Make sure your mouse or motion aim smoothing is not disabled."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+              "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+            }
+          ],
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Tracking most. Holding on a target is a long run of small movements, and small movements are where jitter shows. Snaps and precision holds need smoothing too, but the trade-offs sit in the individual settings (Precision, Response, Easing).",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Gaming input hardware and natural hand jitter can cause an noisy input environment. Smoothing solves this by providing additional stability and control to your aim."
+            }
+          ],
+          "reasoning": "Smoothing's official purpose is countering hardware and hand jitter. Jitter is a small, constant error, so it matters most next to small movements, which make up most of tracking. No source ties smoothing to aim styles."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Smooth",
+          "termId": "smooth",
+          "note": "A single Classic-mode setting. The guide says it was \"known previously as Smoothing\"."
+        },
+        {
+          "name": "Smooth ADS Transition",
+          "termId": "ads-activation-delay",
+          "note": "An ADS Activation Delay option that blends the reticle's movement while switching to ADS. It is not aim smoothing."
+        }
+      ],
+      "related": [
+        "smoothing-standard",
+        "smoothing-classic",
+        "precision",
+        "response",
+        "easing",
+        "stability",
+        "ads-inheritance",
+        "simulate-analog-behavior"
+      ]
+    },
+    {
+      "id": "smoothing-standard",
+      "name": "Standard",
+      "aliases": [
+        "Standard smoothing",
+        "Standard mode"
+      ],
+      "category": "smoothing",
+      "location": "Smoothing, in Mouse Aim or Motion Aim. Press the smoothing button to switch between STANDARD and CLASSIC.",
+      "summary": "The smoothing mode that adapts to your aim speed. Tuned with Precision, Response, Easing and Stability.",
+      "definition": {
+        "text": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "It splits your aim by speed. Precision handles slow, fine aim. Response handles fast aim. Easing handles the start from rest. Stability handles holding still, for motion aim only.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fine aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fast aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior from rest"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior at rest"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "Try the presets first. XIM says smoothing is strictly preference.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Dialed's weapon-aware advice assumes Standard. Because it adapts to aim speed, it can treat slow tracking and fast snaps differently within one Config. Classic applies the same smoothing at every speed.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fine aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fast aim behavior"
+            }
+          ],
+          "reasoning": "Standard \"adapts to your current aim speed\" and has separate settings for fine and fast aim. Classic \"provides static smoothing behavior\". Only a speed-adaptive mode can favour slow and fast aim differently at the same time."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Standard (Game Settings sync)",
+          "termId": "sync-standard",
+          "note": "A sync method: in-game sensitivity at maximum, required settings applied, everything else default. Unrelated to smoothing."
+        },
+        {
+          "name": "Standard (Velocity Mapping)",
+          "termId": "velocity-mapping",
+          "note": "The default Velocity Mapping: your top speed maps to the game's maximum for each aiming angle. Unrelated to smoothing."
+        },
+        {
+          "name": "Standard (update rate)",
+          "note": "The output connection's update rate, which the SAB page says to keep at Standard (the default). Unrelated to smoothing."
+        }
+      ],
+      "related": [
+        "smoothing",
+        "precision",
+        "response",
+        "easing",
+        "stability",
+        "smoothing-classic"
+      ]
+    },
+    {
+      "id": "precision",
+      "name": "Precision",
+      "aliases": [],
+      "category": "smoothing",
+      "location": "Smoothing, Standard mode (Mouse Aim or Motion Aim).",
+      "summary": "Standard smoothing for slow, fine aim. Higher is smoother but heavier.",
+      "definition": {
+        "text": "Controls fine aim behavior. Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Controls fine aim behavior"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "It acts on slow movements: the small corrections you make while lining up or holding on a target. Raising it smooths those movements more.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fine aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+            }
+          ]
+        },
+        {
+          "text": "Lowering it should do the opposite: small adjustments feel lighter but get less smoothing.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+            }
+          ],
+          "reasoning": "The guide only describes raising it (smoother, heavier). Lowering it is the reverse of that stated trade-off."
+        }
+      ],
+      "feel": [
+        {
+          "text": "Higher Precision makes the reticle feel heavier at low speed, in return for a smoother result.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+            }
+          ]
+        }
+      ],
+      "guidance": [
+        {
+          "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Tracking: the main lever. Raising Precision steadies your hold through sustained fire, at the cost of a heavier reticle. If small corrections feel sluggish, lower it.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fine aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+            }
+          ],
+          "reasoning": "Tracking is mostly slow, fine movement, which is what Precision controls (\"fine aim behavior\", \"smoother result at low aim speeds\"). The heaviness trade-off comes from the same definition."
+        },
+        {
+          "text": "Precision hold: matters too. Lining up one careful shot is slow, fine movement. More Precision gives a steadier line-up but a heavier feel.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fine aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+            }
+          ],
+          "reasoning": "Precision acts at low aim speeds, and a deliberate line-up happens at low speed."
+        },
+        {
+          "text": "Snap: matters less. A snap is mostly fast movement, which Response and Easing cover. Precision still shapes the small correction at the end of a snap.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fine aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fast aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior from rest"
+            }
+          ],
+          "reasoning": "Precision is defined for fine aim at low speeds only. Fast aim and the start from rest belong to Response and Easing."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Micro (Advanced SAB)",
+          "termId": "simulate-analog-behavior",
+          "note": "An Advanced SAB value that \"tunes stick behavior at very low aiming speeds\". It belongs to Simulate Analog Behavior, not to smoothing."
+        }
+      ],
+      "related": [
+        "smoothing-standard",
+        "response",
+        "easing",
+        "stability",
+        "smoothing"
+      ]
+    },
+    {
+      "id": "response",
+      "name": "Response",
+      "aliases": [],
+      "category": "smoothing",
+      "location": "Smoothing, Standard mode (Mouse Aim or Motion Aim).",
+      "summary": "Standard smoothing for fast aim. Higher makes the reticle feel lighter at speed.",
+      "definition": {
+        "text": "Controls fast aim behavior. Higher values produces a lighter feeling reticle at faster aim speeds.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Controls fast aim behavior"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "It acts on fast movements: big turns and quick moves onto a target. Raising it makes the reticle feel lighter during those movements.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fast aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+            }
+          ]
+        },
+        {
+          "text": "Lowering it should make fast movements feel heavier.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+            }
+          ],
+          "reasoning": "The guide only describes raising it (\"a lighter feeling reticle at faster aim speeds\"). Lowering it is the reverse."
+        }
+      ],
+      "feel": [
+        {
+          "text": "Higher Response gives a lighter-feeling reticle at faster aim speeds.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+            }
+          ]
+        }
+      ],
+      "guidance": [
+        {
+          "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Snap: the main lever for the fast part of a snap or flick. If fast moves feel too heavy, raise Response; if they feel too light, lower it.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fast aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+            }
+          ],
+          "reasoning": "Snaps are fast movements, and Response \"controls fast aim behavior\", with higher values giving \"a lighter feeling reticle at faster aim speeds\"."
+        },
+        {
+          "text": "Tracking: matters when the target moves fast or you turn quickly while firing. Slow holds depend more on Precision.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fast aim behavior"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Controls fine aim behavior"
+            }
+          ],
+          "reasoning": "Response acts at fast aim speeds; Precision acts at low aim speeds."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Response rate (Check Rate)",
+          "termId": "polling-rate",
+          "note": "A Manager tool that counts how often your mouse actually reports movement, to check its polling rate. It is not a smoothing setting."
+        },
+        {
+          "name": "Aim response curve",
+          "termId": "aiming-curve",
+          "note": "The guide calls an aiming curve your \"aim response\". That is the Aiming Curve, not this setting."
+        },
+        {
+          "name": "\"Response time\" in Easing",
+          "termId": "easing",
+          "note": "Easing's definition mentions \"response time\" for the start from rest. That describes Easing, not the Response setting."
+        }
+      ],
+      "related": [
+        "smoothing-standard",
+        "precision",
+        "easing",
+        "smoothing",
+        "velocity-mapping"
+      ]
+    },
+    {
+      "id": "easing",
+      "name": "Easing",
+      "aliases": [],
+      "category": "smoothing",
+      "location": "Smoothing, Standard mode (Mouse Aim or Motion Aim).",
+      "summary": "Standard smoothing for the moment you start moving from a standstill.",
+      "definition": {
+        "text": "Specifies aim behavior from rest. Higher values result in smoother transition from rest but lower response time.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Specifies aim behavior from rest"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Higher values result in smoother transition from rest but lower response time."
+          }
+        ],
+        "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+      },
+      "explanation": [
+        {
+          "text": "It only acts as your aim starts moving from rest, right after the reticle has been still.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior from rest"
+            }
+          ]
+        },
+        {
+          "text": "Higher Easing should make that start smoother but less responsive. Lower Easing should give a quicker, less smoothed start.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values result in smoother transition from rest but lower response time."
+            }
+          ],
+          "reasoning": "The definition pairs \"smoother transition from rest\" with \"but lower response time\". The \"but\" marks a cost, so we read \"lower response time\" as less responsive.",
+          "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+        }
+      ],
+      "feel": [
+        {
+          "text": "Higher Easing gives a smoother transition from rest.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values result in smoother transition from rest but lower response time."
+            }
+          ],
+          "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+        }
+      ],
+      "guidance": [
+        {
+          "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Snap: the main lever. Peeks and snaps start from a standstill. Lower Easing should give a faster start, at the cost of a less smooth one. Higher Easing should give a smoother but slower start.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior from rest"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values result in smoother transition from rest but lower response time."
+            }
+          ],
+          "reasoning": "Easing \"specifies aim behavior from rest\", and a snap begins at rest. The direction comes from our reading of \"smoother transition from rest but lower response time\".",
+          "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+        },
+        {
+          "text": "Precision hold: can matter. A careful line-up often starts from a standstill, and higher Easing should make that start smoother.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior from rest"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values result in smoother transition from rest but lower response time."
+            }
+          ],
+          "reasoning": "Easing acts on the start from rest, and higher values give a \"smoother transition from rest\".",
+          "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+        },
+        {
+          "text": "Tracking: matters less. While you track, the reticle is rarely at rest, so Easing only acts as the track begins.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior from rest"
+            }
+          ],
+          "reasoning": "Easing is defined only for aim \"from rest\"."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Stability",
+          "termId": "stability",
+          "note": "Stability is about aim at rest (holding still, motion aim only). Easing is about the start of movement from rest."
+        },
+        {
+          "name": "Response",
+          "termId": "response",
+          "note": "The \"response time\" in Easing's definition is not the Response setting, which controls fast aim."
+        },
+        {
+          "name": "Smooth ADS Transition",
+          "termId": "ads-activation-delay",
+          "note": "Blends the switch from Hip to ADS aim. It is an ADS option, not Easing's \"transition from rest\"."
+        }
+      ],
+      "related": [
+        "smoothing-standard",
+        "precision",
+        "response",
+        "stability",
+        "smoothing"
+      ]
+    },
+    {
+      "id": "stability",
+      "name": "Stability",
+      "aliases": [],
+      "category": "smoothing",
+      "location": "Smoothing, Standard mode, Motion Aim.",
+      "summary": "Standard smoothing for holding still. Motion (gyro) aim only.",
+      "definition": {
+        "text": "Specifies aim behavior at rest. Increase to provide extra stability at rest due to hand jitter and instability (motion aim only).",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Specifies aim behavior at rest"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "It only applies to motion (gyro) aim, not to mouse aim.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+            }
+          ]
+        },
+        {
+          "text": "It works while the reticle is at rest, steadying it against hand shake.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior at rest"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+            }
+          ]
+        }
+      ],
+      "feel": [
+        {
+          "text": "Raising it gives extra stability at rest when your hands shake.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+            }
+          ]
+        }
+      ],
+      "guidance": [
+        {
+          "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        },
+        {
+          "text": "Another way XIM gives to steady motion aim: Quick Pull with hair triggers. You don't press the trigger fully, so firing moves the gamepad less.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gamepad-Customization/#hair-triggers",
+              "quote": "Quick Pull with hair triggers also provides additional stability when firing using motion gyro aim. It reduces the physical force of the trigger by not requiring full press and release which can cause your gamepad to move."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Precision hold (motion aim only): the main lever. Waiting on a spot for one careful shot is aim at rest.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior at rest"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+            }
+          ],
+          "reasoning": "Stability \"specifies aim behavior at rest\" and adds \"extra stability at rest\"."
+        },
+        {
+          "text": "Tracking and snap: matter less, because the reticle is moving.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Specifies aim behavior at rest"
+            }
+          ],
+          "reasoning": "Stability is defined only for aim at rest."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Easing",
+          "termId": "easing",
+          "note": "Easing is about the start of movement from rest. Stability is about holding still."
+        }
+      ],
+      "related": [
+        "smoothing-standard",
+        "motion-aim",
+        "easing",
+        "precision",
+        "smoothing"
+      ]
+    },
+    {
+      "id": "smoothing-classic",
+      "name": "Classic",
+      "aliases": [
+        "Classic smoothing",
+        "Classic mode"
+      ],
+      "category": "smoothing",
+      "location": "Smoothing, in Mouse Aim or Motion Aim. Press the smoothing button to switch between STANDARD and CLASSIC.",
+      "summary": "The fixed smoothing mode, based on XIM's older XIM APEX device. Tuned with Smooth, Decay and Synch.",
+      "definition": {
+        "text": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+          }
+        ],
+        "caveat": "Dialed covers XIM MATRIX only. It gives no XIM APEX-based values for Classic."
+      },
+      "explanation": [
+        {
+          "text": "Classic applies the same smoothing whatever your aim speed. Standard, by contrast, adapts to it.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+            }
+          ],
+          "reasoning": "The guide calls Classic \"static\" and Standard \"dynamic\" smoothing that \"adapts to your current aim speed\". We read static as not adapting to speed."
+        },
+        {
+          "text": "It has three settings: Smooth (how strong the smoothing is), Decay (how much past input counts) and Synch (extra smoothing that combines with Smooth).",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Higher values increase impact and is further customized using the Decay setting."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "Try the presets first. XIM says smoothing is strictly preference.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Classic can't favour one aim style: it smooths slow tracking and fast snaps the same way. Dialed's weapon-aware directions assume Standard. With Classic you get the definitions, not the directions.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+            }
+          ],
+          "reasoning": "Classic provides \"static smoothing behavior\", unlike Standard's smoothing that \"adapts to your current aim speed\"."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "XIM APEX smoothing",
+          "note": "Classic is based on the older XIM APEX's smoothing, upgraded for MATRIX. Dialed gives no APEX-era advice."
+        }
+      ],
+      "related": [
+        "smoothing",
+        "smooth",
+        "decay",
+        "synch",
+        "smoothing-standard"
+      ]
+    },
+    {
+      "id": "smooth",
+      "name": "Smooth",
+      "aliases": [],
+      "category": "smoothing",
+      "location": "Smoothing, Classic mode (Mouse Aim or Motion Aim).",
+      "summary": "Classic mode's main smoothing amount. Higher smooths more.",
+      "definition": {
+        "text": "Known previously as Smoothing. Higher values increase impact and is further customized using the Decay setting.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "Known previously as Smoothing"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "Higher values increase impact and is further customized using the Decay setting."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "Raising Smooth increases the smoothing effect. Decay then shapes how it works.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Higher values increase impact and is further customized using the Decay setting."
+            }
+          ]
+        },
+        {
+          "text": "Synch can be combined with Smooth to amplify the smoothing further.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+            }
+          ]
+        },
+        {
+          "text": "It is the older \"Smoothing\" setting under a new name, and its values match XIM APEX behavior.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Known previously as Smoothing"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Values match XIM APEX behavior"
+            }
+          ],
+          "caveat": "This is a definition, not advice. Dialed gives no XIM APEX-based values."
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Same for every aim style. Classic smoothing is static, so this setting acts on slow tracking, fast snaps and precision holds alike. It can't favour one of them.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+            }
+          ],
+          "reasoning": "The guide calls Classic \"static smoothing behavior\", in contrast to Standard, which \"adapts to your current aim speed\". A setting in a static mode can't treat slow and fast aim differently. No source ties Classic settings to aim styles."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Smoothing",
+          "termId": "smoothing",
+          "note": "Smoothing is the whole system, with its presets and two modes. Smooth is one setting inside Classic mode."
+        }
+      ],
+      "related": [
+        "smoothing-classic",
+        "decay",
+        "synch",
+        "smoothing"
+      ]
+    },
+    {
+      "id": "decay",
+      "name": "Decay",
+      "aliases": [],
+      "category": "smoothing",
+      "location": "Smoothing, Classic mode (Mouse Aim or Motion Aim).",
+      "summary": "Classic mode: how much Smooth relies on past input. Higher means older input counts less.",
+      "definition": {
+        "text": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "Smooth blends in your earlier movement. Decay sets how much that older movement still counts. Higher Decay means older input counts for less.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+            }
+          ]
+        },
+        {
+          "text": "So higher Decay should make Classic smoothing follow your latest movement more closely. Lower Decay should let more of your past movement carry through.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+            }
+          ],
+          "reasoning": "If older input values have less impact, the smoothed output is driven more by recent input, and the reverse for lower values."
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Same for every aim style. Classic smoothing is static, so this setting acts on slow tracking, fast snaps and precision holds alike. It can't favour one of them.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+            }
+          ],
+          "reasoning": "The guide calls Classic \"static smoothing behavior\", in contrast to Standard, which \"adapts to your current aim speed\". A setting in a static mode can't treat slow and fast aim differently. No source ties Classic settings to aim styles."
+        }
+      ],
+      "notToBeConfusedWith": [],
+      "related": [
+        "smooth",
+        "synch",
+        "smoothing-classic"
+      ]
+    },
+    {
+      "id": "synch",
+      "name": "Synch",
+      "aliases": [
+        "Synchronize"
+      ],
+      "category": "smoothing",
+      "location": "Smoothing, Classic mode (Mouse Aim or Motion Aim).",
+      "summary": "Classic mode: extra smoothing that combines with Smooth.",
+      "definition": {
+        "text": "Known previously as Synchronize. Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "Known previously as Synchronize"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "Raising Synch increases its effect. Together with Smooth, it adds more smoothing on top.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+              "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Same for every aim style. Classic smoothing is static, so this setting acts on slow tracking, fast snaps and precision holds alike. It can't favour one of them.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+            }
+          ],
+          "reasoning": "The guide calls Classic \"static smoothing behavior\", in contrast to Standard, which \"adapts to your current aim speed\". A setting in a static mode can't treat slow and fast aim differently. No source ties Classic settings to aim styles."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Game Settings synchronization",
+          "termId": "game-settings-sync",
+          "note": "Matching the MATRIX to your game's in-game settings (Standard, Custom or Manual). Unrelated to Synch smoothing."
+        }
+      ],
+      "related": [
+        "smooth",
+        "decay",
+        "smoothing-classic"
+      ]
+    },
+    {
+      "id": "aiming-curve",
+      "name": "Aiming Curve",
+      "aliases": [
+        "Aiming Curves",
+        "curve",
+        "aim response curve"
+      ],
+      "category": "mechanics",
+      "location": "Mouse Aim or Motion Aim: press the \"...\". For thumbstick aim: Thumbstick Aim, press the \"...\", switch to Custom Stick Behavior, then use the Aiming Curve Editor.",
+      "summary": "Maps how fast you move to how fast the reticle moves. The default is a straight line.",
+      "definition": {
+        "text": "A curve represents how your reticle speed transitions from 0 to 100% velocity (bottom left of the curve to upper right).",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+            "quote": "A curve represents how your reticle speed transitions from 0 to 100% velocity (bottom left of the curve to upper right)."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "With the default linear curve, speed in equals speed out.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+              "quote": "In the linear case, speed in produces the same exact speed out. The default curve is linear (a straight diagonal line)."
+            }
+          ]
+        },
+        {
+          "text": "A MATRIX curve replaces the game's own curve instead of stacking on top of it. The curve you draw is the response you get in game.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+              "quote": "XIM MATRIX has the ability to provide true customizable stick aiming curves through its proprietary aim translation technology."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+              "quote": "Meaning, it's not applying aim curves on top of the game's existing curves (producing incorrect and unintuitive aim behavior like other input devices). Rather, the curves you author will be the aim response you experience in game."
+            }
+          ]
+        },
+        {
+          "text": "You can draw any shape, from a simple acceleration curve to multi-zone curves. Presets cover common ones.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+              "quote": "You can craft any curve you want: such as a simple acceleration curve or a more complex multiple zone curves. Presets are included for more common curves."
+            }
+          ]
+        },
+        {
+          "text": "Velocity Mapping decides how the curve's range maps onto real reticle speed.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+              "quote": "Velocity Mapping is a feature that allows you to further craft your aiming experience. It focuses on how your custom aiming curves and thumbstick aim maps to reticle velocity since both have a constrained range."
+            }
+          ]
+        },
+        {
+          "text": "You can reuse a curve in other games for a consistent feel.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+              "quote": "You can take your curves and apply to other games to produce a consistent aiming experience between games."
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "The default is linear. cm/360 is only exact with a linear curve, so keep it linear when you check your sensitivity.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+              "quote": "In the linear case, speed in produces the same exact speed out. The default curve is linear (a straight diagonal line)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "You are testing with a linear aiming curve (not a custom one)"
+            }
+          ]
+        },
+        {
+          "text": "Start with Sensitivity alone. Change other values, like the curve, only if necessary.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+              "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+            }
+          ]
+        },
+        {
+          "text": "Only if you use Simulate Analog Behavior (SAB): don't use any curve other than the default linear.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-aiming-curves",
+              "quote": "Do not use any aiming curves other than the default linear."
+            }
+          ],
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Depends on the shape. An acceleration-style curve sits below the straight line at low speed and still rises to full speed at the top. That gives finer control on slow movements (tracking, precision holds) while keeping full speed for snaps and big turns. The cost: cm/360 no longer matches physically.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+              "quote": "A curve represents how your reticle speed transitions from 0 to 100% velocity (bottom left of the curve to upper right)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+              "quote": "In the linear case, speed in produces the same exact speed out. The default curve is linear (a straight diagonal line)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+              "quote": "You can craft any curve you want: such as a simple acceleration curve or a more complex multiple zone curves. Presets are included for more common curves."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
+            }
+          ],
+          "reasoning": "A curve maps input speed to reticle speed from 0 to 100%, and linear is one-to-one. A curve that outputs less than linear at low input speed but still reaches 100% makes slow movements finer without lowering the top speed. The guide names the \"acceleration curve\" as an option but recommends no shape. cm/360 accuracy needs a linear curve."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "The game's own response curve",
+          "termId": "required-game-settings",
+          "note": "The in-game curve setting. Leave it as XIM requires. A MATRIX curve replaces the game's response rather than adding to it."
+        },
+        {
+          "name": "Elite 2 controller stick curve",
+          "note": "A curve set on an Xbox Elite 2 controller itself. XIM says to have it off when checking cm/360. It is not the MATRIX Aiming Curve."
+        }
+      ],
+      "related": [
+        "velocity-mapping",
+        "custom-stick-behavior",
+        "sensitivity",
+        "quantization",
+        "simulate-analog-behavior"
+      ]
+    },
+    {
+      "id": "velocity-mapping",
+      "name": "Velocity Mapping",
+      "aliases": [],
+      "category": "mechanics",
+      "location": "Press the \"...\" under Aiming Sources.",
+      "summary": "Decides how your top aim speed maps onto the game's maximum turn speed.",
+      "definition": {
+        "text": "Velocity Mapping is a feature that allows you to further craft your aiming experience. It focuses on how your custom aiming curves and thumbstick aim maps to reticle velocity since both have a constrained range.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+            "quote": "Velocity Mapping is a feature that allows you to further craft your aiming experience. It focuses on how your custom aiming curves and thumbstick aim maps to reticle velocity since both have a constrained range."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "On controller output, every console shooter has a maximum turn speed it can't exceed. That maximum differs by aiming angle.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "All controller console shooters are limited by a maximum turn speed that the game cannot exceed. This maximum turn speed limit actually differs depending on aiming angle."
+            }
+          ]
+        },
+        {
+          "text": "The controller-output options: Standard maps your top speed to the game's maximum for each aiming angle. Uniform maps it to the game's supported maximum, so horizontal and vertical feel the same. Limit is Uniform with a top speed you choose. Reduce is Standard lowered by a speed you choose.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "Standard: Maximum velocity is mapped to the maximum reticle velocity of the game for that aiming angle."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "Uniform: Maximum velocity is mapped to the maximum reticle velocity supported by the game resulting in a uniform horizontal and vertical aiming experience."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "Limit: Same as Uniform, but, you can specify the maximum velocity that cannot be exceeded."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "Reduce: Maximum velocity is mapped to the maximum reticle velocity of the game for that aiming angle and then reduced by the specified velocity which cannot be exceeded."
+            }
+          ]
+        },
+        {
+          "text": "For thumbstick aim, it only applies with Custom Stick Behavior.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+              "quote": "For thumbstick aim, velocity mapping only applies when using custom stick behavior."
+            }
+          ]
+        },
+        {
+          "text": "Mouse output has different options. Dialed covers controller output only, so they are left out here.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+              "quote": "This customization differs depending if you are outputting as mouse or controller."
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "The default is Standard.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-velocity-mapping",
+              "quote": "Do not use velocity mapping (default is Standard)."
+            }
+          ]
+        },
+        {
+          "text": "After changing it, expect the red maximum-turn-speed flash more often. You can't exceed the game's turn speed limit either way.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "When customizing Velocity Mapping, your XIM MATRIX may notify that you've exceeded maximum turn speed more often. This is because no matter what, you cannot exceed the turn speed restrictions built into the game."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+              "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+            }
+          ]
+        },
+        {
+          "text": "Only if you use Simulate Analog Behavior (SAB): don't use velocity mapping (leave it at Standard).",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-velocity-mapping",
+              "quote": "Do not use velocity mapping (default is Standard)."
+            }
+          ],
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Snaps and big turns. Velocity Mapping shapes the top of your speed range, so it matters when you move fast. Slow tracking and precision holds rarely reach it.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+              "quote": "Velocity Mapping is a feature that allows you to further craft your aiming experience. It focuses on how your custom aiming curves and thumbstick aim maps to reticle velocity since both have a constrained range."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "Standard: Maximum velocity is mapped to the maximum reticle velocity of the game for that aiming angle."
+            }
+          ],
+          "reasoning": "It maps your maximum velocity onto the game's maximum turn speed. Slow movements sit far below that maximum."
+        },
+        {
+          "text": "Uniform may make fast moves feel the same in every direction, because the top speed no longer changes with aiming angle.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "All controller console shooters are limited by a maximum turn speed that the game cannot exceed. This maximum turn speed limit actually differs depending on aiming angle."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "Standard: Maximum velocity is mapped to the maximum reticle velocity of the game for that aiming angle."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+              "quote": "Uniform: Maximum velocity is mapped to the maximum reticle velocity supported by the game resulting in a uniform horizontal and vertical aiming experience."
+            }
+          ],
+          "reasoning": "With Standard, the top speed follows the game's per-angle maximum, which \"differs depending on aiming angle\". Uniform gives \"a uniform horizontal and vertical aiming experience\"."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Velocity Calibration",
+          "termId": "velocity-calibration",
+          "note": "Teaches the MATRIX how fast the reticle moves in your game. It is required for mouse output; for controller output it is an advanced option that XIM discourages. Velocity Mapping shapes the top of your speed range."
+        },
+        {
+          "name": "Standard (smoothing)",
+          "termId": "smoothing-standard",
+          "note": "The speed-adaptive smoothing mode. Unrelated to the Standard velocity mapping."
+        },
+        {
+          "name": "Standard (Game Settings sync)",
+          "termId": "sync-standard",
+          "note": "A sync method for in-game settings. Unrelated to the Standard velocity mapping."
+        },
+        {
+          "name": "Limit (Advanced SAB)",
+          "termId": "simulate-analog-behavior",
+          "note": "An Advanced SAB value that \"restricts how fast the stick can move\". Not the Limit velocity mapping."
+        }
+      ],
+      "related": [
+        "aiming-curve",
+        "custom-stick-behavior",
+        "thumbstick-aim",
+        "max-turn-speed",
+        "light-notifications"
+      ]
+    },
+    {
+      "id": "quantization",
+      "name": "Quantization",
+      "aliases": [
+        "input quantization",
+        "aim quantization"
+      ],
+      "category": "quantization",
+      "location": "Mouse Aim or Motion Aim: press the \"...\", then the Quantization button.",
+      "summary": "Snaps your reticle's speed and direction to set steps, so tiny movements disturb aim assist less.",
+      "definition": {
+        "text": "Quantization is a feature that can be used to improve compatibility with aim assist (on games that support it).",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+            "quote": "Quantization is a feature that can be used to improve compatibility with aim assist (on games that support it)."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "When it's on, your reticle's speed and direction \"snap\" to set values. Tiny aim changes then disturb aim assist less.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "When enabled, your reticle velocity will \"snap\" to configured magnitude and angle values. This behavior allows aim assist systems to work with less disruption from micro aim changes."
+            }
+          ]
+        },
+        {
+          "text": "It has two parts. Magnitude snaps speed, and its effect grows the faster you aim. Angle snaps direction, the same at any speed.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "It is off by default.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-quantization",
+              "quote": "Do not enable input quantization (default is off)."
+            }
+          ]
+        },
+        {
+          "text": "XIM's starting point: Magnitude 25 and Angle 25. Then adjust one value at a time.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "To start, set Magnitude to 25 and Angle to 25. Adjust one value at a time to match your preferences."
+            }
+          ]
+        },
+        {
+          "text": "Warning: on mouse or motion aim it may hurt real-world sensitivity accuracy. Switch it off before you check that your sensitivity is accurate.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Applying quantization to your mouse or motion aim may negatively affect real world sensitivity accuracy."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "You have quantization disabled"
+            }
+          ]
+        },
+        {
+          "text": "Only if you use Simulate Analog Behavior (SAB): don't enable it.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-quantization",
+              "quote": "Do not enable input quantization (default is off)."
+            }
+          ],
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Mostly tracking with aim assist. Quantization exists to help aim assist work with fewer disruptions from micro aim changes, and holding on a target is full of micro aim changes.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Quantization is a feature that can be used to improve compatibility with aim assist (on games that support it)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "When enabled, your reticle velocity will \"snap\" to configured magnitude and angle values. This behavior allows aim assist systems to work with less disruption from micro aim changes."
+            }
+          ],
+          "reasoning": "Its official purpose is aim-assist compatibility, by reducing disruption from micro aim changes. Tracking is a long run of small corrections. No source ties quantization to aim styles."
+        },
+        {
+          "text": "Fast snaps feel Magnitude most, since its effect grows with speed. Angle affects every movement, slow or fast.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+            }
+          ],
+          "reasoning": "Magnitude: \"The effect increases the faster you aim.\" Angle: \"The effect is independent of aiming speed.\""
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Aim Magnitude and Aim Angle (Smart Actions)",
+          "termId": "aim-magnitude-action",
+          "note": "Actions that move the reticle at a set speed and angle, for example for recoil control or auto-turn. Not quantization."
+        },
+        {
+          "name": "Aim Magnitude Variance and Aim Angle Variance",
+          "termId": "behavior-variance",
+          "note": "Behavior Simulation settings that add slight offsets to those Smart Actions. Not quantization."
+        },
+        {
+          "name": "Steady Aim",
+          "note": "An older XIM setting name, not a MATRIX setting. No source we could read says it is the same as Quantization. See the name notes."
+        }
+      ],
+      "related": [
+        "quantization-magnitude",
+        "quantization-angle",
+        "sensitivity",
+        "aim-magnitude-action",
+        "aim-angle-action",
+        "behavior-variance"
+      ]
+    },
+    {
+      "id": "quantization-magnitude",
+      "name": "Magnitude Quantization",
+      "aliases": [
+        "Magnitude"
+      ],
+      "category": "quantization",
+      "location": "Quantization button (Mouse Aim or Motion Aim, under the \"...\").",
+      "summary": "Snaps reticle speed to set steps. The effect grows the faster you aim.",
+      "definition": {
+        "text": "Snaps your reticle to predefined speeds. The effect increases the faster you aim.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+            "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "It snaps your reticle speed to fixed levels. Slow movements are affected less, fast ones more.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+            }
+          ]
+        },
+        {
+          "text": "The guide doesn't say whether a higher Magnitude value means bigger or smaller steps.",
+          "confidence": "gap",
+          "citations": []
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "XIM's starting point is 25, alongside Angle at 25. Adjust one value at a time.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "To start, set Magnitude to 25 and Angle to 25. Adjust one value at a time to match your preferences."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Snaps and fast turns feel it most; slow tracking and precision holds feel it least.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+            }
+          ],
+          "reasoning": "\"The effect increases the faster you aim.\""
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Aim Magnitude (Smart Action)",
+          "termId": "aim-magnitude-action",
+          "note": "An action that moves the reticle at a set speed in degrees per second, for example for recoil control."
+        },
+        {
+          "name": "Aim Magnitude Variance",
+          "termId": "behavior-variance",
+          "note": "A Behavior Simulation setting that varies Aim Magnitude actions slightly."
+        }
+      ],
+      "related": [
+        "quantization",
+        "quantization-angle",
+        "aim-magnitude-action",
+        "behavior-variance"
+      ]
+    },
+    {
+      "id": "quantization-angle",
+      "name": "Angle Quantization",
+      "aliases": [
+        "Angle"
+      ],
+      "category": "quantization",
+      "location": "Quantization button (Mouse Aim or Motion Aim, under the \"...\").",
+      "summary": "Snaps the direction your reticle moves to set angles, at any speed.",
+      "definition": {
+        "text": "Snaps your reticle to predefined angles. The effect is independent of aiming speed.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+            "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "It snaps the direction your reticle moves to fixed angles. Unlike Magnitude, it works the same at every speed.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+            }
+          ]
+        },
+        {
+          "text": "The guide doesn't say whether a higher Angle value means bigger or smaller steps.",
+          "confidence": "gap",
+          "citations": []
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "XIM's starting point is 25, alongside Magnitude at 25. Adjust one value at a time.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "To start, set Magnitude to 25 and Angle to 25. Adjust one value at a time to match your preferences."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "All aim styles equally, because its effect doesn't depend on speed. That includes slow tracking and precision holds, which Magnitude Quantization affects less.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+            }
+          ],
+          "reasoning": "Angle: \"The effect is independent of aiming speed.\" Magnitude: \"The effect increases the faster you aim.\""
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Aim Angle (Smart Action)",
+          "termId": "aim-angle-action",
+          "note": "An action that moves the reticle at a set angle, used with Aim Magnitude, for example for recoil control."
+        },
+        {
+          "name": "Aim Angle Variance",
+          "termId": "behavior-variance",
+          "note": "A Behavior Simulation setting that offsets Aim Angle actions slightly."
+        }
+      ],
+      "related": [
+        "quantization",
+        "quantization-magnitude",
+        "aim-angle-action",
+        "behavior-variance"
+      ]
+    },
+    {
+      "id": "deadzone",
+      "name": "Deadzone",
+      "aliases": [
+        "inner deadzone",
+        "outer deadzone",
+        "axial deadzone"
+      ],
+      "category": "deadzone",
+      "location": "In your custom game settings if you use them. Otherwise under Mappings: press the \"...\" and select Gamepad Customization.",
+      "summary": "Sets where thumbstick aim starts and where it reaches full speed, and corrects stick drift.",
+      "definition": {
+        "text": "There are several ways to customize your aiming deadzone behavior as well as stick drift correction.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+            "quote": "There are several ways to customize your aiming deadzone behavior as well as stick drift correction."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "Four parts. Inner deadzone: the zone around center that gives zero reticle speed. Outer deadzone: where maximum reticle speed is reached. Axial deadzone: zero speed around the X and Y axes. Offset values: correct stick drift.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "Inner deadzone for zero reticle velocity starting from the center position"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "Outer deadzone for maximum reticle velocity"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "Axial deadzone for zero reticle velocity around the X and Y axis"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "Offset values to correct stick drift"
+            }
+          ]
+        },
+        {
+          "text": "You can also rotate the stick's \"which way is up\".",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "You can also rotate the stick's directional coordinate system (i.e. \"which way is up\")"
+            }
+          ]
+        },
+        {
+          "text": "It is part of thumbstick aim: it shapes aim from a physical stick.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gamepad-Customization/#deadzone-customization",
+              "quote": "To adjust your aiming thumbstick deadzones, refer to Aim Settings."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "If you are using custom game settings, deadzone customization is available right there. Otherwise, it can accessed under Gamepad Customization within Mappings:"
+            }
+          ]
+        },
+        {
+          "text": "With custom game settings, your aiming stick deadzone is set only in your Config, not in game.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#custom",
+              "quote": "Your aiming stick deadzone is customized only though your Config (not via in-game settings):"
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "Your game's own deadzone settings must match XIM's required settings for your game. Velocity Calibration doesn't change that.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "Your game's deadzone settings must match the required settings for your game."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+              "quote": "This method doesn't support modifying all game settings including Deadzone and Aiming Technique. Those must still be set to their required values."
+            }
+          ]
+        },
+        {
+          "text": "By default, inner deadzone is set to the game's native deadzone value.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "By default, inner deadzone will be set to the game's native deadzone value."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Only matters if you aim with a thumbstick. Inner deadzone shapes the smallest stick movements, which matter for tracking and precision holds. Outer deadzone sets where full speed starts, which matters for snaps and big turns.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "Inner deadzone for zero reticle velocity starting from the center position"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+              "quote": "Outer deadzone for maximum reticle velocity"
+            }
+          ],
+          "reasoning": "Inner deadzone is defined as \"zero reticle velocity starting from the center position\" (the smallest movements); outer deadzone as \"maximum reticle velocity\" (the fastest)."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "In-game deadzone settings",
+          "termId": "required-game-settings",
+          "note": "The game's own deadzone values. They must match XIM's required settings. Stick deadzone tuning happens in the MATRIX instead."
+        }
+      ],
+      "related": [
+        "thumbstick-aim",
+        "custom-stick-behavior",
+        "required-game-settings"
+      ]
+    },
+    {
+      "id": "thumbstick-aim",
+      "name": "Thumbstick Aim",
+      "aliases": [
+        "Gamepad Thumbstick",
+        "stick aim"
+      ],
+      "category": "other",
+      "location": "Aiming Sources: select the thumbstick aiming source.",
+      "summary": "Aiming with a physical gamepad stick through the MATRIX, on its own or alongside mouse and gyro.",
+      "definition": {
+        "text": "One of XIM MATRIX's aiming sources (\"Gamepad Thumbstick\"). All aiming sources you choose are seamlessly combined together to drive the reticle.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#aiming-sources",
+            "quote": "Gamepad Thumbstick"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#aiming-sources",
+            "quote": "All aiming sources you choose are seamlessly combined together to drive the reticle."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "To use it, select the thumbstick aiming source.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+              "quote": "To enable aiming with the thumbstick, make sure the thumbstick aiming source is selected."
+            }
+          ]
+        },
+        {
+          "text": "Depending on the Config type, stick sensitivity is set either in your in-game settings or as a percentage of the game's maximum turn speed, split into X and Y. Tap the lock icon to set X and Y separately.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+              "quote": "Depending on the type of Config, thumbstick sensitivity may be set through your in-game aim ettings, or, specified as a percentage (%) of maximum turn speed split between X and Y."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+              "quote": "Select the lock icon to unlink X and Y and set separately."
+            }
+          ]
+        },
+        {
+          "text": "By default it uses the game's own stick aim mechanics (Native). Custom Stick Behavior swaps in your own curve.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+              "quote": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "If you use Velocity Calibration to keep your own in-game sensitivity, XIM recommends setting Thumbstick Aim Sensitivity to 100/100 (%), because sensitivity then comes from the game. For controller output, XIM discourages this Manual calibration.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+              "quote": "It's recommended that your XIM Thumbstick Aim Sensitivity be set to 100/100 (%) when using Velocity Calibration since you will now be customizing sensitivity using in-game settings."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#manual",
+              "quote": "Manual reticle velocity calibration for Configs that output as controller may not produce accurate results and is thus discouraged from being used."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Snaps and big turns. Stick sensitivity is a share of the game's maximum turn speed, so it sets your fastest stick turn. For motion aim users, XIM suggests the stick for coarse aim and gyro for fine aim.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+              "quote": "Depending on the type of Config, thumbstick sensitivity may be set through your in-game aim ettings, or, specified as a percentage (%) of maximum turn speed split between X and Y."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "If you are new to motion aim, ease into it. Use motion for fine aim and thumbstick for coarse. Start with very low sensitivity and rely more on thumbstick aim initially."
+            }
+          ],
+          "reasoning": "Thumbstick sensitivity is \"a percentage (%) of maximum turn speed\". XIM's motion-aim tip: \"Use motion for fine aim and thumbstick for coarse.\""
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Sensitivity (mouse)",
+          "termId": "sensitivity",
+          "note": "Mouse sensitivity is set in cm/360. Stick sensitivity is a percentage of maximum turn speed."
+        }
+      ],
+      "related": [
+        "deadzone",
+        "custom-stick-behavior",
+        "velocity-mapping",
+        "sensitivity",
+        "motion-aim",
+        "max-turn-speed"
+      ]
+    },
+    {
+      "id": "custom-stick-behavior",
+      "name": "Custom Stick Behavior",
+      "aliases": [],
+      "category": "mechanics",
+      "location": "Thumbstick Aim: press the \"...\", then change Native to Custom Stick Behavior.",
+      "summary": "Replaces the game's built-in stick aim mechanics with your own aiming curve.",
+      "definition": {
+        "text": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+            "quote": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "The default is Native: the game's built-in stick aim mechanics. Custom lets you draw the stick's aim response in the Aiming Curve Editor.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+              "quote": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+              "quote": "Additional flexibility is available for crafting your own thumbstick aiming experience."
+            }
+          ]
+        },
+        {
+          "text": "Velocity Mapping only applies to thumbstick aim when Custom Stick Behavior is on.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+              "quote": "For thumbstick aim, velocity mapping only applies when using custom stick behavior."
+            }
+          ]
+        },
+        {
+          "text": "The same menu lets you aim with the left stick instead, or invert the stick's axes.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+              "quote": "If you prefer to aim with the left stick, change your aiming stick here. You can also flip aiming directions of the stick by using the axis inversion setting."
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "Only if you use Simulate Analog Behavior (SAB): don't use any curve other than the default linear.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-aiming-curves",
+              "quote": "Do not use any aiming curves other than the default linear."
+            }
+          ],
+          "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Only for thumbstick aim. It unlocks a stick curve, so the same trade-offs as the Aiming Curve apply.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+              "quote": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+            }
+          ],
+          "reasoning": "Custom Stick Behavior's purpose is to \"provide your own aim response curve\" through the Aiming Curve Editor."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Custom game settings",
+          "termId": "sync-custom",
+          "note": "Custom sync copies your in-game aim settings into the Config. Unrelated to Custom Stick Behavior."
+        },
+        {
+          "name": "Simulate Analog Behavior",
+          "termId": "simulate-analog-behavior",
+          "note": "SAB makes the MATRIX's stick output look more analog to the game. It is not an aim curve."
+        }
+      ],
+      "related": [
+        "aiming-curve",
+        "velocity-mapping",
+        "thumbstick-aim",
+        "deadzone"
+      ]
+    },
+    {
+      "id": "motion-aim",
+      "name": "Motion Aim",
+      "aliases": [
+        "gyro aim",
+        "Gamepad Gyro"
+      ],
+      "category": "other",
+      "location": "Aiming Sources: select the motion aim source (needs a gyro gamepad).",
+      "summary": "Aiming by moving a gyro gamepad, with its own Sensitivity, Smoothing and activation modes.",
+      "definition": {
+        "text": "Motion Aim is an excellent way to get the aim precision and speed of mouse combined with benefits of true analog player movement.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+            "quote": "Motion Aim is an excellent way to get the aim precision and speed of mouse combined with benefits of true analog player movement."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#aiming-sources",
+            "quote": "Gamepad Gyro"
+          }
+        ]
+      },
+      "explanation": [
+        {
+          "text": "To use it, select the motion aim source. If a gyro gamepad is connected but you don't see motion settings, press a button on the gamepad.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "To enable aiming with gyro (motion aim), make sure the motion aim source is selected."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "If you have a gyro gamepad connected but you don't see motion aim settings in Manager, press a button on the gamepad to activate it."
+            }
+          ]
+        },
+        {
+          "text": "It can be active only in ADS, in ADS or while firing, always (except in Navigate Mode), or when your Smart Actions say so (Custom Engage or Custom Toggle). It can also be disabled.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "Aiming Down Sight: Motion aim is only active while aiming down sight"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "Aim and Fire: Motion aim is active while ADS or firing"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "Always On: Motion aim is always on (except when Navigate Mode is active)"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "Custom Engage: Specify when motion aim is active using Smart Actions"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "Custom Toggle: Toggle when motion aim is active using Smart Actions"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "Disabled: Motion is off."
+            }
+          ]
+        },
+        {
+          "text": "Its settings are Sensitivity (in times-degrees-per-second) and Smoothing, plus the same extra options as mouse aim: Aiming Curve, Y Scale and Quantization.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+              "quote": "Motion (gyro) sensitivity is set in times-degrees-per-second"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+            }
+          ]
+        },
+        {
+          "text": "Stability, in Standard smoothing, applies to motion aim only.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+            }
+          ]
+        }
+      ],
+      "feel": [],
+      "guidance": [
+        {
+          "text": "New to motion aim? Ease into it. Use motion for fine aim and the thumbstick for coarse aim. Start with a very low sensitivity and lean on the stick at first.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "If you are new to motion aim, ease into it. Use motion for fine aim and thumbstick for coarse. Start with very low sensitivity and rely more on thumbstick aim initially."
+            }
+          ]
+        },
+        {
+          "text": "Quick Pull with hair triggers adds stability when firing with motion aim, because you don't press and release the trigger fully.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gamepad-Customization/#hair-triggers",
+              "quote": "Quick Pull with hair triggers also provides additional stability when firing using motion gyro aim. It reduces the physical force of the trigger by not requiring full press and release which can cause your gamepad to move."
+            }
+          ]
+        }
+      ],
+      "aimStyles": [
+        {
+          "text": "Tracking and precision holds. XIM suggests motion for fine aim and the stick for coarse aim, and fine aim is what those styles need. Snaps and big turns go to the stick.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+              "quote": "If you are new to motion aim, ease into it. Use motion for fine aim and thumbstick for coarse. Start with very low sensitivity and rely more on thumbstick aim initially."
+            }
+          ],
+          "reasoning": "XIM's tip: \"Use motion for fine aim and thumbstick for coarse.\" Tracking and precision holds are mostly fine aim; snaps and big turns are coarse."
+        }
+      ],
+      "notToBeConfusedWith": [
+        {
+          "name": "Engage, Pause and Toggle Motion Aim",
+          "note": "Smart Actions that switch motion aim on or off. They are used with the Custom Engage and Custom Toggle activation modes; they are not motion aim settings."
+        }
+      ],
+      "related": [
+        "stability",
+        "sensitivity",
+        "smoothing",
+        "thumbstick-aim",
+        "navigate-mode"
+      ]
+    }
+  ],
+  "nameNotes": [
+    {
+      "name": "Steady Aim",
+      "note": "Not a setting in the official XIM MATRIX guide. It is a setting name from older XIM devices (XIM APEX). A XIM Central MATRIX-era video title uses \"Steady Aim\" for quantization, but we could not review that video, and no source we could read says the two work the same way. For the MATRIX setting, see Quantization."
+    },
+    {
+      "name": "Boost",
+      "note": "Not a setting in the official XIM MATRIX guide. It is a setting name from older XIM devices (XIM APEX). The guide uses \"Vertical Sensitivity Boost\" only for a recoil-control technique: a Modify Aim Sensitivity action that raises vertical sensitivity while its binding runs. XIM Central has a MATRIX-era video about a \"Boost Feature\", but we could not review its content, so Dialed says nothing about it yet."
+    }
+  ]
+}

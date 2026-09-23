@@ -1,1 +1,708 @@
-{ "checks": [] }
+{
+  "checks": [
+    {
+      "id": "firmware-current",
+      "title": "Firmware is up to date",
+      "platforms": [
+        "xbox",
+        "pc"
+      ],
+      "check": "Do this first. In Manager, press the vertical \"...\" and select About to see your firmware and Manager versions. Compare your firmware with the latest XIM MATRIX release at xim.tech/downloads.",
+      "why": {
+        "text": "XIM updates the MATRIX firmware often, with new features and fixes. Even a brand-new MATRIX can have old firmware. XIM's troubleshooting pages say to update first, before you troubleshoot anything else.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Xbox/",
+            "quote": "Your XIM MATRIX is frequently being updated with new features and fixes. It is recommended that you upgrade if there is an update available before continuing troubleshooting."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-PC/",
+            "quote": "Your XIM MATRIX is frequently being updated with new features and fixes. It is recommended that you upgrade if there is an update available before continuing troubleshooting."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Updating-Firmware/",
+            "quote": "Even a new XIM MATRIX may have firmware that is out of date."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Version-Info/",
+            "quote": "To access versioning, press the vertical \"...\" and select About."
+          },
+          {
+            "source": "xim-hardware-compatibility",
+            "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+            "quote": "Please make sure you are running our latest firmware which will have all our most recent fixes."
+          }
+        ]
+      },
+      "fix": {
+        "text": "Update with the XIM MATRIX Firmware Flash Tool from xim.tech/downloads. You need a Windows PC or a Mac and a USB connection. Back up your MATRIX first. Hold the button on the MATRIX while you plug it into the computer: it lights blue, which means it is ready to flash. Press Update Firmware and wait for the rainbow startup sequence. If the update fails on a PC, XIM suggests rebooting, trying another USB port or cable, and disabling extra anti-virus software.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Updating-Firmware/#flash-tool-download",
+            "quote": "Navigate to xim.tech/downloads, select XIM MATRIX and you’ll be directed to our community forum where all our firmware releases are stored."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
+            "quote": "You will need access to a PC running Windows or a Mac. Your XIM MATRIX is upgraded over USB."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Updating-Firmware/#back-up-your-xim-matrix",
+            "quote": "It is always recommended to back up your XIM MATRIX before updating it."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Updating-Firmware/#connect-to-your-computer",
+            "quote": "While continuing to hold the button, plug in your XIM MATRIX into your PC or Mac."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Updating-Firmware/#connect-to-your-computer",
+            "quote": "Your XIM MATRIX will now display blue meaning it's in firmware programming mode."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Updating-Firmware/#flash-your-xim-matrix",
+            "quote": "Press the Update Firmware button to update your XIM MATRIX."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Updating-Firmware/#flash-your-xim-matrix",
+            "quote": "Finally it will display the normal rainbow startup sequence. Your XIM MATRIX is now updated."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-PC/#matrix-firmware-upgrade-problems",
+            "quote": "Disable additional anti-virus software you have running (that can incorrectly block your MATRIX)"
+          }
+        ]
+      },
+      "termIds": [
+        "firmware"
+      ]
+    },
+    {
+      "id": "smart-translator-current",
+      "title": "Your Config is for Destiny 2 and its Smart Translator is current",
+      "platforms": [
+        "xbox",
+        "pc"
+      ],
+      "check": "Open Manager's dashboard. Check that the current Config shows Destiny 2 and your platform. Then look for a warning exclamation icon: it means the Config's Smart Translator is out of date.",
+      "why": {
+        "text": "Every controller-output Config has a Smart Translator: XIM's per-game aim system that handles reticle speed for you. XIM updates a game's Smart Translator when the game's aiming system changes, and Manager warns you when yours is out of date. XIM's cm/360 checklist asks for the Config that matches your game and a translator that isn't out of date.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Velocity-Calibration/",
+            "quote": "Unlike controller output Configs which have Smart Translators that handle all reticle velocity tasks, mouse output Configs do not since they aren't needed."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#notifications",
+            "quote": "A game's Smart Translator can be updated if the game's aiming system changed. If that happens, you will be notified with a warning exclamation icon."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#identity",
+            "quote": "The Config's name, game box art, game platform, and color you chose for it are displayed."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "You use the Config that matches the game you are playing"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Your Config's Smart Translator isn't out-of-date"
+          }
+        ]
+      },
+      "fix": {
+        "text": "If Manager shows a down-arrow icon, press it to download updated game support. Then recreate the Config: press the vertical \"...\", select New Config and build a new Destiny 2 Config.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#notifications",
+            "quote": "New Games Database Available: When updated game support is available for your XIM MATRIX, you will see a down arrow icon appear. Press it to download the database."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#notifications",
+            "quote": "Recreate the Config to update its translation."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#creating-an-xbox-config",
+            "quote": "Load XIM MATRIX Manager and create a new Config by pressing the vertical \"...\" on the top right and selecting New Config"
+          }
+        ],
+        "caveat": "Recreating makes a new Config, so write down your current settings first and enter them again afterwards."
+      },
+      "termIds": [
+        "smart-translation",
+        "config"
+      ]
+    },
+    {
+      "id": "xbox-authentication-controller",
+      "title": "Xbox authentication controller is set up right",
+      "platforms": [
+        "xbox"
+      ],
+      "check": "A genuine Xbox Series, One or Elite controller is plugged into Port 3 (●●●, on the back of the MATRIX) with a USB data cable. Plug it in while it is powered off, before you connect the MATRIX to the Xbox. A licensed third-party wired controller also works, but it must be the only wired Xbox controller on the MATRIX.",
+      "why": {
+        "text": "On Xbox, the MATRIX needs this controller to run on your console. If the MATRIX loses contact with it, the light blinks yellow over and over.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#authentication-controller",
+            "quote": "You'll need to connect a genuine Xbox Series, One, or Elite controller to USB Port 3 (●●●) of your XIM MATRIX. This is your authentication controller required to run on your console."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Hardware-Compatibility/#usb-authentication-port-3",
+            "quote": "USB port 3 is on the back of XIM MATRIX. It is a special port that is used for gaming console authentication for Xbox and PlayStation 4."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#authentication-controller",
+            "quote": "You will need to supply the USB cable that matches your controller. This cable is not included."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Xbox/#1-connection-order",
+            "quote": "Please make sure you are connecting your Xbox controller (which should be powered off) to your XIM MATRIX in Port 3 before you connect your XIM MATRIX to your Xbox."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Xbox/#3rd-party-controller-problems",
+            "quote": "If you are using a licensed 3rd party Xbox controller on your Xbox, please ensure it's the only wired Xbox controller connected to your XIM MATRIX. It should be connected to port 3."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Warning-Lights/#authentication-controller-disconnect",
+            "quote": "Repeated yellow blinking: Your XIM MATRIX has lost communication with your authentication controller."
+          }
+        ]
+      },
+      "fix": {
+        "text": "Yellow blinking: check the controller's USB connection, fix it, and restart the MATRIX. If the MATRIX won't connect to the Xbox, go through XIM's Xbox steps in order: check the connection order, remove the controller's wireless pairings, and update the controller on the Xbox itself (never through the MATRIX). Then try another cable (not a power-only one) and hard reboot the Xbox.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Warning-Lights/#authentication-controller-disconnect",
+            "quote": "Check the USB connection to your controller (especially if it happened when picking up your authentication controller). Correct any problems and restart your XIM MATRIX."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Xbox/#connection-problems",
+            "quote": "Please go through these troubleshooting steps in order and verify each before moving on."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Xbox/#2-remove-wireless-pairings",
+            "quote": "Remove any wireless pairings your Xbox controller has which may be interrupting communication with XIM MATRIX."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Xbox/#3-xbox-controller-update",
+            "quote": "Do not update your Xbox controller's firmware through your XIM MATRIX. Only upgrade your Xbox controller while it's directly connected to your Xbox."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Xbox/#4-try-different-cable",
+            "quote": "Make sure the cable you are using isn't a power only cable."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Xbox/#5-hard-reboot-console",
+            "quote": "Hard rebooting your Xbox console can correct Xbox USB issues"
+          }
+        ]
+      },
+      "termIds": [
+        "output-type",
+        "warning-lights"
+      ]
+    },
+    {
+      "id": "pc-virtual-controller-tools",
+      "title": "No virtual controller tools in the way (PC)",
+      "platforms": [
+        "pc"
+      ],
+      "check": "On PC with controller output, make sure you don't have virtual controller tools installed that may conflict with the MATRIX, such as Steam Input or DS4Windows.",
+      "why": {
+        "text": "When the MATRIX outputs as a controller on PC, XIM warns that virtual controller tools such as Steam Input or DS4Windows may conflict with it. XIM lists this under connection problems.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-PC/#matrix-connection-problems",
+            "quote": "If your XIM MATRIX is outputting as a controller, make sure you don't have any virtual controller emulation tools (such as Steam Input or DS4Windows) installed that may conflict."
+          }
+        ],
+        "caveat": "XIM gives these two tools as examples and does not say how to switch Steam Input off. Other controller emulation tools may matter too."
+      },
+      "fix": {
+        "text": "If the MATRIX still won't connect to your PC, try a different cable. It must carry data, not only power.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-PC/#matrix-connection-problems",
+            "quote": "If your XIM MATRIX in unable to connect to your PC, try a different cable that you are using to connect your XIM MATRIX to your PC."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-PC/#matrix-connection-problems",
+            "quote": "Make sure the cable you are using isn't a power only cable."
+          }
+        ]
+      },
+      "termIds": [
+        "output-type"
+      ]
+    },
+    {
+      "id": "destiny2-required-settings",
+      "title": "Destiny 2's required in-game settings are exact",
+      "platforms": [
+        "xbox",
+        "pc"
+      ],
+      "check": "In Destiny 2, set every required setting exactly as listed on this app's Destiny 2 settings page, and leave all other aim settings at their defaults. Then press the gear icon on Manager's main screen and compare. If the two lists differ, follow Manager's: our copy comes from a public forum page that may not match XIM's current list.",
+      "why": {
+        "text": "The MATRIX's Smart Translation must be in sync with your game's aim settings. With Standard sync, that means in-game sensitivity at maximum, every additional required aim setting, and all other aim settings at default (XIM gives field of view as an example). XIM warns that wrong settings hurt your aim and stop shared Configs from working as intended.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/",
+            "quote": "XIM MATRIX's Smart Translation input system must be synchronized with your game's aim settings for correctness to ensure optimal precision aim."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Sensitivity is set to maximum"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Follows all additional required aim settings"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Has all other aim settings set to default"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Your in-game required settings are correct and all others are default (such as FOV)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+            "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
+          },
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings",
+            "quote": "XIM’s Smart Translation technology requires that your game be set up to its maximum in-game sensitivity and all other values as default unless otherwise stated for accurate aim response."
+          }
+        ]
+      },
+      "fix": {
+        "text": "Correct any setting that doesn't match. You can check XIM's list again at any time: press the gear icon on Manager's main screen.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+            "quote": "If you need to check required in-game settings at a later time, press the gear icon on Manager's main screen."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#required-game-settings",
+            "quote": "If you need to check required in-game settings at a later time, press the gear icon on Manager's main screen."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#identity",
+            "quote": "Use the gear icon to review the required in-game settings for the game."
+          }
+        ]
+      },
+      "termIds": [
+        "required-game-settings",
+        "game-settings-sync",
+        "sync-standard",
+        "smart-translation"
+      ]
+    },
+    {
+      "id": "mouse-dpi-matches",
+      "title": "The DPI in your Config matches your mouse",
+      "platforms": [
+        "xbox",
+        "pc"
+      ],
+      "check": "Enter your mouse's DPI in your Config. Then run Check DPI: in Manager, press and hold the mouse icon for 3 seconds and select Check DPI. Put a ruler (or a ruler app) under the mouse and move it 1 inch sideways. The value shown should be close to your DPI. Keep the mouse still to reset.",
+      "why": {
+        "text": "Your Config uses the DPI to turn mouse movement into real-world sensitivity (cm/360). If the DPI is wrong, your aim won't be accurate. Gaming mice don't always make it clear whether a setting really saved to the mouse, which is why XIM built a tool to check it.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+            "quote": "Your mouse DPI (dots-per-inch) is a very important value that is set in your Config. If it is wrong, your mouse aim won't be accurate."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#mouse-dpi",
+            "quote": "Accurate real world units require your mouse DPI be set correctly in your Config. Make sure this value matches your mouse DPI."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#mouse-dpi",
+            "quote": "Gaming mice can be complex devices where it's not always clear if settings are saved on-device. XIM MATRIX provides tools to check the true DPI and polling rate of your mouse."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+            "quote": "Press and hold the mouse icon for 3 seconds",
+            "note": "How to open Check DPI (used in the check)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+            "quote": "Move your mouse horizontally for 1 inch",
+            "note": "The Check DPI test (used in the check)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+            "quote": "Keep your mouse still to reset."
+          }
+        ]
+      },
+      "fix": {
+        "text": "The value doesn't have to match exactly, but it should be in range. If it isn't, make sure your DPI setting is really saving to your mouse, then test again.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+            "quote": "Gaming mice use high resolution sensors, it's normal to not match your DPI exactly, but, it should be within the range. If it's not, verify that your DPI selection is saving correctly to your mouse."
+          }
+        ]
+      },
+      "termIds": [
+        "mouse-dpi",
+        "sensitivity"
+      ]
+    },
+    {
+      "id": "mouse-polling-rate",
+      "title": "Your mouse reaches its polling rate",
+      "platforms": [
+        "xbox",
+        "pc"
+      ],
+      "check": "Run Check Rate: in Manager, press and hold the mouse icon for 3 seconds, select Check Rate, and move the mouse in continuous circles. The value shown should be close to the polling rate you set. Also look up your mouse on XIM's Hardware Compatibility List: some mice are listed as not working, or as usable only at a lower polling rate.",
+      "why": {
+        "text": "Your mouse may not actually run at the polling rate you set, because of its onboard memory settings or wireless interference. Check Rate counts how many movement reports the MATRIX really gets from your mouse each second. XIM's cm/360 checklist asks for a correct response rate.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+            "quote": "Your mouse may not respond at the polling rate you set due to onboard memory setting issues or wireless interference."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+            "quote": "The response rate tool is measuring the count of non-zero values coming from your mouse every second."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Make sure your mouse response rate is correct"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+            "quote": "Press and hold the mouse icon for 3 seconds",
+            "note": "How to open Check Rate (used in the check)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+            "quote": "Move your mouse continuously in circles"
+          },
+          {
+            "source": "xim-hardware-compatibility",
+            "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+            "quote": "Below is a list of USB hardware that users have reported to be not working."
+          },
+          {
+            "source": "xim-hardware-compatibility",
+            "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+            "quote": "Pulsar x2v2 mini (usable at 125hz)",
+            "note": "One of several mice listed as usable only at a lower polling rate."
+          }
+        ]
+      },
+      "fix": {
+        "text": "If the value is too low, make sure your polling rate is really saving to your mouse. For a wireless mouse, cut interference: put the receiver on a USB extension, away from the MATRIX and other wireless devices and closer to the mouse. If you can't, plug the receiver into Port 2 instead of Port 1. Mouse makers such as Logitech and Razer recommend keeping the mouse within 20 to 30 cm of its receiver. If the Hardware Compatibility List marks your mouse as usable only at a lower polling rate, use that rate.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+            "quote": "Check to make sure your polling rate is actually saving to your mouse"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+            "quote": "For wireless mice, make adjustments in your environment to reduce interference"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#wireless-usb-adapters",
+            "quote": "To ensure optimal wireless performance, it's recommended your wireless USB mouse adapter be placed physically away from your XIM MATRIX by using a USB extension."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#wireless-usb-adapters",
+            "quote": "XIM MATRIX's compact design means that wireless USB adapters plugged into Port 1 are physically close to it's onboard Bluetooth antenna."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#wireless-usb-adapters",
+            "quote": "If that isn't possible in your setup, plug your wireless adapter directly into Port 2 instead."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#use-usb-extensions",
+            "quote": "Move the wireless adapter away from your XIM MATRIX (and the other wireless devices you are using) and closer to your mouse."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#use-usb-extensions",
+            "quote": "Many wireless gaming mouse manufacturers (including Logitech and Razer) recommend keeping your mouse within 20 to 30cm of the receiver and away from other wireless devices."
+          },
+          {
+            "source": "xim-hardware-compatibility",
+            "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+            "quote": "Zaunkoenig M2K (usable at 1000hz or less)"
+          }
+        ]
+      },
+      "termIds": [
+        "polling-rate"
+      ]
+    },
+    {
+      "id": "light-notifications",
+      "title": "Light notifications are on, and you know what they mean",
+      "platforms": [
+        "xbox",
+        "pc"
+      ],
+      "check": "Edit your Config, press \"...\" in the Identity section, and make sure the light aim speed and mode notifications are not disabled. Then learn the signals. Rapid purple blinking at random times: timing errors. A quick red flash: you hit the game's maximum turn speed. A quick green flash: the MATRIX saw you aim down sights (ADS). A quick yellow flash: you went back to hip fire.",
+      "why": {
+        "text": "The light shows problems you can't see any other way. Rapid purple blinking means timing errors that may hurt performance. With controller output, every console shooter has a maximum turn speed, and the MATRIX flashes red when you hit it. The green and yellow flashes tell you your Config's game roles are set up right, so the MATRIX knows when you aim down sights.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#additional-options",
+            "quote": "Disabling light aim speed and mode light notifications"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Warning-Lights/#timing-error",
+            "quote": "Rapid purple blinking: If your XIM MATRIX is blinking like this at seemingly random times, it means there are timing errors detected that may result in non-optimal performance."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+            "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+            "quote": "Your XIM MATRIX will notify you whenever you switch between Hip and Aim Down Sight (if your game is configured for both modes). This is done so that you can know that your Config's game roles are set up correctly."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+            "quote": "When you enter Aim Down Sight, your XIM MATRIX will quickly flash green."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+            "quote": "When you return to Hip, your XIM MATRIX will quickly flash yellow."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Roles/",
+            "quote": "Your XIM MATRIX needs to know when your game is firing and when it's in aiming down sight (ADS) mode in order to function correctly."
+          }
+        ]
+      },
+      "fix": {
+        "text": "Purple blinking: check for loose USB connections, faulty cables and hubs. No green flash when you aim down sights: open Game Roles (press \"...\" and select Game Roles) and set ADS to the button Destiny 2 uses for it. Red flashes: you are turning as fast as the game allows, and no setting can go past the game's limit.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Warning-Lights/#timing-error",
+            "quote": "Check for loose USB connections, faulty cables, hubs, or other hardware."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Roles/",
+            "quote": "To access, press the \"...\" and select Game Roles."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Roles/#assigning-roles",
+            "quote": "To change, select one and choose a different button that activates the mode in your game."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+            "quote": "This is because no matter what, you cannot exceed the turn speed restrictions built into the game."
+          }
+        ]
+      },
+      "termIds": [
+        "light-notifications",
+        "warning-lights",
+        "max-turn-speed",
+        "game-roles",
+        "aiming-modes"
+      ]
+    },
+    {
+      "id": "clean-sensitivity-test",
+      "title": "Test sensitivity under clean conditions",
+      "platforms": [
+        "xbox",
+        "pc"
+      ],
+      "check": "Before you judge your sensitivity, remove anything that changes real-world cm/360, just for the test: use the linear (default) aiming curve and disable quantization. On Xbox with an Elite 2 controller, make sure no controller stick curve is on. Check that the \"cm/360\" label in your Config isn't red. Test in a training area or private match with no enemies, so aim assist can't slow your reticle. XIM's test: set 40 cm/360, then move the mouse 10 cm sideways at a moderate speed. You should turn a quarter turn (90 degrees), for example from one wall of a room to the next.",
+      "why": {
+        "text": "Sensitivity in cm/360 only matches real mouse distance with a linear aiming curve. XIM's cm/360 checklist says to test with a linear curve, quantization off and, on Xbox, no Elite 2 stick curve. XIM also warns that quantization may hurt real-world sensitivity accuracy. A red \"cm/360\" label means your Config doesn't support accurate cm/360. XIM says accurate cm/360 isn't strictly necessary, but it is required for consistent sensitivity between Configs. That matters here, because this app builds one Config per loadout.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "You are testing with a linear aiming curve (not a custom one)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "You have quantization disabled"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "If using an Elite 2 on Xbox, make sure you don't have a controller stick curve enabled"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+            "quote": "Applying quantization to your mouse or motion aim may negatively affect real world sensitivity accuracy."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Your Config supports it (you will see the \"cm/360\" label display in red if it doesn't)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Make sure your in-game environment isn't artificially slowing your reticle (aim assist)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Although an accurate cm/360 isn't strictly necessary to be able to use and enjoy you XIM MATRIX, it is required if you want"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Consistent sensitivity between your Configs"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Set your mouse sensitivity to 40 cm/360",
+            "note": "XIM's test, used in the check."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Start your game in a training area or private match (without enemies that can cause aim assist slowdown)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "Move your mouse at a moderate speed horizontally 10 centimeters (which is a quarter turn, 90-degrees)",
+            "note": "XIM's test, used in the check."
+          }
+        ]
+      },
+      "fix": {
+        "text": "Switch these off only for the test, then put back what you use. They are features, not faults: XIM offers quantization to improve compatibility with aim assist, and custom curves let you shape your aim any way you like. If your result is way off (it doesn't need to be exact), recheck your DPI, response rate, Config, Smart Translator and in-game settings, then test again.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+            "quote": "Quantization is a feature that can be used to improve compatibility with aim assist (on games that support it)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+            "quote": "You can craft any curve you want: such as a simple acceleration curve or a more complex multiple zone curves."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "If your results are way off (they don't need to be exact), please validate the following and try again"
+          }
+        ]
+      },
+      "termIds": [
+        "sensitivity",
+        "aiming-curve",
+        "quantization"
+      ]
+    }
+  ]
+}

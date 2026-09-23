@@ -1,1 +1,194 @@
-{ "styles": [] }
+{
+  "styles": [
+    {
+      "id": "tracking",
+      "name": "Tracking",
+      "description": "Holding the reticle on a target through sustained fire. For example pulse rifles, auto rifles and SMGs.",
+      "favours": {
+        "text": "Steady, consistent small corrections. Tracking is a long run of slow, fine movements, so the settings that shape fine aim at low speed matter most. These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic is static, so Classic users get the definitions but not these directions.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Controls fine aim behavior"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior."
+          }
+        ],
+        "reasoning": "Holding on a moving target means many small, slow corrections. Precision \"controls fine aim behavior\" and acts \"at low aim speeds\". Standard \"adapts to your current aim speed\", which is what lets a setting target one speed range without changing the others. Classic \"provides static smoothing behavior\", so the speed-based directions don't carry over. No source ties settings to aim styles."
+      },
+      "levers": [
+        {
+          "termId": "precision",
+          "direction": "raise",
+          "statement": {
+            "text": "Raise Precision for a steadier hold. It smooths your low-speed corrections, at the cost of the heavier reticle XIM's definition names. If small corrections start to feel sluggish, ease it back.",
+            "confidence": "reasoned",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Controls fine aim behavior"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+              }
+            ],
+            "reasoning": "Tracking is mostly slow, fine movement, which Precision controls (\"fine aim behavior\"). Higher values give \"a smoother result at low aim speeds\", which should steady the hold. The same sentence names the cost: it \"increases the heaviness of the reticle\".",
+            "caveat": "Assumes Standard smoothing. Precision is a Standard setting; Classic uses Smooth, Decay and Synch instead."
+          }
+        }
+      ]
+    },
+    {
+      "id": "snap",
+      "name": "Snap",
+      "description": "Acquiring a target you see for a split second: snap on, fire, re-peek. For example hand cannons, snipers, shotguns and sidearms.",
+      "favours": {
+        "text": "A fast, direct start from a standstill. A snap begins at rest, so the setting that shapes aim from rest matters most. The fast part of the move belongs to Response. These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic is static, so Classic users get the definitions but not these directions.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Specifies aim behavior from rest"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Controls fast aim behavior"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior."
+          }
+        ],
+        "reasoning": "A snap starts with the reticle at rest, and Easing \"specifies aim behavior from rest\". The quick move after that is fast aim, which Response \"controls\". Standard \"adapts to your current aim speed\", which is what lets a setting target one speed range without changing the others. Classic \"provides static smoothing behavior\", so the speed-based directions don't carry over. No source ties settings to aim styles."
+      },
+      "levers": [
+        {
+          "termId": "easing",
+          "direction": "lower",
+          "statement": {
+            "text": "Lower Easing for a faster start from rest. That suits snapping onto someone who appears for a split second. The cost is a less smooth start. Raising it does the opposite.",
+            "confidence": "reasoned",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Specifies aim behavior from rest"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Higher values result in smoother transition from rest but lower response time."
+              }
+            ],
+            "reasoning": "Easing \"specifies aim behavior from rest\", and a snap starts from rest. Higher values give a \"smoother transition from rest but lower response time\". We read that as a slower start, so lowering Easing should give a quicker one. Easing is a Standard smoothing setting.",
+            "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+          }
+        }
+      ]
+    },
+    {
+      "id": "precision-hold",
+      "name": "Precision hold",
+      "description": "Lining up one deliberate shot. For example scout rifles, linear fusion rifles and bows.",
+      "favours": {
+        "text": "Fine control at low speed, without making the move onto the target feel heavy. The line-up is slow, fine aim (Precision). Getting there is fast aim (Response). These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic is static, so Classic users get the definitions but not these directions.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Controls fine aim behavior"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Controls fast aim behavior"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior."
+          }
+        ],
+        "reasoning": "A deliberate shot is usually a fast move to the target area, then a slow line-up. Precision \"controls fine aim behavior\" and Response \"controls fast aim behavior\". Standard \"adapts to your current aim speed\", which is what lets a setting target one speed range without changing the others. Classic \"provides static smoothing behavior\", so the speed-based directions don't carry over. No source ties settings to aim styles."
+      },
+      "levers": [
+        {
+          "termId": "precision",
+          "direction": "depends",
+          "statement": {
+            "text": "Precision shapes the slow line-up, and it cuts both ways. Raise it if the line-up shakes. Lower it if the line-up feels heavy or sluggish. XIM's definition gives the trade-off: a smoother result at low speed, but a heavier reticle.",
+            "confidence": "reasoned",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Controls fine aim behavior"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+              }
+            ],
+            "reasoning": "A deliberate line-up is slow, fine movement, which Precision controls. Higher values give \"a smoother result at low aim speeds\" and \"increases the heaviness of the reticle\". Which way helps depends on whether your problem is shake or weight.",
+            "caveat": "Assumes Standard smoothing. Precision is a Standard setting; Classic uses Smooth, Decay and Synch instead."
+          }
+        },
+        {
+          "termId": "response",
+          "direction": "depends",
+          "statement": {
+            "text": "Response shapes the fast move onto the target. If that move feels heavy, raise Response. If it feels too light, lower it.",
+            "confidence": "reasoned",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Controls fast aim behavior"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+              }
+            ],
+            "reasoning": "The move to the target area is fast aim, which Response \"controls\". Higher values produce \"a lighter feeling reticle at faster aim speeds\". The definition only says which way is lighter; which way you need depends on your feel.",
+            "caveat": "Assumes Standard smoothing (Response is a Standard setting)."
+          }
+        }
+      ]
+    }
+  ]
+}
