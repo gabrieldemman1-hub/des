@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { knowledge } from '../../../../knowledge/index';
 import { EASING_CAVEAT } from '../../../../knowledge/integrity';
@@ -185,7 +185,7 @@ describe('Build my config: the steps', () => {
       const item = screen.getByRole('listitem', { name: `${setting.name}: ${setting.value}` });
       await user.click(within(item).getByRole('button', { name: 'Done' }));
     }
-    await router.navigate('/troubleshoot');
+    await act(() => router.navigate('/troubleshoot'));
     const check = await screen.findByRole('listitem', { name: checkTitle('destiny2-required-settings') });
     expect(within(check).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'true');
   });
@@ -266,10 +266,10 @@ describe('Build my config: the steps', () => {
     await user.click(within(screen.getByRole('listitem', { name: 'Precision: Raise' })).getByRole('button', { name: 'Done' }));
 
     // Make the main weapon a scout rifle (precision hold), which has its own Precision direction.
-    await router.navigate('/loadouts/l1');
+    await act(() => router.navigate('/loadouts/l1'));
     await user.selectOptions(await screen.findByRole('combobox', { name: 'Kinetic' }), 'scout-rifle');
     await user.click(screen.getByRole('button', { name: 'Save changes' }));
-    await router.navigate('/build/l1/aim');
+    await act(() => router.navigate('/build/l1/aim'));
 
     const precision = await screen.findByRole('listitem', { name: 'Precision: It depends' });
     expect(within(precision).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'false');
@@ -288,23 +288,23 @@ describe('Build my config: the steps', () => {
     await user.click(screen.getByRole('button', { name: 'Done: show the next change' }));
     expect(stored(storage).progress).toEqual({ [progressKey.aim.sensitivity('l1')]: 'done' });
 
-    await router.navigate('/build/l1/aim');
+    await act(() => router.navigate('/build/l1/aim'));
     const sensitivity = await screen.findByRole('listitem', { name: 'Start with Sensitivity' });
     expect(within(sensitivity).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'true');
 
     // Build: ticking Precision moves Tune on to the next change.
     await user.click(within(screen.getByRole('listitem', { name: 'Precision: Raise' })).getByRole('button', { name: 'Done' }));
-    await router.navigate('/tune/l1/changes');
+    await act(() => router.navigate('/tune/l1/changes'));
     const first = await screen.findByRole('region', { name: 'Change this first' });
     expect(within(first).queryByRole('heading', { level: 3, name: 'Sensitivity' })).not.toBeInTheDocument();
     expect(within(first).queryByRole('heading', { level: 3, name: 'Precision' })).not.toBeInTheDocument();
 
     // Build's reset clears the marks Tune made too.
-    await router.navigate('/build/l1/aim');
+    await act(() => router.navigate('/build/l1/aim'));
     await user.click(await screen.findByRole('button', { name: 'Reset this loadout’s steps' }));
     await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Reset' }));
     expect(stored(storage).progress).toEqual({});
-    await router.navigate('/tune/l1/changes');
+    await act(() => router.navigate('/tune/l1/changes'));
     expect(
       within(await screen.findByRole('region', { name: 'Change this first' })).getByRole('heading', {
         level: 3,

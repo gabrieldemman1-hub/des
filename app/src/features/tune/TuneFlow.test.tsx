@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { knowledge } from '../../../../knowledge/index';
 import { EASING_CAVEAT } from '../../../../knowledge/integrity';
@@ -554,11 +554,11 @@ describe('Tune my config: cards', () => {
     expect(stored(storage).inGame.lookSensitivity).toBe(18);
     expect(stored(storage).configs).toEqual({});
 
-    await router.navigate('/tune/l2/settings');
+    await act(() => router.navigate('/tune/l2/settings'));
     expect(await screen.findByRole('heading', { level: 1, name: 'Peek' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Look Sensitivity' })).toHaveValue('18');
 
-    await router.navigate('/tune/l2/changes');
+    await act(() => router.navigate('/tune/l2/changes'));
     const first = await screen.findByRole('region', { name: 'Change this first' });
     expect(within(first).getByRole('heading', { level: 3, name: 'Look Sensitivity' })).toBeInTheDocument();
     expect(within(first).getByText('Yours').nextSibling).toHaveTextContent('18');
