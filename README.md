@@ -11,7 +11,8 @@ are in [docs/research/](docs/research/).
 in its config sheet), Tune my config (enter your current settings, get changes ordered by
 impact), Troubleshoot by feel (setup check, then symptom → setting) and Explain a concept (every
 MATRIX setting, and the aim styles). Profile, loadouts, sources, backup and offline support are
-in place. What's left is publishing it (see Publishing to GitHub Pages).
+in place. Once GitHub Pages is switched on, every merge to `main` publishes it (see Publishing to
+GitHub Pages).
 
 ## Run it on your computer
 
@@ -50,13 +51,31 @@ To try the production build on the phone: `npm run build && npm run preview -- -
 
 ## Publishing to GitHub Pages
 
-`.github/workflows/pages.yml` builds, tests and publishes the app to GitHub Pages. It runs only
-when started by hand (**Actions › Publish to GitHub Pages › Run workflow**), because Pages has to be
-switched on first:
+`.github/workflows/pages.yml` builds, tests and publishes the app to GitHub Pages on every push to
+`main`, and on demand (**Actions › Publish to GitHub Pages › Run workflow**). Pages has to be
+switched on once first:
 
-1. **Settings › Pages › Source: GitHub Actions.** Private repositories need a paid GitHub plan
-   for Pages. A Pages site is public to anyone with the link, even when the repository is private.
-2. Run the workflow. The site's address appears on the run's summary.
+1. **Make the repository public** (Settings › General › Danger Zone › Change visibility). On the
+   free plan GitHub Pages only publishes public repositories.
+2. **Settings › Pages › Build and deployment › Source: GitHub Actions.**
+3. Merge to `main`, or run the workflow by hand. The address appears on the run's summary:
+   `https://gabrieldemman1-hub.github.io/des/`.
+
+If a push to `main` lands before step 2, that run fails at *configure-pages*; re-run it once Pages
+is on.
+
+### Installing it on your phone
+
+Open the address on the phone. Dialed offers to install itself (a card on Home, and a section in
+Profile), or install it from the browser:
+
+- **iPhone or iPad:** Share › **Add to Home Screen**. The installed app keeps its own saved data,
+  separate from Safari's, so if you set things up in Safari first, use **Profile › Download
+  backup** there and **Restore from backup** in the installed app.
+- **Android:** the **Install** button in Dialed, or the browser menu › **Install app**.
+
+Installed, it opens full screen from its own icon and works offline. New versions arrive the next
+time it's opened online, with a **Reload** button.
 
 ## Scripts
 

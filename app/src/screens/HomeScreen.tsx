@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { ChevronIcon, CrosshairMark } from '../components/icons';
+import { InstallCard } from '../components/Install';
 import { Screen } from '../components/Screen';
 import { FLOWS } from '../content/flows';
 import { PLATFORM_LABELS } from '../content/labels';
@@ -57,8 +58,10 @@ export function HomeScreen() {
         ))}
       </ul>
 
+      <InstallCard />
+
       <p className="footnote">
-        Every recommendation will come with its reasoning, its source and a confidence label.{' '}
+        Every recommendation comes with its reasoning, its source and a confidence label.{' '}
         <Link to="/sources">See the sources</Link>
       </p>
     </Screen>

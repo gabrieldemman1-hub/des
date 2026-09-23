@@ -1,6 +1,7 @@
 import { useId, useState, type ChangeEvent } from 'react';
 import { AIMING_SOURCES, OUTPUT_TYPES_BY_PLATFORM, type AimingSource, type Platform } from '../../../knowledge/index';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { InstallSection } from '../components/Install';
 import { Screen } from '../components/Screen';
 import { SegmentedField } from '../components/SegmentedField';
 import { StatementView } from '../components/StatementView';
@@ -429,6 +430,7 @@ export function ProfileScreen() {
         {/* Remounted when the data is replaced (a restore, another tab) so the DPI text starts again from it. */}
         <ProfileFields key={revision} />
       </form>
+      <InstallSection />
       <BackupSection />
     </Screen>
   );

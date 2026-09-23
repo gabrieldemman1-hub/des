@@ -477,6 +477,13 @@ h1[tabindex='-1']:focus {
 
 /* ---- Home ------------------------------------------------------------------------- */
 
+.install-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
 .home-mark {
   display: inline-flex;
   color: var(--accent);
@@ -586,7 +593,8 @@ h1[tabindex='-1']:focus {
   gap: 18px;
 }
 
-.form-section + .form-section {
+.form-section + .form-section,
+.form + .form-section {
   padding-top: 20px;
   border-top: 1px solid var(--border);
 }

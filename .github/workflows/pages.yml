@@ -1,9 +1,10 @@
 name: Publish to GitHub Pages
 
-# Manual only until GitHub Pages is switched on for this repository
-# (Settings → Pages → Source: GitHub Actions). Private repositories need a paid
-# GitHub plan for Pages, and a Pages site is public to anyone with its link.
+# Publishes the app on every push to main, and on demand from the Actions tab.
+# GitHub Pages has to be switched on once first: Settings → Pages → Source: GitHub Actions.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
