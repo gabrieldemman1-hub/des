@@ -201,7 +201,7 @@ describe('Profile screen', () => {
     const link = click.mock.contexts[0] as HTMLAnchorElement;
     expect(link.download).toMatch(/^dialed-backup-\d{4}-\d{2}-\d{2}\.json$/);
     const backup = JSON.parse(await blob!.text()) as Record<string, unknown>;
-    expect(backup).toMatchObject({ app: 'dialed', version: 1, profile: data.profile, loadouts: data.loadouts });
+    expect(backup).toMatchObject({ app: 'dialed', version: 2, profile: data.profile, loadouts: data.loadouts, configs: {}, progress: {} });
     expect(screen.getByText('Backup downloaded.')).toBeInTheDocument();
   });
 

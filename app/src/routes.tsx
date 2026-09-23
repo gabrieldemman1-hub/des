@@ -1,5 +1,9 @@
 import type { RouteObject } from 'react-router';
 import { Layout } from './components/Layout';
+import { BuildFlow } from './features/build/BuildFlow';
+import { ConfigSheetScreen } from './features/build/ConfigSheetScreen';
+import { TroubleshootFlow } from './features/troubleshoot/TroubleshootFlow';
+import { TuneFlow } from './features/tune/TuneFlow';
 import { AimStyleScreen } from './screens/AimStyleScreen';
 import { FlowScreen } from './screens/FlowScreen';
 import { HomeScreen } from './screens/HomeScreen';
@@ -17,12 +21,16 @@ export const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomeScreen /> },
       { path: 'flows/:flowId', element: <FlowScreen /> },
+      { path: 'build/*', element: <BuildFlow /> },
+      { path: 'tune/*', element: <TuneFlow /> },
+      { path: 'troubleshoot/*', element: <TroubleshootFlow /> },
       { path: 'learn', element: <LearnScreen /> },
       { path: 'learn/styles/:styleId', element: <AimStyleScreen /> },
       { path: 'learn/:termId', element: <TermScreen /> },
       { path: 'loadouts', element: <LoadoutsScreen /> },
       { path: 'loadouts/new', element: <LoadoutEditorScreen /> },
       { path: 'loadouts/:loadoutId', element: <LoadoutEditorScreen /> },
+      { path: 'loadouts/:loadoutId/sheet', element: <ConfigSheetScreen /> },
       { path: 'profile', element: <ProfileScreen /> },
       { path: 'sources', element: <SourcesScreen /> },
       { path: '*', element: <NotFoundScreen /> },

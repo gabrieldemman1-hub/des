@@ -1,17 +1,13 @@
 /**
- * What Dialed keeps on this phone: the profile (CONCEPT.md §7) and the loadouts.
- * Everything read back from storage or from a backup file is validated with these schemas.
- *
- * Not stored yet: the player's current Config values (CONCEPT.md §7 "Current config", the
- * starting point for Flow B, including the smoothing mode that decides whether weapon-aware
- * directions apply). They arrive with Flow B as `configs` (one per loadout), together with a
- * STORAGE_VERSION bump and a step in `migrateBackup` (storage.ts), so older backups still
- * restore.
+ * What Dialed keeps on this phone: the profile (CONCEPT.md §7), the loadouts, the player's
+ * current settings for each loadout (the starting point for Tune my config), and checklist
+ * progress. Everything read back from storage or from a backup file is validated with these
+ * schemas.
  */
 import { z } from 'zod';
 import { AimingSource, OUTPUT_TYPES_BY_PLATFORM, OutputType, Platform, WeaponSlot } from '../../../knowledge/schema';
 
-export const STORAGE_VERSION = 1;
+export const STORAGE_VERSION = 2;
 
 export const POLLING_RATES = [125, 250, 500, 1000, 2000, 4000, 8000] as const;
 export type PollingRate = (typeof POLLING_RATES)[number];
@@ -101,10 +97,110 @@ const Loadouts = z.array(Loadout).refine((list) => new Set(list.map((l) => l.id)
   message: 'Loadout ids must be unique',
 });
 
+// ---------------------------------------------------------------------------------------
+// Current settings (Tune my config)
+// ---------------------------------------------------------------------------------------
+
+/** A number the player typed in, or null when left blank. Bounds only reject nonsense. */
+const Num = (min: number, max: number) => z.number().min(min).max(max).nullable().default(null);
+
+/**
+ * The player's current settings for one loadout's Config, as they see them in Destiny 2 and
+ * XIM MATRIX Manager. Every field is optional: Tune my config works with whatever is filled in.
+ */
+export const CurrentConfig = z.object({
+  inGame: z
+    .object({
+      movementControls: z.enum(['default', 'other']).nullable().default(null),
+      buttonLayout: z.enum(['default', 'other']).nullable().default(null),
+      lookSensitivity: Num(0, 1000),
+      adsSensitivityModifier: Num(0, 100),
+      axialDeadzone: Num(0, 100),
+      radialDeadzone: Num(0, 100),
+    })
+    .default({
+      movementControls: null,
+      buttonLayout: null,
+      lookSensitivity: null,
+      adsSensitivityModifier: null,
+      axialDeadzone: null,
+      radialDeadzone: null,
+    }),
+  matrix: z
+    .object({
+      /** The DPI entered in the Config (it must match the mouse). */
+      configDpi: z.number().int().positive().max(1_000_000).nullable().default(null),
+      syncMethod: z.enum(['standard', 'custom', 'manual']).nullable().default(null),
+      /** Manager shows a warning on the Config when its Smart Translator is out of date. */
+      translatorWarning: z.boolean().nullable().default(null),
+    })
+    .default({ configDpi: null, syncMethod: null, translatorWarning: null }),
+  aim: z
+    .object({
+      /** Mouse sensitivity in cm/360 (lower is faster). */
+      hipSensitivity: Num(0, 10_000),
+      adsSensitivity: Num(0, 10_000),
+      adsInheritance: z.enum(['inherit-all', 'sensitivity-only', 'inherit-nothing']).nullable().default(null),
+      /** A preset (its name in presetName), custom Standard, custom Classic, or smoothing off. */
+      smoothing: z.enum(['preset', 'standard', 'classic', 'off']).nullable().default(null),
+      presetName: z.string().max(40).default(''),
+      precision: Num(0, 100),
+      response: Num(0, 100),
+      easing: Num(0, 100),
+      smooth: Num(0, 1000),
+      decay: Num(0, 1000),
+      synch: Num(0, 1000),
+      aimingCurve: z.enum(['linear', 'custom']).nullable().default(null),
+      yScale: Num(0, 1000),
+      quantization: z.boolean().nullable().default(null),
+      quantizationMagnitude: Num(0, 100),
+      quantizationAngle: Num(0, 100),
+      velocityMapping: z.enum(['standard', 'other']).nullable().default(null),
+    })
+    .default({
+      hipSensitivity: null,
+      adsSensitivity: null,
+      adsInheritance: null,
+      smoothing: null,
+      presetName: '',
+      precision: null,
+      response: null,
+      easing: null,
+      smooth: null,
+      decay: null,
+      synch: null,
+      aimingCurve: null,
+      yScale: null,
+      quantization: null,
+      quantizationMagnitude: null,
+      quantizationAngle: null,
+      velocityMapping: null,
+    }),
+  updatedAt: z.iso.datetime().nullable().default(null),
+});
+export type CurrentConfig = z.infer<typeof CurrentConfig>;
+
+export function emptyConfig(): CurrentConfig {
+  return CurrentConfig.parse({});
+}
+
+/** Current settings, one per loadout id. */
+const Configs = z.record(LoadoutId, CurrentConfig);
+
+/**
+ * Checklist progress for Build my config and Troubleshoot by feel, by item id (see
+ * `progressKey` in progress.ts). 'done': checked and fine. 'problem': checked and needs fixing.
+ */
+export const ProgressState = z.enum(['done', 'problem']);
+export type ProgressState = z.infer<typeof ProgressState>;
+const Progress = z.record(z.string().min(1).max(200), ProgressState);
+
 export const AppData = z.object({
   version: z.literal(STORAGE_VERSION),
   profile: Profile,
   loadouts: Loadouts,
+  configs: Configs.default({}),
+  progress: Progress.default({}),
 });
 export type AppData = z.infer<typeof AppData>;
 
@@ -118,6 +214,8 @@ export const BackupFile = z.object({
   exportedAt: z.iso.datetime(),
   profile: Profile,
   loadouts: Loadouts,
+  configs: Configs.default({}),
+  progress: Progress.default({}),
 });
 export type BackupFile = z.infer<typeof BackupFile>;
 
@@ -126,5 +224,5 @@ export function defaultProfile(): Profile {
 }
 
 export function defaultData(): AppData {
-  return { version: STORAGE_VERSION, profile: defaultProfile(), loadouts: [] };
+  return { version: STORAGE_VERSION, profile: defaultProfile(), loadouts: [], configs: {}, progress: {} };
 }

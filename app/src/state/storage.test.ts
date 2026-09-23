@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MemoryStorage } from '../test/memory-storage';
 import { sampleData, sampleLoadout } from '../test/fixtures';
-import { defaultData } from './schema';
+import { STORAGE_VERSION, defaultData, emptyConfig } from './schema';
 import {
   STORAGE_KEY,
   UNREADABLE_KEY,
@@ -141,8 +141,8 @@ describe('loadData / saveData', () => {
     expect(result.data.loadouts).toEqual([good]);
   });
 
-  it('treats data that is not an object, or from another version, as invalid', () => {
-    for (const raw of ['42', 'null', '"text"', JSON.stringify({ version: 2, profile: {}, loadouts: [] })]) {
+  it('treats data that is not an object, or from a newer version, as invalid', () => {
+    for (const raw of ['42', 'null', '"text"', JSON.stringify({ version: STORAGE_VERSION + 1, profile: {}, loadouts: [] })]) {
       const { data, issue } = loadData(new MemoryStorage({ [STORAGE_KEY]: raw }));
       expect(issue).toBe('invalid');
       expect(data).toEqual(defaultData());
@@ -192,7 +192,7 @@ describe('backup and restore', () => {
   it('writes a JSON backup that restores to the same data', () => {
     const text = createBackup(data, now);
     const json = JSON.parse(text) as Record<string, unknown>;
-    expect(json).toMatchObject({ app: 'dialed', version: 1, exportedAt: now.toISOString() });
+    expect(json).toMatchObject({ app: 'dialed', version: STORAGE_VERSION, exportedAt: now.toISOString() });
     expect(parseBackup(text)).toEqual({ ok: true, data, exportedAt: now.toISOString() });
   });
 
@@ -215,7 +215,7 @@ describe('backup and restore', () => {
   });
 
   it('rejects a backup from a newer version, and one with no usable version', () => {
-    const newer = parseBackup(JSON.stringify({ ...JSON.parse(createBackup(data, now)), version: 2 }));
+    const newer = parseBackup(JSON.stringify({ ...JSON.parse(createBackup(data, now)), version: STORAGE_VERSION + 1 }));
     expect(newer.ok).toBe(false);
     if (!newer.ok) expect(newer.error).toMatch(/newer version of Dialed/);
     for (const version of [0, 1.5, '1', undefined]) {
@@ -258,5 +258,50 @@ describe('backup and restore', () => {
   it('rejects duplicate loadout ids', () => {
     const backup = JSON.parse(createBackup({ ...data, loadouts: [sampleLoadout(), sampleLoadout()] }, now)) as object;
     expect(parseBackup(JSON.stringify(backup)).ok).toBe(false);
+  });
+});
+
+describe('version 2: current settings and checklist progress', () => {
+  it('loads version 1 data with empty settings and progress', () => {
+    const loadout = sampleLoadout();
+    const storage = new MemoryStorage({
+      [STORAGE_KEY]: JSON.stringify({ version: 1, profile: defaultData().profile, loadouts: [loadout] }),
+    });
+    const { data, issue } = loadData(storage);
+    expect(issue).toBeNull();
+    expect(data).toEqual({ ...defaultData(), loadouts: [loadout] });
+  });
+
+  it('restores a version 1 backup', () => {
+    const v1 = { app: 'dialed', version: 1, exportedAt: '2026-09-22T12:00:00.000Z', profile: defaultData().profile, loadouts: [] };
+    const result = parseBackup(JSON.stringify(v1));
+    expect(result).toEqual({ ok: true, data: defaultData(), exportedAt: v1.exportedAt });
+  });
+
+  it('round-trips settings and progress through a backup', () => {
+    const data = sampleData({
+      loadouts: [sampleLoadout()],
+      configs: { l1: { ...emptyConfig(), aim: { ...emptyConfig().aim, easing: 40, smoothing: 'standard' } } },
+      progress: { 'check:firmware': 'done', 'loadout:l1:easing': 'problem' },
+    });
+    const result = parseBackup(createBackup(data));
+    expect(result.ok && result.data).toEqual(data);
+  });
+
+  it('keeps valid settings and progress when other stored data is damaged', () => {
+    const good = sampleLoadout();
+    const storage = new MemoryStorage({
+      [STORAGE_KEY]: JSON.stringify({
+        version: STORAGE_VERSION,
+        profile: { platform: 'nope' },
+        loadouts: [good],
+        configs: { l1: emptyConfig(), gone: emptyConfig(), l2: { aim: { easing: 'high' } } },
+        progress: { 'check:firmware': 'done', 'check:dpi': 'maybe' },
+      }),
+    });
+    const { data, issue } = loadData(storage);
+    expect(issue).toBe('invalid');
+    expect(Object.keys(data.configs)).toEqual(['l1']);
+    expect(data.progress).toEqual({ 'check:firmware': 'done' });
   });
 });

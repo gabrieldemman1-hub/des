@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { DataContext, type DataApi, type NoticeKind, type SaveLoadoutResult, type SaveState } from './data-context';
+import {
+  DataContext,
+  type ConfigPatch,
+  type DataApi,
+  type NoticeKind,
+  type SaveLoadoutResult,
+  type SaveState,
+} from './data-context';
 import { createLoadout, deleteLoadout as removeLoadout, updateLoadout, type LoadoutDraft } from './loadouts';
-import { Profile, normalizeProfile, type AppData } from './schema';
+import { loadoutPrefix } from './progress';
+import { CurrentConfig, Profile, ProgressState, emptyConfig, normalizeProfile, type AppData } from './schema';
 import { STORAGE_KEY, getBrowserStorage, loadData, saveData, setAsideUnreadable } from './storage';
 
 interface Props {
@@ -79,7 +87,52 @@ export function DataProvider({ storage: storageProp, children }: Props) {
   );
 
   const deleteLoadout = useCallback(
-    (id: string) => commit({ ...latest.current, loadouts: removeLoadout(latest.current.loadouts, id) }),
+    (id: string) => {
+      const current = latest.current;
+      const configs = { ...current.configs };
+      delete configs[id];
+      const prefix = loadoutPrefix(id);
+      const progress = Object.fromEntries(Object.entries(current.progress).filter(([key]) => !key.startsWith(prefix)));
+      commit({ ...current, loadouts: removeLoadout(current.loadouts, id), configs, progress });
+    },
+    [commit],
+  );
+
+  const updateConfig = useCallback(
+    (loadoutId: string, patch: ConfigPatch) => {
+      const current = latest.current;
+      if (!current.loadouts.some((l) => l.id === loadoutId)) return;
+      const base = current.configs[loadoutId] ?? emptyConfig();
+      // Only valid settings are saved, like the profile.
+      const next = CurrentConfig.safeParse({
+        inGame: { ...base.inGame, ...patch.inGame },
+        matrix: { ...base.matrix, ...patch.matrix },
+        aim: { ...base.aim, ...patch.aim },
+        updatedAt: new Date().toISOString(),
+      });
+      if (next.success) commit({ ...current, configs: { ...current.configs, [loadoutId]: next.data } });
+    },
+    [commit],
+  );
+
+  const setProgress = useCallback(
+    (key: string, state: ProgressState | null) => {
+      const current = latest.current;
+      const progress = { ...current.progress };
+      if (state === null) delete progress[key];
+      else if (ProgressState.safeParse(state).success && key.length > 0 && key.length <= 200) progress[key] = state;
+      else return;
+      commit({ ...current, progress });
+    },
+    [commit],
+  );
+
+  const clearProgress = useCallback(
+    (prefix: string) => {
+      const current = latest.current;
+      const progress = Object.fromEntries(Object.entries(current.progress).filter(([key]) => !key.startsWith(prefix)));
+      commit({ ...current, progress });
+    },
     [commit],
   );
 
@@ -93,8 +146,34 @@ export function DataProvider({ storage: storageProp, children }: Props) {
   const dismissNotice = useCallback(() => setNotice(null), []);
 
   const api = useMemo<DataApi>(
-    () => ({ data, notice, dismissNotice, saveState, revision, updateProfile, saveLoadout, deleteLoadout, replaceData }),
-    [data, notice, dismissNotice, saveState, revision, updateProfile, saveLoadout, deleteLoadout, replaceData],
+    () => ({
+      data,
+      notice,
+      dismissNotice,
+      saveState,
+      revision,
+      updateProfile,
+      saveLoadout,
+      deleteLoadout,
+      updateConfig,
+      setProgress,
+      clearProgress,
+      replaceData,
+    }),
+    [
+      data,
+      notice,
+      dismissNotice,
+      saveState,
+      revision,
+      updateProfile,
+      saveLoadout,
+      deleteLoadout,
+      updateConfig,
+      setProgress,
+      clearProgress,
+      replaceData,
+    ],
   );
 
   return <DataContext value={api}>{children}</DataContext>;

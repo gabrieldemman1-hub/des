@@ -30,8 +30,8 @@ export interface Flow {
 export const FLOWS: readonly Flow[] = [
   {
     id: 'build',
-    available: false,
-    to: '/flows/build',
+    available: true,
+    to: '/build',
     code: 'Flow A',
     title: 'Build my config',
     question: '"Build my config"',
@@ -62,8 +62,8 @@ export const FLOWS: readonly Flow[] = [
   },
   {
     id: 'tune',
-    available: false,
-    to: '/flows/tune',
+    available: true,
+    to: '/tune',
     code: 'Flow B',
     title: 'Tune my config',
     question: '"What should I change?"',
@@ -79,8 +79,8 @@ export const FLOWS: readonly Flow[] = [
   },
   {
     id: 'troubleshoot',
-    available: false,
-    to: '/flows/troubleshoot',
+    available: true,
+    to: '/troubleshoot',
     code: 'Flow C',
     title: 'Troubleshoot by feel',
     question: '"My aim feels…"',

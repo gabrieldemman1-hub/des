@@ -5,7 +5,18 @@
  * try/catch: unavailable storage, corrupt JSON or invalid data fall back to defaults
  * (keeping whatever is still valid) and report an issue instead of throwing.
  */
-import { AppData, BackupFile, Loadout, Profile, STORAGE_VERSION, defaultData, normalizeProfile } from './schema';
+import {
+  AppData,
+  BackupFile,
+  CurrentConfig,
+  Loadout,
+  LoadoutId,
+  Profile,
+  ProgressState,
+  STORAGE_VERSION,
+  defaultData,
+  normalizeProfile,
+} from './schema';
 
 export const STORAGE_KEY = 'dialed:v1';
 /** Where unreadable data is copied before it can be overwritten, so it isn't silently lost. */
@@ -79,6 +90,20 @@ function salvage(value: unknown): AppData {
       }
     }
   }
+  // Entry by entry, like the loadouts: settings for a loadout that no longer exists are dropped.
+  if (record.configs && typeof record.configs === 'object' && !Array.isArray(record.configs)) {
+    const ids = new Set(data.loadouts.map((l) => l.id));
+    for (const [id, value] of Object.entries(record.configs as Record<string, unknown>)) {
+      const config = CurrentConfig.safeParse(value);
+      if (LoadoutId.safeParse(id).success && ids.has(id) && config.success) data.configs[id] = config.data;
+    }
+  }
+  if (record.progress && typeof record.progress === 'object' && !Array.isArray(record.progress)) {
+    for (const [key, value] of Object.entries(record.progress as Record<string, unknown>)) {
+      const state = ProgressState.safeParse(value);
+      if (key.length > 0 && key.length <= 200 && state.success) data.progress[key] = state.data;
+    }
+  }
   return data;
 }
 
@@ -118,9 +143,12 @@ export type Migration = (data: Versioned) => Versioned;
 /**
  * One step per storage version: MIGRATIONS[n] turns version-n data (stored data or a backup)
  * into version n + 1. Add a step with every STORAGE_VERSION bump, so data and backups made by
- * older versions of Dialed still load. There are none yet: version 1 is the first.
+ * older versions of Dialed still load.
  */
-export const MIGRATIONS: Readonly<Record<number, Migration>> = {};
+export const MIGRATIONS: Readonly<Record<number, Migration>> = {
+  // Version 2 adds current settings per loadout and checklist progress, both empty at first.
+  1: (data) => ({ ...data, configs: {}, progress: {} }),
+};
 
 /**
  * Brings stored data or a backup up to `target`, one step at a time. Returns an error message
@@ -169,6 +197,8 @@ export function createBackup(data: AppData, now: Date = new Date()): string {
     exportedAt: now.toISOString(),
     profile: data.profile,
     loadouts: data.loadouts,
+    configs: data.configs,
+    progress: data.progress,
   };
   return `${JSON.stringify(backup, null, 2)}\n`;
 }
@@ -204,6 +234,6 @@ export function parseBackup(text: string): RestoreResult {
     const where = first?.path.length ? ` (${first.path.join('.')})` : '';
     return { ok: false, error: `That backup is damaged and can’t be restored: ${first?.message ?? 'invalid data'}${where}.` };
   }
-  const { profile, loadouts, exportedAt } = parsed.data;
-  return { ok: true, data: { version: STORAGE_VERSION, profile, loadouts }, exportedAt };
+  const { profile, loadouts, configs, progress, exportedAt } = parsed.data;
+  return { ok: true, data: { version: STORAGE_VERSION, profile, loadouts, configs, progress }, exportedAt };
 }

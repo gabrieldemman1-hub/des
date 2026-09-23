@@ -14,8 +14,8 @@ const TABS: Tab[] = [
     to: '/',
     label: 'Home',
     icon: <HomeIcon />,
-    // The flow screens open from Home.
-    isActive: (p) => p === '/' || p.startsWith('/flows/'),
+    // The flows open from Home.
+    isActive: (p) => p === '/' || ['/flows/', '/build', '/tune', '/troubleshoot'].some((prefix) => p.startsWith(prefix)),
   },
   { to: '/learn', label: 'Learn', icon: <LearnIcon />, isActive: (p) => p.startsWith('/learn') },
   { to: '/loadouts', label: 'Loadouts', icon: <LoadoutsIcon />, isActive: (p) => p.startsWith('/loadouts') },

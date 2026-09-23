@@ -109,5 +109,5 @@ export function sampleLoadout(overrides: Partial<Loadout> = {}): Loadout {
 }
 
 export function sampleData(overrides: Partial<AppData> = {}): AppData {
-  return { version: STORAGE_VERSION, profile: defaultProfile(), loadouts: [], ...overrides };
+  return { version: STORAGE_VERSION, profile: defaultProfile(), loadouts: [], configs: {}, progress: {}, ...overrides };
 }

@@ -1,6 +1,6 @@
 import { createContext, use } from 'react';
 import type { DraftErrors, LoadoutDraft } from './loadouts';
-import type { AppData, Loadout, Profile } from './schema';
+import type { AppData, CurrentConfig, Loadout, Profile, ProgressState } from './schema';
 
 export type NoticeKind = 'unavailable' | 'corrupt' | 'invalid' | 'save-failed';
 
@@ -21,6 +21,12 @@ export const NOTICE_TEXT: Record<NoticeKind, string> = {
  */
 export type SaveState = 'idle' | 'saved' | 'failed';
 
+export type ConfigPatch = {
+  inGame?: Partial<CurrentConfig['inGame']>;
+  matrix?: Partial<CurrentConfig['matrix']>;
+  aim?: Partial<CurrentConfig['aim']>;
+};
+
 export type SaveLoadoutResult = { ok: true; loadout: Loadout } | { ok: false; errors: DraftErrors };
 
 export interface DataApi {
@@ -38,7 +44,17 @@ export interface DataApi {
   updateProfile: (patch: Partial<Profile>) => void;
   /** Creates a loadout, or updates it when `id` is given. */
   saveLoadout: (draft: LoadoutDraft, id?: string) => SaveLoadoutResult;
+  /** Also removes the loadout's current settings and checklist progress. */
   deleteLoadout: (id: string) => void;
+  /**
+   * Saves (part of) a loadout's current settings. Nested groups are merged, so
+   * `{ aim: { easing: 40 } }` changes only Easing. Ignored for an unknown loadout.
+   */
+  updateConfig: (loadoutId: string, patch: ConfigPatch) => void;
+  /** Sets a checklist item (see progress.ts), or clears it with null. */
+  setProgress: (key: string, state: ProgressState | null) => void;
+  /** Clears every checklist item whose key starts with `prefix`. */
+  clearProgress: (prefix: string) => void;
   /** Replaces everything, e.g. from a backup. */
   replaceData: (data: AppData) => void;
 }

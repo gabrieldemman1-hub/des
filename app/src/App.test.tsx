@@ -30,13 +30,13 @@ describe('app shell', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Dialed' })).toBeInTheDocument();
     expect(screen.getByText(/Evidence-based XIM MATRIX setup for Destiny 2/)).toBeInTheDocument();
     expect(screen.getByText(/Saved on this phone:/).closest('p')).toHaveTextContent('Saved on this phone: Xbox · 2 loadouts');
-    const coming = screen.getAllByRole('link', { name: /Coming in the next step/ });
-    expect(coming.map((f) => f.querySelector('.flow-card-title')?.textContent)).toEqual([
-      'Build my config',
-      'Tune my config',
-      'Troubleshoot by feel',
+    const ready = screen.getAllByRole('link', { name: /Ready to use/ });
+    expect(ready.map((f) => [f.querySelector('.flow-card-title')?.textContent, f.getAttribute('href')])).toEqual([
+      ['Build my config', '/build'],
+      ['Tune my config', '/tune'],
+      ['Troubleshoot by feel', '/troubleshoot'],
+      ['Explain a concept', '/learn'],
     ]);
-    expect(screen.getByRole('link', { name: /Explain a concept.*Ready to use/ })).toHaveAttribute('href', '/learn');
   });
 
   it('home points to the profile when nothing is saved', () => {
@@ -47,17 +47,13 @@ describe('app shell', () => {
     expect(screen.getByRole('link', { name: 'Set up your profile' })).toHaveAttribute('href', '/profile');
   });
 
-  it('flow cards open a placeholder that explains the flow', async () => {
-    const { user } = renderApp();
-    await user.click(screen.getByRole('link', { name: /Troubleshoot by feel/ }));
-    expect(screen.getByRole('heading', { level: 1, name: 'Troubleshoot by feel' })).toBeInTheDocument();
-    expect(screen.getByRole('note')).toHaveTextContent('Coming in the next step.');
-    expect(screen.getByRole('heading', { name: 'Stage 1: Setup check' })).toBeInTheDocument();
-    // Home stays the current tab inside a flow.
+  it('keeps Home as the current tab inside a flow, and sends old flow addresses to the flow', async () => {
+    const { user, router } = renderApp({ path: '/flows/troubleshoot' });
+    expect(router.state.location.pathname).toBe('/troubleshoot');
     const nav = screen.getByRole('navigation', { name: 'Main' });
     expect(within(nav).getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
 
-    await user.click(screen.getByRole('link', { name: 'Home', current: false })); // the back link
+    await user.click(within(nav).getByRole('link', { name: 'Home' }));
     expect(screen.getByRole('heading', { level: 1, name: 'Dialed' })).toBeInTheDocument();
   });
 

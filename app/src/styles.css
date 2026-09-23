@@ -1239,3 +1239,44 @@ input[type='search'] {
   border-radius: 999px;
   text-decoration: none;
 }
+
+/* ---- Checklists (Build my config, Troubleshoot by feel) ------------------------------- */
+
+.checklist {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklist-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checklist-item.is-done {
+  border-color: var(--success, var(--border-strong));
+}
+
+.checklist-item.is-problem {
+  border-color: var(--danger);
+}
+
+.checklist-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.checklist-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checklist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
