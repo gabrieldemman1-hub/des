@@ -3,6 +3,7 @@
  * the build asks for. Only Destiny 2's required settings have a value to compare against;
  * aim settings are shown as they are, since the knowledge base gives directions, not numbers.
  */
+import { compareRequiredSetting } from '../../state/required-settings';
 import type { CurrentConfig } from '../../state/schema';
 
 /** How a current value relates to the required one. `unknown`: it can't be told apart. */
@@ -13,45 +14,20 @@ export interface CurrentRequiredValue {
   comparison: Comparison;
 }
 
-type InGameField = keyof CurrentConfig['inGame'];
-
-/** Destiny 2 required settings by name (lower-case, dashed), to the field Tune my config stores. */
-const IN_GAME_FIELDS: Record<string, InGameField> = {
-  'movement-controls': 'movementControls',
-  'button-layout': 'buttonLayout',
-  'look-sensitivity': 'lookSensitivity',
-  'ads-sensitivity-modifier': 'adsSensitivityModifier',
-  'axial-deadzone': 'axialDeadzone',
-  'radial-deadzone': 'radialDeadzone',
-};
-
-function slug(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-}
-
-const DEFAULT_TEXT = 'Default';
-const NOT_DEFAULT_TEXT = 'Not Default';
+const COMPARISON = { ok: 'same', mismatch: 'differs', unknown: 'unknown' } as const;
 
 /**
  * The player's current value for a Destiny 2 required setting, or null when it isn't entered
- * (or the setting isn't one Tune my config asks for). Values are compared exactly, after
- * trimming, with the value the knowledge base gives.
+ * (or the setting isn't one Tune my config asks for). Uses the same comparison as Tune my
+ * config (state/required-settings.ts), so the two flows always agree.
  */
 export function currentRequiredValue(
   config: CurrentConfig | undefined,
   name: string,
   required: string,
 ): CurrentRequiredValue | null {
-  const field = IN_GAME_FIELDS[slug(name)];
-  if (!config || !field) return null;
-  const value = config.inGame[field];
-  if (value === null) return null;
-  const want = required.trim();
-  if (value === 'default') return { text: DEFAULT_TEXT, comparison: want === DEFAULT_TEXT ? 'same' : 'differs' };
-  // "Not default" can only be told apart from a required "Default".
-  if (value === 'other') return { text: NOT_DEFAULT_TEXT, comparison: want === DEFAULT_TEXT ? 'differs' : 'unknown' };
-  const text = String(value);
-  return { text, comparison: text.trim() === want ? 'same' : 'differs' };
+  const result = compareRequiredSetting(config, name, required);
+  return result && { text: result.current, comparison: COMPARISON[result.state] };
 }
 
 const SMOOTHING_TEXT: Record<NonNullable<CurrentConfig['aim']['smoothing']>, string> = {

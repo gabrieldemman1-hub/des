@@ -7,9 +7,11 @@ recommendation comes with the *why* and the *source* behind it.
 The agreed concept, including the evidence policy, is in [CONCEPT.md](CONCEPT.md). Research notes
 are in [docs/research/](docs/research/).
 
-**Status:** app foundation. The shell, navigation, profile, loadouts, sources, knowledge-base
-loader and offline support are built. The four flows (Build my config, Tune my config,
-Troubleshoot by feel, Explain a concept) are placeholder screens for now; they are the next step.
+**Status:** all four flows are built: Build my config (a guided walkthrough per loadout, ending
+in its config sheet), Tune my config (enter your current settings, get changes ordered by
+impact), Troubleshoot by feel (setup check, then symptom → setting) and Explain a concept (every
+MATRIX setting, and the aim styles). Profile, loadouts, sources, backup and offline support are
+in place. What's left is publishing it (see Publishing to GitHub Pages).
 
 ## Run it on your computer
 
@@ -85,9 +87,14 @@ app/                      the web app (Vite root)
     routes.tsx            the screens and their URLs (#/, #/loadouts, #/profile, …)
     styles.css            phone-first styles; dark theme, light via prefers-color-scheme
     components/           Screen, TabBar, ConfidenceBadge, ConfirmDialog, SegmentedField, …
-    screens/              Home, Flow (placeholder), Profile, Loadouts, LoadoutEditor, Sources
+    screens/              Home, Profile, Loadouts, LoadoutEditor, Sources, Explain a concept
+                          (Learn, Term, AimStyle), Flow (redirects old flow addresses)
+    features/             build/ (Build my config + config sheet), tune/ (Tune my config),
+                          troubleshoot/ (Troubleshoot by feel): each owns its screens, logic,
+                          styles and tests
     content/              UI text from CONCEPT.md: flow descriptions, labels
-    state/                profile/loadout schema, storage, loadout rules, React contexts
+    state/                data schema, storage and migrations, loadout rules, checklist
+                          progress keys, the shared Destiny 2 settings comparison, contexts
     test/                 test setup, fixtures, render helper
 knowledge/                the evidence base (see below)
   schema.ts               the zod contract (evidence rules from CONCEPT.md §8)
@@ -163,12 +170,12 @@ It is a manual check, not part of CI, because it depends on third-party sites. R
 
 ## Data on the phone
 
-The profile and loadouts are stored in `localStorage` under one versioned key, `dialed:v1`,
-and validated with zod whenever they're read. Stored data and backups carry a `version`; data
-from an older version is brought up to date step by step (`MIGRATIONS` in
-`app/src/state/storage.ts`), so a schema change never makes old backups unrestorable. The
-player's current Config values (Flow B's starting point) aren't stored yet: they arrive with
-Flow B, together with a version bump and its migration step. If storage is blocked, the saved data is corrupt,
+The profile, loadouts, each loadout's current settings (entered in Tune my config) and
+checklist progress (shared by Build my config and Troubleshoot by feel) are stored in
+`localStorage` under one key, `dialed:v1`, and validated with zod whenever they're read. Stored
+data and backups carry a `version` (currently 2); data from an older version is brought up to
+date step by step (`MIGRATIONS` in `app/src/state/storage.ts`), so a schema change never makes
+old backups unrestorable. If storage is blocked, the saved data is corrupt,
 or it doesn't match the schema, the app starts from defaults (keeping whatever is still valid),
 shows a small notice, and copies the unreadable data aside to `dialed:v1:unreadable` so it
 isn't lost. Backups are plain JSON files, validated before anything is replaced.
