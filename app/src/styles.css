@@ -1,0 +1,1302 @@
+/* Dialed: phone-first, single column, dark by default with a light theme. */
+
+:root {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-2: #1f2630;
+  --border: #30363d;
+  --border-strong: #4a5360;
+  /* Edges of form controls: at least 3:1 against the page and the control's own background. */
+  --input-border: #656d76;
+  --text: #e6edf3;
+  --text-muted: #9ea8b3;
+  --accent: #ffa630;
+  --accent-text: #ffb85c;
+  --on-accent: #1d1305;
+  --focus: #79c0ff;
+  --danger: #ff7b72;
+  --success: #56d364;
+  --warning-bg: #2d2413;
+  --warning-border: #9e6a03;
+  --backdrop: rgb(1 4 9 / 0.72);
+  /* Behind the iOS status bar in the installed app: its text is always white (black-translucent). */
+  --status-scrim: #0d1117;
+
+  --c-official: #56d364;
+  --c-expert: #79c0ff;
+  --c-contested: #ffa657;
+  --c-reasoned: #d2a8ff;
+  --c-gap: #9ea8b3;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+  --tabbar-height: 60px;
+  /* The tab bar's full height. TabBar measures it (large text can wrap its labels); this is the
+     starting value. */
+  --tabbar-space: calc(var(--tabbar-height) + env(safe-area-inset-bottom));
+  --gutter: 16px;
+  --content-width: 480px;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  font-size: 100%;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f6f8fa;
+    --surface: #ffffff;
+    --surface-2: #eef1f4;
+    --border: #d0d7de;
+    --border-strong: #8c959f;
+    --input-border: #818b98;
+    --text: #1f2328;
+    --text-muted: #59636e;
+    --accent: #b35900;
+    --accent-text: #9a4d00;
+    --on-accent: #ffffff;
+    --focus: #0969da;
+    --danger: #cf222e;
+    --success: #1a7f37;
+    --warning-bg: #fff8c5;
+    --warning-border: #d4a72c;
+    --backdrop: rgb(31 35 40 / 0.5);
+
+    /* Dark enough for 4.5:1 as badge text on their own tint over white, --bg and --surface-2. */
+    --c-official: #116329;
+    --c-expert: #0550ae;
+    --c-contested: #953800;
+    --c-reasoned: #6639ba;
+    --c-gap: #505963;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  /* Keep focused or scrolled-to elements clear of the fixed tab bar. */
+  scroll-padding-top: 16px;
+  scroll-padding-bottom: calc(var(--tabbar-space) + 16px);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* In the installed iOS app the status bar floats over the page (black-translucent), so keep a
+   dark strip behind it: content scrolls under it, not under the clock. Zero height elsewhere. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 15;
+  height: env(safe-area-inset-top);
+  background: var(--status-scrim);
+  pointer-events: none;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.15rem;
+}
+
+h3 {
+  font-size: 1rem;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--accent-text);
+  text-underline-offset: 0.15em;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Visible focus for keyboard users everywhere. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Screen headings receive focus after navigation; they are not interactive, so no ring. */
+h1[tabindex='-1']:focus {
+  outline: none;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Layout ---------------------------------------------------------------------- */
+
+.content {
+  max-width: calc(var(--content-width) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding-top: calc(env(safe-area-inset-top) + 20px);
+  padding-right: calc(env(safe-area-inset-right) + var(--gutter));
+  /* --toast-space is set while a toast is showing (PwaUpdater), so it never covers the end of a page. */
+  padding-bottom: calc(var(--tabbar-space) + 32px + var(--toast-space, 0px));
+  padding-left: calc(env(safe-area-inset-left) + var(--gutter));
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.screen-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.back-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  margin: -8px 0 -4px -4px;
+  padding: 0 8px 0 4px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lede {
+  color: var(--text-muted);
+  font-size: 1.02rem;
+}
+
+.eyebrow {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.section-title {
+  margin-top: 8px;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.footnote {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.error {
+  color: var(--danger);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.success {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  vertical-align: 0.1em;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+/* ---- Tab bar --------------------------------------------------------------------- */
+
+.tabbar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  border-top: 1px solid var(--border);
+  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.tabbar ul {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  max-width: calc(var(--content-width) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--tabbar-height);
+  min-width: 44px;
+  padding: 6px 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab-label {
+  max-width: 100%;
+  line-height: 1.15;
+  text-align: center;
+  /* Large text on a narrow phone: wrap inside the tab rather than run off the screen. */
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.tab-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 30px;
+  border-radius: 999px;
+}
+
+.tab[aria-current='page'] {
+  color: var(--text);
+}
+
+/* The current tab gets a filled pill as well as a colour change. */
+.tab[aria-current='page'] .tab-icon {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.tab:focus-visible {
+  outline-offset: -3px;
+}
+
+/* ---- Notices ---------------------------------------------------------------------- */
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 10px 6px 10px 14px;
+  border: 1px solid var(--warning-border);
+  border-left-width: 4px;
+  border-radius: var(--radius-sm);
+  background: var(--warning-bg);
+  font-size: 0.92rem;
+}
+
+.notice p {
+  flex: 1;
+  padding-top: 2px;
+}
+
+.notice-dismiss {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin: -8px 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* "Saved …" / "Deleted …" after closing the loadout editor. */
+.flash {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--success);
+  border-left-width: 4px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--success) 10%, var(--surface));
+  font-weight: 600;
+}
+
+.toast {
+  position: fixed;
+  right: calc(env(safe-area-inset-right) + var(--gutter));
+  bottom: calc(var(--tabbar-space) + 12px);
+  left: calc(env(safe-area-inset-left) + var(--gutter));
+  z-index: 20;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+}
+
+.toast-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---- Buttons ---------------------------------------------------------------------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-weight: 650;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button.primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.button.secondary {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.button.danger {
+  background: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.button.small {
+  min-height: 44px;
+  padding: 8px 14px;
+  font-size: 0.92rem;
+}
+
+.button.block {
+  width: 100%;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.button-row .button {
+  flex: 1 1 180px;
+}
+
+.file-button:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---- Home ------------------------------------------------------------------------- */
+
+.install-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+.home-mark {
+  display: inline-flex;
+  color: var(--accent);
+}
+
+.saved-status {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 0.95rem;
+}
+
+.saved-status-label {
+  color: var(--text-muted);
+}
+
+.flow-cards {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.flow-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.flow-card:active {
+  background: var(--surface-2);
+}
+
+.flow-card > svg {
+  flex: none;
+  color: var(--text-muted);
+}
+
+.flow-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.flow-card-title {
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.flow-card-summary {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.flow-card-status {
+  color: var(--accent-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ---- Flow placeholder -------------------------------------------------------------- */
+
+.coming-soon {
+  padding: 12px 14px;
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+}
+
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prose ul {
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.prose li + li {
+  margin-top: 6px;
+}
+
+/* ---- Forms ------------------------------------------------------------------------ */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-section + .form-section,
+.form + .form-section {
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset.field > legend {
+  padding: 0;
+  margin-bottom: 6px;
+}
+
+.field > label,
+.field > legend,
+.field-label {
+  font-weight: 650;
+}
+
+.slot-field > label {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+input[type='text'],
+select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 1rem; /* 16px+ stops iOS from zooming into the field */
+}
+
+select {
+  appearance: none;
+  padding-right: 40px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 14px) 50%;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+
+input::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+input[aria-invalid='true'],
+select[aria-invalid='true'] {
+  border-color: var(--danger);
+  border-width: 2px;
+}
+
+.fixed-value {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.save-status {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.save-status.is-failed {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* Segmented radio group. Options share a row equally while they fit; with large text or on a
+   narrow screen they wrap onto more rows instead of squeezing their labels into each other. */
+.segmented-field {
+  container-type: inline-size;
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.segment {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  /* The automatic minimum width keeps each option at least as wide as the longest word of its
+     label (two-word labels may wrap); max-width lets a word wider than the whole row break. */
+  max-width: 100%;
+}
+
+.segment input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segment span {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 4px 6px;
+  border-radius: 9px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--text-muted);
+  overflow-wrap: break-word;
+}
+
+/* Five options on a 390px phone: slightly smaller text so two-word labels wrap cleanly. */
+.segmented[data-count='5'] .segment span {
+  padding: 4px 2px;
+  font-size: 0.82rem;
+}
+
+/* A five-step scale split over two rows reads badly, so when one row is too tight (large text
+   or a very narrow screen; rem follows the text size) it becomes a top-to-bottom list. */
+@container (max-width: 19rem) {
+  .segmented[data-count='5'] {
+    flex-direction: column;
+  }
+
+  .segmented[data-count='5'] .segment {
+    flex-basis: auto;
+  }
+
+  .segmented[data-count='5'] .segment span {
+    padding: 4px 12px;
+    font-size: 0.92rem;
+  }
+}
+
+.segment input:checked + span {
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+}
+
+.segment input:focus-visible + span {
+  outline: 3px solid var(--focus);
+  outline-offset: 1px;
+}
+
+/* Radio list with a title and sub-line per option */
+.choice-list {
+  display: grid;
+  gap: 8px;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.choice:has(input:checked) {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.choice input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.choice.is-disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.choice-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.choice-title {
+  font-weight: 650;
+}
+
+.choice-sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.form-actions {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
+}
+
+.danger-zone {
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.danger-zone .button {
+  width: 100%;
+}
+
+/* ---- Loadouts --------------------------------------------------------------------- */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 16px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.empty-state-title {
+  font-size: 1.15rem;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+}
+
+.loadout-list,
+.source-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loadout-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loadout-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.loadout-card-head h2 {
+  overflow-wrap: anywhere;
+}
+
+.slot-list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slot-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.slot-list li:last-child {
+  border-bottom: 0;
+}
+
+.slot-name {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.slot-weapon {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.slot-list .is-empty .slot-weapon {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.tag-main {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.main-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---- Aim style, statements, badges --------------------------------------------------- */
+
+.aim-style {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.aim-style-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.aim-style-label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.why summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  color: var(--accent-text);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.why summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A chevron that points down when open, since display:flex hides the native marker. */
+.why summary::before {
+  content: '';
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin: 0 2px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(-45deg);
+}
+
+.why[open] summary::before {
+  transform: rotate(45deg);
+}
+
+.why[open] summary {
+  margin-bottom: 4px;
+}
+
+.statement {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.statement-reasoning,
+.statement-caveat {
+  color: var(--text-muted);
+}
+
+.citations {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.citations blockquote {
+  margin: 0 0 4px;
+  padding-left: 10px;
+  border-left: 3px solid var(--border-strong);
+  color: var(--text-muted);
+}
+
+.citation-note {
+  margin: 0 0 4px;
+  padding-left: 13px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.citation-source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0;
+}
+
+.confidence {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+
+.badge {
+  --tone: var(--c-gap);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border: 1px solid var(--tone);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  color: var(--tone);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.badge-shape {
+  flex: none;
+}
+
+.badge-official {
+  --tone: var(--c-official);
+}
+.badge-expert {
+  --tone: var(--c-expert);
+}
+.badge-contested {
+  --tone: var(--c-contested);
+}
+.badge-reasoned {
+  --tone: var(--c-reasoned);
+}
+.badge-gap {
+  --tone: var(--c-gap);
+}
+
+.confidence-meaning {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+/* ---- Sources ------------------------------------------------------------------------ */
+
+.source-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.source-card h3 a {
+  display: inline-block;
+  padding: 4px 0;
+}
+
+.source-publisher {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.source-notes {
+  font-size: 0.92rem;
+}
+
+.legend {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend li {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.legend .confidence {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* ---- Dialog ------------------------------------------------------------------------- */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--gutter);
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--gutter));
+  background: var(--backdrop);
+}
+
+.dialog {
+  width: 100%;
+  max-width: var(--content-width);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--border-strong);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.45);
+}
+
+.dialog-body {
+  color: var(--text-muted);
+}
+
+.dialog-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+@media (min-width: 600px) {
+  .dialog-backdrop {
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .flow-card,
+  .tab-icon {
+    transition:
+      background-color 120ms ease,
+      color 120ms ease;
+  }
+}
+
+/* Windows High Contrast and other forced-colour modes drop background fills, which is how the
+   selected segment and the current tab are shown, so mark them with system colours instead. */
+@media (forced-colors: active) {
+  .segment input:checked + span,
+  .tab[aria-current='page'] .tab-icon {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .tab[aria-current='page'] .tab-label {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* An opaque bar, so page text doesn't show through it. */
+  .tabbar {
+    background: Canvas;
+  }
+}
+
+/* ---- Explain a concept --------------------------------------------------------------- */
+
+.learn-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input[type='search'] {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 1rem; /* 16px+ stops iOS from zooming into the field */
+}
+
+.statement-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lever-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 10px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.related-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.related-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  text-decoration: none;
+}
+
+/* ---- Checklists (Build my config, Troubleshoot by feel) ------------------------------- */
+
+.checklist {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklist-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checklist-item.is-done {
+  border-color: var(--success, var(--border-strong));
+}
+
+.checklist-item.is-problem {
+  border-color: var(--danger);
+}
+
+.checklist-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.checklist-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* A setup check about one Config: its mark is shared, but every loadout has its own Config. */
+.per-config-note {
+  padding: 6px 10px;
+  border-left: 3px solid var(--border-strong);
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.checklist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

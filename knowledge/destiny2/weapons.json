@@ -1,0 +1,211 @@
+{
+  "slots": [
+    { "id": "kinetic", "name": "Kinetic" },
+    { "id": "energy", "name": "Energy" },
+    { "id": "power", "name": "Power" }
+  ],
+  "archetypes": [
+    {
+      "id": "auto-rifle",
+      "name": "Auto Rifle",
+      "aimStyle": "tracking",
+      "mapping": {
+        "text": "Auto rifles are tracking weapons: you hold the trigger and keep the reticle on the target for the whole spray.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "An auto rifle fires nonstop while you hold the trigger, and a kill takes many hits. The skill is keeping the reticle on a moving target through sustained fire. That is the tracking aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "pulse-rifle",
+      "name": "Pulse Rifle",
+      "aimStyle": "tracking",
+      "mapping": {
+        "text": "Pulse rifles are tracking weapons: a kill takes several bursts in a row, and you keep the reticle on the target through all of them.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A pulse rifle fires in short bursts, and one burst rarely kills. Between and during bursts you keep making small corrections to stay on a moving target. That calls for steady, continuous control (tracking) rather than one fast flick.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "scout-rifle",
+      "name": "Scout Rifle",
+      "aimStyle": "precision-hold",
+      "mapping": {
+        "text": "Scout rifles are precision-hold weapons: you line up one deliberate shot at a time, usually at long range.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A scout rifle fires one shot per trigger pull and rewards hitting the head at range. Each shot is aimed on its own, and at long range a target moves only a little on screen. So the skill is fine control at low aim speed to settle the reticle exactly, which is precision hold.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "hand-cannon",
+      "name": "Hand Cannon",
+      "aimStyle": "snap",
+      "mapping": {
+        "text": "Hand cannons are snap weapons: you peek, get the reticle onto the target fast, fire a hard-hitting shot, and re-peek.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A hand cannon fires slow, heavy single shots, and landing precision hits matters. It is typically used to peek from cover and hit a target that is visible only briefly. The skill is fast, direct acquisition from a standstill, which is the snap aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "submachine-gun",
+      "name": "Submachine Gun",
+      "aimStyle": "tracking",
+      "mapping": {
+        "text": "Submachine guns are tracking weapons: you spray at close range and stay on a target that is moving fast across your screen.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A submachine gun fires very quickly and fully automatically at close range. Up close, a strafing target crosses the screen fast, so you must keep correcting to stay on it for the whole spray. That is tracking.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "sidearm",
+      "name": "Sidearm",
+      "aimStyle": "snap",
+      "mapping": {
+        "text": "Sidearms are snap weapons: close-range fights start suddenly, and getting the reticle onto the target first decides them.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A sidearm is a close-range weapon, often used when a target appears around a corner. The fight is short, and the first thing that matters is getting on target from a standstill. That is the snap aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons. Loose fit: fast-firing sidearms also need some tracking once you are on target."
+      }
+    },
+    {
+      "id": "combat-bow",
+      "name": "Combat Bow",
+      "aimStyle": "precision-hold",
+      "mapping": {
+        "text": "Combat bows are precision-hold weapons: you line up one arrow and fire it deliberately.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A bow fires one arrow per draw, and the draw gives you time to settle the reticle before you release. A precision hit matters. So the skill is fine control at low aim speed on a single shot, which is precision hold.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "shotgun",
+      "name": "Shotgun",
+      "aimStyle": "snap",
+      "mapping": {
+        "text": "Shotguns are snap weapons: at close range you get the reticle onto the target fast and fire one or two shots.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A shotgun kills in very few shots at close range, and the fight is usually over in a moment. What decides it is getting on target quickly from a standstill, not holding on target over time. That is the snap aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "sniper-rifle",
+      "name": "Sniper Rifle",
+      "aimStyle": "snap",
+      "mapping": {
+        "text": "Sniper rifles are snap weapons: a target shows for a moment, you flick to the head and fire.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A sniper rifle kills with one precision shot, often on a target that crosses a lane or peeks for a split second. The skill is getting the reticle onto the head fast and firing before the target is gone. That is the snap aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons. Holding an angle and waiting for a target is closer to precision hold. The quick flick onto a target that appears is why snipers are grouped with snap weapons here."
+      }
+    },
+    {
+      "id": "fusion-rifle",
+      "name": "Fusion Rifle",
+      "aimStyle": "tracking",
+      "mapping": {
+        "text": "Fusion rifles are tracking weapons: you hold the reticle on the target while the shot charges and while the bolts fire.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A fusion rifle charges before it fires, then releases a burst of bolts. The target keeps moving during the charge, so you must stay on it the whole time. That calls for steady, continuous correction, which is tracking.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "trace-rifle",
+      "name": "Trace Rifle",
+      "aimStyle": "tracking",
+      "mapping": {
+        "text": "Trace rifles are tracking weapons: the beam only does damage while it touches the target, so you hold on it.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A trace rifle fires a continuous beam instead of separate bullets. Damage depends on keeping the beam on a moving target. That is the purest form of tracking.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "glaive",
+      "name": "Glaive",
+      "aimStyle": "snap",
+      "mapping": {
+        "text": "Glaives are closest to snap weapons: you fight at close range, getting the reticle onto the target quickly for a shot or a swing.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A glaive fires single, slow projectiles and can also be swung in melee. It is used mostly at close to mid range, one shot at a time. Getting onto the target quickly matters more than holding on it, which fits snap best of the three styles.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons. Loose fit: glaive shots travel slowly, so you also lead moving targets, and melee swings are not really an aim style at all."
+      }
+    },
+    {
+      "id": "grenade-launcher",
+      "name": "Grenade Launcher",
+      "aimStyle": "precision-hold",
+      "mapping": {
+        "text": "Grenade launchers are closest to precision-hold weapons: you place single explosive shots at the right spot, often a target's feet.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A grenade usually travels in an arc and explodes on impact or nearby. The skill is placing each shot at the right spot, not holding on a target or flicking to a head. That is closest to lining up a single deliberate shot.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons. Loose fit: splash damage makes exact aim matter less than with other weapons."
+      }
+    },
+    {
+      "id": "linear-fusion-rifle",
+      "name": "Linear Fusion Rifle",
+      "aimStyle": "precision-hold",
+      "mapping": {
+        "text": "Linear fusion rifles are precision-hold weapons: you line up one precise, long-range shot while it charges.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A linear fusion rifle charges and then fires a single precise bolt, usually at range. You use the charge time to settle the reticle on the head. That is fine control at low aim speed for one deliberate shot, which is precision hold.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "machine-gun",
+      "name": "Machine Gun",
+      "aimStyle": "tracking",
+      "mapping": {
+        "text": "Machine guns are tracking weapons: you hold the trigger and keep the reticle on the target through a long stream of fire.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A machine gun fires fully automatically from a large magazine. The skill is holding on moving targets, or moving between them, through sustained fire. That is tracking.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "id": "rocket-launcher",
+      "name": "Rocket Launcher",
+      "aimStyle": "precision-hold",
+      "mapping": {
+        "text": "Rocket launchers are closest to precision-hold weapons: you line up one slow, explosive rocket at a time.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A rocket launcher fires single slow projectiles with a big explosion, usually aimed at a target's feet or at a large target. Each shot is placed deliberately, and you are not holding on a target through sustained fire. That is closest to precision hold.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons. Loose fit: splash damage makes exact aim matter less than with other weapons."
+      }
+    },
+    {
+      "id": "sword",
+      "name": "Sword",
+      "aimStyle": null,
+      "mapping": {
+        "text": "Swords are melee weapons, so none of Dialed's three aim styles applies, and no source covers them. A loadout whose main weapon is a sword gets no weapon-aware direction.",
+        "confidence": "gap",
+        "citations": []
+      }
+    }
+  ]
+}

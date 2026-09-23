@@ -1,0 +1,330 @@
+import { screen, waitFor, within } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { sampleData, sampleLoadout } from '../test/fixtures';
+import { MemoryStorage } from '../test/memory-storage';
+import { renderApp } from '../test/render';
+import { defaultProfile, emptyConfig, emptyInGame, type AppData } from '../state/schema';
+import { STORAGE_KEY, createBackup } from '../state/storage';
+
+function stored(storage: MemoryStorage): AppData {
+  return storage.json(STORAGE_KEY) as AppData;
+}
+
+describe('Profile screen', () => {
+  it('shows every profile field, labelled', () => {
+    renderApp({ path: '/profile' });
+    expect(screen.getByRole('heading', { level: 1, name: 'Profile' })).toBeInTheDocument();
+
+    const platform = screen.getByRole('group', { name: 'Platform' });
+    expect(within(platform).getByRole('radio', { name: 'Xbox' })).not.toBeChecked();
+    expect(within(platform).getByRole('radio', { name: 'PC' })).not.toBeChecked();
+
+    const output = screen.getByRole('group', { name: 'Output type' });
+    expect(output).toHaveTextContent('Pick a platform first.');
+    expect(output).toHaveAccessibleDescription('Controller output only; PC mouse-and-keyboard output is out of scope.');
+
+    const aim = screen.getByRole('group', { name: 'What you aim with' });
+    const sources = within(aim).getAllByRole('checkbox');
+    expect(sources.map((c) => c.closest('label')?.querySelector('.choice-title')?.textContent)).toEqual([
+      'Mouse',
+      'Gyro',
+      'Thumbstick',
+    ]);
+    expect(sources.map((c) => (c as HTMLInputElement).checked)).toEqual([true, false, false]);
+
+    expect(screen.getByRole('textbox', { name: 'Mouse model' })).toHaveValue('');
+    expect(screen.getByRole('textbox', { name: 'Mouse DPI' })).toHaveValue('');
+    const rate = screen.getByRole('combobox', { name: 'Mouse polling rate' });
+    expect(within(rate).getAllByRole('option').map((o) => o.textContent)).toEqual([
+      'Not set',
+      '125 Hz',
+      '250 Hz',
+      '500 Hz',
+      '1,000 Hz',
+      '2,000 Hz',
+      '4,000 Hz',
+      '8,000 Hz',
+    ]);
+
+    for (const [group, options] of [
+      ['Main focus', ['Crucible', 'PvE', 'Both']],
+      ['How you play', ['Aggressive', 'Balanced', 'Deliberate']],
+      ['Snappy or smooth', ['Snappy', 'Lean snappy', 'Middle', 'Lean smooth', 'Smooth']],
+      ['Sensitivity', ['Slower', 'Medium', 'Faster']],
+    ] as const) {
+      const radios = within(screen.getByRole('group', { name: group })).getAllByRole('radio');
+      expect(radios.map((r) => r.closest('label')?.textContent)).toEqual(options);
+    }
+    // Hints keep the preference names apart from the settings with similar names.
+    expect(screen.getByRole('group', { name: 'Sensitivity' })).toHaveAccessibleDescription(/Faster means a lower cm\/360/);
+    expect(screen.getByRole('group', { name: 'Snappy or smooth' })).toHaveAccessibleDescription(/isn’t the Smooth or Smoothing setting/);
+    expect(screen.getByRole('group', { name: 'How you play' })).toHaveAccessibleDescription(/isn’t the Precision setting/);
+  });
+
+  it('offers the PC output types, and fixes the Xbox one', async () => {
+    const { user, storage } = renderApp({ path: '/profile' });
+
+    await user.click(screen.getByRole('radio', { name: 'PC' }));
+    const output = screen.getByRole('group', { name: 'Output type' });
+    const choices = within(output).getAllByRole('radio');
+    expect(choices.map((c) => c.closest('label')?.querySelector('.choice-title')?.textContent)).toEqual([
+      'XInput controller',
+      'Xbox controller',
+      'DualSense controller',
+    ]);
+    expect(stored(storage).profile.outputType).toBeNull();
+
+    await user.click(within(output).getByRole('radio', { name: /DualSense controller/ }));
+    expect(stored(storage).profile.outputType).toBe('pc-dualsense');
+
+    // Xbox has a single output type, so switching platform sets it.
+    await user.click(screen.getByRole('radio', { name: 'Xbox' }));
+    expect(stored(storage).profile.outputType).toBe('xbox-controller');
+    expect(screen.getByRole('group', { name: 'Output type' })).toHaveTextContent('Controller (Xbox, PS4)');
+    expect(within(screen.getByRole('group', { name: 'Output type' })).queryByRole('radio')).not.toBeInTheDocument();
+
+    // Back on PC, the Xbox output type no longer fits, so it is cleared.
+    await user.click(screen.getByRole('radio', { name: 'PC' }));
+    expect(stored(storage).profile.outputType).toBeNull();
+  });
+
+  it('records what the player aims with, keeping at least one source', async () => {
+    const { user, storage } = renderApp({ path: '/profile' });
+    const aim = screen.getByRole('group', { name: 'What you aim with' });
+    const box = (name: RegExp) => within(aim).getByRole('checkbox', { name });
+
+    expect(box(/^Mouse/)).toBeDisabled(); // the only one picked
+    await user.click(box(/^Gyro/));
+    expect(stored(storage).profile.aimingSources).toEqual(['mouse', 'gyro']);
+    expect(box(/^Mouse/)).toBeEnabled();
+
+    await user.click(box(/^Mouse/));
+    expect(stored(storage).profile.aimingSources).toEqual(['gyro']);
+    expect(box(/^Gyro/)).toBeDisabled();
+  });
+
+  it('saves each change straight away', async () => {
+    const { user, storage } = renderApp({ path: '/profile' });
+
+    await user.click(screen.getByRole('radio', { name: 'PC' }));
+    expect(stored(storage).profile.platform).toBe('pc');
+    expect(screen.getByText('Saved on this phone.')).toBeInTheDocument();
+
+    await user.type(screen.getByRole('textbox', { name: 'Mouse model' }), 'Test Mouse');
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Mouse polling rate' }), '4000');
+    await user.click(screen.getByRole('radio', { name: 'Crucible' }));
+    await user.click(screen.getByRole('radio', { name: 'Deliberate' }));
+    await user.click(screen.getByRole('radio', { name: 'Lean smooth' }));
+    await user.click(screen.getByRole('radio', { name: 'Faster' }));
+
+    expect(stored(storage).profile).toEqual({
+      ...defaultProfile(),
+      platform: 'pc',
+      mouseModel: 'Test Mouse',
+      pollingRate: 4000,
+      focus: 'crucible',
+      style: 'precise',
+      feel: 4,
+      sensitivity: 'high',
+    });
+  });
+
+  it('says so when a change could not be saved', async () => {
+    const storage = new MemoryStorage();
+    const { user } = renderApp({ path: '/profile', storage });
+    expect(screen.getByText('Changes save automatically on this phone.')).toBeInTheDocument();
+    await user.click(screen.getByRole('radio', { name: 'PC' }));
+    expect(screen.getByText('Saved on this phone.')).toBeInTheDocument();
+
+    storage.setItem = () => {
+      throw new DOMException('Quota exceeded', 'QuotaExceededError');
+    };
+    await user.click(screen.getByRole('radio', { name: 'Xbox' }));
+    expect(screen.getByText('Not saved on this phone. Download a backup to keep a copy.')).toBeInTheDocument();
+    expect(screen.queryByText('Saved on this phone.')).not.toBeInTheDocument();
+  });
+
+  it('says nothing is saved when storage is unavailable', () => {
+    renderApp({ path: '/profile', storage: null });
+    expect(screen.getByText('Not saved on this phone. Download a backup to keep a copy.')).toBeInTheDocument();
+  });
+
+  it('only saves a DPI that is a positive whole number', async () => {
+    const { user, storage } = renderApp({ path: '/profile' });
+    const dpi = screen.getByRole('textbox', { name: 'Mouse DPI' });
+
+    await user.type(dpi, '1600');
+    expect(dpi).not.toHaveAttribute('aria-invalid', 'true');
+    expect(stored(storage).profile.mouseDpi).toBe(1600);
+
+    await user.clear(dpi);
+    await user.type(dpi, '16.5');
+    expect(dpi).toHaveAttribute('aria-invalid', 'true');
+    expect(dpi).toHaveAccessibleDescription(/Enter a whole number above 0/);
+    expect(stored(storage).profile.mouseDpi).toBe(16); // the last valid value, typed on the way
+
+    await user.clear(dpi);
+    await user.type(dpi, '0');
+    expect(screen.getByText('Enter a whole number above 0.')).toBeInTheDocument();
+
+    await user.clear(dpi);
+    expect(stored(storage).profile.mouseDpi).toBeNull();
+    expect(screen.queryByText('Enter a whole number above 0.')).not.toBeInTheDocument();
+  });
+
+  it('shows saved values when it opens', () => {
+    const data = sampleData({
+      profile: { ...defaultProfile(), platform: 'xbox', mouseDpi: 800, pollingRate: 1000, feel: 1 },
+    });
+    renderApp({ path: '/profile', storage: new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(data) }) });
+    expect(screen.getByRole('radio', { name: 'Xbox' })).toBeChecked();
+    expect(screen.getByRole('textbox', { name: 'Mouse DPI' })).toHaveValue('800');
+    expect(screen.getByRole('combobox', { name: 'Mouse polling rate' })).toHaveValue('1000');
+    expect(screen.getByRole('radio', { name: 'Snappy' })).toBeChecked();
+    expect(screen.getByRole('group', { name: 'Output type' })).toHaveTextContent('Controller (Xbox, PS4)');
+  });
+
+  it('downloads a backup of everything saved', async () => {
+    const data = sampleData({ profile: { ...defaultProfile(), platform: 'pc' }, loadouts: [sampleLoadout()] });
+    let blob: Blob | undefined;
+    vi.spyOn(URL, 'createObjectURL').mockImplementation((b) => {
+      blob = b as Blob;
+      return 'blob:backup';
+    });
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
+
+    const { user } = renderApp({ path: '/profile', storage: new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(data) }) });
+    await user.click(screen.getByRole('button', { name: 'Download backup' }));
+
+    expect(click).toHaveBeenCalledOnce();
+    const link = click.mock.contexts[0] as HTMLAnchorElement;
+    expect(link.download).toMatch(/^dialed-backup-\d{4}-\d{2}-\d{2}\.json$/);
+    const backup = JSON.parse(await blob!.text()) as Record<string, unknown>;
+    expect(backup).toMatchObject({
+      app: 'dialed',
+      version: 2,
+      profile: data.profile,
+      loadouts: data.loadouts,
+      inGame: emptyInGame(),
+      configs: {},
+      progress: {},
+    });
+    expect(screen.getByText('Backup downloaded.')).toBeInTheDocument();
+  });
+
+  it('restores a backup after confirmation', async () => {
+    const { user, storage } = renderApp({ path: '/profile' });
+    await user.click(screen.getByRole('radio', { name: 'Xbox' }));
+
+    const backup = sampleData({
+      profile: { ...defaultProfile(), platform: 'pc', mouseDpi: 3200 },
+      loadouts: [sampleLoadout()],
+    });
+    const file = new File([createBackup(backup, new Date('2026-09-01T00:00:00Z'))], 'backup.json', {
+      type: 'application/json',
+    });
+    await user.upload(screen.getByLabelText('Restore from backup'), file);
+
+    const dialog = await screen.findByRole('alertdialog', { name: 'Replace your data with this backup?' });
+    expect(dialog).toHaveTextContent('has 1 loadout');
+    expect(within(dialog).getByRole('button', { name: 'Cancel' })).toHaveFocus();
+    expect(stored(storage).profile.platform).toBe('xbox'); // nothing replaced yet
+
+    await user.click(within(dialog).getByRole('button', { name: 'Replace' }));
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+    expect(stored(storage)).toEqual(backup);
+    expect(screen.getByRole('radio', { name: 'PC' })).toBeChecked();
+    expect(screen.getByRole('textbox', { name: 'Mouse DPI' })).toHaveValue('3200');
+    expect(screen.getByText('Backup restored.')).toBeInTheDocument();
+  });
+
+  it('says the restore replaces current settings and checklist marks too', async () => {
+    const { user } = renderApp({ path: '/profile' });
+    const backup = sampleData({
+      loadouts: [sampleLoadout()],
+      inGame: { ...emptyInGame(), lookSensitivity: 20 },
+      configs: { l1: { ...emptyConfig(), aim: { ...emptyConfig().aim, precision: 40 } } },
+      progress: { 'check:firmware-current': 'done', 'loadout:l1:aim:sensitivity': 'done' },
+    });
+    const file = new File([createBackup(backup, new Date('2026-09-01T00:00:00Z'))], 'backup.json', {
+      type: 'application/json',
+    });
+    await user.upload(screen.getByLabelText('Restore from backup'), file);
+    const dialog = await screen.findByRole('alertdialog', { name: 'Replace your data with this backup?' });
+    expect(dialog).toHaveTextContent('has 1 loadout, current settings and 2 checklist marks.');
+    expect(dialog).toHaveTextContent(
+      'It will replace the profile, 0 loadouts, current settings and checklist marks on this phone.',
+    );
+    expect(dialog).not.toHaveTextContent('restoring it clears');
+    expect(screen.getByText(/Your profile, loadouts, current settings and checklist marks are saved only/)).toBeInTheDocument();
+  });
+
+  it('warns that a backup without current settings or marks (version 1) clears them', async () => {
+    const onPhone = sampleData({
+      loadouts: [sampleLoadout()],
+      inGame: { ...emptyInGame(), lookSensitivity: 20 },
+      progress: { 'required:look-sensitivity': 'done' },
+    });
+    const { user, storage } = renderApp({
+      path: '/profile',
+      storage: new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(onPhone) }),
+    });
+    const v1 = {
+      app: 'dialed',
+      version: 1,
+      exportedAt: '2026-09-01T00:00:00.000Z',
+      profile: defaultProfile(),
+      loadouts: [sampleLoadout()],
+    };
+    await user.upload(
+      screen.getByLabelText('Restore from backup'),
+      new File([JSON.stringify(v1)], 'old.json', { type: 'application/json' }),
+    );
+    const dialog = await screen.findByRole('alertdialog', { name: 'Replace your data with this backup?' });
+    expect(dialog).toHaveTextContent('has 1 loadout, no current settings and no checklist marks.');
+    expect(dialog).toHaveTextContent(
+      'This backup has no current settings or checklist marks, so restoring it clears the current settings and checklist marks on this phone.',
+    );
+
+    await user.click(within(dialog).getByRole('button', { name: 'Replace' }));
+    expect(stored(storage).inGame).toEqual(emptyInGame());
+    expect(stored(storage).progress).toEqual({});
+  });
+
+  it('warns only about what the backup lacks', async () => {
+    const onPhone = sampleData({ progress: { 'check:firmware-current': 'done' } });
+    const { user } = renderApp({
+      path: '/profile',
+      storage: new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(onPhone) }),
+    });
+    const backup = sampleData({ inGame: { ...emptyInGame(), buttonLayout: 'default' } });
+    await user.upload(
+      screen.getByLabelText('Restore from backup'),
+      new File([createBackup(backup)], 'backup.json', { type: 'application/json' }),
+    );
+    const dialog = await screen.findByRole('alertdialog');
+    expect(dialog).toHaveTextContent(
+      'This backup has no checklist marks, so restoring it clears the checklist marks on this phone.',
+    );
+  });
+
+  it('keeps everything when the restore is cancelled', async () => {
+    const { user, storage } = renderApp({ path: '/profile' });
+    await user.click(screen.getByRole('radio', { name: 'Xbox' }));
+    const file = new File([createBackup(sampleData(), new Date())], 'backup.json', { type: 'application/json' });
+    await user.upload(screen.getByLabelText('Restore from backup'), file);
+
+    await user.click(await screen.findByRole('button', { name: 'Cancel' }));
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+    expect(stored(storage).profile.platform).toBe('xbox');
+  });
+
+  it('explains why a file cannot be restored', async () => {
+    const { user } = renderApp({ path: '/profile' });
+    const file = new File(['{"hello":"world"}'], 'other.json', { type: 'application/json' });
+    await user.upload(screen.getByLabelText('Restore from backup'), file);
+    await waitFor(() => expect(screen.getByText('That file isn’t a Dialed backup.')).toBeInTheDocument());
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+  });
+});

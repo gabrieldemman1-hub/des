@@ -1,0 +1,54 @@
+{
+  "sources": [
+    {
+      "id": "xim-guide",
+      "title": "XIM MATRIX User Guide",
+      "publisher": "XIM Technologies",
+      "url": "https://guide.xim.tech/",
+      "hosts": ["guide.xim.tech"],
+      "tier": "official",
+      "accessed": "2026-09-22",
+      "notes": "The canonical reference for every XIM MATRIX setting. Has no Destiny 2 content."
+    },
+    {
+      "id": "xim-game-settings",
+      "title": "XIM Game Settings (public copy)",
+      "publisher": "XIM Community Forum",
+      "url": "https://community.xim.tech/pub/xim-game-settings",
+      "hosts": ["community.xim.tech"],
+      "tier": "official-by-reference",
+      "accessed": "2026-09-22",
+      "notes": "Required in-game settings per game. The guide's \"required aim settings\" links go to a login-walled forum topic; this is a public copy of its first post and may differ from it. Author \"mist\" is not confirmed as XIM staff. Confirm values in Manager (gear icon)."
+    },
+    {
+      "id": "xim-hardware-compatibility",
+      "title": "XIM MATRIX Official Hardware Compatibility List",
+      "publisher": "XIM Community Forum",
+      "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+      "hosts": ["community.xim.tech"],
+      "tier": "official-by-reference",
+      "accessed": "2026-09-22",
+      "notes": "A public forum page, posted by OBsIV, who writes in XIM's voice (\"our latest firmware\"); no page states their role. CONCEPT.md §8 lists it as official by reference, together with the Game Settings list. Hardware reports come from users and can go out of date, so check the live page."
+    },
+    {
+      "id": "xim-getting-started",
+      "title": "XIM MATRIX Getting Started Guide",
+      "publisher": "XIM Community Forum (OBsIV)",
+      "url": "https://community.xim.tech/pub/xim-matrix-getting-started-guide",
+      "hosts": ["community.xim.tech"],
+      "tier": "official-inferred",
+      "accessed": "2026-09-22",
+      "notes": "OBsIV writes in XIM's voice; no page states their role."
+    },
+    {
+      "id": "xim-central",
+      "title": "XIM Central (YouTube)",
+      "publisher": "Independent creator",
+      "url": "https://www.youtube.com/@XIMCentral",
+      "hosts": ["www.youtube.com", "youtube.com", "controlc.com", "pastebin.com"],
+      "tier": "expert",
+      "accessed": "2026-09-22",
+      "notes": "Not XIM's official channel. XIM MATRIX-era material only (user decision): nothing made for XIM APEX or XIM4. Video transcripts could not be retrieved; only scripts confirmed as the channel's may be cited."
+    }
+  ]
+}

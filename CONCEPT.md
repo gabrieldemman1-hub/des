@@ -349,18 +349,25 @@ Roughly in order of likely value:
 
 ## 12. Next steps
 
-All concept questions are answered. The next milestone is the **Destiny 2
-knowledge base**: researching and citing each value, definition and symptom
-mapping into data files. None of the following blocks it, but each would help:
+All concept questions are answered, and the MVP (§9) is built: the Destiny 2 knowledge
+base (`knowledge/`), the phone-first app (`app/`) and all four flows with a config sheet
+per loadout. What's left for the first release:
+
+- **Publish it.** The repository goes public and GitHub Pages is switched on
+  (Settings → Pages → Source: GitHub Actions). From then on every merge to `main`
+  publishes the app, which installs to the home screen and works offline.
+- **One in-game test.** The official Easing wording is ambiguous (§6). Raising
+  Easing and feeling whether the reticle gets slower to start moving settles which
+  way the hand-cannon advice points. Until then, `npm run check:release` reports
+  the statements that wait on it.
+
+These don't block the release, but would help fill Flow C's gaps (§10):
 
 - **Forum access.** XIM's MATRIX Support FAQ and the full Game Settings topic need a
   forum login. If you have an account, pasting those pages in fills gaps.
 - **XIM Central's MATRIX videos.** These are the only XIM Central content in scope,
   and our tools couldn't read their transcripts. Notes or transcripts from you for
   the smoothing, quantization and "Boost" videos would let the app cite them.
-- **One in-game test.** The official Easing wording is ambiguous (§6). Raising
-  Easing and feeling whether the reticle gets slower to start moving settles which
-  way the hand-cannon advice points.
 
 ## 13. Decision log
 
@@ -376,7 +383,7 @@ Choices made during concept alignment (2026-09-22):
 | Device link | Reference-only — user applies values in XIM MATRIX Manager |
 | First game | Destiny 2 |
 | Platforms | Xbox and PC |
-| Output types | Controller output only (PC mouse-and-keyboard output out of scope) |
+| Output types | Controller output only. Out of scope: PC mouse-and-keyboard output, and the PC-only "Mouse, Keyboard, Controller" mode (it also aims through the controller, per the guide; can be added later) |
 | Knowledge policy | Evidence-based whitelist: official XIM documentation + XIM Central; additions require a logged decision |
 | Official guide | XIM MATRIX User Guide — https://guide.xim.tech |
 | Device generation | XIM MATRIX only — no XIM APEX or XIM4 advice, including XIM Central's older videos |
@@ -388,3 +395,4 @@ Choices made during concept alignment (2026-09-22):
 | Weapon-aware guidance | Yes — pulse rifle (tracking) vs hand cannon (peek) and other aim styles, as *reasoned* guidance |
 | Multiple weapons | Separate Configs per loadout, loaded when you switch loadouts |
 | Concept explainer | Yes — Flow D glossary, inline on every setting name; in the MVP (proposed in v0.3, no objection) |
+| Hosting (2026-09-23) | GitHub Pages from a public repository, published on every merge to `main`; installed to the home screen as a Progressive Web App |
