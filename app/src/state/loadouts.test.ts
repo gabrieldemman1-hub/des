@@ -140,6 +140,9 @@ describe('loadout list changes', () => {
   it('generates distinct ids without crypto.randomUUID', () => {
     const ids = new Set(Array.from({ length: 50 }, newLoadoutId));
     expect(ids.size).toBe(50);
-    for (const id of ids) expect(id).toMatch(/^[0-9a-f]{24}$/);
+    for (const id of ids) {
+      expect(id).toMatch(/^[0-9a-f]{24}$/);
+      expect(Loadout.safeParse(sampleLoadout({ id })).success).toBe(true); // the schema accepts them
+    }
   });
 });

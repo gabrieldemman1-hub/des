@@ -9,7 +9,7 @@ import {
   SENSITIVITY_LABELS,
   STYLE_LABELS,
 } from '../content/labels';
-import { useData } from '../state/data-context';
+import { useData, type SaveState } from '../state/data-context';
 import { MAX_MOUSE_MODEL_LENGTH, POLLING_RATES, type AppData, type PollingRate } from '../state/schema';
 import { backupFileName, createBackup, parseBackup } from '../state/storage';
 
@@ -173,7 +173,7 @@ interface PendingRestore {
   exportedAt: string;
 }
 
-function BackupSection({ onRestored }: { onRestored: () => void }) {
+function BackupSection() {
   const { data, replaceData } = useData();
   const [pending, setPending] = useState<PendingRestore | null>(null);
   const [message, setMessage] = useState<{ kind: 'error' | 'done'; text: string } | null>(null);
@@ -214,7 +214,6 @@ function BackupSection({ onRestored }: { onRestored: () => void }) {
     replaceData(pending.data);
     setPending(null);
     setMessage({ kind: 'done', text: 'Backup restored.' });
-    onRestored();
   };
 
   return (
@@ -262,23 +261,28 @@ function BackupSection({ onRestored }: { onRestored: () => void }) {
   );
 }
 
+const SAVE_STATUS: Record<SaveState, string> = {
+  idle: 'Changes save automatically on this phone.',
+  saved: 'Saved on this phone.',
+  failed: 'Not saved on this phone. Download a backup to keep a copy.',
+};
+
 export function ProfileScreen() {
-  const { lastSavedAt } = useData();
-  // Remount the fields after a restore so their local state starts from the restored data.
-  const [revision, setRevision] = useState(0);
+  const { saveState, revision } = useData();
 
   return (
     <Screen
       title="Profile"
       intro={<p className="lede">Dialed tailors its advice to these. Change them any time.</p>}
     >
-      <p className="save-status" aria-live="polite">
-        {lastSavedAt ? 'Saved on this phone.' : 'Changes save automatically on this phone.'}
+      <p className={saveState === 'failed' ? 'save-status is-failed' : 'save-status'} aria-live="polite">
+        {SAVE_STATUS[saveState]}
       </p>
       <form className="form" onSubmit={(e) => e.preventDefault()} aria-label="Profile">
+        {/* Remounted when the data is replaced (a restore, another tab) so the DPI text starts again from it. */}
         <ProfileFields key={revision} />
       </form>
-      <BackupSection onRestored={() => setRevision((r) => r + 1)} />
+      <BackupSection />
     </Screen>
   );
 }

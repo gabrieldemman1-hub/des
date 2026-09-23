@@ -7,6 +7,8 @@
   --surface-2: #1f2630;
   --border: #30363d;
   --border-strong: #4a5360;
+  /* Edges of form controls: at least 3:1 against the page and the control's own background. */
+  --input-border: #656d76;
   --text: #e6edf3;
   --text-muted: #9ea8b3;
   --accent: #ffa630;
@@ -18,6 +20,8 @@
   --warning-bg: #2d2413;
   --warning-border: #9e6a03;
   --backdrop: rgb(1 4 9 / 0.72);
+  /* Behind the iOS status bar in the installed app: its text is always white (black-translucent). */
+  --status-scrim: #0d1117;
 
   --c-official: #56d364;
   --c-expert: #79c0ff;
@@ -28,6 +32,9 @@
   --radius: 14px;
   --radius-sm: 10px;
   --tabbar-height: 60px;
+  /* The tab bar's full height. TabBar measures it (large text can wrap its labels); this is the
+     starting value. */
+  --tabbar-space: calc(var(--tabbar-height) + env(safe-area-inset-bottom));
   --gutter: 16px;
   --content-width: 480px;
 
@@ -53,6 +60,7 @@
     --surface-2: #eef1f4;
     --border: #d0d7de;
     --border-strong: #8c959f;
+    --input-border: #818b98;
     --text: #1f2328;
     --text-muted: #59636e;
     --accent: #b35900;
@@ -65,11 +73,12 @@
     --warning-border: #d4a72c;
     --backdrop: rgb(31 35 40 / 0.5);
 
-    --c-official: #1a7f37;
-    --c-expert: #0969da;
-    --c-contested: #bc4c00;
-    --c-reasoned: #8250df;
-    --c-gap: #59636e;
+    /* Dark enough for 4.5:1 as badge text on their own tint over white, --bg and --surface-2. */
+    --c-official: #116329;
+    --c-expert: #0550ae;
+    --c-contested: #953800;
+    --c-reasoned: #6639ba;
+    --c-gap: #505963;
   }
 }
 
@@ -83,7 +92,7 @@ html {
   background: var(--bg);
   /* Keep focused or scrolled-to elements clear of the fixed tab bar. */
   scroll-padding-top: 16px;
-  scroll-padding-bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom) + 16px);
+  scroll-padding-bottom: calc(var(--tabbar-space) + 16px);
 }
 
 body {
@@ -92,6 +101,18 @@ body {
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
+}
+
+/* In the installed iOS app the status bar floats over the page (black-translucent), so keep a
+   dark strip behind it: content scrolls under it, not under the clock. Zero height elsewhere. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 15;
+  height: env(safe-area-inset-top);
+  background: var(--status-scrim);
+  pointer-events: none;
 }
 
 h1,
@@ -162,7 +183,8 @@ h1[tabindex='-1']:focus {
   margin: 0 auto;
   padding-top: calc(env(safe-area-inset-top) + 20px);
   padding-right: calc(env(safe-area-inset-right) + var(--gutter));
-  padding-bottom: calc(env(safe-area-inset-bottom) + var(--tabbar-height) + 32px);
+  /* --toast-space is set while a toast is showing (PwaUpdater), so it never covers the end of a page. */
+  padding-bottom: calc(var(--tabbar-space) + 32px + var(--toast-space, 0px));
   padding-left: calc(env(safe-area-inset-left) + var(--gutter));
 }
 
@@ -282,12 +304,22 @@ h1[tabindex='-1']:focus {
   gap: 2px;
   min-height: var(--tabbar-height);
   min-width: 44px;
-  padding: 6px 4px;
+  padding: 6px 0;
   color: var(--text-muted);
   font-size: 0.75rem;
   font-weight: 600;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+.tab-label {
+  max-width: 100%;
+  line-height: 1.15;
+  text-align: center;
+  /* Large text on a narrow phone: wrap inside the tab rather than run off the screen. */
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 .tab-icon {
@@ -345,10 +377,21 @@ h1[tabindex='-1']:focus {
   cursor: pointer;
 }
 
+/* "Saved …" / "Deleted …" after closing the loadout editor. */
+.flash {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--success);
+  border-left-width: 4px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--success) 10%, var(--surface));
+  font-weight: 600;
+}
+
 .toast {
   position: fixed;
   right: calc(env(safe-area-inset-right) + var(--gutter));
-  bottom: calc(env(safe-area-inset-bottom) + var(--tabbar-height) + 12px);
+  bottom: calc(var(--tabbar-space) + 12px);
   left: calc(env(safe-area-inset-left) + var(--gutter));
   z-index: 20;
   max-width: var(--content-width);
@@ -579,7 +622,7 @@ select {
   width: 100%;
   min-height: 48px;
   padding: 10px 12px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--input-border);
   border-radius: var(--radius-sm);
   background: var(--surface);
   font-size: 1rem; /* 16px+ stops iOS from zooming into the field */
@@ -600,7 +643,7 @@ select {
 
 input::placeholder {
   color: var(--text-muted);
-  opacity: 0.8;
+  opacity: 1;
 }
 
 input[aria-invalid='true'],
@@ -625,13 +668,23 @@ select[aria-invalid='true'] {
   font-size: 0.9rem;
 }
 
-/* Segmented radio group */
+.save-status.is-failed {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* Segmented radio group. Options share a row equally while they fit; with large text or on a
+   narrow screen they wrap onto more rows instead of squeezing their labels into each other. */
+.segmented-field {
+  container-type: inline-size;
+}
+
 .segmented {
-  display: grid;
-  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 4px;
   padding: 4px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--input-border);
   border-radius: 12px;
   background: var(--surface);
 }
@@ -639,6 +692,10 @@ select[aria-invalid='true'] {
 .segment {
   position: relative;
   display: flex;
+  flex: 1 1 0;
+  /* The automatic minimum width keeps each option at least as wide as the longest word of its
+     label (two-word labels may wrap); max-width lets a word wider than the whole row break. */
+  max-width: 100%;
 }
 
 .segment input {
@@ -664,12 +721,30 @@ select[aria-invalid='true'] {
   line-height: 1.15;
   text-align: center;
   color: var(--text-muted);
+  overflow-wrap: break-word;
 }
 
 /* Five options on a 390px phone: slightly smaller text so two-word labels wrap cleanly. */
 .segmented[data-count='5'] .segment span {
   padding: 4px 2px;
   font-size: 0.82rem;
+}
+
+/* A five-step scale split over two rows reads badly, so when one row is too tight (large text
+   or a very narrow screen; rem follows the text size) it becomes a top-to-bottom list. */
+@container (max-width: 19rem) {
+  .segmented[data-count='5'] {
+    flex-direction: column;
+  }
+
+  .segmented[data-count='5'] .segment {
+    flex-basis: auto;
+  }
+
+  .segmented[data-count='5'] .segment span {
+    padding: 4px 12px;
+    font-size: 0.92rem;
+  }
 }
 
 .segment input:checked + span {
@@ -1070,5 +1145,26 @@ select[aria-invalid='true'] {
     transition:
       background-color 120ms ease,
       color 120ms ease;
+  }
+}
+
+/* Windows High Contrast and other forced-colour modes drop background fills, which is how the
+   selected segment and the current tab are shown, so mark them with system colours instead. */
+@media (forced-colors: active) {
+  .segment input:checked + span,
+  .tab[aria-current='page'] .tab-icon {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .tab[aria-current='page'] .tab-label {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* An opaque bar, so page text doesn't show through it. */
+  .tabbar {
+    background: Canvas;
   }
 }

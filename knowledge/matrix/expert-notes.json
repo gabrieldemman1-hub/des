@@ -96,7 +96,7 @@
         "jitter"
       ],
       "statement": {
-        "text": "XIM Central found that the Light smoothing preset gives far better micro movements (very small aim adjustments) than the Off preset. In another 2023 tutorial, XIM Central called both Light and Deactivated good presets. The official guide leaves the choice to you: try each preset and keep the one that feels most natural.",
+        "text": "XIM Central found that the Light smoothing preset gives far better micro movements (very small aim adjustments) than the Off preset. The official guide leaves the choice to you: try each preset and keep the one that feels most natural.",
         "confidence": "expert",
         "citations": [
           {
@@ -105,13 +105,6 @@
             "quote": "It provides far better micro movements than the off preset",
             "matrixEra": true,
             "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). The recommendation to use Light was made for Rainbow Six Siege; only this comparison with the off preset is general."
-          },
-          {
-            "source": "xim-central",
-            "url": "https://controlc.com/ee24428c",
-            "quote": "While Light, and Deactivated are good presets, I prefer the aim assist when using custom smoothing.",
-            "matrixEra": true,
-            "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). The preference for custom smoothing concerns aim assist in Overwatch 2 and is not used here."
           },
           {
             "source": "xim-guide",
@@ -129,7 +122,7 @@
       ],
       "symptomIds": [],
       "statement": {
-        "text": "XIM Central uses Groups to keep per-weapon bindings, such as recoil Smart Actions, inside one Config. To keep the active group matched to the weapon in your hands, XIM Central binds the group cycle action to the same button used to switch weapons. If the groups get out of step, press the key that selects your loadout again. The official guide describes the same method. Officially, Groups turn sets of bindings on and off.",
+        "text": "XIM Central uses Groups to keep per-weapon bindings, such as recoil Smart Actions, inside one Config. To keep the active group matched to the weapon in your hands, XIM Central binds the group cycle action to the same button used to switch weapons. If the groups get out of step, press the key that selects your loadout again. The official guide describes the same method. With several loadouts, it suggests a Cycle Reset action instead, because you only need to remember one key. Officially, Groups turn sets of bindings on and off.",
         "confidence": "expert",
         "citations": [
           {
@@ -160,11 +153,16 @@
           },
           {
             "source": "xim-guide",
+            "url": "https://guide.xim.tech/Groups/#group-cycling",
+            "quote": "If you have multiple loadouts, use a Cycle Reset action to resynchronize with your current weapon since it only requires you to remember a single key."
+          },
+          {
+            "source": "xim-guide",
             "url": "https://guide.xim.tech/Groups/#groups",
             "quote": "Group Membership is a powerful tool that allows you to selectively enable and disable sets of bindings using actions."
           }
         ],
-        "caveat": "XIM Central's example is Rainbow Six Siege (2023). We found no source that confirms this method with Destiny 2's weapon switching. Group features have been added since, such as the official Cycle Reset action."
+        "caveat": "XIM Central's example is Rainbow Six Siege (2023). We found no source that confirms this method with Destiny 2's weapon switching. XIM Central's 2023 script does not mention the Cycle Reset action that the current guide offers."
       }
     },
     {
@@ -204,7 +202,7 @@
             "quote": "Move reticle at specified angle. Seamlessly integrates with user aim."
           }
         ],
-        "caveat": "From a 2023 recoil tutorial. Use it only for direction: the tutorial sets magnitude in %, while the current guide sets Aim Magnitude in degrees per second. This is the Aim Angle Smart Action; Quantization Angle and Behavior Variance use \"Angle\" for different things."
+        "caveat": "From a 2023 recoil tutorial. Use it only for direction, and check it with a short test: the tutorial sets magnitude in %, while the current guide sets Aim Magnitude in degrees per second. The script talks about moving the stick. Do not confuse Aim Angle, which moves the reticle, with the separate Right Stick Angle action. Quantization Angle and Behavior Variance also use \"Angle\" for different things."
       }
     },
     {
@@ -215,7 +213,7 @@
       ],
       "symptomIds": [],
       "statement": {
-        "text": "Sources disagree about in-game settings that the required list does not mention. The official guide (Standard sync): set sensitivity to maximum, follow every required aim setting, and leave all other aim settings at default. XIM Central (2023): use only the listed values, and anything the list does not show can be set to your preference. In that tutorial XIM Central also tuned the game's own aim assist settings. Both agree that the listed values are mandatory.",
+        "text": "Sources disagree about in-game settings that the required list does not mention. The official guide (Standard sync): set sensitivity to maximum, follow every required aim setting, and leave all other aim settings at default. XIM Central (2023): use only the listed values, and anything the list does not show can be set to your preference. In the same tutorial, XIM Central went on to show the in-game aim assist settings they use. Both agree that the listed values are mandatory.",
         "confidence": "contested",
         "citations": [
           {
@@ -236,16 +234,9 @@
           {
             "source": "xim-central",
             "url": "https://controlc.com/ee24428c",
-            "quote": "Only use these ingame settings, otherwise your xim will not work as intended. Anything that isn’t displayed here can be customized to your personal preference.",
+            "quote": "Only use these ingame settings, otherwise your xim will not work as intended. Anything that isn’t displayed here can be customized to your personal preference. In the last chapter, I will show you what aim assist settings I am using in the game.",
             "matrixEra": true,
             "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). Said about the required in-game settings list that Manager opens; the statement is general."
-          },
-          {
-            "source": "xim-central",
-            "url": "https://controlc.com/ee24428c",
-            "quote": "For Overwatch, I always recommend to dial in the aim assist settings of the game, before doing any bigger changes in your xim configuration.",
-            "matrixEra": true,
-            "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). Cited only to show that XIM Central's 'preference' includes aim settings; the Overwatch values are not used."
           }
         ],
         "caveat": "Dialed's Destiny 2 settings follow the official rule: aim settings that are not on the required list stay at default. XIM Central's comment comes from an Overwatch 2 tutorial."

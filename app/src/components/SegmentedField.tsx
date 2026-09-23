@@ -1,4 +1,4 @@
-import { useId, type CSSProperties, type ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 
 interface Option<T extends string | number> {
   value: T;
@@ -25,11 +25,7 @@ export function SegmentedField<T extends string | number>({ legend, hint, option
           {hint}
         </p>
       )}
-      <div
-        className="segmented"
-        data-count={options.length}
-        style={{ '--count': options.length } as CSSProperties}
-      >
+      <div className="segmented" data-count={options.length}>
         {options.map((option) => (
           <label className="segment" key={option.value}>
             <input

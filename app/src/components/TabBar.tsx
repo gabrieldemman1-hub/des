@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router';
 import { HomeIcon, LoadoutsIcon, ProfileIcon, SourcesIcon } from './icons';
 
@@ -24,8 +24,26 @@ const TABS: Tab[] = [
 
 export function TabBar() {
   const { pathname } = useLocation();
+  const nav = useRef<HTMLElement>(null);
+
+  // Large text can wrap the labels onto two lines, making the bar taller than --tabbar-height.
+  // Publish its real height so the page keeps its end (and the toast) clear of it.
+  useLayoutEffect(() => {
+    const element = nav.current;
+    if (!element || typeof ResizeObserver === 'undefined') return;
+    const root = document.documentElement;
+    const update = () => root.style.setProperty('--tabbar-space', `${element.offsetHeight}px`);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(element, { box: 'border-box' });
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty('--tabbar-space');
+    };
+  }, []);
+
   return (
-    <nav className="tabbar" aria-label="Main">
+    <nav className="tabbar" aria-label="Main" ref={nav}>
       <ul>
         {TABS.map((tab) => {
           const active = tab.isActive(pathname);

@@ -104,7 +104,7 @@
       "id": "max-sensitivity-and-defaults",
       "title": "The general rule: maximum sensitivity, everything else default",
       "statement": {
-        "text": "XIM's rule for every game: set the in-game sensitivity to maximum and leave every other setting at its default, unless the game's entry says otherwise. Destiny 2 is on XIM's list of games that need extra settings, so use the six values above exactly. Getting these wrong hurts your aim and stops shared Configs from working as intended.",
+        "text": "XIM's rule for every game: set the in-game sensitivity to maximum and leave every other setting at its default, unless the game's entry says otherwise. Destiny 2 is on XIM's list of games that need extra settings, so use its six Destiny 2 values exactly. Getting these wrong hurts your aim and stops shared Configs from working as intended.",
         "confidence": "official",
         "citations": [
           {
@@ -130,9 +130,14 @@
       "id": "sync-method",
       "title": "Sync method: plan for Standard",
       "statement": {
-        "text": "Plan for Standard sync. In the game: the required values above, and every other aim setting at default. Your aim is then shaped in your Config, not in the game.",
+        "text": "Plan for Standard sync. In the game: Destiny 2's six required values, and every other aim setting at default. Your aim is then shaped in your Config, not in the game.",
         "confidence": "reasoned",
         "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/",
+            "quote": "These settings apply only to Configs that output as controller."
+          },
           {
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Game-Settings/#standard",
@@ -174,19 +179,24 @@
             "quote": "This means a Config can work with different in-game aim settings without modification. This is highly beneficial for controller Configs, but, also valuable for mouse Configs that are using Simulate Analog Behavior."
           },
           {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+            "quote": "Or, if you are a controller gamer (and the game has support for it), aim is customized in your game and settings are copied to your Config."
+          },
+          {
             "source": "xim-game-settings",
             "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
             "quote": "This game supports Custom In-Game Settings. Setting values in green can be customized when using this feature.",
             "note": "From the Apex Legends (ALC) entry, one of 15 entries with this line. The Destiny 2 entry has no such line."
           }
         ],
-        "reasoning": "No source says which sync methods Destiny 2 supports. XIM's guide says every supported game has Standard sync, and that Standard is the default for new mouse Configs. Custom is the default only for controller Configs, and only when the game has it; for mouse Configs, XIM ties its value to Simulate Analog Behavior. On the public Game Settings list, 15 entries say 'This game supports Custom In-Game Settings'. The Destiny 2 entry does not. That is weak evidence on its own: those same 15 entries are exactly the ones that require SAB, so the line may mark SAB games rather than every game with Custom support. Standard is the safe plan either way, because every game has it.",
-        "caveat": "We found no evidence that Destiny 2 supports Custom sync, but no source rules it out. If Manager offers Custom for your Destiny 2 Config, the public list may be out of date."
+        "reasoning": "No source says whether Destiny 2 supports Custom sync. XIM's guide says every supported game has Standard sync, and that Standard is the default for new mouse Configs. Custom is the default only for what XIM calls 'controller Configs', meaning Configs where you aim with a controller instead of a mouse, and only when the game has it. For mouse Configs, XIM says Custom is valuable when they use Simulate Analog Behavior. All three sync methods apply only to Configs that output as controller, so 'controller Configs' here does not mean controller output. On the public Game Settings list, 15 entries say 'This game supports Custom In-Game Settings'. The Destiny 2 entry does not. That is weak evidence on its own: those same 15 entries are exactly the ones that require SAB, so the line may mark SAB games rather than every game with Custom support. Standard is the safe plan either way, because every game has it.",
+        "caveat": "We found no evidence that Destiny 2 supports Custom sync (copying your in-game aim settings into your Config), but no source rules it out. If Manager offers Custom for your Destiny 2 Config, Destiny 2 does support it. Standard still works, because every game has it, and it is the default for new mouse Configs."
       }
     },
     {
       "id": "simulate-analog-behavior",
-      "title": "Simulate Analog Behavior (SAB): not required",
+      "title": "Simulate Analog Behavior (SAB): not listed as required",
       "statement": {
         "text": "The public list sets no SAB requirement for Destiny 2, so the plan leaves SAB off (its default). SAB makes the stick and trigger output look more analog. Other entries do require it: Apex Legends, Arc Raiders, Battlefield 6, Call of Duty: Black Ops 6 and Black Ops 7, and Fortnite.",
         "confidence": "reasoned",
@@ -221,9 +231,19 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
             "quote": "Do not use aiming curves"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#lower-in-game-sensitivity",
+            "quote": "When using SAB, you will need to turn your game's aim sensitivity down so it's not at or near maximum."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#warnings",
+            "quote": "You will be warned if you are using SAB with problematic settings that diverge from the checklist"
           }
         ],
-        "reasoning": "This is inferred from what the entry leaves out. Games that need SAB say so in an 'Input Requirements' line on the list; the Destiny 2 entry has none. XIM's guide says SAB is for games with additional input requirements. Turning it on anyway would pull in XIM's SAB checklist, which changes other parts of the plan: for example, it says not to use maximum in-game sensitivity and not to use aiming curves.",
+        "reasoning": "This is inferred from what the entry leaves out. Games that need SAB say so in an 'Input Requirements' line on the list; the Destiny 2 entry has none. XIM's guide says SAB is for games with additional input requirements. Turning it on anyway would change other parts of the plan: XIM says that when using SAB you must turn in-game sensitivity down from maximum, and you are warned when SAB is used with settings that break its checklist (which also says not to use aiming curves).",
         "caveat": "Not stated by XIM. If Manager's gear-icon list shows an SAB requirement for Destiny 2, follow XIM's SAB checklist instead."
       }
     },
@@ -241,16 +261,22 @@
       "id": "pc-tool-conflicts",
       "title": "PC: controller emulation tools can conflict",
       "statement": {
-        "text": "On PC with controller output, XIM warns that virtual controller tools such as Steam Input or DS4Windows may conflict with the MATRIX. XIM lists this under connection problems, so check it first if the MATRIX won't connect to your PC.",
+        "text": "On PC with controller output, XIM warns that virtual controller tools such as Steam Input or DS4Windows may conflict with the MATRIX. XIM lists this under connection problems, so check it if the MATRIX won't connect to your PC.",
         "confidence": "official",
         "citations": [
           {
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Troubleshooting-PC/#matrix-connection-problems",
             "quote": "If your XIM MATRIX is outputting as a controller, make sure you don't have any virtual controller emulation tools (such as Steam Input or DS4Windows) installed that may conflict."
+          },
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
+            "quote": "If your game sees an XInput/Xbox 360 controller, enable Steam Input and restart your game.",
+            "note": "From the Apex Legends (ALC, Classic, Linear) entries. The Destiny 2 entry has no 'PC Players' line."
           }
         ],
-        "caveat": "XIM's wording is about having these tools installed. It doesn't say what to do when the game itself runs through Steam, or whether turning Steam Input off for one game is enough."
+        "caveat": "XIM's wording is about having these tools installed. It doesn't say what to do when the game itself runs through Steam, or whether turning Steam Input off for one game is enough. XIM's Game Settings list tells PC players of one other game (Apex Legends) to turn Steam Input on if the game sees an XInput/Xbox 360 controller. The Destiny 2 entry has no such line, so XIM gives no Destiny 2 advice either way."
       }
     },
     {

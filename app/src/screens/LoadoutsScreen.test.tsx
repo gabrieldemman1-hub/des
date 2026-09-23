@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { emptyKnowledge, sampleData, sampleLoadout } from '../test/fixtures';
 import { MemoryStorage } from '../test/memory-storage';
@@ -12,6 +12,10 @@ function storageWith(data: AppData) {
 
 function stored(storage: MemoryStorage): AppData {
   return storage.json(STORAGE_KEY) as AppData;
+}
+
+function tab(name: string) {
+  return within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name });
 }
 
 describe('Loadouts', () => {
@@ -77,7 +81,7 @@ describe('Loadouts', () => {
     expect(card).toHaveTextContent(/EnergyEmpty/);
     expect(card).toHaveTextContent(/PowerShotgun/);
 
-    const [loadout] = stored(storage!).loadouts;
+    const [loadout] = stored(storage).loadouts;
     expect(loadout).toMatchObject({
       name: 'Peek',
       weapons: { kinetic: 'hand-cannon', energy: null, power: 'shotgun' },
@@ -97,11 +101,11 @@ describe('Loadouts', () => {
 
     await user.click(screen.getByRole('button', { name: 'Save changes' }));
     expect(screen.getByText('Choose which weapon is the main one.')).toBeInTheDocument();
-    expect(stored(storage!).loadouts[0]?.weapons.kinetic).toBe('pulse-rifle'); // nothing saved yet
+    expect(stored(storage).loadouts[0]?.weapons.kinetic).toBe('pulse-rifle'); // nothing saved yet
 
     await user.click(within(main).getByRole('radio', { name: /Power/ }));
     await user.click(screen.getByRole('button', { name: 'Save changes' }));
-    expect(stored(storage!).loadouts[0]).toMatchObject({
+    expect(stored(storage).loadouts[0]).toMatchObject({
       weapons: { kinetic: null, energy: 'shotgun', power: 'scout-rifle' },
       mainSlot: 'power',
     });
@@ -128,8 +132,8 @@ describe('Loadouts', () => {
     const edited = screen.getByRole('heading', { level: 2, name: 'Shotgun main' }).closest('li')!;
     expect(edited).toHaveTextContent(/EnergyShotgunMain/);
     expect(within(edited).getByText('Snap / peek')).toBeInTheDocument();
-    expect(stored(storage!).loadouts).toHaveLength(1);
-    expect(stored(storage!).loadouts[0]).toMatchObject({ id: 'l1', name: 'Shotgun main', mainSlot: 'energy' });
+    expect(stored(storage).loadouts).toHaveLength(1);
+    expect(stored(storage).loadouts[0]).toMatchObject({ id: 'l1', name: 'Shotgun main', mainSlot: 'energy' });
   });
 
   it('deletes a loadout only after confirmation', async () => {
@@ -151,7 +155,71 @@ describe('Loadouts', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Loadouts' })).toBeInTheDocument();
     expect(screen.getByText('Deleted “Pulse + shotgun”.')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Pulse + shotgun' })).not.toBeInTheDocument();
-    expect(stored(storage!).loadouts.map((l) => l.id)).toEqual(['l2']);
+    expect(stored(storage).loadouts.map((l) => l.id)).toEqual(['l2']);
+  });
+
+  it('leaves the finished editor out of history, so Back skips it', async () => {
+    const { user, router } = renderApp({ path: '/' });
+    await user.click(tab('Loadouts'));
+    await user.click(screen.getByRole('link', { name: 'Add a loadout' }));
+    await user.type(screen.getByRole('textbox', { name: 'Name' }), 'Peek');
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Kinetic' }), 'hand-cannon');
+    await user.click(screen.getByRole('button', { name: 'Save loadout' }));
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Loadouts' })).toBeInTheDocument();
+    // Shown in a live region that stays mounted, so screen readers announce it.
+    expect(screen.getByText('Saved “Peek”.').closest('[aria-live="polite"]')).toBeInTheDocument();
+    expect(router.state.location.state).toBeNull(); // nothing to come back on reload
+
+    // Back goes to where the list was opened from, not into the editor or a second list.
+    await act(() => router.navigate(-1));
+    expect(screen.getByRole('heading', { level: 1, name: 'Dialed' })).toBeInTheDocument();
+    expect(screen.queryByText('Saved “Peek”.')).not.toBeInTheDocument();
+
+    // And returning to the list doesn't bring the confirmation back.
+    await user.click(tab('Loadouts'));
+    expect(screen.getByRole('heading', { level: 2, name: 'Peek' })).toBeInTheDocument();
+    expect(screen.queryByText('Saved “Peek”.')).not.toBeInTheDocument();
+  });
+
+  it('does not go Back into a deleted loadout', async () => {
+    const { user, router } = renderApp({
+      path: '/',
+      storage: storageWith(sampleData({ loadouts: [sampleLoadout()] })),
+    });
+    await user.click(tab('Loadouts'));
+    await user.click(screen.getByRole('link', { name: 'Edit Pulse + shotgun' }));
+    await user.click(screen.getByRole('button', { name: 'Delete loadout' }));
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Delete' }));
+    expect(screen.getByText('Deleted “Pulse + shotgun”.')).toBeInTheDocument();
+
+    await act(() => router.navigate(-1));
+    expect(screen.getByRole('heading', { level: 1, name: 'Dialed' })).toBeInTheDocument();
+  });
+
+  it('Cancel and the back link return to the list without adding to history', async () => {
+    const { user, router } = renderApp({ path: '/' });
+    await user.click(tab('Loadouts'));
+    await user.click(screen.getByRole('link', { name: 'Add a loadout' }));
+    await user.click(screen.getByRole('link', { name: 'Cancel' }));
+    expect(screen.getByRole('heading', { level: 1, name: 'Loadouts' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('link', { name: 'Add a loadout' }));
+    await user.click(within(screen.getByRole('main')).getByRole('link', { name: 'Loadouts' }));
+    expect(screen.getByRole('heading', { level: 1, name: 'Loadouts' })).toBeInTheDocument();
+
+    await act(() => router.navigate(-1));
+    expect(screen.getByRole('heading', { level: 1, name: 'Dialed' })).toBeInTheDocument();
+  });
+
+  it('replaces the editor with the list when it was opened directly', async () => {
+    const { user, router } = renderApp({ path: '/loadouts/new' });
+    await user.type(screen.getByRole('textbox', { name: 'Name' }), 'Peek');
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Kinetic' }), 'hand-cannon');
+    await user.click(screen.getByRole('button', { name: 'Save loadout' }));
+    expect(screen.getByRole('heading', { level: 1, name: 'Loadouts' })).toBeInTheDocument();
+    expect(screen.getByText('Saved “Peek”.')).toBeInTheDocument();
+    expect(router.state.historyAction).toBe('REPLACE');
   });
 
   it('copes with a saved loadout whose weapon is no longer in the knowledge base', () => {

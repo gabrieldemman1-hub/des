@@ -1,5 +1,5 @@
 import { useId, useRef, useState, type FormEvent } from 'react';
-import { Link, useNavigate, useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import type { AimStyleId, WeaponArchetype, WeaponSlot } from '../../../knowledge/index';
 import { AimStyleSummary } from '../components/AimStyleSummary';
 import { ConfirmDialog } from '../components/ConfirmDialog';
@@ -19,6 +19,7 @@ import {
   type LoadoutDraft,
 } from '../state/loadouts';
 import { MAX_LOADOUT_NAME_LENGTH, type Loadout } from '../state/schema';
+import { useCloseEditor } from './loadout-navigation';
 
 const STYLE_ORDER: AimStyleId[] = ['tracking', 'snap', 'precision-hold'];
 
@@ -34,7 +35,7 @@ function useArchetypeGroups() {
 function LoadoutForm({ loadout }: { loadout?: Loadout }) {
   const { archetypeById, slotName } = useKnowledge();
   const { saveLoadout, deleteLoadout } = useData();
-  const navigate = useNavigate();
+  const { close, onLinkClick } = useCloseEditor();
   const groups = useArchetypeGroups();
 
   const [draft, setDraft] = useState<LoadoutDraft>(() => (loadout ? draftFromLoadout(loadout) : emptyDraft()));
@@ -60,7 +61,7 @@ function LoadoutForm({ loadout }: { loadout?: Loadout }) {
     setSubmitted(true);
     const result = saveLoadout(draft, loadout?.id);
     if (result.ok) {
-      void navigate('/loadouts', { state: { flash: `Saved “${result.loadout.name}”.` } });
+      close(`Saved “${result.loadout.name}”.`);
       return;
     }
     if (result.errors.name) nameInput.current?.focus();
@@ -72,7 +73,7 @@ function LoadoutForm({ loadout }: { loadout?: Loadout }) {
     if (!loadout) return;
     setConfirmingDelete(false);
     deleteLoadout(loadout.id);
-    void navigate('/loadouts', { state: { flash: `Deleted “${loadout.name}”.` } });
+    close(`Deleted “${loadout.name}”.`);
   };
 
   return (
@@ -187,7 +188,7 @@ function LoadoutForm({ loadout }: { loadout?: Loadout }) {
         <button type="submit" className="button primary">
           {loadout ? 'Save changes' : 'Save loadout'}
         </button>
-        <Link className="button secondary" to="/loadouts">
+        <Link className="button secondary" to="/loadouts" onClick={onLinkClick}>
           Cancel
         </Link>
       </div>
@@ -218,7 +219,8 @@ export function LoadoutEditorScreen() {
   const { loadoutId } = useParams();
   const { data } = useData();
   const { kb } = useKnowledge();
-  const back = { to: '/loadouts', label: 'Loadouts' };
+  const { onLinkClick } = useCloseEditor();
+  const back = { to: '/loadouts', label: 'Loadouts', onClick: onLinkClick };
 
   if (loadoutId === undefined) {
     return (

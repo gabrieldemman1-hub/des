@@ -34,9 +34,18 @@ export type Profile = z.infer<typeof Profile>;
 /** A weapon archetype id from knowledge/destiny2/weapons.json, or null for an empty slot. */
 const ArchetypeRef = z.string().min(1).max(64).nullable();
 
+/**
+ * A loadout id, as `newLoadoutId` makes them. It becomes part of the loadout's URL, so it is
+ * limited to characters that are safe there, and can't be "new" (the create screen's path).
+ */
+export const LoadoutId = z
+  .string()
+  .regex(/^[a-z0-9]{1,64}$/, 'Invalid loadout id')
+  .refine((id) => id !== 'new', 'Invalid loadout id');
+
 export const Loadout = z
   .object({
-    id: z.string().min(1).max(64),
+    id: LoadoutId,
     name: z.string().trim().min(1).max(MAX_LOADOUT_NAME_LENGTH),
     weapons: z.object({ kinetic: ArchetypeRef, energy: ArchetypeRef, power: ArchetypeRef }),
     /** The main weapon's slot. It must hold a weapon. */

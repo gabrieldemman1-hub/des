@@ -107,8 +107,9 @@ function metaText(html) {
 export function htmlToText(html) {
   const meta = metaText(html);
   const body = html
-    .replace(/<!--[\s\S]*?-->/g, ' ')
-    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, ' ')
+    // One left-to-right pass, so whichever starts first wins: a "<!--" inside a script is
+    // script text, and a "<script>" inside a comment is comment text.
+    .replace(/<!--[\s\S]*?-->|<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, ' ')
     .replace(/<!(?:doctype|\[CDATA\[)[^>]*>/gi, ' ')
     .replace(TAG, (_m, /** @type {string} */ tag) => (INLINE_TAGS.has(tag.toLowerCase()) ? '' : ' '));
   return decodeHTML(meta ? `${body} ${meta}` : body);

@@ -49,7 +49,8 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest}'],
+        // manifest.webmanifest is not listed: the plugin precaches it on its own.
+        globPatterns: ['**/*.{js,css,html,svg,png}'],
         cleanupOutdatedCaches: true,
       },
     }),

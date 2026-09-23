@@ -102,6 +102,34 @@ describe('loadData / saveData', () => {
     expect(loadData(storage)).toEqual({ data: result.data, issue: null });
   });
 
+  it('keeps every valid profile field when one field is invalid', () => {
+    const profile = {
+      platform: 'pc',
+      mouseModel: 'Test Mouse',
+      mouseDpi: 1600,
+      pollingRate: 4000,
+      focus: 'crucible',
+      style: 'precise',
+      feel: 9, // out of range
+      sensitivity: 'high',
+    };
+    const storage = new MemoryStorage({ [STORAGE_KEY]: JSON.stringify({ version: 1, profile, loadouts: [] }) });
+    const result = loadData(storage);
+    expect(result.issue).toBe('invalid');
+    expect(result.data.profile).toEqual({ ...profile, feel: null });
+  });
+
+  it('drops stored loadouts whose id could not be used in a link', () => {
+    const good = sampleLoadout({ id: 'abc123' });
+    const loadouts = ['new', 'a/b', 'x?y', '..', 'UPPER', ''].map((id) => sampleLoadout({ id }));
+    const storage = new MemoryStorage({
+      [STORAGE_KEY]: JSON.stringify({ version: 1, profile: defaultData().profile, loadouts: [good, ...loadouts] }),
+    });
+    const result = loadData(storage);
+    expect(result.issue).toBe('invalid');
+    expect(result.data.loadouts).toEqual([good]);
+  });
+
   it('treats data that is not an object, or from another version, as invalid', () => {
     for (const raw of ['42', 'null', '"text"', JSON.stringify({ version: 2, profile: {}, loadouts: [] })]) {
       const { data, issue } = loadData(new MemoryStorage({ [STORAGE_KEY]: raw }));
@@ -121,6 +149,22 @@ describe('loadData / saveData', () => {
     });
     try {
       expect(getBrowserStorage()).toBeNull();
+    } finally {
+      if (original) Object.defineProperty(window, 'localStorage', original);
+    }
+  });
+
+  it('getBrowserStorage still returns storage that can be read but not written (full quota)', () => {
+    const data = sampleData({ profile: { ...defaultData().profile, platform: 'pc' }, loadouts: [sampleLoadout()] });
+    const full = new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(data) }, { write: true });
+    const original = Object.getOwnPropertyDescriptor(window, 'localStorage');
+    Object.defineProperty(window, 'localStorage', { configurable: true, get: () => full });
+    try {
+      const storage = getBrowserStorage();
+      expect(storage).toBe(full);
+      // The saved data stays visible; the failed write is reported when something is saved.
+      expect(loadData(storage)).toEqual({ data, issue: null });
+      expect(saveData(storage, data)).toBe(false);
     } finally {
       if (original) Object.defineProperty(window, 'localStorage', original);
     }
@@ -172,6 +216,15 @@ describe('backup and restore', () => {
     const result = parseBackup(JSON.stringify(backup));
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error).toMatch(/damaged.*loadouts\.0\.mainSlot/);
+  });
+
+  it('rejects loadout ids that could not be used in a link', () => {
+    for (const id of ['new', 'a/b', 'x?y', '..', 'with space', 'x'.repeat(65)]) {
+      const backup = JSON.parse(createBackup({ ...data, loadouts: [sampleLoadout({ id })] }, now)) as object;
+      const result = parseBackup(JSON.stringify(backup));
+      expect(result.ok, id).toBe(false);
+      if (!result.ok) expect(result.error).toMatch(/Invalid loadout id.*loadouts\.0\.id/);
+    }
   });
 
   it('rejects duplicate loadout ids', () => {

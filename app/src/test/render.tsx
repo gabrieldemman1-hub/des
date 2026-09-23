@@ -8,14 +8,19 @@ import { KnowledgeContext, type KnowledgeApi } from '../state/knowledge-context'
 import { weaponKnowledge } from './fixtures';
 import { MemoryStorage } from './memory-storage';
 
-interface Options {
+interface Options<S extends Storage | null> {
   path?: string;
-  storage?: MemoryStorage | null;
+  /** Defaults to an empty MemoryStorage. */
+  storage?: S;
   knowledge?: KnowledgeApi;
 }
 
 /** Renders the whole app (routes, data, knowledge) at `path`. */
-export function renderApp({ path = '/', storage = new MemoryStorage(), knowledge = weaponKnowledge }: Options = {}) {
+export function renderApp<S extends Storage | null = MemoryStorage>({
+  path = '/',
+  storage = new MemoryStorage() as Storage as S,
+  knowledge = weaponKnowledge,
+}: Options<S> = {}) {
   const router = createMemoryRouter(routes, { initialEntries: [path] });
   const user = userEvent.setup();
   const result = render(

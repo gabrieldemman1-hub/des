@@ -15,6 +15,12 @@ export const NOTICE_TEXT: Record<NoticeKind, string> = {
     'Dialed couldn’t save on this phone, so recent changes will be lost when you close it. Download a backup from the Profile screen to keep a copy.',
 };
 
+/**
+ * Whether the latest change reached the phone's storage: 'idle' before any change, 'saved'
+ * after a successful write, 'failed' when the latest write failed or storage is unavailable.
+ */
+export type SaveState = 'idle' | 'saved' | 'failed';
+
 export type SaveLoadoutResult = { ok: true; loadout: Loadout } | { ok: false; errors: DraftErrors };
 
 export interface DataApi {
@@ -22,8 +28,13 @@ export interface DataApi {
   /** A storage problem to show the user, if any. */
   notice: NoticeKind | null;
   dismissNotice: () => void;
-  /** When the last change was written to the phone (null before the first change). */
-  lastSavedAt: Date | null;
+  saveState: SaveState;
+  /**
+   * Goes up whenever the data is replaced from outside the current form: a restored backup,
+   * or a change saved by Dialed in another tab or window. Forms that keep their own copy of a
+   * value use it as a `key` so they start again from the new data.
+   */
+  revision: number;
   updateProfile: (patch: Partial<Profile>) => void;
   /** Creates a loadout, or updates it when `id` is given. */
   saveLoadout: (draft: LoadoutDraft, id?: string) => SaveLoadoutResult;

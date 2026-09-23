@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Phone-first guide to an evidence-based XIM MATRIX configuration for Destiny 2 (Xbox and PC, controller output).",
   "engines": {
-    "node": ">=22.22.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
   },
   "scripts": {
     "dev": "vite",
@@ -34,7 +34,7 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.1.1",
-    "entities": "^8.1.0",
+    "entities": "8.1.0",
     "eslint": "10.11.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-react-refresh": "0.5.7",

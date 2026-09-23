@@ -55,6 +55,13 @@ describe('verify-citations helpers', () => {
     expect(text).toBe('Aim Precision Precision controls fine aim behavior. Smoothing');
   });
 
+  it('removes comments and scripts in page order, so "<!--" in a script hides no page text', () => {
+    const html = '<script>var s="<!--";</script><p>Precision controls fine aim.</p><!-- footer -->';
+    expect(normalizeText(htmlToText(html))).toBe('Precision controls fine aim.');
+    const commented = '<!-- <script> --><p>Kept text.</p><script>x()</script><style>a{}</style>';
+    expect(normalizeText(htmlToText(commented))).toBe('Kept text.');
+  });
+
   it('decodes named and numeric entities, and handles > inside attributes', () => {
     const html = '<p title="a > b">Tom &amp; Jerry &#8220;hi&#8221; &#x2019;s &nbsp;caf&eacute; &lt;tag&gt;</p>';
     expect(normalizeText(htmlToText(html))).toBe('Tom & Jerry "hi" \'s café <tag>');

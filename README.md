@@ -13,7 +13,8 @@ Troubleshoot by feel, Explain a concept) are placeholder screens for now; they a
 
 ## Run it on your computer
 
-You need **Node.js 22.22 or newer** (React Router 8 requires it) and npm.
+You need **Node.js 22.22.2 or newer on 22.x, 24.15+ or 26+** (the test runner's jsdom 30
+requires it; React Router 8 needs 22.22+) and npm.
 
 ```sh
 npm install
@@ -183,7 +184,9 @@ exposes the classic compiler API it uses. Its error message points to running Ty
 by side with the TypeScript 6.0 API, which is what this project does:
 
 - `typescript` in `package.json` is an alias for `@typescript/typescript6` (the TypeScript 6.0
-  API). typescript-eslint and editors use it.
+  API, which resolves to TypeScript 6.0.3 in `node_modules/@typescript/old`). typescript-eslint
+  uses it. Editors use their own bundled TypeScript; to use the workspace's TypeScript 6.0.3 in
+  VS Code, set `"typescript.tsdk": "node_modules/@typescript/old/lib"`.
 - `typescript-7` is TypeScript 7.0.2. `npm run typecheck` runs it explicitly.
 
 Use `npm run typecheck` rather than `npx tsc`: `npx tsc` resolves to TypeScript 6. When

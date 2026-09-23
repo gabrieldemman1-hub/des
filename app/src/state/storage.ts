@@ -20,13 +20,15 @@ export interface LoadResult {
   unreadable?: string;
 }
 
-/** localStorage, or null when the browser blocks it (private modes, disabled cookies…). */
+/**
+ * localStorage, or null when the browser blocks reading it (private modes, disabled cookies…).
+ * Only reading is probed: storage that can be read but not written (a full quota, for example)
+ * is still returned, so saved data stays visible and a failed write shows up through `saveData`.
+ */
 export function getBrowserStorage(): Storage | null {
   try {
     const storage = window.localStorage;
-    const probe = `${STORAGE_KEY}:probe`;
-    storage.setItem(probe, '1');
-    storage.removeItem(probe);
+    storage.getItem(STORAGE_KEY);
     return storage;
   } catch {
     return null;
@@ -54,8 +56,17 @@ function salvage(value: unknown): AppData {
   const data = defaultData();
   if (!value || typeof value !== 'object') return data;
   const record = value as Record<string, unknown>;
-  const profile = Profile.safeParse(record.profile);
-  if (profile.success) data.profile = profile.data;
+  // Field by field, so one bad value doesn't reset the whole profile. Every field has a
+  // default, which `defaultData()` has already filled in.
+  const storedProfile = record.profile;
+  if (storedProfile && typeof storedProfile === 'object') {
+    const fields = storedProfile as Record<string, unknown>;
+    const profile = data.profile as Record<keyof Profile, unknown>;
+    for (const key of Object.keys(Profile.shape) as (keyof Profile)[]) {
+      const field = Profile.shape[key].safeParse(fields[key]);
+      if (field.success) profile[key] = field.data;
+    }
+  }
   if (Array.isArray(record.loadouts)) {
     const seen = new Set<string>();
     for (const item of record.loadouts) {

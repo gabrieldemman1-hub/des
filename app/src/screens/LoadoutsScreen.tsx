@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router';
+import { Link } from 'react-router';
 import type { WeaponArchetype } from '../../../knowledge/index';
 import { AimStyleSummary } from '../components/AimStyleSummary';
 import { EmptyState, WeaponListMissing } from '../components/EmptyState';
@@ -6,6 +6,7 @@ import { Screen } from '../components/Screen';
 import { useData } from '../state/data-context';
 import { useKnowledge } from '../state/knowledge-context';
 import { SLOTS } from '../state/loadouts';
+import { FROM_LIST } from './loadout-navigation';
 import type { Loadout } from '../state/schema';
 
 function weaponLabel(id: string | null, find: (id: string) => WeaponArchetype | undefined): string {
@@ -22,7 +23,12 @@ function LoadoutCard({ loadout }: { loadout: Loadout }) {
     <li className="card loadout-card">
       <div className="loadout-card-head">
         <h2>{loadout.name}</h2>
-        <Link className="button secondary small" to={`/loadouts/${loadout.id}`} aria-label={`Edit ${loadout.name}`}>
+        <Link
+          className="button secondary small"
+          to={`/loadouts/${encodeURIComponent(loadout.id)}`}
+          state={FROM_LIST}
+          aria-label={`Edit ${loadout.name}`}
+        >
           Edit
         </Link>
       </div>
@@ -53,8 +59,6 @@ function LoadoutCard({ loadout }: { loadout: Loadout }) {
 export function LoadoutsScreen() {
   const { data } = useData();
   const { kb } = useKnowledge();
-  const location = useLocation();
-  const flash = (location.state as { flash?: unknown } | null)?.flash;
   const canCreate = kb.weapons.archetypes.length > 0;
   const { loadouts } = data;
 
@@ -68,8 +72,6 @@ export function LoadoutsScreen() {
         </p>
       }
     >
-      <div aria-live="polite">{typeof flash === 'string' && <p className="success">{flash}</p>}</div>
-
       {!canCreate && <WeaponListMissing />}
       {canCreate && loadouts.length === 0 && (
         <EmptyState title="No loadouts yet">
@@ -86,7 +88,7 @@ export function LoadoutsScreen() {
       )}
 
       {canCreate && (
-        <Link className="button primary block" to="/loadouts/new">
+        <Link className="button primary block" to="/loadouts/new" state={FROM_LIST}>
           Add a loadout
         </Link>
       )}

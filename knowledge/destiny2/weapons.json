@@ -77,10 +77,10 @@
       "name": "Combat Bow",
       "aimStyle": "precision-hold",
       "mapping": {
-        "text": "Combat bows are precision-hold weapons: you draw, line up one arrow, and release it deliberately.",
+        "text": "Combat bows are precision-hold weapons: you line up one arrow (or, on a crossbow, one bolt) and fire it deliberately.",
         "confidence": "reasoned",
         "citations": [],
-        "reasoning": "A bow fires one arrow per draw, and the draw gives you time to settle the reticle before you release. A precision hit matters. So the skill is fine control at low aim speed on a single shot, which is precision hold."
+        "reasoning": "A bow fires one arrow per draw, and the draw gives you time to settle the reticle before you release. A precision hit matters. So the skill is fine control at low aim speed on a single shot, which is precision hold. This also covers crossbows, first added in The Edge of Fate, which the game lists as Combat Bows. They also fire one bolt at a time, so the same aim style applies."
       }
     },
     {

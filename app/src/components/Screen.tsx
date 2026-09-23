@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type MouseEventHandler, type ReactNode } from 'react';
 import { Link } from 'react-router';
 
 let firstScreen = true;
@@ -7,7 +7,7 @@ interface Props {
   title: string;
   /** Shown instead of the title in the browser tab, if different. */
   documentTitle?: string;
-  back?: { to: string; label: string };
+  back?: { to: string; label: string; onClick?: MouseEventHandler<HTMLAnchorElement> };
   /** Decoration shown before the title (hidden from assistive tech by the caller). */
   icon?: ReactNode;
   /** Extra content inside the header, under the title. */
@@ -40,7 +40,7 @@ export function Screen({ title, documentTitle, back, icon, intro, children }: Pr
     <section className="screen" aria-labelledby={headingId}>
       <header className="screen-header">
         {back && (
-          <Link className="back-link" to={back.to}>
+          <Link className="back-link" to={back.to} onClick={back.onClick}>
             <span aria-hidden="true">‹ </span>
             {back.label}
           </Link>

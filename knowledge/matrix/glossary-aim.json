@@ -97,7 +97,7 @@
           ]
         },
         {
-          "text": "A custom curve or quantization changes the real turn distance. cm/360 is only exact with the default linear curve and quantization off.",
+          "text": "cm/360 is defined for the default linear curve. A custom curve changes the real turn distance, and quantization may make it less accurate. When you check your sensitivity, use a linear curve and turn quantization off.",
           "confidence": "official",
           "citations": [
             {
@@ -109,6 +109,16 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Aim-Settings/#quantization",
               "quote": "Applying quantization to your mouse or motion aim may negatively affect real world sensitivity accuracy."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "You are testing with a linear aiming curve (not a custom one)"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "You have quantization disabled"
             }
           ]
         },
@@ -245,7 +255,7 @@
         {
           "name": "Thumbstick sensitivity",
           "termId": "thumbstick-aim",
-          "note": "Aim speed for a physical stick, set as a percentage of the game's maximum turn speed, not in cm/360."
+          "note": "Aim speed for a physical stick. Depending on the Config type, it is set in-game or as a percentage of the game's maximum turn speed, not in cm/360."
         },
         {
           "name": "Modify Aim Sensitivity",
@@ -499,16 +509,21 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
               "quote": "Gaming input hardware and natural hand jitter can cause an noisy input environment. Smoothing solves this by providing additional stability and control to your aim."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
             }
           ],
-          "reasoning": "Smoothing's official purpose is countering hardware and hand jitter. Jitter is a small, constant error, so it matters most next to small movements, which make up most of tracking. No source ties smoothing to aim styles."
+          "reasoning": "Smoothing's official purpose is countering hardware and hand jitter. The guide's Stability setting ties hand jitter to aim at rest (for motion aim), so jitter likely shows most when the reticle is still or moving slowly, which is most of tracking. No source ties smoothing to aim styles."
         }
       ],
       "notToBeConfusedWith": [
         {
           "name": "Smooth",
           "termId": "smooth",
-          "note": "A single Classic-mode setting. The guide says it was \"known previously as Smoothing\"."
+          "note": "A single Classic-mode setting. The guide says it was \"Known previously as Smoothing\"."
         },
         {
           "name": "Smooth ADS Transition",
@@ -790,7 +805,7 @@
         {
           "name": "Micro (Advanced SAB)",
           "termId": "simulate-analog-behavior",
-          "note": "An Advanced SAB value that \"tunes stick behavior at very low aiming speeds\". It belongs to Simulate Analog Behavior, not to smoothing."
+          "note": "An Advanced SAB value that \"Tunes stick behavior at very low aiming speeds\". It belongs to Simulate Analog Behavior, not to smoothing."
         }
       ],
       "related": [
@@ -896,7 +911,7 @@
               "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
             }
           ],
-          "reasoning": "Snaps are fast movements, and Response \"controls fast aim behavior\", with higher values giving \"a lighter feeling reticle at faster aim speeds\"."
+          "reasoning": "Snaps are fast movements, and Response \"Controls fast aim behavior\", with higher values giving \"a lighter feeling reticle at faster aim speeds\"."
         },
         {
           "text": "Tracking: matters when the target moves fast or you turn quickly while firing. Slow holds depend more on Precision.",
@@ -1034,7 +1049,7 @@
               "quote": "Higher values result in smoother transition from rest but lower response time."
             }
           ],
-          "reasoning": "Easing \"specifies aim behavior from rest\", and a snap begins at rest. The direction comes from our reading of \"smoother transition from rest but lower response time\".",
+          "reasoning": "Easing \"Specifies aim behavior from rest\", and a snap begins at rest. The direction comes from our reading of \"smoother transition from rest but lower response time\".",
           "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
         },
         {
@@ -1198,7 +1213,7 @@
               "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
             }
           ],
-          "reasoning": "Stability \"specifies aim behavior at rest\" and adds \"extra stability at rest\"."
+          "reasoning": "Stability \"Specifies aim behavior at rest\" and adds \"extra stability at rest\"."
         },
         {
           "text": "Tracking and snap: matter less, because the reticle is moving.",
@@ -1382,23 +1397,6 @@
               "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
             }
           ]
-        },
-        {
-          "text": "It is the older \"Smoothing\" setting under a new name, and its values match XIM APEX behavior.",
-          "confidence": "official",
-          "citations": [
-            {
-              "source": "xim-guide",
-              "url": "https://guide.xim.tech/Aim-Settings/#classic",
-              "quote": "Known previously as Smoothing"
-            },
-            {
-              "source": "xim-guide",
-              "url": "https://guide.xim.tech/Aim-Settings/#classic",
-              "quote": "Values match XIM APEX behavior"
-            }
-          ],
-          "caveat": "This is a definition, not advice. Dialed gives no XIM APEX-based values."
         }
       ],
       "feel": [],
@@ -1748,7 +1746,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Depends on the shape. An acceleration-style curve sits below the straight line at low speed and still rises to full speed at the top. That gives finer control on slow movements (tracking, precision holds) while keeping full speed for snaps and big turns. The cost: cm/360 no longer matches physically.",
+          "text": "Depends on the shape. For example, a curve that sits below the straight line at low speed but still reaches 100% at the top gives finer control on slow movements (tracking, precision holds) while keeping full speed for snaps and big turns. The cost: cm/360 no longer matches physically.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -1772,7 +1770,7 @@
               "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
             }
           ],
-          "reasoning": "A curve maps input speed to reticle speed from 0 to 100%, and linear is one-to-one. A curve that outputs less than linear at low input speed but still reaches 100% makes slow movements finer without lowering the top speed. The guide names the \"acceleration curve\" as an option but recommends no shape. cm/360 accuracy needs a linear curve."
+          "reasoning": "A curve maps input speed to reticle speed from 0 to 100%, and linear is one-to-one. A curve that outputs less than linear at low input speed but still reaches 100% makes slow movements finer without lowering the top speed. The guide lists presets and \"a simple acceleration curve\" but doesn't define their shapes or recommend one. cm/360 accuracy needs a linear curve."
         }
       ],
       "notToBeConfusedWith": [
@@ -1800,7 +1798,7 @@
       "aliases": [],
       "category": "mechanics",
       "location": "Press the \"...\" under Aiming Sources.",
-      "summary": "Decides how your top aim speed maps onto the game's maximum turn speed.",
+      "summary": "Decides how your aiming curve and thumbstick aim map onto the game's maximum turn speed.",
       "definition": {
         "text": "Velocity Mapping is a feature that allows you to further craft your aiming experience. It focuses on how your custom aiming curves and thumbstick aim maps to reticle velocity since both have a constrained range.",
         "confidence": "official",
@@ -1887,7 +1885,7 @@
           ]
         },
         {
-          "text": "After changing it, expect the red maximum-turn-speed flash more often. You can't exceed the game's turn speed limit either way.",
+          "text": "After changing it, your MATRIX may flash red (maximum turn speed reached) more often, if that light notification is on. You can't exceed the game's turn speed limit either way.",
           "confidence": "official",
           "citations": [
             {
@@ -1899,6 +1897,11 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
               "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#additional-options",
+              "quote": "Disabling light aim speed and mode light notifications"
             }
           ]
         },
@@ -1917,7 +1920,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Snaps and big turns. Velocity Mapping shapes the top of your speed range, so it matters when you move fast. Slow tracking and precision holds rarely reach it.",
+          "text": "Snaps and big turns. Velocity Mapping shapes how the top of your curve's range and your thumbstick map to reticle speed, so it matters when you move fast. Slow tracking and precision holds rarely reach it.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -1975,7 +1978,7 @@
         {
           "name": "Limit (Advanced SAB)",
           "termId": "simulate-analog-behavior",
-          "note": "An Advanced SAB value that \"restricts how fast the stick can move\". Not the Limit velocity mapping."
+          "note": "An Advanced SAB value that \"Restricts how fast the stick can move\". Not the Limit velocity mapping."
         }
       ],
       "related": [
@@ -2567,7 +2570,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Snaps and big turns. Stick sensitivity is a share of the game's maximum turn speed, so it sets your fastest stick turn. For motion aim users, XIM suggests the stick for coarse aim and gyro for fine aim.",
+          "text": "Snaps and big turns. On Configs that set it as a percentage, stick sensitivity is a share of the game's maximum turn speed, so it sets your fastest stick turn. XIM's tip for players new to motion aim: use the stick for coarse aim and gyro for fine aim.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -2581,14 +2584,14 @@
               "quote": "If you are new to motion aim, ease into it. Use motion for fine aim and thumbstick for coarse. Start with very low sensitivity and rely more on thumbstick aim initially."
             }
           ],
-          "reasoning": "Thumbstick sensitivity is \"a percentage (%) of maximum turn speed\". XIM's motion-aim tip: \"Use motion for fine aim and thumbstick for coarse.\""
+          "reasoning": "On some Config types, thumbstick sensitivity is \"specified as a percentage (%) of maximum turn speed\". XIM's tip for players new to motion aim: \"Use motion for fine aim and thumbstick for coarse.\""
         }
       ],
       "notToBeConfusedWith": [
         {
           "name": "Sensitivity (mouse)",
           "termId": "sensitivity",
-          "note": "Mouse sensitivity is set in cm/360. Stick sensitivity is a percentage of maximum turn speed."
+          "note": "Mouse sensitivity is set in cm/360. Stick sensitivity is set in-game or as a percentage of maximum turn speed, depending on the Config type."
         }
       ],
       "related": [
@@ -2691,7 +2694,7 @@
         {
           "name": "Custom game settings",
           "termId": "sync-custom",
-          "note": "Custom sync copies your in-game aim settings into the Config. Unrelated to Custom Stick Behavior."
+          "note": "With Custom sync, you copy your game's aim settings into your Config. Unrelated to Custom Stick Behavior."
         },
         {
           "name": "Simulate Analog Behavior",
@@ -2845,7 +2848,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Tracking and precision holds. XIM suggests motion for fine aim and the stick for coarse aim, and fine aim is what those styles need. Snaps and big turns go to the stick.",
+          "text": "Tracking and precision holds. XIM's tip for players new to motion aim is motion for fine aim and the stick for coarse aim, and fine aim is what those styles need. Snaps and big turns go to the stick.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -2854,13 +2857,13 @@
               "quote": "If you are new to motion aim, ease into it. Use motion for fine aim and thumbstick for coarse. Start with very low sensitivity and rely more on thumbstick aim initially."
             }
           ],
-          "reasoning": "XIM's tip: \"Use motion for fine aim and thumbstick for coarse.\" Tracking and precision holds are mostly fine aim; snaps and big turns are coarse."
+          "reasoning": "XIM's tip for players new to motion aim: \"Use motion for fine aim and thumbstick for coarse.\" Tracking and precision holds are mostly fine aim; snaps and big turns are coarse."
         }
       ],
       "notToBeConfusedWith": [
         {
           "name": "Engage, Pause and Toggle Motion Aim",
-          "note": "Smart Actions that switch motion aim on or off. They are used with the Custom Engage and Custom Toggle activation modes; they are not motion aim settings."
+          "note": "Smart Actions for motion aim. Engage and Pause work only while the action is active. Toggle switches motion aim on or off, and only works with the Custom Toggle activation mode. They are actions, not motion aim settings."
         }
       ],
       "related": [

@@ -15,7 +15,7 @@
         "stability"
       ],
       "mapping": {
-        "text": "Smoothing is made for this. XIM says input hardware and natural hand jitter make your input noisy, and Smoothing counters it with extra stability and control. If you aim with gyro (motion aim) and the shake shows while you hold still, Stability is the setting XIM made for that.",
+        "text": "Smoothing is made for this. XIM says input hardware and natural hand jitter can make your input noisy, and Smoothing counters it with extra stability and control. If you aim with gyro (motion aim) and the shake shows while you hold still, Stability is the setting XIM made for that.",
         "confidence": "official",
         "citations": [
           {
@@ -82,7 +82,7 @@
             "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
           }
         ],
-        "reasoning": "XIM describes Precision in feel words (heaviness at low aim speeds) but never says \"if small adjustments feel heavy, lower Precision\". Small adjustments are low-speed aim, which is what Precision covers, so we match your feel to its wording."
+        "reasoning": "XIM describes Precision in feel words (\"heaviness of the reticle\") and says it \"controls fine aim behavior\", but never says \"if small adjustments feel heavy, lower Precision\". Small adjustments are low-speed aim, which is what Precision covers, so we match your feel to its wording."
       },
       "suggestedChange": {
         "text": "Lower Precision a little. Small adjustments should feel lighter, but they get less smoothing, so watch for jitter coming back.",
@@ -99,7 +99,7 @@
             "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
           }
         ],
-        "reasoning": "If higher Precision \"increases the heaviness of the reticle\" at low aim speeds, lower Precision should reduce it. The same definition says higher values give \"a smoother result\", so lowering it trades some smoothness away.",
+        "reasoning": "Precision \"controls fine aim behavior\", and higher values increase \"the heaviness of the reticle\", so lowering it should make small adjustments feel lighter. The same definition says higher values give \"a smoother result\", so lowering it trades some smoothness away.",
         "caveat": "Assumes Standard smoothing. Precision is a Standard setting; Classic uses Smooth, Decay and Synch instead."
       }
     },
@@ -214,10 +214,12 @@
       "termIds": [
         "max-turn-speed",
         "light-notifications",
-        "velocity-mapping"
+        "velocity-mapping",
+        "required-game-settings",
+        "sync-standard"
       ],
       "mapping": {
-        "text": "With controller output, the game has a maximum turn speed it can't exceed. XIM says every console shooter's limit is different, and it also changes with aiming angle. The MATRIX flashes red when you hit it. No setting takes you past it, and customising Velocity Mapping can make you hit it more often.",
+        "text": "With controller output, the game has a maximum turn speed it can't exceed. XIM says every console shooter's limit is different, and it also changes with aiming angle. The MATRIX flashes red when you hit it. No MATRIX setting takes you past it, and customising Velocity Mapping can make you hit it more often.",
         "confidence": "official",
         "citations": [
           {
@@ -238,7 +240,7 @@
         ]
       },
       "suggestedChange": {
-        "text": "Confirm it with the light. Make sure light notifications are on (they can be switched off in the Config's additional options), then do a fast turn. A quick red flash means you hit the game's limit. Work within it rather than looking for a setting that lifts it.",
+        "text": "Confirm it with the light. Make sure light notifications are on (they can be switched off in the Config's additional options), then do a fast turn. A quick red flash means you hit the game's limit. No MATRIX setting lifts it.",
         "confidence": "official",
         "citations": [
           {
@@ -260,8 +262,19 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Identity/#additional-options",
             "quote": "Disabling light aim speed and mode light notifications"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#custom",
+            "quote": "Custom in-game settings affects the maximum turn speed of the game."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#standard",
+            "quote": "Follows all additional required aim settings"
           }
-        ]
+        ],
+        "caveat": "XIM notes that custom in-game settings affect the game's maximum turn speed. If you haven't yet, run the setup check to confirm Destiny 2's required in-game settings."
       }
     },
     {
@@ -281,7 +294,7 @@
         "light-notifications"
       ],
       "mapping": {
-        "text": "Three MATRIX mechanisms decide which aim settings are active when you aim down sights. Game Roles tell the MATRIX which button puts the game in ADS (and, for a trigger, how far it must be pulled). ADS Activation Delay makes the MATRIX wait before switching, for games whose ADS takes time. Aim Settings Inheritance decides how much of your Hip setup ADS reuses: Inherit All (the default), Sensitivity Only or Inherit Nothing. XIM doesn't link any of them to a feel. We point here because if the switch happens at the wrong moment, or ADS reuses settings you didn't mean it to, Hip and ADS won't behave the way you set them up.",
+        "text": "Three MATRIX mechanisms decide which aim settings are active when you aim down sights. Game Roles tell the MATRIX which button puts the game in ADS (and, for a trigger, how far it must be pulled). ADS Activation Delay makes the MATRIX wait before switching, for games whose ADS takes time. Aim Settings Inheritance decides how much of your Hip setup ADS reuses: Inherit All (the default), Sensitivity Only (ADS copies everything from Hip except sensitivity) or Inherit Nothing. XIM doesn't link any of them to a feel. We point here because if the switch happens at the wrong moment, or ADS reuses settings you didn't mean it to, Hip and ADS won't behave the way you set them up.",
         "confidence": "reasoned",
         "citations": [
           {
@@ -338,7 +351,7 @@
         "reasoning": "XIM documents each mechanism: the MATRIX \"needs to know\" when the game is in ADS \"in order to function correctly\", it can wait before switching ADS aim mode, and Hip and ADS have separate aim settings unless ADS inherits them. None of these pages describes a feel. The link to this symptom is ours: each one changes which settings are active, and when."
       },
       "suggestedChange": {
-        "text": "Check the ADS light before changing any aim values. Aim down sights and watch for a quick green flash, then let go and watch for yellow. No flash, or a flash that doesn't line up with your sights, points to Game Roles or ADS Activation Delay.",
+        "text": "Check the ADS light before changing any aim values. First make sure light notifications are on (they can be switched off in the Config's additional options). Then aim down sights and watch for a quick green flash, and let go and watch for yellow. No flash, or a flash that doesn't line up with your sights, points to Game Roles or ADS Activation Delay.",
         "confidence": "reasoned",
         "citations": [
           {
@@ -365,6 +378,16 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
             "quote": "You can add a delay so that XIM MATRIX will wait to activate or deactivate ADS aim mode when you aim down sight to match your game's behavior."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#additional-options",
+            "quote": "Press the \"...\" to view additional configuration options available. These include:"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#additional-options",
+            "quote": "Disabling light aim speed and mode light notifications"
           }
         ],
         "reasoning": "XIM says the ADS light exists \"so that you can know that your Config's game roles are set up correctly\". If the MATRIX switches to ADS at the wrong moment, the wrong mode's settings apply. Checking the light first rules out a setup fault before any feel tuning.",
@@ -386,7 +409,7 @@
         "quantization-angle"
       ],
       "mapping": {
-        "text": "Quantization is the MATRIX option for this. XIM says it can improve compatibility with aim assist, on games that support it. When it is on, your reticle speed \"snaps\" to set magnitude and angle values, so aim assist is less disrupted by tiny aim changes.",
+        "text": "Quantization is the MATRIX option for this. XIM says it can improve compatibility with aim assist, on games that support it. When it is on, your reticle's speed and direction \"snap\" to set steps (Magnitude sets the speed steps, Angle the direction steps), so aim assist is less disrupted by tiny aim changes.",
         "confidence": "official",
         "citations": [
           {
@@ -398,6 +421,16 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#quantization",
             "quote": "When enabled, your reticle velocity will \"snap\" to configured magnitude and angle values. This behavior allows aim assist systems to work with less disruption from micro aim changes."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+            "quote": "Magnitude Quantization: Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+            "quote": "Angle Quantization: Snaps your reticle to predefined angles. The effect is independent of aiming speed."
           }
         ],
         "caveat": "Thin evidence. XIM says what Quantization is for and how it works, but not how it feels in Destiny 2. XIM Central's MATRIX videos on it haven't been reviewed yet."
@@ -427,7 +460,7 @@
             "quote": "Do not enable input quantization (default is off)."
           }
         ],
-        "caveat": "Not with Simulate Analog Behavior (SAB): XIM's SAB checklist says not to enable quantization."
+        "caveat": "Thin evidence: XIM doesn't say how Quantization feels in Destiny 2. Not with Simulate Analog Behavior (SAB): XIM's SAB checklist says not to enable quantization."
       }
     },
     {

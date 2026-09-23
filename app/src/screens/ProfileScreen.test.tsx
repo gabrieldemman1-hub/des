@@ -52,7 +52,7 @@ describe('Profile screen', () => {
     const { user, storage } = renderApp({ path: '/profile' });
 
     await user.click(screen.getByRole('radio', { name: 'PC' }));
-    expect(stored(storage!).profile.platform).toBe('pc');
+    expect(stored(storage).profile.platform).toBe('pc');
     expect(screen.getByText('Saved on this phone.')).toBeInTheDocument();
 
     await user.type(screen.getByRole('textbox', { name: 'Mouse model' }), 'Test Mouse');
@@ -62,7 +62,7 @@ describe('Profile screen', () => {
     await user.click(screen.getByRole('radio', { name: 'Lean smooth' }));
     await user.click(screen.getByRole('radio', { name: 'High' }));
 
-    expect(stored(storage!).profile).toEqual({
+    expect(stored(storage).profile).toEqual({
       ...defaultProfile(),
       platform: 'pc',
       mouseModel: 'Test Mouse',
@@ -74,26 +74,46 @@ describe('Profile screen', () => {
     });
   });
 
+  it('says so when a change could not be saved', async () => {
+    const storage = new MemoryStorage();
+    const { user } = renderApp({ path: '/profile', storage });
+    expect(screen.getByText('Changes save automatically on this phone.')).toBeInTheDocument();
+    await user.click(screen.getByRole('radio', { name: 'PC' }));
+    expect(screen.getByText('Saved on this phone.')).toBeInTheDocument();
+
+    storage.setItem = () => {
+      throw new DOMException('Quota exceeded', 'QuotaExceededError');
+    };
+    await user.click(screen.getByRole('radio', { name: 'Xbox' }));
+    expect(screen.getByText('Not saved on this phone. Download a backup to keep a copy.')).toBeInTheDocument();
+    expect(screen.queryByText('Saved on this phone.')).not.toBeInTheDocument();
+  });
+
+  it('says nothing is saved when storage is unavailable', () => {
+    renderApp({ path: '/profile', storage: null });
+    expect(screen.getByText('Not saved on this phone. Download a backup to keep a copy.')).toBeInTheDocument();
+  });
+
   it('only saves a DPI that is a positive whole number', async () => {
     const { user, storage } = renderApp({ path: '/profile' });
     const dpi = screen.getByRole('textbox', { name: 'Mouse DPI' });
 
     await user.type(dpi, '1600');
     expect(dpi).not.toHaveAttribute('aria-invalid', 'true');
-    expect(stored(storage!).profile.mouseDpi).toBe(1600);
+    expect(stored(storage).profile.mouseDpi).toBe(1600);
 
     await user.clear(dpi);
     await user.type(dpi, '16.5');
     expect(dpi).toHaveAttribute('aria-invalid', 'true');
     expect(dpi).toHaveAccessibleDescription(/Enter a whole number above 0/);
-    expect(stored(storage!).profile.mouseDpi).toBe(16); // the last valid value, typed on the way
+    expect(stored(storage).profile.mouseDpi).toBe(16); // the last valid value, typed on the way
 
     await user.clear(dpi);
     await user.type(dpi, '0');
     expect(screen.getByText('Enter a whole number above 0.')).toBeInTheDocument();
 
     await user.clear(dpi);
-    expect(stored(storage!).profile.mouseDpi).toBeNull();
+    expect(stored(storage).profile.mouseDpi).toBeNull();
     expect(screen.queryByText('Enter a whole number above 0.')).not.toBeInTheDocument();
   });
 
@@ -145,11 +165,11 @@ describe('Profile screen', () => {
     const dialog = await screen.findByRole('alertdialog', { name: 'Replace your data with this backup?' });
     expect(dialog).toHaveTextContent('has 1 loadout');
     expect(within(dialog).getByRole('button', { name: 'Cancel' })).toHaveFocus();
-    expect(stored(storage!).profile.platform).toBe('xbox'); // nothing replaced yet
+    expect(stored(storage).profile.platform).toBe('xbox'); // nothing replaced yet
 
     await user.click(within(dialog).getByRole('button', { name: 'Replace' }));
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
-    expect(stored(storage!)).toEqual(backup);
+    expect(stored(storage)).toEqual(backup);
     expect(screen.getByRole('radio', { name: 'PC' })).toBeChecked();
     expect(screen.getByRole('textbox', { name: 'Mouse DPI' })).toHaveValue('3200');
     expect(screen.getByText('Backup restored.')).toBeInTheDocument();
@@ -163,7 +183,7 @@ describe('Profile screen', () => {
 
     await user.click(await screen.findByRole('button', { name: 'Cancel' }));
     expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
-    expect(stored(storage!).profile.platform).toBe('xbox');
+    expect(stored(storage).profile.platform).toBe('xbox');
   });
 
   it('explains why a file cannot be restored', async () => {

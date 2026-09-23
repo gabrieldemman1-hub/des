@@ -5,7 +5,7 @@
       "name": "Tracking",
       "description": "Holding the reticle on a target through sustained fire. For example pulse rifles, auto rifles and SMGs.",
       "favours": {
-        "text": "Steady, consistent small corrections. Tracking is a long run of slow, fine movements, so the settings that shape fine aim at low speed matter most. These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic is static, so Classic users get the definitions but not these directions.",
+        "text": "Steady, consistent small corrections. Tracking is a long run of slow, fine movements, so the settings that shape fine aim at low speed matter most. These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic smoothing is static (it doesn't adapt to your aim speed), so Classic users get the definitions but not these directions.",
         "confidence": "reasoned",
         "citations": [
           {
@@ -61,7 +61,7 @@
       "name": "Snap",
       "description": "Acquiring a target you see for a split second: snap on, fire, re-peek. For example hand cannons, snipers, shotguns and sidearms.",
       "favours": {
-        "text": "A fast, direct start from a standstill. A snap begins at rest, so the setting that shapes aim from rest matters most. The fast part of the move belongs to Response. These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic is static, so Classic users get the definitions but not these directions.",
+        "text": "A fast, direct start from a standstill. A snap begins at rest, so the setting that shapes aim from rest matters most. The fast part of the move belongs to Response. These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic smoothing is static (it doesn't adapt to your aim speed), so Classic users get the definitions but not these directions.",
         "confidence": "reasoned",
         "citations": [
           {
@@ -109,6 +109,28 @@
             "reasoning": "Easing \"specifies aim behavior from rest\", and a snap starts from rest. Higher values give a \"smoother transition from rest but lower response time\". We read that as a slower start, so lowering Easing should give a quicker one. Easing is a Standard smoothing setting.",
             "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
           }
+        },
+        {
+          "termId": "response",
+          "direction": "depends",
+          "statement": {
+            "text": "Response shapes the fast move after the start. If that move feels heavy, raise Response. If it feels too light, lower it.",
+            "confidence": "reasoned",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Controls fast aim behavior"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+              }
+            ],
+            "reasoning": "After the start from rest, a snap is fast aim, which Response \"controls\". Higher values produce \"a lighter feeling reticle at faster aim speeds\". Which way you need depends on your feel.",
+            "caveat": "Assumes Standard smoothing (Response is a Standard setting)."
+          }
         }
       ]
     },
@@ -117,7 +139,7 @@
       "name": "Precision hold",
       "description": "Lining up one deliberate shot. For example scout rifles, linear fusion rifles and bows.",
       "favours": {
-        "text": "Fine control at low speed, without making the move onto the target feel heavy. The line-up is slow, fine aim (Precision). Getting there is fast aim (Response). These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic is static, so Classic users get the definitions but not these directions.",
+        "text": "Fine control at low speed, without making the move onto the target feel heavy. The line-up is slow, fine aim (Precision). Getting there is fast aim (Response). These directions assume Standard smoothing: it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic smoothing is static (it doesn't adapt to your aim speed), so Classic users get the definitions but not these directions.",
         "confidence": "reasoned",
         "citations": [
           {
@@ -186,6 +208,28 @@
             ],
             "reasoning": "The move to the target area is fast aim, which Response \"controls\". Higher values produce \"a lighter feeling reticle at faster aim speeds\". The definition only says which way is lighter; which way you need depends on your feel.",
             "caveat": "Assumes Standard smoothing (Response is a Standard setting)."
+          }
+        },
+        {
+          "termId": "stability",
+          "direction": "raise",
+          "statement": {
+            "text": "Motion (gyro) aim only: if the reticle wobbles while you hold still on the spot, raise Stability. It adds steadiness at rest.",
+            "confidence": "reasoned",
+            "citations": [
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Specifies aim behavior at rest"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#standard",
+                "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+              }
+            ],
+            "reasoning": "A deliberate shot often means holding still on a spot, which is aim at rest. Stability \"specifies aim behavior at rest\", and raising it gives \"extra stability at rest\". No source ties it to aim styles.",
+            "caveat": "Motion aim only. Assumes Standard smoothing (Stability is a Standard setting)."
           }
         }
       ]
