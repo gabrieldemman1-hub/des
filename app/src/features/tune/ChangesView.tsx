@@ -5,9 +5,10 @@ import { AimStyleSummary } from '../../components/AimStyleSummary';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { EmptyState } from '../../components/EmptyState';
-import { StatementView } from '../../components/StatementView';
+import { SharedCaveatNote, StatementView } from '../../components/StatementView';
+import { hoistedCaveat } from '../../components/statements';
 import { TermLink } from '../../components/TermLink';
-import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, reasonedLabel } from '../../content/labels';
+import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS } from '../../content/labels';
 import { useData } from '../../state/data-context';
 import { leversForProfile } from '../../state/guidance';
 import { useKnowledge } from '../../state/knowledge-context';
@@ -67,11 +68,14 @@ function FindingValues({ finding }: { finding: Finding }) {
   );
 }
 
-/** The main statement (its badge is in the card's head), then the ones that belong with it. */
-function FindingStatements({ finding }: { finding: Finding }) {
+/**
+ * The main statement (its badge is in the card's head; `showCaveat` false when the card shows
+ * the caveat above), then the ones that belong with it.
+ */
+function FindingStatements({ finding, showCaveat = true }: { finding: Finding; showCaveat?: boolean }) {
   return (
     <div className="finding-statements">
-      <StatementView statement={finding.statement} showBadge={false} />
+      <StatementView statement={finding.statement} showBadge={false} showCaveat={showCaveat} />
       {finding.more.map((statement, i) => (
         <StatementView key={i} statement={statement} />
       ))}
@@ -80,19 +84,15 @@ function FindingStatements({ finding }: { finding: Finding }) {
 }
 
 /**
- * What a card shows of its statement before "Why, and the source": whether it was worked out,
- * and its caveat, like the config sheet.
+ * What a card shows of its statement before "Why, and the source": its caveat, like the config
+ * sheet, unless a note above the cards (`hoisted`) already has it.
  */
-function StatementNotes({ statement }: { statement: Statement }) {
+function StatementNotes({ statement, hoisted }: { statement: Statement; hoisted?: string }) {
+  if (!statement.caveat || statement.caveat === hoisted) return null;
   return (
-    <>
-      {statement.confidence === 'reasoned' && <p className="finding-note">{reasonedLabel(statement)}</p>}
-      {statement.caveat && (
-        <p className="finding-note">
-          <strong>Caveat:</strong> {statement.caveat}
-        </p>
-      )}
-    </>
+    <p className="finding-note">
+      <strong>Caveat:</strong> {statement.caveat}
+    </p>
   );
 }
 
@@ -113,10 +113,12 @@ interface FindingCardProps {
   /** The prominent "Change this first" card: its statement shows in full. */
   first?: boolean;
   done?: boolean;
+  /** A caveat the section shows once above its cards. */
+  hoisted?: string;
   actions?: ReactNode;
 }
 
-function FindingCard({ finding, first = false, done = false, actions }: FindingCardProps) {
+function FindingCard({ finding, first = false, done = false, hoisted, actions }: FindingCardProps) {
   const Tag = first ? 'div' : 'li';
   return (
     <Tag className={`card finding${first ? ' tune-first' : ''}${done ? ' is-done' : ''}`}>
@@ -139,10 +141,10 @@ function FindingCard({ finding, first = false, done = false, actions }: FindingC
         <FindingStatements finding={finding} />
       ) : (
         <>
-          <StatementNotes statement={finding.statement} />
+          <StatementNotes statement={finding.statement} hoisted={hoisted} />
           <details className="why">
             <summary>Why, and the source</summary>
-            <FindingStatements finding={finding} />
+            <FindingStatements finding={finding} showCaveat={false} />
           </details>
         </>
       )}
@@ -248,6 +250,9 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
   const missing = required.filter((s) => s.state === 'missing');
   const matching = required.filter((s) => s.state === 'ok');
   const unknown = required.filter((s) => s.state === 'unknown');
+  // XIM's list comes with one caveat for every value, so the section says it once (the card in
+  // "Change this first" sits above the section and keeps its own).
+  const fixCaveat = hoistedCaveat([...groups.fix, ...unknown].map((f) => f.statement));
 
   const { archetype, style } = mainWeapon(kb, loadout);
   const hiddenLevers = style ? style.levers.length - leversForProfile(style.levers, data.profile).length : 0;
@@ -270,13 +275,14 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
     setMoved((n) => n + 1);
   };
 
-  const cardFor = (finding: Finding) => {
+  const cardFor = (finding: Finding, hoisted?: string) => {
     const done = isDone(finding);
     return (
       <FindingCard
         key={finding.id}
         finding={finding}
         done={done}
+        hoisted={hoisted}
         actions={
           canMarkDone(finding) && (
             <div className="checklist-actions">
@@ -336,7 +342,10 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
 
       <Section title={groups.fix.length > 0 ? 'Fix these Destiny 2 settings' : 'Destiny 2 settings'}>
         <p className="hint">Your Destiny 2 settings are shared by every loadout.</p>
-        {groups.fix.length > 0 && <ul className="finding-list">{groups.fix.map(cardFor)}</ul>}
+        {fixCaveat && <SharedCaveatNote>{fixCaveat}</SharedCaveatNote>}
+        {groups.fix.length > 0 && (
+          <ul className="finding-list">{groups.fix.map((finding) => cardFor(finding, fixCaveat))}</ul>
+        )}
         {matching.length > 0 && <p>Already the same as XIM’s list: {names(matching)}.</p>}
         {missing.length > 0 && (
           <p>
@@ -366,10 +375,10 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
                       <dd>{setting.required}</dd>
                     </div>
                   </dl>
-                  <StatementNotes statement={setting.statement} />
+                  <StatementNotes statement={setting.statement} hoisted={fixCaveat} />
                   <details className="why">
                     <summary>Why, and the source</summary>
-                    <StatementView statement={setting.statement} showBadge={false} />
+                    <StatementView statement={setting.statement} showBadge={false} showCaveat={false} />
                   </details>
                 </li>
               ))}
@@ -379,7 +388,7 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
       </Section>
 
       <Section title="Setup">
-        {groups.setup.length > 0 && <ul className="finding-list">{groups.setup.map(cardFor)}</ul>}
+        {groups.setup.length > 0 && <ul className="finding-list">{groups.setup.map((finding) => cardFor(finding))}</ul>}
         {dpiMatches && <p>The DPI in your Config matches the mouse DPI in your profile.</p>}
         {configDpi !== null && mouseDpi === null && (
           <p>
@@ -397,7 +406,7 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
         ) : (
           <p className="hint">The main weapon isn’t in the knowledge base any more, so its aim style is unknown.</p>
         )}
-        {groups.aim.length > 0 && <ul className="finding-list">{groups.aim.map(cardFor)}</ul>}
+        {groups.aim.length > 0 && <ul className="finding-list">{groups.aim.map((finding) => cardFor(finding))}</ul>}
         {hiddenLevers > 0 && (
           <p className="footnote">
             {hiddenLevers === 1 ? 'One setting' : `${hiddenLevers} settings`} for other ways of aiming{' '}
@@ -409,7 +418,7 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
 
       {groups.info.length > 0 && (
         <Section title="Good to know">
-          <ul className="finding-list">{groups.info.map(cardFor)}</ul>
+          <ul className="finding-list">{groups.info.map((finding) => cardFor(finding))}</ul>
         </Section>
       )}
 

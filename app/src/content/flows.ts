@@ -1,6 +1,6 @@
 /**
- * The four flows, described in CONCEPT.md §5 wording. Explain a concept is built; the others
- * are placeholders whose screens explain what each flow will do.
+ * The four flows: the line each Home card shows, and the fuller account (CONCEPT.md §5 wording)
+ * that a flow's index screen keeps a tap away under "How this works".
  */
 export type FlowId = 'build' | 'tune' | 'troubleshoot' | 'learn';
 
@@ -20,7 +20,7 @@ export interface Flow {
   question: string;
   /** One line for the Home card. */
   summary: string;
-  /** Built and usable, rather than a placeholder. */
+  /** Built and usable. Every flow is; an old /flows/<id> address redirects to `to`. */
   available: boolean;
   /** Where the Home card leads. */
   to: string;
@@ -71,8 +71,8 @@ export const FLOWS: readonly Flow[] = [
     sections: [
       {
         paragraphs: [
-          'You enter your existing settings. The app compares them against the evidence base and your profile, flags what’s off (and what’s fine), and proposes targeted changes.',
-          'Changes are ordered by impact and made one at a time, so cause and effect stay observable. Your current config is the starting point, so advice is a diff, not a restart.',
+          'You enter the settings you have now. Dialed compares them with the evidence and your profile, flags what’s off (and what’s fine), and proposes targeted changes.',
+          'Changes come in impact order, one at a time, so you can tell what each one did. Your current config is the starting point: Dialed says what to change, not to start over.',
         ],
       },
     ],
@@ -107,8 +107,8 @@ export const FLOWS: readonly Flow[] = [
       {
         heading: 'Stage 2: Symptom → setting',
         paragraphs: [
-          'You pick what you feel, and the app points to the setting whose official definition describes that feel. It explains the mechanism and suggests one change.',
-          'Where there’s no sourced MATRIX-era answer yet, the app says so. The flow ends with a guardrail: change one thing at a time.',
+          'You pick what you feel, and Dialed points to the setting whose official definition describes that feel. It explains the mechanism and suggests one change.',
+          'Where there’s no sourced MATRIX-era answer yet, Dialed says so. The flow ends with a guardrail: change one thing at a time.',
         ],
       },
     ],

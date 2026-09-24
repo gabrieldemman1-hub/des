@@ -31,12 +31,24 @@ export function reasonedLabel(statement: Pick<Statement, 'citations'>): string {
     : 'Worked out by Dialed, not stated by any source.';
 }
 
+/** The source tiers, as the Sources page names them next to the prose that explains them. */
 export const SOURCE_TIER_LABELS = {
   official: 'Official',
   'official-by-reference': 'Official (by reference)',
   'official-inferred': 'Official (inferred)',
   expert: 'Community expert',
 } as const;
+
+/**
+ * Where a source's words come from, for the tag under a citation whose tier differs from the
+ * statement's confidence. Never a confidence word: those belong to the badge.
+ */
+export const SOURCE_PROVENANCE_LABELS: Record<keyof typeof SOURCE_TIER_LABELS, string> = {
+  official: 'XIM’s own guide',
+  'official-by-reference': 'XIM forum · public page',
+  'official-inferred': 'XIM forum · OBsIV',
+  expert: 'Independent creator',
+};
 
 /** Fallback names when aim-styles.json doesn't have the style yet (CONCEPT.md §6). */
 export const AIM_STYLE_NAMES: Record<AimStyleId, string> = {

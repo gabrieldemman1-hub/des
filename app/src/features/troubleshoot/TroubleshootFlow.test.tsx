@@ -220,15 +220,17 @@ describe('Troubleshoot by feel: stage 1, setup check', () => {
     expect(within(item).getByText(checkById('destiny2-required-settings').fix!.text)).toBeVisible();
   });
 
-  it('says to check the per-Config checks in every Config', () => {
+  it('tags the per-Config checks, and says once what that means', () => {
     renderApp({ path: '/troubleshoot', knowledge: real, storage: storageWith(XBOX) });
-    const note = 'Check this in every Config you use — each loadout has its own.';
     for (const id of ['mouse-dpi-matches', 'smart-translator-current', 'light-notifications', 'clean-sensitivity-test']) {
-      expect(checkItem(checkById(id).title), id).toHaveTextContent(note);
+      expect(within(checkItem(checkById(id).title)).getByText('Per Config', { selector: '.tag' }), id).toBeInTheDocument();
     }
     for (const id of ['firmware-current', 'mouse-polling-rate', 'destiny2-required-settings']) {
-      expect(checkItem(checkById(id).title), id).not.toHaveTextContent(note);
+      expect(checkItem(checkById(id).title), id).not.toHaveTextContent('Per Config');
     }
+    const hint = within(stage1()).getByText(/marks a check to repeat in every Config you use/);
+    expect(hint).toHaveClass('hint');
+    expect(within(stage1()).getAllByText(/every Config you use/)).toHaveLength(1);
   });
 
   it('gives the Done and Needs fixing buttons the check’s title as their description', () => {
@@ -290,15 +292,26 @@ describe('Troubleshoot by feel: stage 2, symptoms', () => {
     expect(screen.getByRole('heading', { level: 1, name: symptom.label })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Troubleshoot by feel/ })).toHaveAttribute('href', '/troubleshoot');
 
+    // Both statements carry the Easing caveat, so the page says it once under the title, with
+    // what Reasoned means; the cards don't repeat either.
+    expect(screen.getByRole('note')).toHaveTextContent(`Caveat: ${EASING_CAVEAT}`);
+    expect(screen.getAllByText(/official wording is ambiguous/)).toHaveLength(1);
+    expect(screen.getByText('Worked out from XIM’s definitions, not stated by a source.', { exact: false })).toHaveClass(
+      'confidence-meaning',
+    );
+
     const points = screen.getByRole('region', { name: 'What it points to' });
     expect(points).toHaveTextContent(symptom.mapping.text);
-    expect(points).toHaveTextContent(EASING_CAVEAT);
+    expect(points).not.toHaveTextContent(EASING_CAVEAT);
     expect(points).toHaveTextContent('Reasoned');
     expect(within(points).getByRole('list', { name: 'Sources' })).toBeInTheDocument();
 
     const change = screen.getByRole('region', { name: 'Try this one change' });
     expect(change).toHaveTextContent(symptom.suggestedChange!.text);
-    expect(change).toHaveTextContent(EASING_CAVEAT);
+    expect(change).not.toHaveTextContent(EASING_CAVEAT);
+    // Its quotes are the ones "What it points to" shows, so it refers up instead of repeating them.
+    expect(within(change).queryByRole('blockquote')).toBeNull();
+    expect(within(change).getAllByText(/^Quoted above:/).length).toBeGreaterThan(0);
 
     expect(screen.getByRole('region', { name: 'One change at a time' })).toHaveTextContent(knowledge.guardrail.text);
     expect(screen.queryByRole('region', { name: 'No sourced answer yet' })).not.toBeInTheDocument();

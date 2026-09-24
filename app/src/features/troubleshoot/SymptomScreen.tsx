@@ -1,8 +1,10 @@
 import { useId, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router';
-import type { Symptom } from '../../../../knowledge/index';
+import type { Statement, Symptom } from '../../../../knowledge/index';
+import { ReasonedLegend } from '../../components/ConfidenceBadge';
 import { Screen } from '../../components/Screen';
-import { StatementView } from '../../components/StatementView';
+import { SharedCaveatNote, StatementView } from '../../components/StatementView';
+import { hoistedCaveat, needsReasonedLegend, quotesShownAbove } from '../../components/statements';
 import { TermLink } from '../../components/TermLink';
 import { useData } from '../../state/data-context';
 import { checksForProfile } from '../../state/guidance';
@@ -85,23 +87,43 @@ function SymptomDetail({ symptom }: { symptom: Symptom }) {
   );
   const notes = kb.expertNotes.filter((n) => n.symptomIds.includes(symptom.id));
 
+  // The page's statements in reading order: a caveat they share is said once under the title,
+  // and a passage one of them quotes is shown in full once.
+  const statements: Statement[] = [
+    symptom.mapping,
+    ...(symptom.suggestedChange ? [symptom.suggestedChange] : []),
+    ...notes.map((n) => n.statement),
+    kb.guardrail,
+  ];
+  const caveat = hoistedCaveat(statements);
+  const above = quotesShownAbove(statements);
+  const view = (statement: Statement) => (
+    <StatementView
+      statement={statement}
+      showCaveat={caveat === undefined || statement.caveat !== caveat}
+      shownAbove={above.get(statement)}
+    />
+  );
+
   return (
     <Screen
       title={symptom.label}
       back={BACK}
       intro={
-        symptom.aliases.length > 0 && (
-          <p className="hint">
-            <strong>Also described as:</strong> {symptom.aliases.join(', ')}
-          </p>
-        )
+        <>
+          {symptom.aliases.length > 0 && (
+            <p className="hint">
+              <strong>Also described as:</strong> {symptom.aliases.join(', ')}
+            </p>
+          )}
+          {caveat && <SharedCaveatNote>{caveat}</SharedCaveatNote>}
+          {needsReasonedLegend(statements) && <ReasonedLegend />}
+        </>
       }
     >
       {isGap ? (
         <Section title="No sourced answer yet">
-          <div className="card">
-            <StatementView statement={symptom.mapping} />
-          </div>
+          <div className="card">{view(symptom.mapping)}</div>
           <p>
             Dialed doesn’t suggest a change without a source, so there’s no change to try here. Start with the{' '}
             {checks.length > 0 ? 'setup check below' : <Link to="/troubleshoot">setup check</Link>}, or pick a more
@@ -117,9 +139,7 @@ function SymptomDetail({ symptom }: { symptom: Symptom }) {
         </Section>
       ) : (
         <Section title="What it points to">
-          <div className="card">
-            <StatementView statement={symptom.mapping} />
-          </div>
+          <div className="card">{view(symptom.mapping)}</div>
           <SettingsInvolved termIds={symptom.termIds} />
         </Section>
       )}
@@ -141,9 +161,7 @@ function SymptomDetail({ symptom }: { symptom: Symptom }) {
 
       {!isGap && symptom.suggestedChange && (
         <Section title="Try this one change">
-          <div className="card">
-            <StatementView statement={symptom.suggestedChange} />
-          </div>
+          <div className="card">{view(symptom.suggestedChange)}</div>
         </Section>
       )}
 
@@ -152,7 +170,7 @@ function SymptomDetail({ symptom }: { symptom: Symptom }) {
           <ul className="statement-list">
             {notes.map((note) => (
               <li className="card" key={note.id}>
-                <StatementView statement={note.statement} />
+                {view(note.statement)}
               </li>
             ))}
           </ul>
@@ -160,9 +178,7 @@ function SymptomDetail({ symptom }: { symptom: Symptom }) {
       )}
 
       <Section title="One change at a time">
-        <div className="card">
-          <StatementView statement={kb.guardrail} />
-        </div>
+        <div className="card">{view(kb.guardrail)}</div>
       </Section>
 
       <nav className="ts-next" aria-label="Next steps">

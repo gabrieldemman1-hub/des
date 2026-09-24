@@ -525,16 +525,77 @@
     color: var(--accent);
   }
 
-  .saved-status {
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    font-size: 0.95rem;
+  /* First run: the one required step, before the flows. */
+  .start-here {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
-  .saved-status-label {
+  .start-here-steps {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding-left: 1.4em;
+  }
+
+  /* Your loadouts: each one is two rows, the config sheet (what a returning player opens most)
+     and the build behind it. */
+  .home-loadouts {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .home-loadout {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .home-loadout-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 12px 16px;
+    color: var(--text);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .home-loadout-link:active {
+    background: var(--surface-2);
+  }
+
+  .home-loadout-link > svg {
+    flex: none;
     color: var(--text-muted);
+  }
+
+  .home-loadout-link.is-build {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-top: 1px solid var(--border);
+    font-size: 0.95rem;
+    font-weight: 650;
+  }
+
+  .home-loadout-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .home-loadout-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
   }
 
   .flow-cards {
@@ -585,13 +646,31 @@
     font-size: 0.92rem;
   }
 
+  /* Where the player is in a flow, from what is saved (never a constant label). */
   .flow-card-status {
     color: var(--accent-text);
     font-size: 0.8rem;
     font-weight: 600;
   }
 
-  /* ---- Flow placeholder -------------------------------------------------------------- */
+  .flow-card-status.is-problem {
+    color: var(--danger);
+  }
+
+  /* ---- Flow intros and the flow placeholder ------------------------------------------ */
+
+  /* A flow's fuller account, under its one-line lede. */
+  .how-this-works .prose {
+    font-size: 0.95rem;
+  }
+
+  .how-this-works .prose + .prose {
+    margin-top: 12px;
+  }
+
+  .how-this-works h3 {
+    font-size: 1rem;
+  }
 
   .coming-soon {
     padding: 12px 14px;
@@ -907,10 +986,13 @@
     list-style: none;
   }
 
+  /* One loadout, the same in every list (LoadoutCard): name, weapons, aim style, status. On the
+     Loadouts screen it is a card with actions; in the Build and Tune pickers the same lines sit
+     inside a .flow-card link. */
   .loadout-card {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
   }
 
   .loadout-card-head {
@@ -920,9 +1002,54 @@
     gap: 12px;
   }
 
-  .loadout-card-head h2 {
+  .loadout-card-name {
     font-size: 1.15rem;
     overflow-wrap: anywhere;
+  }
+
+  .loadout-card-weapons {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  .loadout-card-style {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+  }
+
+  /* The aim style is the loadout's key fact, so its tag reads at body weight, not as a footnote. */
+  .loadout-card-style .tag {
+    color: var(--text);
+    font-size: 0.85rem;
+  }
+
+  .loadout-card-status {
+    color: var(--accent-text);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .loadout-card-status .is-problem {
+    color: var(--danger);
+  }
+
+  /* The config sheet is the main action; Build and Tune share the row under it. */
+  .loadout-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .loadout-card-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .loadout-card-row .button {
+    flex: 1 1 0;
   }
 
   .slot-list {
@@ -1047,26 +1174,33 @@
     color: var(--text-muted);
   }
 
+  /* A caveat shared by every statement in a page or section, said once in Dialed's voice: a
+     box, not the left rule that marks a quotation. */
+  .shared-caveat {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  /* What Reasoned means, once under a page title. */
+  .confidence-legend .confidence-meaning {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  /* Sources: one rule for the whole group, each source named once (in full contrast, so the
+     block has a visible start and end), its passages numbered under it. The quotes stay at the
+     statement's size: they are read at arm's length. */
   .citations {
     display: grid;
-    gap: 10px;
+    gap: 12px;
     margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .citations blockquote {
-    margin: 0 0 4px;
-    padding-left: 10px;
+    padding: 0 0 0 12px;
     border-left: 3px solid var(--border-strong);
-    color: var(--text-muted);
-  }
-
-  .citation-note {
-    margin: 0 0 4px;
-    padding-left: 13px;
-    color: var(--text-muted);
-    font-size: 0.85rem;
+    list-style: none;
   }
 
   .citation-source {
@@ -1075,6 +1209,77 @@
     align-items: center;
     gap: 4px 8px;
     margin: 0;
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .citation-where,
+  .citation-count {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .citation-passages {
+    display: grid;
+    gap: 8px;
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: passage;
+  }
+
+  .citation-passages > li {
+    display: grid;
+    gap: 4px;
+  }
+
+  .citation-passages.is-many > li {
+    position: relative;
+    padding-left: 20px;
+    counter-increment: passage;
+  }
+
+  .citation-passages.is-many > li::before {
+    content: counter(passage);
+    position: absolute;
+    top: 0.15em;
+    left: 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .citations blockquote {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  /* A passage already shown in full higher up: a reference, not the block again. */
+  .citation-repeat {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .citation-note {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .citation-link {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+
+  /* A 44px tap height on the text links, without moving the lines around them. */
+  .citation-source a,
+  .citation-link a {
+    display: inline-block;
+    margin: -12px 0;
+    padding: 12px 0;
   }
 
   .confidence {
@@ -1104,8 +1309,16 @@
     flex: none;
   }
 
+  /* Official is the default, so it is a dot and a word; the pill marks the four exceptions. */
   .badge-official {
     --tone: var(--c-official);
+    padding: 2px 0;
+    border-color: transparent;
+    background: transparent;
+    color: var(--text-muted);
+  }
+  .badge-official .badge-shape {
+    color: var(--tone);
   }
   .badge-expert {
     --tone: var(--c-expert);
@@ -1335,12 +1548,14 @@
     gap: 8px;
   }
 
-  /* A setup check about one Config: its mark is shared, but every loadout has its own Config. */
+  /* A setup check about one Config (its mark is shared, but every loadout has its own Config):
+     a tag on the card, and what it means once above the list. */
   .per-config-note {
-    padding: 6px 10px;
-    border-left: 3px solid var(--border-strong);
-    color: var(--text-muted);
-    font-size: 0.92rem;
+    margin: 0;
+  }
+
+  .per-config-hint .tag {
+    margin-right: 2px;
   }
 
   .checklist-actions {

@@ -3,7 +3,7 @@ import type { FoundationCheck } from '../../../../knowledge/index';
 import { ChecklistItem } from '../../components/ChecklistItem';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
-import { PerConfigNote } from '../../components/PerConfigNote';
+import { PerConfigHint, PerConfigNote } from '../../components/PerConfigNote';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
 import { useData } from '../../state/data-context';
@@ -70,11 +70,14 @@ function SetupCheckItem({ check }: { check: FoundationCheck }) {
 /** The setup checks as a checklist. Marks are shared with Build my config (same keys). */
 export function SetupChecklist({ checks }: { checks: readonly FoundationCheck[] }) {
   return (
-    <ul className="checklist">
-      {checks.map((check) => (
-        <SetupCheckItem key={check.id} check={check} />
-      ))}
-    </ul>
+    <>
+      <PerConfigHint checks={checks} />
+      <ul className="checklist">
+        {checks.map((check) => (
+          <SetupCheckItem key={check.id} check={check} />
+        ))}
+      </ul>
+    </>
   );
 }
 

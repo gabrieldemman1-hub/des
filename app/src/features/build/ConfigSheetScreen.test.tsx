@@ -237,7 +237,8 @@ describe('Config sheet', () => {
     expect(within(dpi).queryByRole('group', { name: 'Status' })).not.toBeInTheDocument();
     expect(dpi).toHaveTextContent('This Config: 800 DPI');
     expect(dpi).toHaveTextContent('You marked this Done, but the values above differ.');
-    expect(dpi).toHaveTextContent('Check this in every Config you use — each loadout has its own.');
+    expect(within(dpi).getByText('Per Config', { selector: '.tag' })).toBeInTheDocument();
+    expect(within(setup).getByText(/marks a check to repeat in every Config you use/)).toHaveClass('hint');
     // The Destiny 2 settings check is in the Destiny 2 settings section, not here.
     expect(
       within(setup).queryByRole('listitem', {

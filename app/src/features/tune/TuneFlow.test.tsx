@@ -62,7 +62,10 @@ describe('Tune my config: picking a loadout', () => {
   it('explains the flow and invites you to add a loadout when there are none', () => {
     renderApp({ path: '/tune', knowledge: realKnowledge });
     expect(screen.getByRole('heading', { level: 1, name: 'Tune my config' })).toBeInTheDocument();
-    expect(screen.getByText(/compares them against the evidence base/)).toBeInTheDocument();
+    expect(screen.getByText(/Enter what you have now/)).toHaveClass('lede');
+    const details = screen.getByText('How this works').closest('details')!;
+    expect(details).not.toHaveAttribute('open');
+    expect(within(details).getByText(/Dialed compares them with the evidence/)).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'No loadouts yet' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Add a loadout' })).toHaveAttribute('href', '/loadouts/new');
   });
@@ -85,11 +88,13 @@ describe('Tune my config: picking a loadout', () => {
     const links = within(list).getAllByRole('link');
     expect(links).toHaveLength(2);
     expect(links[0]).toHaveTextContent('Pulse + shotgun');
-    expect(links[0]).toHaveTextContent('Main weapon: Pulse Rifle · Tracking');
-    expect(links[0]).toHaveTextContent('Destiny 2 settings entered · none for this Config yet');
+    expect(links[0]).toHaveTextContent('Pulse Rifle (main) · Shotgun · Power: empty');
+    expect(links[0]).toHaveTextContent('Aim style: Tracking');
+    expect(links[0]).toHaveTextContent('Only Destiny 2 settings entered');
     expect(links[0]).toHaveAttribute('href', '/tune/l1');
-    expect(links[1]).toHaveTextContent('Main weapon: Hand Cannon · Snap');
-    expect(links[1]).toHaveTextContent(/Settings entered · updated/);
+    expect(links[1]).toHaveTextContent('Hand Cannon (main) · Energy: empty · Power: empty');
+    expect(links[1]).toHaveTextContent('Aim style: Snap');
+    expect(links[1]).toHaveTextContent(/Settings entered (Sep 22|22 Sep)/);
   });
 
   it('opens "Your settings" first when nothing is entered, "What to change" otherwise', async () => {
@@ -512,7 +517,7 @@ describe('Tune my config: marking changes done', () => {
 });
 
 describe('Tune my config: cards', () => {
-  it('shows every card’s confidence, and the caveat and “worked out” label outside “Why”', () => {
+  it('shows every card’s confidence and caveat outside “Why”, and says inside it when a change was worked out', () => {
     render(
       '/tune/l1/changes',
       storageWith({
@@ -530,18 +535,41 @@ describe('Tune my config: cards', () => {
     expect(easing.querySelector('.finding-head .badge')).toHaveTextContent('Reasoned');
     expect(easing.querySelector('.finding-head .badge')).toBeVisible();
     const notes = Array.from(easing.querySelectorAll<HTMLElement>(':scope > .finding-note'));
-    expect(notes.map((n) => n.textContent)).toEqual([
-      'Worked out from XIM’s definitions, not stated by a source.',
-      `Caveat: ${EASING_CAVEAT}`,
-    ]);
+    expect(notes.map((n) => n.textContent)).toEqual([`Caveat: ${EASING_CAVEAT}`]);
     for (const note of notes) expect(note).toBeVisible();
-    // The full statement stays one tap away.
+    // The full statement stays one tap away, and opens with why it counts as worked out; the
+    // caveat above isn't repeated inside.
     expect(within(easing).getByText('Why, and the source').closest('details')).not.toHaveAttribute('open');
+    const workedOut = within(easing).getByText(/^Worked out from XIM’s definitions, not stated by a source\. /);
+    expect(workedOut).not.toBeVisible();
+    expect(within(easing).getAllByText(/Caveat:/)).toHaveLength(1);
 
     const setup = section('Setup');
     const dpi = within(setup).getByRole('heading', { level: 3, name: /DPI in your Config differs/ }).closest('li')!;
     expect(dpi.querySelector('.finding-head .badge')).toHaveTextContent('Official');
     expect(dpi.querySelector('.finding-head .badge')).toBeVisible();
+  });
+
+  it('says the Destiny 2 settings’ shared caveat once above their cards', () => {
+    render(
+      '/tune/l1/changes',
+      storageWith({
+        inGame: inGameWith({ ...REQUIRED_IN_GAME, lookSensitivity: 15, axialDeadzone: 5, radialDeadzone: 1 }),
+      }),
+    );
+    const caveat = knowledge.game.requiredSettings.find((s) => s.name === 'Axial Deadzone')!.statement.caveat!;
+    // The first change sits above the section and keeps its own caveat in full.
+    expect(within(section('Change this first')).getByText(/^Caveat:/).closest('p')).toHaveTextContent(caveat);
+
+    const fix = section('Fix these Destiny 2 settings');
+    const note = within(fix).getByRole('note');
+    expect(note).toHaveTextContent(`Caveat: ${caveat}`);
+    expect(within(fix).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
+      'Axial Deadzone',
+      'Radial Deadzone',
+    ]);
+    expect(fix.querySelectorAll('.finding-note')).toHaveLength(0);
+    expect(within(fix).getAllByText(/Caveat:/)).toHaveLength(1);
   });
 
   it('keeps one set of Destiny 2 settings for every loadout', async () => {

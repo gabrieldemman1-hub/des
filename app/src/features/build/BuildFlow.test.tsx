@@ -55,15 +55,26 @@ describe('Build my config: choosing a loadout', () => {
     const total = planProgress(plan, data.progress).total;
     const pulse = screen.getByRole('link', { name: /Pulse \+ shotgun/ });
     expect(pulse).toHaveAttribute('href', '/build/l1');
-    expect(pulse).toHaveTextContent('Pulse Rifle (main), Shotgun');
+    expect(pulse).toHaveTextContent('Pulse Rifle (main) · Shotgun · Power: empty');
     expect(pulse).toHaveTextContent('Aim style: Tracking');
-    expect(pulse).toHaveTextContent(`2 of ${total} items done`);
+    expect(pulse).toHaveTextContent(`Sheet 2 of ${total} done`);
     expect(screen.getByRole('link', { name: /Peek/ })).toHaveTextContent('Aim style: Snap');
 
+    // The loadouts come first (the build starts from one); the profile's readiness is below them.
     const profile = screen.getByRole('region', { name: 'Your profile' });
+    const list = screen.getByRole('list', { name: 'Your loadouts' });
+    expect(list.compareDocumentPosition(profile) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(profile).toHaveTextContent('Not set yet: platform, output type, mouse DPI and polling rate.');
     expect(within(profile).getByRole('link', { name: 'Complete your profile' })).toHaveAttribute('href', '/profile');
     expect(screen.getByText(/shared by every loadout/)).toBeInTheDocument();
+  });
+
+  it('keeps the intro to a line, with the fuller account a tap away', () => {
+    render('/build');
+    expect(screen.getByText(/in the order they depend on each other, ending in a config sheet/)).toHaveClass('lede');
+    const details = screen.getByText('How this works').closest('details')!;
+    expect(details).not.toHaveAttribute('open');
+    expect(within(details).getByRole('heading', { level: 3, name: 'The order it follows' })).toBeInTheDocument();
   });
 
   it('says when the profile has everything the build uses', () => {
@@ -73,11 +84,14 @@ describe('Build my config: choosing a loadout', () => {
     expect(profile).not.toHaveTextContent('Not set yet');
   });
 
-  it('invites you to add a loadout when there are none', () => {
+  it('invites you to add a loadout when there are none, before the profile', () => {
     render('/build', sampleData());
     // Inside the "Choose a loadout" section, so one level below it.
     expect(screen.getByRole('heading', { level: 3, name: 'No loadouts yet' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Add a loadout' })).toHaveAttribute('href', '/loadouts/new');
+    const add = screen.getByRole('link', { name: 'Add a loadout' });
+    expect(add).toHaveAttribute('href', '/loadouts/new');
+    const complete = screen.getByRole('link', { name: 'Complete your profile' });
+    expect(add.compareDocumentPosition(complete) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it('opens a loadout at the first step that isn’t done', async () => {
@@ -164,7 +178,8 @@ describe('Build my config: the steps', () => {
   it('step 2 leaves the Destiny 2 settings check to step 1, and says to check per-Config checks in every Config', () => {
     render('/build/l1/matrix', withProfile({ platform: 'xbox', outputType: 'xbox-controller' }));
     expect(screen.queryByRole('listitem', { name: checkTitle('destiny2-required-settings') })).not.toBeInTheDocument();
-    const note = 'Check this in every Config you use — each loadout has its own.';
+    const note = 'Per Config';
+    expect(screen.getByText(/marks a check to repeat in every Config you use/)).toHaveClass('hint');
     expect(screen.getByRole('listitem', { name: checkTitle('mouse-dpi-matches') })).toHaveTextContent(note);
     expect(screen.getByRole('listitem', { name: checkTitle('smart-translator-current') })).toHaveTextContent(note);
     expect(screen.getByRole('listitem', { name: checkTitle('firmware-current') })).not.toHaveTextContent(note);
@@ -251,11 +266,10 @@ describe('Build my config: the steps', () => {
     const { user } = render('/build/l1/aim');
     const sensitivity = screen.getByRole('listitem', { name: 'Start with Sensitivity' });
     const guidance = real.termById('sensitivity')!.guidance[0]!;
-    // The line up front, then the full statement (text, quotes) inside the disclosure.
-    const [line, full] = within(sensitivity).getAllByText(guidance.text, { exact: false });
+    // The line up front, once; the disclosure holds the quotes, not the text again.
+    const line = within(sensitivity).getByText(guidance.text, { exact: false });
     expect(line).toBeVisible();
     expect(line).toHaveTextContent('Official');
-    expect(full).not.toBeVisible();
     const quote = within(sensitivity).getByText(`“${guidance.citations[0]!.quote}”`);
     expect(quote).not.toBeVisible();
     await user.click(within(sensitivity).getByText('Reasons and sources'));
@@ -263,9 +277,10 @@ describe('Build my config: the steps', () => {
 
     // The aim style's "favours" statement works the same way.
     const favours = real.aimStyleById('tracking')!.favours;
-    const [favoursLine, favoursFull] = screen.getAllByText(favours.text, { exact: false });
+    const favoursLine = screen.getByText(favours.text, { exact: false });
     expect(favoursLine).toBeVisible();
-    expect(favoursFull).not.toBeVisible();
+    const favoursCard = within(favoursLine.closest('.card')!);
+    expect(favoursCard.getByText(`“${favours.citations[0]!.quote}”`)).not.toBeVisible();
   });
 
   it('step 3 tells a hand cannon (snap) loadout to lower Easing, with the Easing caveat', () => {

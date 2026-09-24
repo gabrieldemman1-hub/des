@@ -4,7 +4,7 @@ import type { PreferenceInput, Statement } from '../../../../knowledge/index';
 import { AimStyleSummary } from '../../components/AimStyleSummary';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { ChecklistItem } from '../../components/ChecklistItem';
-import { PerConfigNote } from '../../components/PerConfigNote';
+import { PerConfigHint, PerConfigNote } from '../../components/PerConfigNote';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
 import {
@@ -185,6 +185,7 @@ export function MatrixSetupStep({ plan, count, pager }: StepProps) {
         Work through them in order, and tick each one once it checks out. The reasons and sources behind each check are
         a tap away.
       </p>
+      <PerConfigHint checks={plan.checks.map(({ check }) => check)} />
       <StepCount count={count} />
       {pager}
       {plan.checks.length === 0 ? (
@@ -371,7 +372,7 @@ export function AimSettingsStep({ plan, count }: StepProps) {
             <h3 className="build-note-title">What the settings should favour</h3>
             <div className="card build-statements">
               <StatementLine statement={style.favours} />
-              <Why statements={[style.favours]} showBadge={false} />
+              <Why statements={[style.favours]} showBadge={false} showText={false} showCaveat={false} />
             </div>
           </>
         )}
@@ -417,7 +418,7 @@ export function AimSettingsStep({ plan, count }: StepProps) {
                 {current && <CurrentValue value={current} />}
                 <div className="build-statements">
                   <StatementLine statement={lever.statement} />
-                  <Why statements={[lever.statement]} showBadge={false} />
+                  <Why statements={[lever.statement]} showBadge={false} showText={false} showCaveat={false} />
                 </div>
               </ChecklistItem>
             );

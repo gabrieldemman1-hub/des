@@ -5,7 +5,6 @@ import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { Screen } from '../../components/Screen';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
-import { reasonedLabel } from '../../content/labels';
 import type { GuidanceItem } from './build-plan';
 import type { CheckContextLine } from '../../state/current-values';
 import './build.css';
@@ -25,8 +24,8 @@ export function LoadoutNotFound({ back, link }: { back: { to: string; label: str
 }
 
 /**
- * A statement's text, badge, "worked out" label (when reasoned) and caveat, for scanning; the
- * reasoning and sources go behind `Why`.
+ * A statement's text, badge and caveat, for scanning; the reasoning (which says when it was
+ * worked out) and sources go behind `Why`.
  */
 export function StatementLine({ statement }: { statement: Statement }) {
   return (
@@ -34,11 +33,6 @@ export function StatementLine({ statement }: { statement: Statement }) {
       <p>
         <ConfidenceBadge level={statement.confidence} /> {statement.text}
       </p>
-      {statement.confidence === 'reasoned' && (
-        <p className="statement-reasoning">
-          <strong>{reasonedLabel(statement)}</strong>
-        </p>
-      )}
       {statement.caveat && (
         <p className="statement-caveat">
           <strong>Caveat:</strong> {statement.caveat}
@@ -48,22 +42,35 @@ export function StatementLine({ statement }: { statement: Statement }) {
   );
 }
 
-/** The full statements (reasoning and sources), one tap away. `showBadge` false when the lines above show it. */
+/**
+ * The full statements (reasoning and sources), one tap away. `showBadge`, `showText` and
+ * `showCaveat` false when the lines above (e.g. `StatementLine`) show them.
+ */
 export function Why({
   summary = 'Reasons and sources',
   statements,
   showBadge = true,
+  showText = true,
+  showCaveat = true,
 }: {
   summary?: ReactNode;
   statements: readonly Statement[];
   showBadge?: boolean;
+  showText?: boolean;
+  showCaveat?: boolean;
 }) {
   return (
     <details className="why">
       <summary>{summary}</summary>
       <div className="build-statements">
         {statements.map((statement, i) => (
-          <StatementView key={i} statement={statement} showBadge={showBadge} />
+          <StatementView
+            key={i}
+            statement={statement}
+            showBadge={showBadge}
+            showText={showText}
+            showCaveat={showCaveat}
+          />
         ))}
       </div>
     </details>
@@ -80,7 +87,7 @@ export function GuidanceStatements({ item }: { item: GuidanceItem }) {
       {item.lead.map((statement, i) => (
         <StatementLine key={i} statement={statement} />
       ))}
-      <Why statements={item.lead} showBadge={false} />
+      <Why statements={item.lead} showBadge={false} showText={false} showCaveat={false} />
       {item.more.length > 0 && (
         <details className="why">
           <summary>

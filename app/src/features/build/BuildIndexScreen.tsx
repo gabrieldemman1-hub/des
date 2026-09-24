@@ -1,17 +1,12 @@
 import { useId } from 'react';
 import { Link } from 'react-router';
-import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { EmptyState } from '../../components/EmptyState';
-import { ChevronIcon } from '../../components/icons';
+import { HowThisWorks } from '../../components/HowThisWorks';
+import { LoadoutCard } from '../../components/LoadoutCard';
 import { Screen } from '../../components/Screen';
 import { OUTPUT_TYPE_LABELS, PLATFORM_LABELS } from '../../content/labels';
 import { useData } from '../../state/data-context';
-import { useKnowledge } from '../../state/knowledge-context';
-import { progressSummary } from '../../state/progress';
-import type { Loadout, Profile } from '../../state/schema';
-import { useEffectiveProgress } from '../../state/use-progress';
-import { buildPlan, planProgress } from './build-plan';
-import { aimStyleName, weaponLines, weaponSummary } from './format';
+import type { Profile } from '../../state/schema';
 import { buildPath } from './use-build-plan';
 import './build.css';
 
@@ -64,32 +59,7 @@ function ProfileReadiness({ profile }: { profile: Profile }) {
   );
 }
 
-function LoadoutCard({ loadout }: { loadout: Loadout }) {
-  const knowledge = useKnowledge();
-  const { data } = useData();
-  const progress = useEffectiveProgress();
-  const plan = buildPlan(knowledge, data.profile, loadout);
-  const weapons = weaponLines(loadout, knowledge);
-
-  return (
-    <li>
-      <Link className="flow-card" to={buildPath(loadout.id)}>
-        <span className="flow-card-text">
-          <span className="flow-card-title">{loadout.name}</span>
-          <span className="flow-card-summary">{weaponSummary(weapons)}</span>
-          <span className="build-card-style">
-            Aim style: <strong>{aimStyleName(plan.main, plan.style)}</strong>
-            {plan.main && <ConfidenceBadge level={plan.main.mapping.confidence} />}
-          </span>
-          <span className="flow-card-status">{progressSummary(planProgress(plan, progress), 'items')}</span>
-        </span>
-        <ChevronIcon />
-      </Link>
-    </li>
-  );
-}
-
-/** Build my config: the profile's readiness, then a loadout to build for. */
+/** Build my config: a loadout to build for (the build starts from one), then the profile's readiness. */
 export function BuildIndexScreen() {
   const { data } = useData();
   const headingId = useId();
@@ -100,16 +70,15 @@ export function BuildIndexScreen() {
       title="Build my config"
       back={{ to: '/', label: 'Home' }}
       intro={
-        <p className="lede">
-          A step-by-step walkthrough that builds a complete Destiny 2 configuration from the ground up, in dependency
-          order: Destiny 2’s own settings, then your MATRIX setup, then the aim settings for one loadout. Each step shows
-          the recommendation for you, the reasoning and the source. It ends with a config sheet to work through in XIM
-          MATRIX Manager and in Destiny 2.
-        </p>
+        <>
+          <p className="lede">
+            Destiny 2’s settings, your MATRIX setup, then the aim settings for one loadout, in the order they depend
+            on each other, ending in a config sheet to take to the console.
+          </p>
+          <HowThisWorks flow="build" />
+        </>
       }
     >
-      <ProfileReadiness profile={data.profile} />
-
       <section className="learn-section" aria-labelledby={headingId}>
         <h2 className="section-title" id={headingId}>
           Choose a loadout
@@ -134,12 +103,14 @@ export function BuildIndexScreen() {
             </p>
             <ul className="flow-cards" aria-label="Your loadouts">
               {loadouts.map((loadout) => (
-                <LoadoutCard key={loadout.id} loadout={loadout} />
+                <LoadoutCard key={loadout.id} loadout={loadout} to={buildPath(loadout.id)} />
               ))}
             </ul>
           </>
         )}
       </section>
+
+      <ProfileReadiness profile={data.profile} />
     </Screen>
   );
 }

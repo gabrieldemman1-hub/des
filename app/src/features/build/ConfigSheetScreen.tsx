@@ -3,10 +3,10 @@ import { Link, useLocation, useParams } from 'react-router';
 import type { Confidence, Statement } from '../../../../knowledge/index';
 import { AimStyleSummary } from '../../components/AimStyleSummary';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
-import { PerConfigNote } from '../../components/PerConfigNote';
+import { PerConfigHint, PerConfigNote } from '../../components/PerConfigNote';
 import { Screen } from '../../components/Screen';
 import { StatementView } from '../../components/StatementView';
-import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, reasonedLabel } from '../../content/labels';
+import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS } from '../../content/labels';
 import { checkContext, currentAimValue, currentRequiredValue, smoothingNote } from '../../state/current-values';
 import { useData } from '../../state/data-context';
 import { useKnowledge } from '../../state/knowledge-context';
@@ -140,19 +140,22 @@ function DerivedNote({ saved, differs }: { saved: ProgressState | undefined; dif
 }
 
 /**
- * The full statements, one tap away. `showBadge` false when the row already shows the badge;
- * `badge` puts one in the summary line itself.
+ * The full statements, one tap away. `showBadge` false when the row already shows the badge,
+ * `showCaveat` false when the row or the section shows the caveat; `badge` puts one in the
+ * summary line itself.
  */
 function Why({
   summary = 'Reasons and sources',
   badge,
   statements,
   showBadge = true,
+  showCaveat = true,
 }: {
   summary?: string;
   badge?: Confidence;
   statements: readonly Statement[];
   showBadge?: boolean;
+  showCaveat?: boolean;
 }) {
   return (
     <details className="why">
@@ -170,7 +173,7 @@ function Why({
       </summary>
       <div className="build-statements">
         {statements.map((statement, i) => (
-          <StatementView key={i} statement={statement} showBadge={showBadge} />
+          <StatementView key={i} statement={statement} showBadge={showBadge} showCaveat={showCaveat} />
         ))}
       </div>
     </details>
@@ -378,7 +381,7 @@ function Sheet({ plan }: { plan: BuildPlan }) {
                     <DerivedNote saved={saved[setting.key]} differs={`your value differs from ${setting.value}`} />
                   )}
                   {!shared && setting.statement.caveat && <Caveat text={setting.statement.caveat} />}
-                  <Why summary="Why and source" statements={[setting.statement]} showBadge={false} />
+                  <Why summary="Why and source" statements={[setting.statement]} showBadge={false} showCaveat={false} />
                 </SheetRow>
               );
             })}
@@ -390,6 +393,7 @@ function Sheet({ plan }: { plan: BuildPlan }) {
         {profile.platform === null && (
           <p className="hint">Your platform isn’t set, so the checks for both Xbox and PC are listed.</p>
         )}
+        <PerConfigHint checks={plan.checks.map(({ check }) => check)} />
         {plan.checks.length === 0 ? (
           <p className="hint">The setup checks are missing from this build of the knowledge base.</p>
         ) : (
@@ -484,11 +488,8 @@ function Sheet({ plan }: { plan: BuildPlan }) {
                 itemKey={key}
               >
                 {current && <CurrentValue value={current} />}
-                {lever.statement.confidence === 'reasoned' && (
-                  <p className="sheet-caveat">{reasonedLabel(lever.statement)}</p>
-                )}
                 {lever.statement.caveat && <Caveat text={lever.statement.caveat} />}
-                <Why statements={[lever.statement]} showBadge={false} />
+                <Why statements={[lever.statement]} showBadge={false} showCaveat={false} />
               </SheetRow>
             );
           })}
