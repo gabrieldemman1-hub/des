@@ -53,6 +53,11 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Pressed: the surface the other tap targets use, so a tap reads as a tap. */
+.build-step:active {
+  background: var(--surface-2);
+}
+
 .build-step-number {
   display: grid;
   place-items: center;
@@ -157,7 +162,7 @@ details.card > .statement-list {
   list-style: none;
 }
 
-.tag.tag-differs {
+.tag-differs {
   border-color: var(--danger);
   color: var(--danger);
 }
@@ -198,25 +203,49 @@ details.card > .statement-list {
   font-size: 0.9rem;
 }
 
+/* Back and Next both name their step, so they share the row equally. */
 .build-pager {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
   padding-top: 8px;
   border-top: 1px solid var(--border);
 }
 
-.build-reset {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
+/* The same pager under the progress count: no rule above it, a rule between it and the list. */
+.build-pager.is-top {
+  padding: 0 0 12px;
+  border-top: 0;
+  border-bottom: 1px solid var(--border);
 }
+
+/* A badge inside a "Why it matters" / "How to fix it" summary wraps under the label when narrow. */
+.build-checklist .why summary {
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+
 
 /* ---- Config sheet ------------------------------------------------------------------- */
 
+/* The progress count, with the link that picks the build up again beside it. */
+.sheet-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 14px;
+}
+
+.sheet-progress a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+/* Two compact buttons on one line: the sheet is for reading, so neither is the page's call to action. */
 .sheet-actions .button {
-  flex: 1 1 140px;
+  flex: 0 1 auto;
 }
 
 .sheet-copy-status:empty {
@@ -258,12 +287,12 @@ textarea.sheet-text {
   background: var(--surface);
 }
 
+/* The name wraps under a value pinned top right, so the values line up down the sheet. */
 .sheet-row-head {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 2px 12px;
 }
 
 /* Readable at arm's length, next to the console. */
@@ -273,17 +302,48 @@ textarea.sheet-text {
   overflow-wrap: anywhere;
 }
 
-.sheet-name a {
-  display: inline-block;
-  padding: 2px 0;
+/* "What is this?": a 44px tap target around a small chip, so the name itself stays a label. */
+.sheet-explain {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: -10px 0;
+  padding: 0 4px;
+  vertical-align: middle;
+  text-decoration: none;
 }
 
+.sheet-explain .tag {
+  color: var(--accent-text);
+}
+
+.sheet-explain:focus-visible {
+  outline: none;
+}
+
+.sheet-explain:focus-visible .tag {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* One size for every value, number or word: it is the column the eye runs down. */
 .sheet-value {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   color: var(--text);
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
+  text-align: right;
+}
+
+.sheet-value-caption {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 .sheet-meta {
@@ -293,40 +353,14 @@ textarea.sheet-text {
   gap: 6px 10px;
 }
 
-.sheet-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  font-weight: 700;
+/* The Done / Needs fixing pair sits right of the badge, or on its own line when that is narrow. */
+.sheet-toggles {
+  margin-left: auto;
 }
 
-/* A shape as well as a colour: filled for done, a bar for needs fixing, a ring for not yet. */
-.sheet-status-mark {
-  flex: none;
-  width: 10px;
-  height: 10px;
-  border: 2px solid currentColor;
-  border-radius: 999px;
-}
-
-.sheet-status.is-done {
-  color: var(--success);
-}
-
-.sheet-status.is-done .sheet-status-mark {
-  background: currentColor;
-}
-
-.sheet-status.is-problem {
-  color: var(--danger);
-}
-
-.sheet-status.is-problem .sheet-status-mark {
-  height: 4px;
-  border-radius: 2px;
-  background: currentColor;
+/* A little tighter than elsewhere, so the pair shares the badge's line on a 390px phone. */
+.sheet-toggles .button {
+  padding-inline: 10px;
 }
 
 .sheet-caveat {
@@ -334,25 +368,28 @@ textarea.sheet-text {
   font-size: 0.92rem;
 }
 
-.sheet-statement {
+/* The player's value: its "Differs" tag on a line of its own, never sometimes beside the value. */
+.sheet-row .build-current.is-differs::after,
+.sheet-row .build-context li.is-differs::after {
+  content: '';
+  flex-basis: 100%;
+  height: 0;
+  order: 1;
+}
+
+.sheet-row .build-current .tag,
+.sheet-row .build-context li .tag {
+  order: 2;
+}
+
+/* After the last row: pick the build up, or go on from here (the build steps end with a pager). */
+.sheet-end {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-.sheet-statement .confidence {
-  margin-right: 4px;
-}
-
-.sheet-favours {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 10px;
-}
-
-.sheet-favours .why {
-  flex: 1 1 200px;
+  align-items: flex-start;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
 }
 
 @media (forced-colors: active) {

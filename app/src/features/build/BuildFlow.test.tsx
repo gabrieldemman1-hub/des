@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { act, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { knowledge } from '../../../../knowledge/index';
 import { EASING_CAVEAT } from '../../../../knowledge/integrity';
@@ -55,15 +55,26 @@ describe('Build my config: choosing a loadout', () => {
     const total = planProgress(plan, data.progress).total;
     const pulse = screen.getByRole('link', { name: /Pulse \+ shotgun/ });
     expect(pulse).toHaveAttribute('href', '/build/l1');
-    expect(pulse).toHaveTextContent('Pulse Rifle (main), Shotgun');
+    expect(pulse).toHaveTextContent('Pulse Rifle (main) · Shotgun · Power: empty');
     expect(pulse).toHaveTextContent('Aim style: Tracking');
-    expect(pulse).toHaveTextContent(`2 of ${total} items done`);
+    expect(pulse).toHaveTextContent(`Sheet 2 of ${total} done`);
     expect(screen.getByRole('link', { name: /Peek/ })).toHaveTextContent('Aim style: Snap');
 
+    // The loadouts come first (the build starts from one); the profile's readiness is below them.
     const profile = screen.getByRole('region', { name: 'Your profile' });
+    const list = screen.getByRole('list', { name: 'Your loadouts' });
+    expect(list.compareDocumentPosition(profile) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(profile).toHaveTextContent('Not set yet: platform, output type, mouse DPI and polling rate.');
     expect(within(profile).getByRole('link', { name: 'Complete your profile' })).toHaveAttribute('href', '/profile');
     expect(screen.getByText(/shared by every loadout/)).toBeInTheDocument();
+  });
+
+  it('keeps the intro to a line, with the fuller account a tap away', () => {
+    render('/build');
+    expect(screen.getByText(/in the order they depend on each other, ending in a config sheet/)).toHaveClass('lede');
+    const details = screen.getByText('How this works').closest('details')!;
+    expect(details).not.toHaveAttribute('open');
+    expect(within(details).getByRole('heading', { level: 3, name: 'The order it follows' })).toBeInTheDocument();
   });
 
   it('says when the profile has everything the build uses', () => {
@@ -73,11 +84,14 @@ describe('Build my config: choosing a loadout', () => {
     expect(profile).not.toHaveTextContent('Not set yet');
   });
 
-  it('invites you to add a loadout when there are none', () => {
+  it('invites you to add a loadout when there are none, before the profile', () => {
     render('/build', sampleData());
     // Inside the "Choose a loadout" section, so one level below it.
     expect(screen.getByRole('heading', { level: 3, name: 'No loadouts yet' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Add a loadout' })).toHaveAttribute('href', '/loadouts/new');
+    const add = screen.getByRole('link', { name: 'Add a loadout' });
+    expect(add).toHaveAttribute('href', '/loadouts/new');
+    const complete = screen.getByRole('link', { name: 'Complete your profile' });
+    expect(add.compareDocumentPosition(complete) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it('opens a loadout at the first step that isn’t done', async () => {
@@ -113,12 +127,28 @@ describe('Build my config: the steps', () => {
     await user.click(screen.getByText(notes[1]!.title));
     expect(screen.getByText(notes[1]!.statement.text)).toBeVisible();
 
+    // The caveat (compare with Manager's gear icon) is said once above the cards, not on each.
+    expect(screen.getByRole('region', { name: 'Set these in Destiny 2' })).toHaveTextContent(/gear icon/);
     const look = screen.getByRole('listitem', { name: 'Look Sensitivity: 20' });
-    expect(look).toHaveTextContent(/gear icon/);
+    expect(look).not.toHaveTextContent(/gear icon/);
     await user.click(within(look).getByRole('button', { name: 'Done' }));
     expect(within(look).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'true');
     expect(stored(storage).progress[progressKey.requiredSetting('Look Sensitivity')]).toBe('done');
     expect(screen.getByText('1 of 6 done')).toBeInTheDocument();
+  });
+
+  it('step 1 says the caveat every Destiny 2 value shares once, above the cards', () => {
+    render('/build/l1/destiny-2');
+    const caveat = knowledge.game.requiredSettings.find((s) => s.name === 'Look Sensitivity')!.statement.caveat!;
+    const region = screen.getByRole('region', { name: 'Set these in Destiny 2' });
+    const note = within(region).getByRole('note');
+    expect(note).toHaveTextContent(`Caveat: ${caveat}`);
+    const list = region.querySelector('ol.checklist')!;
+    expect(note.compareDocumentPosition(list) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(region).getAllByText(/Caveat:/)).toHaveLength(1);
+    // The pressed toggle shows a mark in its box, not the accent fill (that is for forward actions).
+    const look = screen.getByRole('listitem', { name: 'Look Sensitivity: 20' });
+    expect(within(look).getByRole('button', { name: 'Done' })).not.toHaveClass('primary');
   });
 
   it('step 1 shows the current value from Tune my config and flags a difference', () => {
@@ -128,6 +158,10 @@ describe('Build my config: the steps', () => {
     const look = screen.getByRole('listitem', { name: 'Look Sensitivity: 20' });
     expect(look).toHaveTextContent('Your current value: 18');
     expect(within(look).getByText('Differs from 20')).toBeInTheDocument();
+    // A value that differs needs fixing whatever the tick says, and the step count agrees.
+    expect(within(look).getByRole('button', { name: 'Needs fixing' })).toHaveAttribute('aria-pressed', 'true');
+    expect(look).toHaveTextContent('Shown as Needs fixing because your value differs from 20.');
+    expect(screen.getByText('0 of 6 done · 1 needs fixing')).toBeInTheDocument();
     unmount();
 
     // Destiny 2's settings are game-wide: the other loadout shows the same value.
@@ -160,7 +194,8 @@ describe('Build my config: the steps', () => {
   it('step 2 leaves the Destiny 2 settings check to step 1, and says to check per-Config checks in every Config', () => {
     render('/build/l1/matrix', withProfile({ platform: 'xbox', outputType: 'xbox-controller' }));
     expect(screen.queryByRole('listitem', { name: checkTitle('destiny2-required-settings') })).not.toBeInTheDocument();
-    const note = 'Check this in every Config you use — each loadout has its own.';
+    const note = 'Per Config';
+    expect(screen.getByText(/marks a check to repeat in every Config you use/)).toHaveClass('hint');
     expect(screen.getByRole('listitem', { name: checkTitle('mouse-dpi-matches') })).toHaveTextContent(note);
     expect(screen.getByRole('listitem', { name: checkTitle('smart-translator-current') })).toHaveTextContent(note);
     expect(screen.getByRole('listitem', { name: checkTitle('firmware-current') })).not.toHaveTextContent(note);
@@ -179,13 +214,39 @@ describe('Build my config: the steps', () => {
     expect(screen.getByText(/^0 of \d+ done · 1 needs fixing$/)).toBeInTheDocument();
   });
 
+  it('step 2 keeps each check’s reasons and sources one tap away, with the confidence up front', async () => {
+    const { user } = render('/build/l1/matrix', withProfile({ platform: 'xbox', outputType: 'xbox-controller' }));
+    const check = knowledge.foundation.find((c) => c.id === 'firmware-current')!;
+    const firmware = screen.getByRole('listitem', { name: check.title });
+    expect(within(firmware).getByText(check.check)).toBeVisible();
+    const why = within(firmware).getByText(check.why.text);
+    expect(why).not.toBeVisible();
+    const summary = within(firmware).getByText('Why it matters');
+    expect(summary).toHaveTextContent('Official');
+    await user.click(summary);
+    expect(why).toBeVisible();
+    // The first Sources list is the why's; the fix's stays closed.
+    expect(within(firmware).getAllByRole('list', { name: 'Sources' })[0]).toBeVisible();
+  });
+
+  it('step 2 puts Done / Needs fixing right under each check’s title, before its evidence', () => {
+    render('/build/l1/matrix', withProfile({ platform: 'xbox', outputType: 'xbox-controller' }));
+    const check = knowledge.foundation.find((c) => c.id === 'smart-translator-current')!;
+    const item = screen.getByRole('listitem', { name: check.title });
+    const actions = within(item).getByRole('group', { name: 'Status' });
+    const instruction = within(item).getByText(check.check);
+    // The pair comes before the instruction in the document, so no CSS reordering to confuse focus.
+    expect(actions.compareDocumentPosition(instruction) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(actions).getByRole('button', { name: 'Done' })).toHaveAccessibleDescription(check.title);
+  });
+
   it('step 1 ticks make up the Destiny 2 settings check in Troubleshoot by feel', async () => {
     const { user, router } = render('/build/l1/destiny-2', withProfile({ platform: 'xbox', outputType: 'xbox-controller' }));
     for (const setting of knowledge.game.requiredSettings) {
       const item = screen.getByRole('listitem', { name: `${setting.name}: ${setting.value}` });
       await user.click(within(item).getByRole('button', { name: 'Done' }));
     }
-    await router.navigate('/troubleshoot');
+    await act(() => router.navigate('/troubleshoot'));
     const check = await screen.findByRole('listitem', { name: checkTitle('destiny2-required-settings') });
     expect(within(check).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'true');
   });
@@ -215,6 +276,28 @@ describe('Build my config: the steps', () => {
 
     await user.click(within(precision).getByRole('button', { name: 'Done' }));
     expect(stored(storage).progress[progressKey.aim.lever('l1', 'tracking', 'precision')]).toBe('done');
+  });
+
+  it('step 3 shows each direction with its badge, and its quotes behind “Why and source”', async () => {
+    const { user } = render('/build/l1/aim');
+    const sensitivity = screen.getByRole('listitem', { name: 'Start with Sensitivity' });
+    const guidance = real.termById('sensitivity')!.guidance[0]!;
+    // The line up front, once; the disclosure holds the quotes, not the text again.
+    const line = within(sensitivity).getByText(guidance.text, { exact: false });
+    expect(line).toBeVisible();
+    expect(line).toHaveTextContent('Official');
+    const quote = within(sensitivity).getByText(`“${guidance.citations[0]!.quote}”`);
+    expect(quote).not.toBeVisible();
+    // Sensitivity's lead is two statements (XIM's line and the cm/360 gap), so the label counts them.
+    await user.click(within(sensitivity).getByText('Why and source (2)'));
+    expect(quote).toBeVisible();
+
+    // The aim style's "favours" statement works the same way.
+    const favours = real.aimStyleById('tracking')!.favours;
+    const favoursLine = screen.getByText(favours.text, { exact: false });
+    expect(favoursLine).toBeVisible();
+    const favoursCard = within(favoursLine.closest('.card')!);
+    expect(favoursCard.getByText(`“${favours.citations[0]!.quote}”`)).not.toBeVisible();
   });
 
   it('step 3 tells a hand cannon (snap) loadout to lower Easing, with the Easing caveat', () => {
@@ -266,10 +349,10 @@ describe('Build my config: the steps', () => {
     await user.click(within(screen.getByRole('listitem', { name: 'Precision: Raise' })).getByRole('button', { name: 'Done' }));
 
     // Make the main weapon a scout rifle (precision hold), which has its own Precision direction.
-    await router.navigate('/loadouts/l1');
+    await act(() => router.navigate('/loadouts/l1'));
     await user.selectOptions(await screen.findByRole('combobox', { name: 'Kinetic' }), 'scout-rifle');
     await user.click(screen.getByRole('button', { name: 'Save changes' }));
-    await router.navigate('/build/l1/aim');
+    await act(() => router.navigate('/build/l1/aim'));
 
     const precision = await screen.findByRole('listitem', { name: 'Precision: It depends' });
     expect(within(precision).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'false');
@@ -288,23 +371,23 @@ describe('Build my config: the steps', () => {
     await user.click(screen.getByRole('button', { name: 'Done: show the next change' }));
     expect(stored(storage).progress).toEqual({ [progressKey.aim.sensitivity('l1')]: 'done' });
 
-    await router.navigate('/build/l1/aim');
+    await act(() => router.navigate('/build/l1/aim'));
     const sensitivity = await screen.findByRole('listitem', { name: 'Start with Sensitivity' });
     expect(within(sensitivity).getByRole('button', { name: 'Done' })).toHaveAttribute('aria-pressed', 'true');
 
     // Build: ticking Precision moves Tune on to the next change.
     await user.click(within(screen.getByRole('listitem', { name: 'Precision: Raise' })).getByRole('button', { name: 'Done' }));
-    await router.navigate('/tune/l1/changes');
+    await act(() => router.navigate('/tune/l1/changes'));
     const first = await screen.findByRole('region', { name: 'Change this first' });
     expect(within(first).queryByRole('heading', { level: 3, name: 'Sensitivity' })).not.toBeInTheDocument();
     expect(within(first).queryByRole('heading', { level: 3, name: 'Precision' })).not.toBeInTheDocument();
 
     // Build's reset clears the marks Tune made too.
-    await router.navigate('/build/l1/aim');
-    await user.click(await screen.findByRole('button', { name: 'Reset this loadout’s steps' }));
-    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Reset' }));
+    await act(() => router.navigate('/build/l1/aim'));
+    await user.click(await screen.findByRole('button', { name: 'Clear aim marks' }));
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Clear marks' }));
     expect(stored(storage).progress).toEqual({});
-    await router.navigate('/tune/l1/changes');
+    await act(() => router.navigate('/tune/l1/changes'));
     expect(
       within(await screen.findByRole('region', { name: 'Change this first' })).getByRole('heading', {
         level: 3,
@@ -381,13 +464,21 @@ describe('Build my config: moving between steps', () => {
     const steps = screen.getByRole('navigation', { name: 'Build steps' });
     expect(within(steps).getByRole('link', { name: /^Step 1: Destiny 2 settings/ })).toHaveAttribute('aria-current', 'step');
 
-    await user.click(screen.getByRole('link', { name: 'Next: MATRIX setup' }));
+    const pager = () => screen.getByRole('navigation', { name: 'Previous and next step' });
+    await user.click(within(pager()).getByRole('link', { name: 'Next: MATRIX setup' }));
     expect(router.state.location.pathname).toBe('/build/l1/matrix');
     expect(screen.getByRole('heading', { level: 1, name: 'MATRIX setup' })).toHaveFocus();
     expect(screen.getByText('Step 2 of 4 · Pulse + shotgun')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('link', { name: 'Back' }));
+    // The pager is repeated under the progress count, so a long step can be left from the top.
+    const top = screen.getByRole('navigation', { name: 'Previous and next step, above the list' });
+    expect(top.previousElementSibling).toHaveTextContent(/^0 of \d+ done$/);
+    expect(within(top).getByRole('link', { name: 'Next: Aim settings' })).toHaveAttribute('href', '/build/l1/aim');
+    // Back names its step, like Next.
+    await user.click(within(top).getByRole('link', { name: 'Back: Destiny 2 settings' }));
     expect(router.state.location.pathname).toBe('/build/l1/destiny-2');
+    expect(within(pager()).queryByRole('link', { name: /^Back/ })).not.toBeInTheDocument();
+    expect(within(pager()).getByRole('link', { name: 'All loadouts' })).toHaveAttribute('href', '/build');
 
     await user.click(
       within(screen.getByRole('navigation', { name: 'Build steps' })).getByRole('link', { name: /^Step 3: Aim settings/ }),
@@ -423,7 +514,7 @@ describe('Build my config: moving between steps', () => {
     expect(router.state.location.pathname).toBe('/build/l1/destiny-2');
   });
 
-  it('resets only this loadout’s own steps, after confirmation', async () => {
+  it('clears only this loadout’s aim marks, after confirmation', async () => {
     const data = withProfile({});
     const look = progressKey.requiredSetting('Look Sensitivity');
     const precision = progressKey.aim.lever('l1', 'tracking', 'precision');
@@ -432,15 +523,28 @@ describe('Build my config: moving between steps', () => {
     data.progress = { [look]: 'done', [precision]: 'done', [curve]: 'problem', [other]: 'done' };
     const { user, storage } = render('/build/l1/aim', data);
 
-    await user.click(screen.getByRole('button', { name: 'Reset this loadout’s steps' }));
-    const dialog = screen.getByRole('alertdialog', { name: 'Reset the steps for “Pulse + shotgun”?' });
+    const clear = screen.getByRole('button', { name: 'Clear aim marks' });
+    expect(clear).toHaveAttribute('aria-disabled', 'false');
+    await user.click(clear);
+    const dialog = screen.getByRole('alertdialog', { name: 'Clear the aim marks for “Pulse + shotgun”?' });
     expect(dialog).toHaveTextContent('Build my config and Tune my config share these marks');
     await user.click(within(dialog).getByRole('button', { name: 'Cancel' }));
     expect(stored(storage).progress[precision]).toBe('done');
 
-    await user.click(screen.getByRole('button', { name: 'Reset this loadout’s steps' }));
-    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Reset' }));
+    await user.click(clear);
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Clear marks' }));
     expect(stored(storage).progress).toEqual({ [look]: 'done', [other]: 'done' });
-    expect(screen.getByRole('status')).toHaveTextContent('Cleared the aim settings marks for “Pulse + shotgun”.');
+    expect(screen.getByRole('status')).toHaveTextContent('Cleared the aim marks for “Pulse + shotgun”.');
+    // Nothing left to clear: the button stays (focus returns to it) but does nothing.
+    expect(clear).toHaveFocus();
+    expect(clear).toHaveAttribute('aria-disabled', 'true');
+    await user.click(clear);
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+  });
+
+  it('shows the same "Clear aim marks" on every step, since the marks are the aim step’s', () => {
+    render('/build/l1/destiny-2');
+    expect(screen.getByRole('button', { name: 'Clear aim marks' })).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByRole('button', { name: /Reset/ })).not.toBeInTheDocument();
   });
 });

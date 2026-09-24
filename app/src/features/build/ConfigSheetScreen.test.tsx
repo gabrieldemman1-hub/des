@@ -27,6 +27,15 @@ function pulseWithConfig(): AppData {
   });
 }
 
+/** The row's Done / Needs fixing pair, as `{ done, problem }` pressed states. */
+function pressed(row: HTMLElement) {
+  const group = within(row).getByRole('group', { name: 'Status' });
+  return {
+    done: within(group).getByRole('button', { name: 'Done' }).getAttribute('aria-pressed'),
+    problem: within(group).getByRole('button', { name: 'Needs fixing' }).getAttribute('aria-pressed'),
+  };
+}
+
 describe('Config sheet', () => {
   it('shows the loadout, and each Destiny 2 value with its confidence and state', () => {
     render('/loadouts/l1/sheet', pulseWithConfig());
@@ -41,41 +50,124 @@ describe('Config sheet', () => {
       expect(row).toHaveTextContent(setting.value);
       expect(within(row).getByText('Official', { selector: '.badge' })).toBeInTheDocument();
     }
-    expect(within(d2).getByRole('listitem', { name: 'Axial Deadzone' })).toHaveTextContent('Done');
-    expect(within(d2).getByRole('listitem', { name: 'Radial Deadzone' })).toHaveTextContent('Not checked yet');
-    // The caveat every value shares is shown once.
+    expect(pressed(within(d2).getByRole('listitem', { name: 'Axial Deadzone' }))).toEqual({ done: 'true', problem: 'false' });
+    expect(pressed(within(d2).getByRole('listitem', { name: 'Radial Deadzone' }))).toEqual({ done: 'false', problem: 'false' });
+    // The caveat every value shares is shown once, behind a one-line summary.
+    expect(d2).toHaveTextContent('From the public copy of XIM’s list — confirm in Manager');
     expect(d2).toHaveTextContent(/confirm it in XIM MATRIX Manager/i);
+    expect(d2).toHaveTextContent('Confirm the required settings in Manager');
 
     const setup = screen.getByRole('region', { name: 'MATRIX setup' });
     const firmware = knowledge.foundation.find((c) => c.id === 'firmware-current')!;
-    expect(within(setup).getByRole('listitem', { name: firmware.title })).toHaveTextContent('Needs fixing');
+    expect(pressed(within(setup).getByRole('listitem', { name: firmware.title }))).toEqual({ done: 'false', problem: 'true' });
+    // Axial Deadzone done; the firmware check and Look Sensitivity (18, not 20) need fixing. The
+    // same words as the loadout cards' "Sheet 1 of 21 done".
+    expect(screen.getByText('1 of 21 done · 2 need fixing')).toBeInTheDocument();
   });
 
-  it('flags a current Destiny 2 value that differs from the required one', () => {
+  it('marks a row Done or Needs fixing on the sheet itself, with the marks Build my config uses', async () => {
+    const { user } = render('/loadouts/l1/sheet', pulseWithConfig());
+    const d2 = screen.getByRole('region', { name: 'Destiny 2 settings' });
+    const row = within(d2).getByRole('listitem', { name: 'Movement Controls' });
+    await user.click(within(row).getByRole('button', { name: 'Done' }));
+    expect(pressed(row)).toEqual({ done: 'true', problem: 'false' });
+    expect(screen.getByText('2 of 21 done · 2 need fixing')).toBeInTheDocument();
+    // The same toggles as every checklist: a mark in a tinted box, never the accent fill.
+    expect(within(row).getByRole('button', { name: 'Done' })).toHaveClass('status-toggle', 'is-done');
+    expect(within(row).getByRole('button', { name: 'Done' })).not.toHaveClass('primary');
+    await user.click(within(row).getByRole('button', { name: 'Needs fixing' }));
+    expect(pressed(row)).toEqual({ done: 'false', problem: 'true' });
+    expect(screen.getByText('1 of 21 done · 3 need fixing')).toBeInTheDocument();
+    // Tapping the active one again clears it.
+    await user.click(within(row).getByRole('button', { name: 'Needs fixing' }));
+    expect(pressed(row)).toEqual({ done: 'false', problem: 'false' });
+    expect(screen.getByText('1 of 21 done · 2 need fixing')).toBeInTheDocument();
+  });
+
+  it('flags a current Destiny 2 value that differs from the required one as Needs fixing', () => {
     render('/loadouts/l1/sheet', pulseWithConfig());
     const d2 = screen.getByRole('region', { name: 'Destiny 2 settings' });
     const look = within(d2).getByRole('listitem', { name: 'Look Sensitivity' });
     expect(look).toHaveTextContent('Your current value: 18');
     expect(within(look).getByText('Differs from 20')).toBeInTheDocument();
+    // Worked out from the value, so it can't be marked here: a chip with the same mark as the toggles.
+    const chip = within(look).getByText('Needs fixing', { selector: '.status-chip' });
+    expect(chip).toHaveClass('is-problem');
+    expect(chip.querySelector('svg.status-mark')).not.toBeNull();
+    expect(within(look).queryByRole('group', { name: 'Status' })).not.toBeInTheDocument();
+    expect(look).toHaveTextContent('Shown as Needs fixing because your value differs from 20.');
 
     const ads = within(d2).getByRole('listitem', { name: 'ADS Sensitivity Modifier' });
     expect(ads).toHaveTextContent('Your current value: 1.5');
     expect(within(ads).queryByText(/Differs/)).not.toBeInTheDocument();
+    expect(within(ads).getByRole('group', { name: 'Status' })).toBeInTheDocument();
   });
 
-  it('lists the aim settings with direction, confidence and the current value', () => {
+  it('shows a Destiny 2 value that differs as Needs fixing even when it was ticked Done, and counts it', async () => {
+    const data = pulseWithConfig();
+    data.inGame = { ...data.inGame, adsSensitivityModifier: 1 };
+    data.progress[progressKey.requiredSetting('ADS Sensitivity Modifier')] = 'done';
+    const { user } = render('/loadouts/l1/sheet', data);
+    const d2 = screen.getByRole('region', { name: 'Destiny 2 settings' });
+    const ads = within(d2).getByRole('listitem', { name: 'ADS Sensitivity Modifier' });
+    expect(within(ads).getByText('Differs from 1.5')).toBeInTheDocument();
+    expect(within(ads).getByText('Needs fixing', { selector: '.status-chip' })).toBeInTheDocument();
+    expect(within(ads).queryByText('Done', { selector: '.status-chip' })).not.toBeInTheDocument();
+    expect(ads).toHaveTextContent('You marked this Done, but your value differs from 1.5.');
+    // Axial Deadzone done; firmware, Look Sensitivity and ADS Sensitivity Modifier need fixing.
+    expect(screen.getByText('1 of 21 done · 3 need fixing')).toBeInTheDocument();
+
+    const writeText = vi.spyOn(navigator.clipboard, 'writeText');
+    await user.click(screen.getByRole('button', { name: 'Copy as text' }));
+    const text = writeText.mock.calls[0]![0];
+    expect(text).toContain('- ADS Sensitivity Modifier: 1.5 [Official] · Needs fixing · Yours: 1 (differs)');
+    expect(text).toContain('Progress: 1 of 21 done · 3 need fixing');
+  });
+
+  it('lists the aim settings with a value, confidence and the current value', () => {
     render('/loadouts/l1/sheet', pulseWithConfig());
     const aim = screen.getByRole('region', { name: 'Aim settings' });
     const precision = within(aim).getByRole('listitem', { name: 'Precision' });
-    expect(precision).toHaveTextContent('Raise');
+    expect(within(precision).getByText('Raise', { selector: '.sheet-value' })).toBeInTheDocument();
     expect(within(precision).getByText('Reasoned', { selector: '.badge' })).toBeInTheDocument();
     expect(precision).toHaveTextContent('Your current value: 40');
-    expect(within(aim).getByRole('listitem', { name: 'Sensitivity' })).toHaveTextContent('Gap');
-    for (const name of ['Smoothing', 'Aiming Curve', 'Quantization', 'Velocity Mapping']) {
-      expect(within(aim).getByRole('listitem', { name })).toBeInTheDocument();
-    }
-    expect(screen.getByRole('link', { name: 'Continue building' })).toHaveAttribute('href', '/build/l1');
-    expect(screen.getByRole('link', { name: 'Enter your current settings' })).toHaveAttribute('href', '/tune/l1/settings');
+    expect(within(precision).getByRole('link', { name: /^What is this\?\s*\(Precision\)$/ })).toHaveAttribute('href', '/learn/precision');
+
+    // Every aim row has a value in the same place as the Destiny 2 rows, from the knowledge base.
+    const value = (name: string) => within(aim).getByRole('listitem', { name }).querySelector('.sheet-value')!.textContent;
+    expect(value('Sensitivity')).toBe('Your cm/360by feel');
+    // The badge in the meta row is the value's; the statements keep their own inside the disclosure.
+    const meta = (name: string) => within(aim).getByRole('listitem', { name }).querySelector<HTMLElement>('.sheet-meta')!;
+    expect(within(meta('Sensitivity')).getByText('Gap', { selector: '.badge' })).toBeInTheDocument();
+    expect(value('Smoothing')).toBe('A presetby feel');
+    expect(value('Aiming Curve')).toBe('Lineardefault');
+    expect(value('Quantization')).toBe('Offdefault');
+    expect(value('Velocity Mapping')).toBe('Standarddefault');
+    expect(within(meta('Aiming Curve')).getByText('Official', { selector: '.badge' })).toBeInTheDocument();
+    // The guidance is still there, one tap away, behind the one label every evidence disclosure
+    // uses, with a count when it holds several statements.
+    const curve = within(aim).getByRole('listitem', { name: 'Aiming Curve' });
+    expect(curve).toHaveTextContent('The default is linear.');
+    expect(within(curve).getByText(/^Why and source \(\d+\)$/).closest('details')).not.toHaveAttribute('open');
+    const d2 = screen.getByRole('region', { name: 'Destiny 2 settings' });
+    expect(within(d2).getAllByText('Why and source')).toHaveLength(knowledge.game.requiredSettings.length);
+    expect(screen.queryByText('Reasons and sources')).not.toBeInTheDocument();
+
+    // The section header's badge is part of the summary line.
+    const favours = within(aim).getByText('What tracking settings should favour').closest('summary')!;
+    expect(within(favours).getByText('Reasoned', { selector: '.badge' })).toBeInTheDocument();
+  });
+
+  it('links on from the top and from the end of the sheet', () => {
+    render('/loadouts/l1/sheet', pulseWithConfig());
+    const building = screen.getAllByRole('link', { name: 'Continue building' });
+    expect(building).toHaveLength(2);
+    for (const link of building) expect(link).toHaveAttribute('href', '/build/l1');
+    expect(screen.getByRole('link', { name: 'Enter settings' })).toHaveAttribute('href', '/tune/l1/settings');
+    const more = screen.getByRole('list', { name: 'More for this loadout' });
+    expect(within(more).getByRole('link', { name: 'Tune this loadout' })).toHaveAttribute('href', '/tune/l1');
+    expect(within(more).getByRole('link', { name: 'Troubleshoot by feel' })).toHaveAttribute('href', '/troubleshoot');
+    expect(within(more).getByRole('link', { name: 'All loadouts' })).toHaveAttribute('href', '/loadouts');
   });
 
   it('keeps the Easing caveat on a hand cannon sheet', () => {
@@ -86,7 +178,7 @@ describe('Config sheet', () => {
       }),
     );
     const easing = within(screen.getByRole('region', { name: 'Aim settings' })).getByRole('listitem', { name: 'Easing' });
-    expect(easing).toHaveTextContent('Lower');
+    expect(within(easing).getByText('Lower', { selector: '.sheet-value' })).toBeInTheDocument();
     expect(easing).toHaveTextContent(EASING_CAVEAT);
   });
 
@@ -97,8 +189,10 @@ describe('Config sheet', () => {
     expect(writeText).toHaveBeenCalledTimes(1);
     const text = writeText.mock.calls[0]![0];
     expect(text).toContain('Pulse + shotgun: config sheet');
-    expect(text).toContain('- Look Sensitivity: 20 [Official] · Not checked yet · Yours: 18 (differs)');
+    expect(text).toContain('- Look Sensitivity: 20 [Official] · Needs fixing · Yours: 18 (differs)');
     expect(text).toContain('- Precision: Raise · Not checked yet · Yours: 40');
+    expect(text).toContain('- Sensitivity: Your cm/360 (by feel) · Not checked yet\n');
+    expect(text).toContain('- Aiming Curve: Linear (default) · Not checked yet\n');
     expect(screen.getByRole('status')).toHaveTextContent('Copied the sheet as text.');
     expect(screen.queryByRole('textbox', { name: 'The sheet as text' })).not.toBeInTheDocument();
   });
@@ -123,9 +217,9 @@ describe('Config sheet', () => {
     await user.click(screen.getByRole('link', { name: 'See the config sheet' }));
     expect(router.state.location.pathname).toBe('/loadouts/l1/sheet');
     const aim = screen.getByRole('region', { name: 'Aim settings' });
-    expect(within(aim).getByRole('listitem', { name: 'Sensitivity' })).toHaveTextContent('Done');
-    expect(within(aim).getByRole('listitem', { name: 'Precision' })).toHaveTextContent('Done');
-    expect(within(aim).getByRole('listitem', { name: 'Aiming Curve' })).toHaveTextContent('Not checked yet');
+    expect(pressed(within(aim).getByRole('listitem', { name: 'Sensitivity' }))).toEqual({ done: 'true', problem: 'false' });
+    expect(pressed(within(aim).getByRole('listitem', { name: 'Precision' }))).toEqual({ done: 'true', problem: 'false' });
+    expect(pressed(within(aim).getByRole('listitem', { name: 'Aiming Curve' }))).toEqual({ done: 'false', problem: 'false' });
 
     // Opened from Tune my config, so its back link goes back there.
     const back = document.querySelector<HTMLAnchorElement>('.back-link')!;
@@ -151,11 +245,12 @@ describe('Config sheet', () => {
     const dpi = within(setup).getByRole('listitem', {
       name: knowledge.foundation.find((c) => c.id === 'mouse-dpi-matches')!.title,
     });
-    expect(dpi).toHaveTextContent('Needs fixing');
-    expect(dpi).not.toHaveTextContent(/^Done/);
-    expect(dpi).toHaveTextContent('This loadout’s Config (current settings): 800 DPI');
+    expect(within(dpi).getByText('Needs fixing', { selector: '.status-chip' })).toBeInTheDocument();
+    expect(within(dpi).queryByRole('group', { name: 'Status' })).not.toBeInTheDocument();
+    expect(dpi).toHaveTextContent('This Config: 800 DPI');
     expect(dpi).toHaveTextContent('You marked this Done, but the values above differ.');
-    expect(dpi).toHaveTextContent('Check this in every Config you use — each loadout has its own.');
+    expect(within(dpi).getByText('Per Config', { selector: '.tag' })).toBeInTheDocument();
+    expect(within(setup).getByText(/marks a check to repeat in every Config you use/)).toHaveClass('hint');
     // The Destiny 2 settings check is in the Destiny 2 settings section, not here.
     expect(
       within(setup).queryByRole('listitem', {
@@ -183,8 +278,8 @@ describe('Config sheet', () => {
     await user.click(screen.getByRole('button', { name: 'Copy as text' }));
     const text = writeText.mock.calls[0]![0];
     expect(text).toContain('Note: Your smoothing is Custom Classic. These directions assume Standard smoothing.');
-    expect(text).toContain('- Smoothing · Not checked yet · Yours: Custom Classic (Smooth 12)');
-    expect(text).toContain('- Quantization · Not checked yet · Yours: Off\n');
+    expect(text).toContain('- Smoothing: A preset (by feel) · Not checked yet · Yours: Custom Classic (Smooth 12)');
+    expect(text).toContain('- Quantization: Off (default) · Not checked yet · Yours: Off\n');
     expect(text).toContain('- Precision: Raise · Not checked yet\n');
     expect(text).toContain('Worked out from XIM’s definitions, not stated by a source.');
   });

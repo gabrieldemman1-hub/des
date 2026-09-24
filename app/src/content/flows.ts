@@ -1,6 +1,6 @@
 /**
- * The four flows, described in CONCEPT.md §5 wording. Explain a concept is built; the others
- * are placeholders whose screens explain what each flow will do.
+ * The four flows: the line each Home card shows, and the fuller account (CONCEPT.md §5 wording)
+ * that a flow's index screen keeps a tap away under "How this works".
  */
 export type FlowId = 'build' | 'tune' | 'troubleshoot' | 'learn';
 
@@ -20,9 +20,7 @@ export interface Flow {
   question: string;
   /** One line for the Home card. */
   summary: string;
-  /** Built and usable, rather than a placeholder. */
-  available: boolean;
-  /** Where the Home card leads. */
+  /** Where the Home card leads (an old /flows/<id> address redirects here too). */
   to: string;
   sections: FlowSection[];
 }
@@ -30,7 +28,6 @@ export interface Flow {
 export const FLOWS: readonly Flow[] = [
   {
     id: 'build',
-    available: true,
     to: '/build',
     code: 'Flow A',
     title: 'Build my config',
@@ -62,7 +59,6 @@ export const FLOWS: readonly Flow[] = [
   },
   {
     id: 'tune',
-    available: true,
     to: '/tune',
     code: 'Flow B',
     title: 'Tune my config',
@@ -71,15 +67,14 @@ export const FLOWS: readonly Flow[] = [
     sections: [
       {
         paragraphs: [
-          'You enter your existing settings. The app compares them against the evidence base and your profile, flags what’s off (and what’s fine), and proposes targeted changes.',
-          'Changes are ordered by impact and made one at a time, so cause and effect stay observable. Your current config is the starting point, so advice is a diff, not a restart.',
+          'You enter the settings you have now. Dialed compares them with the evidence and your profile, flags what’s off (and what’s fine), and proposes targeted changes.',
+          'Changes come in impact order, one at a time, so you can tell what each one did. Your current settings are the starting point: Dialed says what to change, not to start over.',
         ],
       },
     ],
   },
   {
     id: 'troubleshoot',
-    available: true,
     to: '/troubleshoot',
     code: 'Flow C',
     title: 'Troubleshoot by feel',
@@ -97,7 +92,7 @@ export const FLOWS: readonly Flow[] = [
         bullets: [
           'Firmware and the Smart Translator are current.',
           'Destiny 2’s required in-game settings are exact.',
-          'The DPI in your Config matches your mouse.',
+          'The DPI in your MATRIX Config matches your mouse.',
           'Your mouse actually reaches its polling rate.',
           'Nothing is changing real-world cm/360 before you judge sensitivity (a non-linear curve, quantization, or an Elite 2 stick curve on Xbox).',
           'Light notifications are switched on, and what they say.',
@@ -107,15 +102,14 @@ export const FLOWS: readonly Flow[] = [
       {
         heading: 'Stage 2: Symptom → setting',
         paragraphs: [
-          'You pick what you feel, and the app points to the setting whose official definition describes that feel. It explains the mechanism and suggests one change.',
-          'Where there’s no sourced MATRIX-era answer yet, the app says so. The flow ends with a guardrail: change one thing at a time.',
+          'You pick what you feel, and Dialed points to the setting whose official definition describes that feel. It explains the mechanism and suggests one change.',
+          'Where there’s no sourced MATRIX-era answer yet, Dialed says so. The flow ends with a guardrail: change one thing at a time.',
         ],
       },
     ],
   },
   {
     id: 'learn',
-    available: true,
     to: '/learn',
     code: 'Flow D',
     title: 'Explain a concept',

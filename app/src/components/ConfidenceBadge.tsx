@@ -43,3 +43,12 @@ export function ConfidenceBadge({ level, withMeaning = false }: Props) {
     </span>
   );
 }
+
+/** What Reasoned means, once per page whose cards carry the badge (the full legend is on Sources). */
+export function ReasonedLegend() {
+  return (
+    <p className="confidence-legend">
+      <ConfidenceBadge level="reasoned" withMeaning />
+    </p>
+  );
+}

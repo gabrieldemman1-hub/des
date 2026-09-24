@@ -113,7 +113,7 @@ describe('current values', () => {
     config.matrix.configDpi = 800;
     expect(checkContext('mouse-dpi-matches', { mouseDpi: 1600, pollingRate: null }, config)).toEqual([
       { label: 'Your mouse (profile)', value: '1600 DPI' },
-      { label: 'This loadout’s Config (current settings)', value: '800 DPI', differs: true },
+      { label: 'This Config', value: '800 DPI', differs: true },
     ]);
     expect(checkContext('mouse-polling-rate', { mouseDpi: null, pollingRate: 1000 }, undefined)).toEqual([
       { label: 'Your mouse is set to (profile)', value: '1000 Hz' },

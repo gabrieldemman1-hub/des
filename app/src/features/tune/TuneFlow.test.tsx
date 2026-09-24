@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { knowledge } from '../../../../knowledge/index';
 import { EASING_CAVEAT } from '../../../../knowledge/integrity';
@@ -62,7 +62,10 @@ describe('Tune my config: picking a loadout', () => {
   it('explains the flow and invites you to add a loadout when there are none', () => {
     renderApp({ path: '/tune', knowledge: realKnowledge });
     expect(screen.getByRole('heading', { level: 1, name: 'Tune my config' })).toBeInTheDocument();
-    expect(screen.getByText(/compares them against the evidence base/)).toBeInTheDocument();
+    expect(screen.getByText(/Enter what you have now/)).toHaveClass('lede');
+    const details = screen.getByText('How this works').closest('details')!;
+    expect(details).not.toHaveAttribute('open');
+    expect(within(details).getByText(/Dialed compares them with the evidence/)).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'No loadouts yet' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Add a loadout' })).toHaveAttribute('href', '/loadouts/new');
   });
@@ -85,11 +88,13 @@ describe('Tune my config: picking a loadout', () => {
     const links = within(list).getAllByRole('link');
     expect(links).toHaveLength(2);
     expect(links[0]).toHaveTextContent('Pulse + shotgun');
-    expect(links[0]).toHaveTextContent('Main weapon: Pulse Rifle · Tracking');
-    expect(links[0]).toHaveTextContent('Destiny 2 settings entered · none for this Config yet');
+    expect(links[0]).toHaveTextContent('Pulse Rifle (main) · Shotgun · Power: empty');
+    expect(links[0]).toHaveTextContent('Aim style: Tracking');
+    expect(links[0]).toHaveTextContent('Only Destiny 2 settings entered');
     expect(links[0]).toHaveAttribute('href', '/tune/l1');
-    expect(links[1]).toHaveTextContent('Main weapon: Hand Cannon · Snap');
-    expect(links[1]).toHaveTextContent(/Settings entered · updated/);
+    expect(links[1]).toHaveTextContent('Hand Cannon (main) · Energy: empty · Power: empty');
+    expect(links[1]).toHaveTextContent('Aim style: Snap');
+    expect(links[1]).toHaveTextContent(/Settings entered (Sep 22|22 Sep)/);
   });
 
   it('opens "Your settings" first when nothing is entered, "What to change" otherwise', async () => {
@@ -293,12 +298,12 @@ describe('Tune my config: what to change', () => {
     // The first change isn't hidden behind "Why".
     const first = section('Change this first');
     expect(within(first).getByRole('heading', { level: 3, name: 'Look Sensitivity' })).toBeInTheDocument();
-    expect(within(first).queryByText('Why, and the source')).not.toBeInTheDocument();
+    expect(within(first).queryByText('Why and source')).not.toBeInTheDocument();
     expect(within(first).getByRole('link', { name: 'Update your settings' })).toHaveAttribute('href', '/tune/l1/settings');
 
     const fix = section('Fix these Destiny 2 settings');
     expect(within(fix).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['Axial Deadzone']);
-    expect(within(fix).getByText('Why, and the source').closest('details')).not.toHaveAttribute('open');
+    expect(within(fix).getByText('Why and source').closest('details')).not.toHaveAttribute('open');
     expect(fix).toHaveTextContent(
       'Already the same as XIM’s list: Movement Controls, Button Layout, ADS Sensitivity Modifier, Radial Deadzone.',
     );
@@ -346,10 +351,15 @@ describe('Tune my config: what to change', () => {
     expect(within(first()).getByRole('heading', { level: 3, name: 'Precision' })).toBeInTheDocument();
     expect(Object.keys(stored(storage).progress)).toEqual([progressKey.aim.sensitivity('l1')]);
 
-    // Sensitivity is now in the list, marked done, and can be undone.
+    // Sensitivity is now in the list, marked done (a chip in its head, the pressed toggle at its
+    // end, neither in the accent fill), and can be undone.
     const aim = section('Aim settings for tracking');
     const done = within(aim).getByRole('button', { name: 'Sensitivity: done' });
     expect(done).toHaveAttribute('aria-pressed', 'true');
+    expect(done).not.toHaveClass('primary');
+    const card = done.closest('li')!;
+    expect(within(card).getByText('Done', { selector: '.status-chip' })).toBeInTheDocument();
+    expect(card.querySelector('.finding-head .tag')).toBeNull();
     await user.click(done);
     expect(within(first()).getByRole('heading', { level: 3, name: 'Sensitivity' })).toBeInTheDocument();
     expect(stored(storage).progress).toEqual({});
@@ -482,7 +492,7 @@ describe('Tune my config: marking changes done', () => {
     await waitFor(() => expect(within(first).getByRole('heading', { level: 2 })).toHaveFocus());
   });
 
-  it('asks before starting the aim changes again, and clears the marks Build my config shares', async () => {
+  it('asks before clearing the aim marks, which Build my config shares, from the end of the page', async () => {
     const { user, storage } = render(
       '/tune/l1/changes',
       storageWith({
@@ -496,23 +506,37 @@ describe('Tune my config: marking changes done', () => {
         },
       }),
     );
-    await user.click(screen.getByRole('button', { name: 'Start the aim changes again' }));
-    const dialog = screen.getByRole('alertdialog', { name: 'Start the aim changes again?' });
+    const clear = screen.getByRole('button', { name: 'Clear aim marks' });
+    // After the last section and its links, not beside "Done: show the next change".
+    const last = section('One change at a time');
+    const links = screen.getByRole('list', { name: 'More for this loadout' });
+    expect(last.compareDocumentPosition(clear) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(links.compareDocumentPosition(clear) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(section('Change this first')).queryByRole('button', { name: 'Clear aim marks' })).toBeNull();
+
+    await user.click(clear);
+    const dialog = screen.getByRole('alertdialog', { name: 'Clear the aim marks for “Pulse + shotgun”?' });
     expect(dialog).toHaveTextContent('Build my config and Tune my config share these marks');
     await user.click(within(dialog).getByRole('button', { name: 'Cancel' }));
     expect(stored(storage).progress[progressKey.aim.sensitivity('l1')]).toBe('done');
 
-    await user.click(screen.getByRole('button', { name: 'Start the aim changes again' }));
-    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Start again' }));
+    await user.click(clear);
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Clear marks' }));
     expect(stored(storage).progress).toEqual({
       [progressKey.aim.sensitivity('l2')]: 'done',
       'check:firmware-current': 'done',
     });
+    expect(within(clear.closest('.clear-marks')!).getByRole('status')).toHaveTextContent(
+      'Cleared the aim marks for “Pulse + shotgun”.',
+    );
+    // Nothing left to clear for this loadout: the button stays (focus returns to it) but is inert.
+    expect(clear).toHaveFocus();
+    expect(clear).toHaveAttribute('aria-disabled', 'true');
   });
 });
 
 describe('Tune my config: cards', () => {
-  it('shows every card’s confidence, and the caveat and “worked out” label outside “Why”', () => {
+  it('shows every card’s confidence and caveat outside “Why”, and says inside it when a change was worked out', () => {
     render(
       '/tune/l1/changes',
       storageWith({
@@ -530,18 +554,41 @@ describe('Tune my config: cards', () => {
     expect(easing.querySelector('.finding-head .badge')).toHaveTextContent('Reasoned');
     expect(easing.querySelector('.finding-head .badge')).toBeVisible();
     const notes = Array.from(easing.querySelectorAll<HTMLElement>(':scope > .finding-note'));
-    expect(notes.map((n) => n.textContent)).toEqual([
-      'Worked out from XIM’s definitions, not stated by a source.',
-      `Caveat: ${EASING_CAVEAT}`,
-    ]);
+    expect(notes.map((n) => n.textContent)).toEqual([`Caveat: ${EASING_CAVEAT}`]);
     for (const note of notes) expect(note).toBeVisible();
-    // The full statement stays one tap away.
-    expect(within(easing).getByText('Why, and the source').closest('details')).not.toHaveAttribute('open');
+    // The full statement stays one tap away, and opens with why it counts as worked out; the
+    // caveat above isn't repeated inside.
+    expect(within(easing).getByText('Why and source').closest('details')).not.toHaveAttribute('open');
+    const workedOut = within(easing).getByText(/^Worked out from XIM’s definitions, not stated by a source\. /);
+    expect(workedOut).not.toBeVisible();
+    expect(within(easing).getAllByText(/Caveat:/)).toHaveLength(1);
 
     const setup = section('Setup');
     const dpi = within(setup).getByRole('heading', { level: 3, name: /DPI in your Config differs/ }).closest('li')!;
     expect(dpi.querySelector('.finding-head .badge')).toHaveTextContent('Official');
     expect(dpi.querySelector('.finding-head .badge')).toBeVisible();
+  });
+
+  it('says the Destiny 2 settings’ shared caveat once above their cards', () => {
+    render(
+      '/tune/l1/changes',
+      storageWith({
+        inGame: inGameWith({ ...REQUIRED_IN_GAME, lookSensitivity: 15, axialDeadzone: 5, radialDeadzone: 1 }),
+      }),
+    );
+    const caveat = knowledge.game.requiredSettings.find((s) => s.name === 'Axial Deadzone')!.statement.caveat!;
+    // The first change sits above the section and keeps its own caveat in full.
+    expect(within(section('Change this first')).getByText(/^Caveat:/).closest('p')).toHaveTextContent(caveat);
+
+    const fix = section('Fix these Destiny 2 settings');
+    const note = within(fix).getByRole('note');
+    expect(note).toHaveTextContent(`Caveat: ${caveat}`);
+    expect(within(fix).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
+      'Axial Deadzone',
+      'Radial Deadzone',
+    ]);
+    expect(fix.querySelectorAll('.finding-note')).toHaveLength(0);
+    expect(within(fix).getAllByText(/Caveat:/)).toHaveLength(1);
   });
 
   it('keeps one set of Destiny 2 settings for every loadout', async () => {
@@ -554,11 +601,11 @@ describe('Tune my config: cards', () => {
     expect(stored(storage).inGame.lookSensitivity).toBe(18);
     expect(stored(storage).configs).toEqual({});
 
-    await router.navigate('/tune/l2/settings');
+    await act(() => router.navigate('/tune/l2/settings'));
     expect(await screen.findByRole('heading', { level: 1, name: 'Peek' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: 'Look Sensitivity' })).toHaveValue('18');
 
-    await router.navigate('/tune/l2/changes');
+    await act(() => router.navigate('/tune/l2/changes'));
     const first = await screen.findByRole('region', { name: 'Change this first' });
     expect(within(first).getByRole('heading', { level: 3, name: 'Look Sensitivity' })).toBeInTheDocument();
     expect(within(first).getByText('Yours').nextSibling).toHaveTextContent('18');

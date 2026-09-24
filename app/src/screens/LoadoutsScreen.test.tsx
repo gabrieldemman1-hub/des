@@ -1,5 +1,9 @@
 import { act, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { knowledge } from '../../../knowledge/index';
+import { buildPlan, planProgress, stepKeys } from '../features/build/build-plan';
+import { createKnowledgeApi } from '../state/knowledge-context';
+import { emptyConfig } from '../state/schema';
 import { emptyKnowledge, sampleData, sampleLoadout } from '../test/fixtures';
 import { MemoryStorage } from '../test/memory-storage';
 import { renderApp } from '../test/render';
@@ -77,10 +81,10 @@ describe('Loadouts', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: 'Loadouts' })).toBeInTheDocument();
     expect(screen.getByText('Saved “Peek”.')).toBeInTheDocument();
+    // The weapons on one line, in slot order, with the empty slot marked.
     const card = screen.getByRole('heading', { level: 2, name: 'Peek' }).closest('li')!;
-    expect(card).toHaveTextContent(/KineticHand CannonMain/);
-    expect(card).toHaveTextContent(/EnergyEmpty/);
-    expect(card).toHaveTextContent(/PowerShotgun/);
+    expect(card).toHaveTextContent('Hand Cannon (main) · Energy: empty · Shotgun');
+    expect(card).toHaveTextContent('Aim style: Snap / peek');
 
     const [loadout] = stored(storage).loadouts;
     expect(loadout).toMatchObject({
@@ -140,7 +144,7 @@ describe('Loadouts', () => {
     await user.click(screen.getByRole('button', { name: 'Save changes' }));
 
     const edited = screen.getByRole('heading', { level: 2, name: 'Shotgun main' }).closest('li')!;
-    expect(edited).toHaveTextContent(/EnergyShotgunMain/);
+    expect(edited).toHaveTextContent('Pulse Rifle · Shotgun (main) · Power: empty');
     expect(within(edited).getByText('Snap / peek')).toBeInTheDocument();
     expect(stored(storage).loadouts).toHaveLength(1);
     expect(stored(storage).loadouts[0]).toMatchObject({ id: 'l1', name: 'Shotgun main', mainSlot: 'energy' });
@@ -235,7 +239,7 @@ describe('Loadouts', () => {
   it('copes with a saved loadout whose weapon is no longer in the knowledge base', () => {
     const data = sampleData({ loadouts: [sampleLoadout({ weapons: { kinetic: 'gone', energy: null, power: null } })] });
     renderApp({ path: '/loadouts', storage: storageWith(data) });
-    expect(screen.getByText('Unknown weapon')).toBeInTheDocument();
+    expect(screen.getByText(/Unknown weapon \(main\)/)).toBeInTheDocument();
     expect(screen.getByText(/aim style is unknown/)).toBeInTheDocument();
   });
 
@@ -246,13 +250,38 @@ describe('Loadouts', () => {
 });
 
 describe('Loadout config links', () => {
-  it('links each loadout to its config sheet, build and tune pages', () => {
+  it('links each loadout to its config sheet (the main action), build and tune pages', () => {
     renderApp({ path: '/loadouts', storage: storageWith(sampleData({ loadouts: [sampleLoadout()] })) });
-    const links = within(screen.getByRole('list', { name: 'Pulse + shotgun: config' })).getAllByRole('link');
+    const links = within(screen.getByRole('group', { name: 'Pulse + shotgun: sheet, build and tune' })).getAllByRole('link');
     expect(links.map((l) => [l.textContent, l.getAttribute('href')])).toEqual([
       ['Config sheet', '/loadouts/l1/sheet'],
       ['Build', '/build/l1'],
       ['Tune', '/tune/l1'],
     ]);
+    expect(links[0]).toHaveClass('primary');
+    expect(links[1]).not.toHaveClass('primary');
+  });
+
+  it('shows each loadout’s sheet progress and whether its settings are entered', () => {
+    const real = createKnowledgeApi(knowledge);
+    const data = sampleData({ loadouts: [sampleLoadout(), sampleLoadout({ id: 'l2', name: 'Peek' })] });
+    const config = emptyConfig();
+    config.matrix.configDpi = 1600;
+    data.configs = { l1: config };
+    const plan = buildPlan(real, data.profile, sampleLoadout());
+    const keys = stepKeys(plan);
+    data.progress = { [keys['destiny-2'][0]!]: 'done', [keys.matrix[0]!]: 'problem' };
+    renderApp({ path: '/loadouts', knowledge: real, storage: storageWith(data) });
+
+    const total = planProgress(plan, data.progress).total;
+    const first = screen.getByRole('heading', { level: 2, name: 'Pulse + shotgun' }).closest('li')!;
+    expect(first).toHaveTextContent(`Sheet 1 of ${total} done · 1 needs fixing · Settings entered`);
+    expect(within(first).getByText(/needs fixing/)).toHaveClass('is-problem');
+    // The Destiny 2 and MATRIX steps are shared, so the second loadout counts the same marks.
+    const second = screen.getByRole('heading', { level: 2, name: 'Peek' }).closest('li')!;
+    expect(second).toHaveTextContent(`Sheet 1 of ${total} done · 1 needs fixing · No settings entered`);
+    // The why behind the aim style stays on the sheet: the list shows the style and its confidence only.
+    expect(within(first).getByText('Reasoned')).toBeInTheDocument();
+    expect(within(first).queryByText(/Why tracking/)).not.toBeInTheDocument();
   });
 });

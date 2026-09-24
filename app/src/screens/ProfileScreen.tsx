@@ -196,7 +196,7 @@ function ProfileFields() {
         <div className="field">
           <label htmlFor={ids.dpi}>Mouse DPI</label>
           <p className="hint" id={ids.dpiHint}>
-            The DPI your mouse is set to. The DPI in your Config must match it.
+            The DPI your mouse is set to. The DPI in your MATRIX Config must match it.
           </p>
           <input
             id={ids.dpi}
