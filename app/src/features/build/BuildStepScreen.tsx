@@ -68,27 +68,35 @@ function StepIndicator({
   );
 }
 
-function StepPager({ plan, index }: { plan: BuildPlan; index: number }) {
+/**
+ * Back and Next. Once at the end of the step, and on the setup checks again (smaller) under the
+ * progress count at the top, so that long step can be left without scrolling to its end.
+ */
+function StepPager({ plan, index, at = 'end' }: { plan: BuildPlan; index: number; at?: 'top' | 'end' }) {
   const prev = BUILD_STEPS[index - 1];
   const next = BUILD_STEPS[index + 1];
   const id = plan.loadout.id;
+  const size = at === 'top' ? ' small' : '';
   return (
-    <nav className="build-pager" aria-label="Previous and next step">
+    <nav
+      className={`build-pager${at === 'top' ? ' is-top' : ''}`}
+      aria-label={at === 'top' ? 'Previous and next step, above the list' : 'Previous and next step'}
+    >
       {prev ? (
-        <Link className="button secondary" to={buildPath(id, prev.id)}>
+        <Link className={`button secondary${size}`} to={buildPath(id, prev.id)}>
           Back
         </Link>
       ) : (
-        <Link className="button secondary" to="/build">
+        <Link className={`button secondary${size}`} to="/build">
           All loadouts
         </Link>
       )}
       {next ? (
-        <Link className="button primary" to={buildPath(id, next.id)}>
+        <Link className={`button primary${size}`} to={buildPath(id, next.id)}>
           Next: {next.title}
         </Link>
       ) : (
-        <Link className="button secondary" to="/build">
+        <Link className={`button secondary${size}`} to="/build">
           All loadouts
         </Link>
       )}
@@ -176,7 +184,9 @@ export function BuildStepScreen() {
       }
     >
       {step.id === 'destiny-2' && <GameSettingsStep plan={plan} count={counts['destiny-2']} />}
-      {step.id === 'matrix' && <MatrixSetupStep plan={plan} count={counts.matrix} />}
+      {step.id === 'matrix' && (
+        <MatrixSetupStep plan={plan} count={counts.matrix} pager={<StepPager plan={plan} index={index} at="top" />} />
+      )}
       {step.id === 'aim' && <AimSettingsStep plan={plan} count={counts.aim} />}
       {step.id === 'sheet' && <SheetStep plan={plan} />}
       <StepPager plan={plan} index={index} />

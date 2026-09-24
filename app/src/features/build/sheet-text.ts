@@ -14,33 +14,15 @@ import {
 } from '../../state/current-values';
 import { PER_CONFIG_CHECK_IDS, PER_CONFIG_CHECK_NOTE, progressSummary, type ProgressMap } from '../../state/progress';
 import type { CurrentConfig, InGameSettings, Profile } from '../../state/schema';
-import { planProgress, type BuildPlan, type GuidanceItem } from './build-plan';
+import { planProgress, type BuildPlan, type GuidanceItem, type GuidanceValue } from './build-plan';
 import { STATUS_TEXT, aimStyleName, statusOf, type WeaponLine } from './format';
 
 type ContextProfile = Pick<Profile, 'mouseDpi' | 'pollingRate'>;
 
-/**
- * The statuses the sheet shows: the effective progress (see `effectiveProgress`), except that a
- * setup check whose context shows a difference (e.g. this loadout's Config DPI differs from the
- * mouse's) needs fixing, whatever it was ticked.
- */
-export function sheetProgress(
-  plan: BuildPlan,
-  progress: ProgressMap,
-  profile: ContextProfile,
-  config: CurrentConfig | undefined,
-): ProgressMap {
-  const differing = plan.checks.filter(({ check }) =>
-    checkContext(check.id, profile, config).some((line) => line.differs),
-  );
-  if (differing.length === 0) return progress;
-  return { ...progress, ...Object.fromEntries(differing.map(({ key }) => [key, 'problem' as const])) };
-}
-
 export interface SheetTextInput {
   plan: BuildPlan;
   weapons: readonly WeaponLine[];
-  /** The effective progress (`effectiveProgress`); the sheet's own statuses are worked out from it. */
+  /** The effective progress (`effectiveProgress`), which shows the values that differ as Needs fixing. */
   progress: ProgressMap;
   inGame: InGameSettings;
   config: CurrentConfig | undefined;
@@ -71,9 +53,14 @@ function statementLines(statement: Statement, indent: string): string[] {
   return [`${indent}${label(statement)} ${statement.text}`, ...noteLines(statement, `${indent}  `)];
 }
 
+/** "Linear (default)", "Your cm/360 (by feel)": the value as the sheet's big figure reads. */
+export function guidanceValueText(value: GuidanceValue): string {
+  return value.caption ? `${value.text} (${value.caption})` : value.text;
+}
+
 function guidanceLines(item: GuidanceItem, status: string, current: string | null): string[] {
-  const head = [`- ${item.term.name}`, status, ...(current ? [`Yours: ${current}`] : [])].join(' · ');
-  return [head, ...[...item.lead, ...item.more].flatMap((s) => statementLines(s, '  '))];
+  const head = [`- ${item.term.name}: ${guidanceValueText(item.value)}`, status, ...(current ? [`Yours: ${current}`] : [])];
+  return [head.join(' · '), ...[...item.lead, ...item.more].flatMap((s) => statementLines(s, '  '))];
 }
 
 function contextText(line: CheckContextLine): string {
@@ -81,9 +68,8 @@ function contextText(line: CheckContextLine): string {
 }
 
 export function sheetText(input: SheetTextInput): string {
-  const { plan, weapons, inGame, config, profile, termName } = input;
+  const { plan, weapons, progress, inGame, config, profile, termName } = input;
   const { loadout, main, style } = plan;
-  const progress = sheetProgress(plan, input.progress, profile, config);
   const lines: string[] = [];
   const status = (key: string) => STATUS_TEXT[statusOf(progress, key)];
   const smoothing = style ? smoothingNote(config?.aim) : null;

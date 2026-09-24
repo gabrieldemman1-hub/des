@@ -8,7 +8,8 @@
  *   config sheet) and Tune my config ("Done: show the next change").
  */
 import type { KnowledgeBase } from '../../../knowledge/index';
-import type { ProgressState } from './schema';
+import { checkContext, currentRequiredValue } from './current-values';
+import type { CurrentConfig, InGameSettings, Profile, ProgressState } from './schema';
 
 export type ProgressMap = Readonly<Record<string, ProgressState>>;
 
@@ -62,18 +63,72 @@ export const progressKey = {
 };
 
 /**
- * The progress as the checklists show it: the saved marks, plus the Destiny 2 settings check
- * worked out from the required settings when the player hasn't marked it themselves. It is
- * Needs fixing when any required setting is, and Done when every one is.
+ * What the player's values are held against, to work out the marks that follow from them: the
+ * profile and what was entered in Tune my config.
  */
-export function effectiveProgress(progress: ProgressMap, kb: Pick<KnowledgeBase, 'game'>): ProgressMap {
+export interface ProgressContext {
+  /** Destiny 2's in-game settings (one record for every loadout). */
+  inGame: InGameSettings | undefined;
+  profile: Pick<Profile, 'mouseDpi' | 'pollingRate'>;
+  /** Every saved Config: the per-Config checks are about each of them. */
+  configs: readonly CurrentConfig[];
+}
+
+/**
+ * The items that need fixing whatever the player ticked: a Destiny 2 setting whose current
+ * value differs from XIM's list, and a setup check whose context shows a difference in any
+ * saved Config (e.g. a Config's DPI differs from the mouse's). A wrong value in a lower layer
+ * breaks everything above it (CONCEPT.md §6), so a tick can't say Done until the values match.
+ */
+export function derivedProblemKeys(
+  kb: Pick<KnowledgeBase, 'game' | 'foundation'>,
+  context: ProgressContext,
+): ReadonlySet<string> {
+  const keys = new Set<string>();
+  for (const setting of kb.game.requiredSettings) {
+    if (currentRequiredValue(context.inGame, setting.name, setting.value)?.comparison === 'differs') {
+      keys.add(progressKey.requiredSetting(setting.name));
+    }
+  }
+  for (const check of kb.foundation) {
+    const differs = context.configs.some((config) =>
+      checkContext(check.id, context.profile, config).some((line) => line.differs),
+    );
+    if (differs) keys.add(progressKey.check(check.id));
+  }
+  return keys;
+}
+
+/** The line under an item shown as Needs fixing because its values differ: the tick it overrides, and what differs. */
+export function derivedProblemNote(saved: ProgressState | null | undefined, differs: string): string {
+  return saved === 'done' ? `You marked this Done, but ${differs}.` : `Shown as Needs fixing because ${differs}.`;
+}
+
+/**
+ * The progress as the checklists show it: the saved marks, with the items whose values differ
+ * (`derivedProblemKeys`, when a context is given) as Needs fixing, plus the Destiny 2 settings
+ * check worked out from the required settings when the player hasn't marked it themselves. That
+ * check is Needs fixing when any required setting is, and Done when every one is; a setting
+ * whose value differs makes it Needs fixing whatever the player marked on it.
+ */
+export function effectiveProgress(
+  progress: ProgressMap,
+  kb: Pick<KnowledgeBase, 'game' | 'foundation'>,
+  context?: ProgressContext,
+): ProgressMap {
+  const derived = context ? derivedProblemKeys(kb, context) : undefined;
+  const marks: ProgressMap =
+    derived && derived.size > 0
+      ? { ...progress, ...Object.fromEntries([...derived].map((key) => [key, 'problem' as const])) }
+      : progress;
   const key = progressKey.check(REQUIRED_SETTINGS_CHECK_ID);
-  if (progress[key] !== undefined) return progress;
-  const states = kb.game.requiredSettings.map((s) => progress[progressKey.requiredSetting(s.name)]);
-  if (states.length === 0) return progress;
-  if (states.includes('problem')) return { ...progress, [key]: 'problem' };
-  if (states.every((s) => s === 'done')) return { ...progress, [key]: 'done' };
-  return progress;
+  const settingKeys = kb.game.requiredSettings.map((s) => progressKey.requiredSetting(s.name));
+  if (derived && settingKeys.some((k) => derived.has(k))) return { ...marks, [key]: 'problem' };
+  if (marks[key] !== undefined || settingKeys.length === 0) return marks;
+  const states = settingKeys.map((k) => marks[k]);
+  if (states.includes('problem')) return { ...marks, [key]: 'problem' };
+  if (states.every((s) => s === 'done')) return { ...marks, [key]: 'done' };
+  return marks;
 }
 
 export interface ProgressCount {

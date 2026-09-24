@@ -18,9 +18,9 @@ import {
 import { checkContext, currentAimValue, currentRequiredValue, smoothingNote } from '../../state/current-values';
 import { useData } from '../../state/data-context';
 import { useKnowledge } from '../../state/knowledge-context';
-import { progressSummary } from '../../state/progress';
+import { derivedProblemNote, progressSummary } from '../../state/progress';
 import type { Profile } from '../../state/schema';
-import { useEffectiveProgress } from '../../state/use-progress';
+import { useDerivedProblemKeys, useEffectiveProgress } from '../../state/use-progress';
 import {
   BUILD_STEPS,
   CHECKLIST_STEPS,
@@ -31,7 +31,7 @@ import {
   type GuidanceItem,
   type ProgressCount,
 } from './build-plan';
-import { CheckContext, CurrentValue, GuidanceStatements, Label, SmoothingNote } from './parts';
+import { CheckContext, CurrentValue, GuidanceStatements, Label, SmoothingNote, StatementLine, Why } from './parts';
 import { sheetLinkState } from './sheet-navigation';
 import { buildPath, sheetPath, tuneSettingsPath } from './use-build-plan';
 import './build.css';
@@ -39,6 +39,8 @@ import './build.css';
 interface StepProps {
   plan: BuildPlan;
   count: ProgressCount;
+  /** The Back / Next pager, repeated under the progress count when that count opens the page (step 2). */
+  pager?: ReactNode;
 }
 
 function StepSection({ title, children }: { title: string; children: ReactNode }) {
@@ -117,13 +119,25 @@ export function GameSettingsStep({ plan, count }: StepProps) {
         </p>
         <StepCount count={count} />
         {plan.settings.length === 0 ? (
-          <p className="empty-state">Destiny 2’s required settings are missing from this build of the knowledge base.</p>
+          <p className="empty-state">
+            Destiny 2’s required settings are missing from this build of the knowledge base.
+          </p>
         ) : (
-          <ol className="checklist">
+          <ol className="checklist build-checklist">
             {plan.settings.map((setting) => {
               const current = currentRequiredValue(data.inGame, setting.name, setting.value);
               return (
-                <ChecklistItem key={setting.key} itemKey={setting.key} title={`${setting.name}: ${setting.value}`}>
+                <ChecklistItem
+                  key={setting.key}
+                  itemKey={setting.key}
+                  title={`${setting.name}: ${setting.value}`}
+                  actionsPlacement="header"
+                  derivedNote={
+                    current?.comparison === 'differs'
+                      ? derivedProblemNote(data.progress[setting.key], `your value differs from ${setting.value}`)
+                      : undefined
+                  }
+                >
                   {current && (
                     <CurrentValue
                       value={current.text}
@@ -146,9 +160,10 @@ export function GameSettingsStep({ plan, count }: StepProps) {
 // Step 2: MATRIX setup
 // ---------------------------------------------------------------------------------------
 
-export function MatrixSetupStep({ plan, count }: StepProps) {
+export function MatrixSetupStep({ plan, count, pager }: StepProps) {
   const { data } = useData();
   const progress = useEffectiveProgress();
+  const derived = useDerivedProblemKeys();
   const { profile } = data;
   const config = data.configs[plan.loadout.id];
 
@@ -166,40 +181,67 @@ export function MatrixSetupStep({ plan, count }: StepProps) {
           <Link to="/profile">Set your output type</Link>
         </p>
       )}
-      <p className="hint">Work through them in order, and tick each one once it checks out.</p>
+      <p className="hint">
+        Work through them in order, and tick each one once it checks out. The reasons and sources behind each check are
+        a tap away.
+      </p>
       <StepCount count={count} />
+      {pager}
       {plan.checks.length === 0 ? (
         <p className="empty-state">The setup checks are missing from this build of the knowledge base.</p>
       ) : (
-        <ol className="checklist">
-          {plan.checks.map(({ key, check }) => (
-            <ChecklistItem key={key} itemKey={key} title={check.title}>
-              <p>{check.check}</p>
-              <PerConfigNote checkId={check.id} />
-              <CheckContext lines={checkContext(check.id, profile, config)} />
-              <Label>Why it matters</Label>
-              <StatementView statement={check.why} />
-              {check.fix && (
-                // Opens by itself when the check is marked "Needs fixing"; the player can still close it.
-                <details className="why" open={progress[key] === 'problem'}>
-                  <summary>How to fix it</summary>
-                  <StatementView statement={check.fix} />
-                </details>
-              )}
-              {check.termIds.length > 0 && (
-                <>
-                  <Label>Settings involved</Label>
-                  <ul className="related-links">
-                    {check.termIds.map((id) => (
-                      <li key={id}>
-                        <TermLink id={id} />
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </ChecklistItem>
-          ))}
+        <ol className="checklist build-checklist">
+          {plan.checks.map(({ key, check }) => {
+            const lines = checkContext(check.id, profile, config);
+            const differs = lines.some((line) => line.differs)
+              ? 'the values above differ'
+              : 'another loadout’s Config differs';
+            return (
+              <ChecklistItem
+                key={key}
+                itemKey={key}
+                title={check.title}
+                actionsPlacement="header"
+                derivedNote={derived.has(key) ? derivedProblemNote(data.progress[key], differs) : undefined}
+              >
+                <p>{check.check}</p>
+                <PerConfigNote checkId={check.id} />
+                <CheckContext lines={lines} />
+                <Why
+                  summary={
+                    <>
+                      Why it matters <ConfidenceBadge level={check.why.confidence} />
+                    </>
+                  }
+                  statements={[check.why]}
+                  showBadge={false}
+                />
+                {check.fix && (
+                  // Opens by itself when the check is marked "Needs fixing"; the player can still close it.
+                  <details className="why" open={progress[key] === 'problem'}>
+                    <summary>
+                      How to fix it <ConfidenceBadge level={check.fix.confidence} />
+                    </summary>
+                    <div className="build-statements">
+                      <StatementView statement={check.fix} showBadge={false} />
+                    </div>
+                  </details>
+                )}
+                {check.termIds.length > 0 && (
+                  <>
+                    <Label>Settings involved</Label>
+                    <ul className="related-links">
+                      {check.termIds.map((id) => (
+                        <li key={id}>
+                          <TermLink id={id} />
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </ChecklistItem>
+            );
+          })}
         </ol>
       )}
     </StepSection>
@@ -210,16 +252,28 @@ export function MatrixSetupStep({ plan, count }: StepProps) {
 // Step 3: Aim settings
 // ---------------------------------------------------------------------------------------
 
-function GuidanceChecklistItem({ item, title, current }: { item: GuidanceItem; title: ReactNode; current: string | null }) {
+function GuidanceChecklistItem({
+  item,
+  title,
+  current,
+}: {
+  item: GuidanceItem;
+  title: ReactNode;
+  current: string | null;
+}) {
   return (
-    <ChecklistItem itemKey={item.key} title={title}>
+    <ChecklistItem itemKey={item.key} title={title} actionsPlacement="header">
       {current && <CurrentValue value={current} />}
       <GuidanceStatements item={item} />
     </ChecklistItem>
   );
 }
 
-const PREFERENCES: { input: PreferenceInput; label: string; value: (p: Profile) => string | null }[] = [
+const PREFERENCES: {
+  input: PreferenceInput;
+  label: string;
+  value: (p: Profile) => string | null;
+}[] = [
   {
     input: 'feel',
     label: 'Snappy or smooth',
@@ -230,8 +284,16 @@ const PREFERENCES: { input: PreferenceInput; label: string; value: (p: Profile) 
     label: 'Sensitivity',
     value: (p) => (p.sensitivity === null ? null : SENSITIVITY_LABELS[p.sensitivity]),
   },
-  { input: 'focus', label: 'Main focus', value: (p) => (p.focus === null ? null : FOCUS_LABELS[p.focus]) },
-  { input: 'style', label: 'How you play', value: (p) => (p.style === null ? null : STYLE_LABELS[p.style]) },
+  {
+    input: 'focus',
+    label: 'Main focus',
+    value: (p) => (p.focus === null ? null : FOCUS_LABELS[p.focus]),
+  },
+  {
+    input: 'style',
+    label: 'How you play',
+    value: (p) => (p.style === null ? null : STYLE_LABELS[p.style]),
+  },
 ];
 
 /** What the knowledge base says each preference the player has set can (or can't) change. */
@@ -293,8 +355,8 @@ export function AimSettingsStep({ plan, count }: StepProps) {
         {main && main.aimStyle === null && (
           <div className="card build-statements">
             <p>
-              {main.name} has no aim style in Dialed’s knowledge base, so this step has no weapon-aware directions.
-              Here is what the knowledge base says:
+              {main.name} has no aim style in Dialed’s knowledge base, so this step has no weapon-aware directions. Here
+              is what the knowledge base says:
             </p>
             <StatementView statement={main.mapping} />
           </div>
@@ -307,8 +369,9 @@ export function AimSettingsStep({ plan, count }: StepProps) {
         {style && (
           <>
             <h3 className="build-note-title">What the settings should favour</h3>
-            <div className="card">
-              <StatementView statement={style.favours} />
+            <div className="card build-statements">
+              <StatementLine statement={style.favours} />
+              <Why statements={[style.favours]} showBadge={false} />
             </div>
           </>
         )}
@@ -318,7 +381,7 @@ export function AimSettingsStep({ plan, count }: StepProps) {
       <StepSection title="Work through these in Manager">
         <p className="hint">Tick each one once you’ve dealt with it in this loadout’s Config.</p>
         <StepCount count={count} />
-        <ol className="checklist">
+        <ol className="checklist build-checklist">
           {plan.sensitivity && (
             <GuidanceChecklistItem
               item={plan.sensitivity}
@@ -349,9 +412,13 @@ export function AimSettingsStep({ plan, count }: StepProps) {
                     <span className="build-direction">{LEVER_DIRECTION_LABELS[lever.direction]}</span>
                   </>
                 }
+                actionsPlacement="header"
               >
                 {current && <CurrentValue value={current} />}
-                <StatementView statement={lever.statement} />
+                <div className="build-statements">
+                  <StatementLine statement={lever.statement} />
+                  <Why statements={[lever.statement]} showBadge={false} />
+                </div>
               </ChecklistItem>
             );
           })}
@@ -414,7 +481,10 @@ export function SheetStep({ plan }: { plan: BuildPlan }) {
         <Link
           className="button primary block"
           to={sheetPath(id)}
-          state={sheetLinkState({ to: buildPath(id, 'sheet'), label: 'Build my config' })}
+          state={sheetLinkState({
+            to: buildPath(id, 'sheet'),
+            label: 'Build my config',
+          })}
         >
           Open the config sheet
         </Link>

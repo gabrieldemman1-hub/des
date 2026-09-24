@@ -5,11 +5,15 @@ import {
   REQUIRED_SETTINGS_CHECK_ID,
   aimProgressPrefix,
   countProgress,
+  derivedProblemKeys,
+  derivedProblemNote,
   effectiveProgress,
   loadoutPrefix,
   progressKey,
   progressSummary,
+  type ProgressContext,
 } from './progress';
+import { emptyConfig, emptyInGame } from './schema';
 
 const requiredKeys = knowledge.game.requiredSettings.map((s) => progressKey.requiredSetting(s.name));
 const checkKey = progressKey.check(REQUIRED_SETTINGS_CHECK_ID);
@@ -58,7 +62,57 @@ describe('effectiveProgress', () => {
     const progress = Object.fromEntries(requiredKeys.map((k) => [k, 'done' as const]));
     effectiveProgress(progress, knowledge);
     expect(progress).not.toHaveProperty(checkKey);
-    expect(effectiveProgress(progress, { game: { ...knowledge.game, requiredSettings: [] } })).toBe(progress);
+    expect(effectiveProgress(progress, { ...knowledge, game: { ...knowledge.game, requiredSettings: [] } })).toBe(progress);
+  });
+});
+
+describe('derived problems', () => {
+  const context = (patch: Partial<ProgressContext> = {}): ProgressContext => ({
+    inGame: undefined,
+    profile: { mouseDpi: null, pollingRate: null },
+    configs: [],
+    ...patch,
+  });
+  const adsKey = progressKey.requiredSetting('ADS Sensitivity Modifier');
+  const dpiKey = progressKey.check('mouse-dpi-matches');
+  const allDone = Object.fromEntries(requiredKeys.map((k) => [k, 'done' as const]));
+
+  it('shows a Destiny 2 setting whose value differs from XIM’s as Needs fixing, even when ticked Done', () => {
+    expect(knowledge.game.requiredSettings.find((s) => s.name === 'ADS Sensitivity Modifier')?.value).toBe('1.5');
+    const inGame = { ...emptyInGame(), adsSensitivityModifier: 1 };
+    expect(derivedProblemKeys(knowledge, context({ inGame }))).toEqual(new Set([adsKey]));
+    expect(effectiveProgress({ [adsKey]: 'done' }, knowledge, context({ inGame }))[adsKey]).toBe('problem');
+    expect(effectiveProgress({}, knowledge, context({ inGame }))[adsKey]).toBe('problem');
+    // The same value as XIM's list, or none entered, leaves the tick alone.
+    const same = { ...inGame, adsSensitivityModifier: 1.5 };
+    expect(effectiveProgress({ [adsKey]: 'done' }, knowledge, context({ inGame: same }))[adsKey]).toBe('done');
+    expect(effectiveProgress({ [adsKey]: 'done' }, knowledge, context({ inGame: emptyInGame() }))[adsKey]).toBe('done');
+    expect(effectiveProgress({ [adsKey]: 'done' }, knowledge)[adsKey]).toBe('done');
+  });
+
+  it('makes the Destiny 2 settings check Needs fixing too, whatever it was marked', () => {
+    const inGame = { ...emptyInGame(), adsSensitivityModifier: 1 };
+    expect(effectiveProgress(allDone, knowledge, context({ inGame }))[checkKey]).toBe('problem');
+    expect(effectiveProgress({ ...allDone, [checkKey]: 'done' }, knowledge, context({ inGame }))[checkKey]).toBe('problem');
+    expect(effectiveProgress(allDone, knowledge, context({ inGame: emptyInGame() }))[checkKey]).toBe('done');
+  });
+
+  it('shows a check whose values differ in any saved Config as Needs fixing, even when ticked Done', () => {
+    const matching = emptyConfig();
+    matching.matrix.configDpi = 1600;
+    const differing = emptyConfig();
+    differing.matrix.configDpi = 800;
+    const profile = { mouseDpi: 1600, pollingRate: null };
+    const ticked = { [dpiKey]: 'done' as const };
+    expect(effectiveProgress(ticked, knowledge, context({ profile, configs: [matching, differing] }))[dpiKey]).toBe('problem');
+    expect(effectiveProgress(ticked, knowledge, context({ profile, configs: [matching] }))[dpiKey]).toBe('done');
+    expect(effectiveProgress({}, knowledge, context({ configs: [differing] }))[dpiKey]).toBeUndefined();
+  });
+
+  it('words why an item shows Needs fixing', () => {
+    expect(derivedProblemNote('done', 'your value differs from 1.5')).toBe('You marked this Done, but your value differs from 1.5.');
+    expect(derivedProblemNote(null, 'the values above differ')).toBe('Shown as Needs fixing because the values above differ.');
+    expect(derivedProblemNote(undefined, 'the values above differ')).toBe('Shown as Needs fixing because the values above differ.');
   });
 });
 

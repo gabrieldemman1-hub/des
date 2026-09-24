@@ -5,9 +5,9 @@ import { createKnowledgeApi } from '../../state/knowledge-context';
 import { REQUIRED_SETTINGS_CHECK_ID, effectiveProgress, progressKey, progressSummary } from '../../state/progress';
 import { defaultProfile, emptyConfig, emptyInGame, type Profile } from '../../state/schema';
 import { sampleLoadout } from '../../test/fixtures';
-import { buildPlan, planProgress, resumeStep, stepKeys } from './build-plan';
+import { MECHANICS_DEFAULTS, MECHANICS_TERM_IDS, buildPlan, planProgress, resumeStep, stepKeys } from './build-plan';
 import { weaponLines } from './format';
-import { sharedCaveat, sheetProgress, sheetText } from './sheet-text';
+import { sharedCaveat, sheetText } from './sheet-text';
 
 const real = createKnowledgeApi(knowledge);
 
@@ -145,6 +145,8 @@ describe('sheetText', () => {
     expect(text).toContain(`Caveat for every value here: ${sharedCaveat(plan.settings.map((s) => s.statement))!}`);
     expect(text).toContain('- Easing: Lower');
     expect(text).toContain(EASING_CAVEAT);
+    expect(text).toContain('- Sensitivity: Your cm/360 (by feel) · Not checked yet\n');
+    expect(text).toContain('- Aiming Curve: Linear (default) · Not checked yet\n');
     for (const check of plan.checks) expect(text).toContain(check.check.title);
     expect(text).toContain('Progress: 0 of');
     expect(text).toMatch(/Progress: 0 of \d+ items done · 1 needs fixing/);
@@ -214,20 +216,41 @@ describe('sheetText', () => {
   });
 });
 
-describe('sheetProgress', () => {
-  it('shows a check whose context differs as Needs fixing, even when ticked Done', () => {
+describe('progress on the sheet', () => {
+  it('counts a Destiny 2 setting whose value differs as needing fixing, so the sheet and the Build index agree', () => {
     const plan = buildPlan(real, profile(), sampleLoadout());
-    const key = progressKey.check('mouse-dpi-matches');
-    const config = emptyConfig();
-    config.matrix.configDpi = 800;
-    const progress = { [key]: 'done' as const };
-    expect(sheetProgress(plan, progress, { mouseDpi: 1600, pollingRate: null }, config)[key]).toBe('problem');
-    expect(sheetProgress(plan, progress, { mouseDpi: 800, pollingRate: null }, config)[key]).toBe('done');
-    expect(sheetProgress(plan, {}, { mouseDpi: null, pollingRate: null }, config)[key]).toBeUndefined();
+    const key = progressKey.requiredSetting('ADS Sensitivity Modifier');
+    const progress = effectiveProgress({ [key]: 'done' }, knowledge, {
+      inGame: { ...emptyInGame(), adsSensitivityModifier: 1 },
+      profile: profile(),
+      configs: [],
+    });
+    expect(progress[key]).toBe('problem');
+    const count = planProgress(plan, progress);
+    expect(count.done).toBe(0);
+    expect(count.problem).toBe(1);
+    // "Needs fixing" isn't done, so the build picks up at step 1.
+    expect(resumeStep(plan, progress)).toBe('destiny-2');
+  });
+});
+
+describe('aim row values', () => {
+  it('gives every aim row a value to show, from the knowledge base', () => {
+    const plan = buildPlan(real, profile(), sampleLoadout());
+    expect(plan.sensitivity?.value).toEqual({ text: 'Your cm/360', caption: 'by feel', confidence: 'gap' });
+    expect(plan.smoothing?.value).toEqual({ text: 'A preset', caption: 'by feel', confidence: 'official' });
+    expect(plan.mechanics.map((m) => [m.term.id, m.value])).toEqual([
+      ['aiming-curve', { text: 'Linear', caption: 'default', confidence: 'official' }],
+      ['quantization', { text: 'Off', caption: 'default', confidence: 'official' }],
+      ['velocity-mapping', { text: 'Standard', caption: 'default', confidence: 'official' }],
+    ]);
   });
 
-  it('works from the effective progress, with the derived Destiny 2 settings check', () => {
-    const all = Object.fromEntries(knowledge.game.requiredSettings.map((s) => [progressKey.requiredSetting(s.name), 'done' as const]));
-    expect(effectiveProgress(all, knowledge)[progressKey.check(REQUIRED_SETTINGS_CHECK_ID)]).toBe('done');
+  it('keeps each mechanic’s default in step with XIM’s guidance on the term', () => {
+    for (const id of MECHANICS_TERM_IDS) {
+      const first = real.termById(id)?.guidance[0];
+      expect(first?.confidence, id).toBe('official');
+      expect(first?.text.toLowerCase(), id).toContain(MECHANICS_DEFAULTS[id].toLowerCase());
+    }
   });
 });
