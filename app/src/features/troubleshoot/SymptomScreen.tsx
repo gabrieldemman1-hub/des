@@ -133,7 +133,7 @@ function SymptomDetail({ symptom }: { symptom: Symptom }) {
             <SettingsInvolved termIds={symptom.termIds} />
           ) : (
             <p className="hint">
-              To read what each setting does, see <Link to="/learn">Explain a concept</Link>.
+              To read what each setting does, see <Link to="/learn">Learn</Link>.
             </p>
           )}
         </Section>

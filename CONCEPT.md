@@ -353,9 +353,13 @@ All concept questions are answered, and the MVP (§9) is built: the Destiny 2 kn
 base (`knowledge/`), the phone-first app (`app/`) and all four flows with a config sheet
 per loadout. What's left for the first release:
 
-- **Publish it.** The repository goes public and GitHub Pages is switched on
-  (Settings → Pages → Source: GitHub Actions). From then on every merge to `main`
-  publishes the app, which installs to the home screen and works offline.
+- ~~**Publish it.**~~ Done 2026-09-23: the repository is public, GitHub Pages is on,
+  and every merge to `main` publishes https://gabrieldemman1-hub.github.io/des/, which
+  installs to the home screen and works offline.
+- **Design review follow-ups.** A professional UI review (2026-09-24, in
+  `docs/reviews/`) kept 66 findings. The P1s, quick wins, Home, evidence
+  de-duplication and label consistency are fixed; the remaining P2/P3 items are
+  listed there for later.
 - **One in-game test.** The official Easing wording is ambiguous (§6). Raising
   Easing and feeling whether the reticle gets slower to start moving settles which
   way the hand-cannon advice points. Until then, `npm run check:release` reports

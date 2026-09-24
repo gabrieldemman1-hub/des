@@ -931,7 +931,7 @@
             "note": "XIM's test, used in the check."
           }
         ],
-        "caveat": "This app builds one Config per loadout, so consistent sensitivity between Configs matters here."
+        "caveat": "Dialed makes one config sheet per loadout, one Config each, so consistent sensitivity between Configs matters here."
       },
       "fix": {
         "text": "Switch these off only for the test, then put back what you use. They are features, not faults: XIM offers quantization to improve compatibility with aim assist, and custom curves let you shape your aim any way you like. If your result is way off (it doesn't need to be exact), recheck your DPI, your mouse's rate (Check Rate), Config, Smart Translator and in-game settings, then test again. If the cm/360 label is red, your Config doesn't support accurate cm/360 yet. Let XIM staff know: XIM says updating that Smart Translator will then be prioritized.",
@@ -1050,7 +1050,7 @@
           ]
         },
         {
-          "text": "Part of Dialed's setup: Dialed builds one Config per loadout, and a hotkey is one way to load it. Decide here whether hotkeys should work outside Navigate Mode.",
+          "text": "Part of Dialed's setup: each loadout has its own Config, and a hotkey is one way to load it. Decide here whether hotkeys should work outside Navigate Mode.",
           "confidence": "reasoned",
           "citations": [
             {

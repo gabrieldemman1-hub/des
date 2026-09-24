@@ -2,6 +2,7 @@ import { useId, type ReactNode } from 'react';
 import { useData } from '../state/data-context';
 import type { ProgressState } from '../state/schema';
 import { useEffectiveProgress } from '../state/use-progress';
+import { StatusChip, StatusToggles } from './StatusToggles';
 
 interface Props {
   /** The progress key (see state/progress.ts). */
@@ -21,8 +22,6 @@ interface Props {
   derivedNote?: string;
 }
 
-const LABELS: Record<ProgressState, string> = { done: 'Done', problem: 'Needs fixing' };
-
 /** Why the Destiny 2 settings check shows a state the player didn't mark. */
 const DERIVED_NOTE: Record<ProgressState, string> = {
   done: 'Shown as Done because every Destiny 2 setting is marked Done in Build my config.',
@@ -30,40 +29,29 @@ const DERIVED_NOTE: Record<ProgressState, string> = {
 };
 
 /**
- * One checklist step with two toggles: "Done" and "Needs fixing". Tapping the active one
- * again clears it. The state is saved on the phone, so Build my config, Tune my config and
- * Troubleshoot by feel share it. Some items show a state worked out from others (see
- * `effectiveProgress`); tapping a toggle then marks the item itself.
+ * One checklist step with the shared "Done" / "Needs fixing" pair (see `StatusToggles`). The
+ * state is saved on the phone, so Build my config, Tune my config and Troubleshoot by feel share
+ * it. Some items show a state worked out from others (see `effectiveProgress`); tapping a toggle
+ * then marks the item itself. With the pair at the end of a long item, the title row repeats the
+ * state as a chip, so it can be read before the buttons scroll into view.
  */
 export function ChecklistItem({ itemKey, title, children, actionsPlacement = 'end', derivedNote }: Props) {
-  const { data, setProgress } = useData();
+  const { data } = useData();
   const progress = useEffectiveProgress();
   const saved = data.progress[itemKey] ?? null;
   const state = progress[itemKey] ?? null;
   const titleId = useId();
 
-  const actions = (
-    <div className="checklist-actions" role="group" aria-label="Status">
-      {(Object.keys(LABELS) as ProgressState[]).map((s) => (
-        <button
-          key={s}
-          type="button"
-          className={`button small ${state === s ? 'primary' : 'secondary'}`}
-          aria-pressed={state === s}
-          aria-describedby={titleId}
-          onClick={() => setProgress(itemKey, saved === s ? null : s)}
-        >
-          {LABELS[s]}
-        </button>
-      ))}
-    </div>
-  );
+  const actions = <StatusToggles itemKey={itemKey} state={state} describedBy={titleId} />;
 
   return (
     <li className={`card checklist-item${state ? ` is-${state}` : ''}`} aria-labelledby={titleId}>
-      <p className="checklist-title" id={titleId}>
-        {title}
-      </p>
+      <div className="checklist-head">
+        <p className="checklist-title" id={titleId}>
+          {title}
+        </p>
+        {actionsPlacement === 'end' && state && <StatusChip state={state} />}
+      </div>
       {actionsPlacement === 'header' && actions}
       {children && <div className="checklist-body">{children}</div>}
       {state !== null && state !== saved && <p className="hint">{derivedNote ?? DERIVED_NOTE[state]}</p>}

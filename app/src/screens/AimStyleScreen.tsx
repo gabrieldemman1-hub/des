@@ -40,7 +40,7 @@ export function AimStyleScreen() {
     <Screen
       title={style.name}
       documentTitle={`${style.name} aim style`}
-      back={{ to: '/learn', label: 'Explain a concept' }}
+      back={{ to: '/learn', label: 'Learn' }}
       intro={
         <>
           <p className="lede">{style.description}</p>

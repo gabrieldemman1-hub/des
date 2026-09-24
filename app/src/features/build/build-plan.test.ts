@@ -2,7 +2,14 @@ import { describe, expect, it } from 'vitest';
 import { knowledge } from '../../../../knowledge/index';
 import { EASING_CAVEAT } from '../../../../knowledge/integrity';
 import { createKnowledgeApi } from '../../state/knowledge-context';
-import { REQUIRED_SETTINGS_CHECK_ID, effectiveProgress, progressKey, progressSummary } from '../../state/progress';
+import {
+  PER_CONFIG_CHECK_IDS,
+  PER_CONFIG_CHECK_NOTE,
+  REQUIRED_SETTINGS_CHECK_ID,
+  effectiveProgress,
+  progressKey,
+  progressSummary,
+} from '../../state/progress';
 import { defaultProfile, emptyConfig, emptyInGame, type Profile } from '../../state/schema';
 import { sampleLoadout } from '../../test/fixtures';
 import { MECHANICS_DEFAULTS, MECHANICS_TERM_IDS, buildPlan, planProgress, resumeStep, stepKeys } from './build-plan';
@@ -118,7 +125,7 @@ describe('progress', () => {
     const count = planProgress(plan, { [a!]: 'done', [b!]: 'problem', 'check:unrelated': 'done' });
     expect(count.done).toBe(1);
     expect(count.problem).toBe(1);
-    expect(progressSummary(count, 'items')).toBe(`1 of ${count.total} items done · 1 needs fixing`);
+    expect(progressSummary(count)).toBe(`1 of ${count.total} done · 1 needs fixing`);
     expect(progressSummary({ total: 6, done: 2, problem: 0 })).toBe('2 of 6 done');
   });
 });
@@ -149,10 +156,12 @@ describe('sheetText', () => {
     expect(text).toContain('- Aiming Curve: Linear (default) · Not checked yet\n');
     for (const check of plan.checks) expect(text).toContain(check.check.title);
     expect(text).toContain('Progress: 0 of');
-    expect(text).toMatch(/Progress: 0 of \d+ items done · 1 needs fixing/);
+    expect(text).toMatch(/Progress: 0 of \d+ done · 1 needs fixing/);
   });
 
-  it('labels every reasoned statement as worked out', () => {
+
+
+  it('says once at the top what [Reasoned] means, instead of under every reasoned line', () => {
     const loadout = sampleLoadout({ weapons: { kinetic: 'hand-cannon', energy: null, power: null } });
     const plan = buildPlan(real, profile(), loadout);
     const text = sheetText({
@@ -165,17 +174,22 @@ describe('sheetText', () => {
       termName,
     });
     const lines = text.split('\n');
-    const reasoned = lines.filter((line) => line.includes('[Reasoned]'));
+    const reasoned = lines.filter((line) => line.includes('[Reasoned]') && !line.startsWith('[Reasoned] means:'));
     expect(reasoned.length).toBeGreaterThan(2);
-    // Every [Reasoned] statement is followed by its "worked out" label.
-    lines.forEach((line, i) => {
-      if (line.includes('[Reasoned]') && line.trimStart().startsWith('[Reasoned]')) {
-        expect(lines[i + 1], line).toMatch(/Worked out (from XIM’s definitions|by Dialed), not stated by (a|any) source\./);
-      }
-    });
-    // The Easing lever is reasoned from XIM's definitions.
+    // The legend comes before the first section, once per wording that occurs (the hand cannon's
+    // aim style is Dialed's own reading, the Easing lever is worked out from XIM's definitions);
+    // no line repeats it.
+    const legend = lines.filter((line) => line.startsWith('[Reasoned] means: '));
+    expect(legend).toEqual([
+      '[Reasoned] means: Worked out by Dialed, not stated by any source.',
+      '[Reasoned] means: Worked out from XIM’s definitions, not stated by a source.',
+    ]);
+    expect(lines.indexOf(legend[1]!)).toBeLessThan(lines.indexOf('DESTINY 2 SETTINGS'));
+    expect(lines.filter((line) => /^\s+Worked out (from XIM’s definitions|by Dialed)/.test(line))).toHaveLength(0);
+    // The Easing lever keeps its label and caveat on the line itself.
     const easing = lines.findIndex((line) => line.startsWith('- Easing: Lower'));
-    expect(lines[easing + 2]).toBe('    Worked out from XIM’s definitions, not stated by a source.');
+    expect(lines[easing + 1]).toMatch(/^ {2}\[Reasoned\] /);
+    expect(lines[easing + 2]).toMatch(/^ {4}Caveat: /);
   });
 
   it('includes the smoothing note when smoothing isn’t custom Standard', () => {
@@ -196,7 +210,7 @@ describe('sheetText', () => {
     );
   });
 
-  it('says to check the per-Config checks in every Config', () => {
+  it('says once under MATRIX SETUP which checks are per Config, and tags each of them', () => {
     const loadout = sampleLoadout();
     const plan = buildPlan(real, profile(), loadout);
     const text = sheetText({
@@ -209,10 +223,14 @@ describe('sheetText', () => {
       termName,
     });
     const lines = text.split('\n');
-    const dpi = lines.findIndex((line) => line.startsWith(`- ${plan.checks.find((c) => c.check.id === 'mouse-dpi-matches')!.check.title}`));
-    expect(lines[dpi + 1]).toBe('  Check this in every Config you use — each loadout has its own.');
-    const firmware = lines.findIndex((line) => line.startsWith(`- ${plan.checks.find((c) => c.check.id === 'firmware-current')!.check.title}`));
-    expect(lines[firmware + 1]).not.toContain('every Config');
+    const setup = lines.indexOf('MATRIX SETUP');
+    expect(lines[setup + 1]).toBe(`Per Config: ${PER_CONFIG_CHECK_NOTE}`);
+    expect(text.split(PER_CONFIG_CHECK_NOTE)).toHaveLength(2);
+    for (const { check } of plan.checks) {
+      const line = lines.find((l) => l.startsWith(`- ${check.title} `))!;
+      expect(line.includes(' · Per Config'), check.id).toBe(PER_CONFIG_CHECK_IDS.has(check.id));
+    }
+    expect(lines.filter((line) => line.includes(' · Per Config')).length).toBeGreaterThan(1);
   });
 });
 

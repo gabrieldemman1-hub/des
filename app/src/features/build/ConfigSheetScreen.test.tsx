@@ -60,8 +60,9 @@ describe('Config sheet', () => {
     const setup = screen.getByRole('region', { name: 'MATRIX setup' });
     const firmware = knowledge.foundation.find((c) => c.id === 'firmware-current')!;
     expect(pressed(within(setup).getByRole('listitem', { name: firmware.title }))).toEqual({ done: 'false', problem: 'true' });
-    // Axial Deadzone done; the firmware check and Look Sensitivity (18, not 20) need fixing.
-    expect(screen.getByText('1 of 21 items done · 2 need fixing')).toBeInTheDocument();
+    // Axial Deadzone done; the firmware check and Look Sensitivity (18, not 20) need fixing. The
+    // same words as the loadout cards' "Sheet 1 of 21 done".
+    expect(screen.getByText('1 of 21 done · 2 need fixing')).toBeInTheDocument();
   });
 
   it('marks a row Done or Needs fixing on the sheet itself, with the marks Build my config uses', async () => {
@@ -70,14 +71,17 @@ describe('Config sheet', () => {
     const row = within(d2).getByRole('listitem', { name: 'Movement Controls' });
     await user.click(within(row).getByRole('button', { name: 'Done' }));
     expect(pressed(row)).toEqual({ done: 'true', problem: 'false' });
-    expect(screen.getByText('2 of 21 items done · 2 need fixing')).toBeInTheDocument();
+    expect(screen.getByText('2 of 21 done · 2 need fixing')).toBeInTheDocument();
+    // The same toggles as every checklist: a mark in a tinted box, never the accent fill.
+    expect(within(row).getByRole('button', { name: 'Done' })).toHaveClass('status-toggle', 'is-done');
+    expect(within(row).getByRole('button', { name: 'Done' })).not.toHaveClass('primary');
     await user.click(within(row).getByRole('button', { name: 'Needs fixing' }));
     expect(pressed(row)).toEqual({ done: 'false', problem: 'true' });
-    expect(screen.getByText('1 of 21 items done · 3 need fixing')).toBeInTheDocument();
+    expect(screen.getByText('1 of 21 done · 3 need fixing')).toBeInTheDocument();
     // Tapping the active one again clears it.
     await user.click(within(row).getByRole('button', { name: 'Needs fixing' }));
     expect(pressed(row)).toEqual({ done: 'false', problem: 'false' });
-    expect(screen.getByText('1 of 21 items done · 2 need fixing')).toBeInTheDocument();
+    expect(screen.getByText('1 of 21 done · 2 need fixing')).toBeInTheDocument();
   });
 
   it('flags a current Destiny 2 value that differs from the required one as Needs fixing', () => {
@@ -86,8 +90,10 @@ describe('Config sheet', () => {
     const look = within(d2).getByRole('listitem', { name: 'Look Sensitivity' });
     expect(look).toHaveTextContent('Your current value: 18');
     expect(within(look).getByText('Differs from 20')).toBeInTheDocument();
-    // Worked out from the value, so it can't be marked here.
-    expect(within(look).getByText('Needs fixing', { selector: '.sheet-status' })).toBeInTheDocument();
+    // Worked out from the value, so it can't be marked here: a chip with the same mark as the toggles.
+    const chip = within(look).getByText('Needs fixing', { selector: '.status-chip' });
+    expect(chip).toHaveClass('is-problem');
+    expect(chip.querySelector('svg.status-mark')).not.toBeNull();
     expect(within(look).queryByRole('group', { name: 'Status' })).not.toBeInTheDocument();
     expect(look).toHaveTextContent('Shown as Needs fixing because your value differs from 20.');
 
@@ -105,17 +111,17 @@ describe('Config sheet', () => {
     const d2 = screen.getByRole('region', { name: 'Destiny 2 settings' });
     const ads = within(d2).getByRole('listitem', { name: 'ADS Sensitivity Modifier' });
     expect(within(ads).getByText('Differs from 1.5')).toBeInTheDocument();
-    expect(within(ads).getByText('Needs fixing', { selector: '.sheet-status' })).toBeInTheDocument();
-    expect(within(ads).queryByText('Done', { selector: '.sheet-status' })).not.toBeInTheDocument();
+    expect(within(ads).getByText('Needs fixing', { selector: '.status-chip' })).toBeInTheDocument();
+    expect(within(ads).queryByText('Done', { selector: '.status-chip' })).not.toBeInTheDocument();
     expect(ads).toHaveTextContent('You marked this Done, but your value differs from 1.5.');
     // Axial Deadzone done; firmware, Look Sensitivity and ADS Sensitivity Modifier need fixing.
-    expect(screen.getByText('1 of 21 items done · 3 need fixing')).toBeInTheDocument();
+    expect(screen.getByText('1 of 21 done · 3 need fixing')).toBeInTheDocument();
 
     const writeText = vi.spyOn(navigator.clipboard, 'writeText');
     await user.click(screen.getByRole('button', { name: 'Copy as text' }));
     const text = writeText.mock.calls[0]![0];
     expect(text).toContain('- ADS Sensitivity Modifier: 1.5 [Official] · Needs fixing · Yours: 1 (differs)');
-    expect(text).toContain('Progress: 1 of 21 items done · 3 need fixing');
+    expect(text).toContain('Progress: 1 of 21 done · 3 need fixing');
   });
 
   it('lists the aim settings with a value, confidence and the current value', () => {
@@ -138,8 +144,14 @@ describe('Config sheet', () => {
     expect(value('Quantization')).toBe('Offdefault');
     expect(value('Velocity Mapping')).toBe('Standarddefault');
     expect(within(meta('Aiming Curve')).getByText('Official', { selector: '.badge' })).toBeInTheDocument();
-    // The guidance is still there, one tap away.
-    expect(within(aim).getByRole('listitem', { name: 'Aiming Curve' })).toHaveTextContent('The default is linear.');
+    // The guidance is still there, one tap away, behind the one label every evidence disclosure
+    // uses, with a count when it holds several statements.
+    const curve = within(aim).getByRole('listitem', { name: 'Aiming Curve' });
+    expect(curve).toHaveTextContent('The default is linear.');
+    expect(within(curve).getByText(/^Why and source \(\d+\)$/).closest('details')).not.toHaveAttribute('open');
+    const d2 = screen.getByRole('region', { name: 'Destiny 2 settings' });
+    expect(within(d2).getAllByText('Why and source')).toHaveLength(knowledge.game.requiredSettings.length);
+    expect(screen.queryByText('Reasons and sources')).not.toBeInTheDocument();
 
     // The section header's badge is part of the summary line.
     const favours = within(aim).getByText('What tracking settings should favour').closest('summary')!;
@@ -153,7 +165,7 @@ describe('Config sheet', () => {
     for (const link of building) expect(link).toHaveAttribute('href', '/build/l1');
     expect(screen.getByRole('link', { name: 'Enter settings' })).toHaveAttribute('href', '/tune/l1/settings');
     const more = screen.getByRole('list', { name: 'More for this loadout' });
-    expect(within(more).getByRole('link', { name: 'Tune this config' })).toHaveAttribute('href', '/tune/l1');
+    expect(within(more).getByRole('link', { name: 'Tune this loadout' })).toHaveAttribute('href', '/tune/l1');
     expect(within(more).getByRole('link', { name: 'Troubleshoot by feel' })).toHaveAttribute('href', '/troubleshoot');
     expect(within(more).getByRole('link', { name: 'All loadouts' })).toHaveAttribute('href', '/loadouts');
   });
@@ -233,7 +245,7 @@ describe('Config sheet', () => {
     const dpi = within(setup).getByRole('listitem', {
       name: knowledge.foundation.find((c) => c.id === 'mouse-dpi-matches')!.title,
     });
-    expect(within(dpi).getByText('Needs fixing', { selector: '.sheet-status' })).toBeInTheDocument();
+    expect(within(dpi).getByText('Needs fixing', { selector: '.status-chip' })).toBeInTheDocument();
     expect(within(dpi).queryByRole('group', { name: 'Status' })).not.toBeInTheDocument();
     expect(dpi).toHaveTextContent('This Config: 800 DPI');
     expect(dpi).toHaveTextContent('You marked this Done, but the values above differ.');

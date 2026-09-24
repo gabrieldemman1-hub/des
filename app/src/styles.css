@@ -492,6 +492,64 @@
     font-size: 0.92rem;
   }
 
+  /* Done / Needs fixing (StatusToggles): pressed is a tint of the state's colour and a mark in
+     the box, never the accent fill, which is for forward actions. Unpressed is a plain secondary. */
+  .status-toggle {
+    --tone: var(--success);
+    gap: 6px;
+  }
+
+  .status-toggle.is-problem {
+    --tone: var(--danger);
+  }
+
+  .status-toggle[aria-pressed='true'] {
+    border-color: var(--tone);
+    background: color-mix(in srgb, var(--tone) 18%, var(--surface));
+    color: var(--tone);
+  }
+
+  .status-toggle[aria-pressed='true']:active {
+    background: color-mix(in srgb, var(--tone) 28%, var(--surface));
+  }
+
+  /* The state as a mark and a word, where it can't be changed: the same shape as the toggles. */
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .status-chip.is-done {
+    color: var(--success);
+  }
+
+  .status-chip.is-problem {
+    color: var(--danger);
+  }
+
+  .status-mark {
+    flex: none;
+    width: 1.1em;
+    height: 1.1em;
+  }
+
+  /* "Clear aim marks" (Build my config, Tune my config): after everything, with its status line. */
+  .clear-marks {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .clear-marks .button[aria-disabled='true'] {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
   .button.block {
     width: 100%;
   }
@@ -657,7 +715,7 @@
     color: var(--danger);
   }
 
-  /* ---- Flow intros and the flow placeholder ------------------------------------------ */
+  /* ---- Flow intros ------------------------------------------------------------------- */
 
   /* A flow's fuller account, under its one-line lede. */
   .how-this-works .prose {
@@ -670,13 +728,6 @@
 
   .how-this-works h3 {
     font-size: 1rem;
-  }
-
-  .coming-soon {
-    padding: 12px 14px;
-    border: 1px dashed var(--accent);
-    border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--accent) 8%, var(--surface));
   }
 
   .prose {
@@ -1437,13 +1488,19 @@
   }
 
   /* Windows High Contrast and other forced-colour modes drop background fills, which is how the
-     selected segment and the current tab are shown, so mark them with system colours instead. */
+     selected segment, the current tab and a pressed Done / Needs fixing are shown, so mark them
+     with system colours instead (the mark in the box stays, so the state reads without them too). */
   @media (forced-colors: active) {
     .segment input:checked + span,
-    .tab[aria-current='page'] .tab-icon {
+    .tab[aria-current='page'] .tab-icon,
+    .button[aria-pressed='true'] {
       forced-color-adjust: none;
       background: Highlight;
       color: HighlightText;
+    }
+
+    .button[aria-pressed='true'] {
+      border-color: Highlight;
     }
 
     .tab[aria-current='page'] .tab-label {
@@ -1457,7 +1514,7 @@
     }
   }
 
-  /* ---- Explain a concept --------------------------------------------------------------- */
+  /* ---- Learn ------------------------------------------------------------------------- */
 
   .learn-section {
     display: flex;
@@ -1528,12 +1585,25 @@
     gap: 10px;
   }
 
+  /* The border echoes the state; the chip in the title row and the marks in the toggles carry it. */
   .checklist-item.is-done {
     border-color: var(--success, var(--border-strong));
   }
 
   .checklist-item.is-problem {
     border-color: var(--danger);
+  }
+
+  .checklist-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px 12px;
+  }
+
+  .checklist-head .checklist-title {
+    flex: 1 1 200px;
   }
 
   .checklist-title {

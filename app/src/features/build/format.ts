@@ -5,13 +5,6 @@ import type { KnowledgeApi } from '../../state/knowledge-context';
 import { SLOTS } from '../../state/loadouts';
 import type { Loadout, ProgressState } from '../../state/schema';
 
-/** A checklist item's state, as the config sheet shows it. */
-export const STATUS_TEXT: Record<ProgressState | 'none', string> = {
-  done: 'Done',
-  problem: 'Needs fixing',
-  none: 'Not checked yet',
-};
-
 export function statusOf(progress: Readonly<Record<string, ProgressState>>, key: string): ProgressState | 'none' {
   return progress[key] ?? 'none';
 }

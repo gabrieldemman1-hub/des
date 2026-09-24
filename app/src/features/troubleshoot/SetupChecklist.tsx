@@ -113,7 +113,7 @@ export function SetupSummary({ checks, allowReset = false }: SummaryProps) {
               if (canReset) setConfirming(true);
             }}
           >
-            Clear all marks
+            Clear setup-check marks
           </button>
           <ConfirmDialog
             open={confirming}

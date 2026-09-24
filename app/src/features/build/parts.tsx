@@ -5,6 +5,7 @@ import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { Screen } from '../../components/Screen';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
+import { whySummary } from '../../content/labels';
 import type { GuidanceItem } from './build-plan';
 import type { CheckContextLine } from '../../state/current-values';
 import './build.css';
@@ -43,11 +44,11 @@ export function StatementLine({ statement }: { statement: Statement }) {
 }
 
 /**
- * The full statements (reasoning and sources), one tap away. `showBadge`, `showText` and
- * `showCaveat` false when the lines above (e.g. `StatementLine`) show them.
+ * The full statements (reasoning and sources), one tap away behind "Why and source". `showBadge`,
+ * `showText` and `showCaveat` false when the lines above (e.g. `StatementLine`) show them.
  */
 export function Why({
-  summary = 'Reasons and sources',
+  summary,
   statements,
   showBadge = true,
   showText = true,
@@ -61,7 +62,7 @@ export function Why({
 }) {
   return (
     <details className="why">
-      <summary>{summary}</summary>
+      <summary>{summary ?? whySummary(statements)}</summary>
       <div className="build-statements">
         {statements.map((statement, i) => (
           <StatementView

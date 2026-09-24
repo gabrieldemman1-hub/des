@@ -167,7 +167,7 @@ describe('Troubleshoot by feel: stage 1, setup check', () => {
     const total = checksForProfile(knowledge.foundation, XBOX).length;
     expect(within(stage1()).getByRole('status')).toHaveTextContent(`1 of ${total} done · 1 needs fixing`);
 
-    const reset = within(stage1()).getByRole('button', { name: 'Clear all marks' });
+    const reset = within(stage1()).getByRole('button', { name: 'Clear setup-check marks' });
     await user.click(reset);
     let dialog = screen.getByRole('alertdialog', { name: 'Clear the setup check?' });
     expect(dialog).toHaveTextContent('Build my config');
@@ -231,6 +231,28 @@ describe('Troubleshoot by feel: stage 1, setup check', () => {
     const hint = within(stage1()).getByText(/marks a check to repeat in every Config you use/);
     expect(hint).toHaveClass('hint');
     expect(within(stage1()).getAllByText(/every Config you use/)).toHaveLength(1);
+  });
+
+  it('repeats a marked check’s state as a chip in its title row, with a mark and not the accent fill', async () => {
+    const { user } = renderApp({ path: '/troubleshoot', knowledge: real, storage: storageWith(XBOX) });
+    const item = checkItem(checkById('firmware-current').title);
+    const chip = () => item.querySelector('.checklist-head .status-chip');
+    expect(chip()).toBeNull();
+
+    await user.click(within(item).getByRole('button', { name: 'Done' }));
+    expect(chip()).toHaveTextContent('Done');
+    expect(chip()).toHaveClass('is-done');
+    expect(chip()!.querySelector('svg.status-mark')).not.toBeNull();
+    const done = within(item).getByRole('button', { name: 'Done' });
+    expect(done).toHaveClass('status-toggle', 'is-done');
+    expect(done).not.toHaveClass('primary');
+    // The toggles' accessible names stay the two words: the mark is decoration.
+    expect(within(item).getByRole('group', { name: 'Status' })).toHaveTextContent(/^DoneNeeds fixing$/);
+
+    await user.click(within(item).getByRole('button', { name: 'Needs fixing' }));
+    expect(chip()).toHaveTextContent('Needs fixing');
+    expect(chip()).toHaveClass('is-problem');
+    expect(within(item).getByRole('button', { name: 'Needs fixing' })).toHaveClass('is-problem');
   });
 
   it('gives the Done and Needs fixing buttons the check’s title as their description', () => {
@@ -334,7 +356,7 @@ describe('Troubleshoot by feel: stage 2, symptoms', () => {
     const gap = screen.getByRole('region', { name: 'No sourced answer yet' });
     expect(gap).toHaveTextContent(symptom.mapping.text);
     expect(within(gap).getByText('Gap')).toBeInTheDocument();
-    expect(within(gap).getByRole('link', { name: 'Explain a concept' })).toHaveAttribute('href', '/learn');
+    expect(within(gap).getByRole('link', { name: 'Learn' })).toHaveAttribute('href', '/learn');
     expect(screen.queryByRole('region', { name: 'Try this one change' })).not.toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'What it points to' })).not.toBeInTheDocument();
 

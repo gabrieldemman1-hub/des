@@ -5,7 +5,8 @@ import { AimStyleSummary } from '../../components/AimStyleSummary';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { ChecklistItem } from '../../components/ChecklistItem';
 import { PerConfigHint, PerConfigNote } from '../../components/PerConfigNote';
-import { StatementView } from '../../components/StatementView';
+import { SharedCaveatNote, StatementView } from '../../components/StatementView';
+import { hoistedCaveat } from '../../components/statements';
 import { TermLink } from '../../components/TermLink';
 import {
   AIMING_SOURCE_LABELS,
@@ -84,6 +85,8 @@ export function GameSettingsStep({ plan, count }: StepProps) {
   const noteById = (id: string) => kb.game.notes.find((n) => n.id === id);
   const notes = GAME_NOTE_IDS.flatMap((id) => noteById(id) ?? []);
   const more = moreGameNoteIds(data.profile.platform).flatMap((id) => noteById(id) ?? []);
+  // XIM's list comes with one caveat for every value, so the step says it once above the cards.
+  const caveat = hoistedCaveat(plan.settings.map((s) => s.statement));
 
   return (
     <>
@@ -118,6 +121,7 @@ export function GameSettingsStep({ plan, count }: StepProps) {
           Destiny 2 settings check in Troubleshoot by feel.
         </p>
         <StepCount count={count} />
+        {caveat && <SharedCaveatNote>{caveat}</SharedCaveatNote>}
         {plan.settings.length === 0 ? (
           <p className="empty-state">
             Destiny 2’s required settings are missing from this build of the knowledge base.
@@ -145,7 +149,7 @@ export function GameSettingsStep({ plan, count }: StepProps) {
                       expected={setting.value}
                     />
                   )}
-                  <StatementView statement={setting.statement} />
+                  <StatementView statement={setting.statement} showCaveat={setting.statement.caveat !== caveat} />
                 </ChecklistItem>
               );
             })}
@@ -380,7 +384,7 @@ export function AimSettingsStep({ plan, count }: StepProps) {
       </StepSection>
 
       <StepSection title="Work through these in Manager">
-        <p className="hint">Tick each one once you’ve dealt with it in this loadout’s Config.</p>
+        <p className="hint">Tick each one once you’ve dealt with it in this loadout’s Config in Manager.</p>
         <StepCount count={count} />
         <ol className="checklist build-checklist">
           {plan.sensitivity && (
@@ -504,7 +508,7 @@ export function SheetStep({ plan }: { plan: BuildPlan }) {
       </StepSection>
 
       <StepSection title="Loading this loadout’s Config">
-        <p className="hint">Each loadout has its own Config. Read how Configs are loaded and switched:</p>
+        <p className="hint">Each loadout has its own Config in Manager. Read how Configs are loaded and switched:</p>
         <ul className="related-links">
           {['config', 'load-config', 'navigate-mode'].map((termId) => (
             <li key={termId}>

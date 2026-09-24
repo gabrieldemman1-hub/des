@@ -203,9 +203,10 @@ details.card > .statement-list {
   font-size: 0.9rem;
 }
 
+/* Back and Next both name their step, so they share the row equally. */
 .build-pager {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
   padding-top: 8px;
   border-top: 1px solid var(--border);
@@ -224,12 +225,6 @@ details.card > .statement-list {
   row-gap: 4px;
 }
 
-.build-reset {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-}
 
 /* ---- Config sheet ------------------------------------------------------------------- */
 
@@ -366,42 +361,6 @@ textarea.sheet-text {
 /* A little tighter than elsewhere, so the pair shares the badge's line on a 390px phone. */
 .sheet-toggles .button {
   padding-inline: 10px;
-}
-
-.sheet-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-/* A shape as well as a colour: filled for done, a bar for needs fixing, a ring for not yet. */
-.sheet-status-mark {
-  flex: none;
-  width: 10px;
-  height: 10px;
-  border: 2px solid currentColor;
-  border-radius: 999px;
-}
-
-.sheet-status.is-done {
-  color: var(--success);
-}
-
-.sheet-status.is-done .sheet-status-mark {
-  background: currentColor;
-}
-
-.sheet-status.is-problem {
-  color: var(--danger);
-}
-
-.sheet-status.is-problem .sheet-status-mark {
-  height: 4px;
-  border-radius: 2px;
-  background: currentColor;
 }
 
 .sheet-caveat {

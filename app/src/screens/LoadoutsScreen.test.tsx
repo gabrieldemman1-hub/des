@@ -252,7 +252,7 @@ describe('Loadouts', () => {
 describe('Loadout config links', () => {
   it('links each loadout to its config sheet (the main action), build and tune pages', () => {
     renderApp({ path: '/loadouts', storage: storageWith(sampleData({ loadouts: [sampleLoadout()] })) });
-    const links = within(screen.getByRole('group', { name: 'Pulse + shotgun: config' })).getAllByRole('link');
+    const links = within(screen.getByRole('group', { name: 'Pulse + shotgun: sheet, build and tune' })).getAllByRole('link');
     expect(links.map((l) => [l.textContent, l.getAttribute('href')])).toEqual([
       ['Config sheet', '/loadouts/l1/sheet'],
       ['Build', '/build/l1'],

@@ -1988,7 +1988,7 @@
       ],
       "category": "config-switching",
       "location": "Manager's main screen: press the vertical \"...\" to load, create or manage Configs. Press the pencil icon to edit the current one.",
-      "summary": "One complete setup on the MATRIX for one game: output, bindings and aim settings. Dialed builds one Config per loadout.",
+      "summary": "One complete setup on the MATRIX for one game: output, bindings and aim settings. Dialed makes one config sheet per loadout, for one Config each.",
       "definition": {
         "text": "A Config is built for a game and platform, with the inputs and outputs you choose. It holds your aim settings and your mappings (bindings). A few settings are global instead of per-Config.",
         "confidence": "official",

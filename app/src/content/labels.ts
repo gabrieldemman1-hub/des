@@ -31,6 +31,15 @@ export function reasonedLabel(statement: Pick<Statement, 'citations'>): string {
     : 'Worked out by Dialed, not stated by any source.';
 }
 
+/**
+ * The one label for a statement's reasons and citations, one tap away: "Why and source", with
+ * a count when the disclosure holds several statements. Checks use "Why it matters" and "How to
+ * fix it" instead.
+ */
+export function whySummary(statements: readonly unknown[]): string {
+  return statements.length > 1 ? `Why and source (${statements.length})` : 'Why and source';
+}
+
 /** The source tiers, as the Sources page names them next to the prose that explains them. */
 export const SOURCE_TIER_LABELS = {
   official: 'Official',

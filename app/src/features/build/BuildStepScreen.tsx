@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router';
-import { ConfirmDialog } from '../../components/ConfirmDialog';
+import { ClearAimMarks } from '../../components/ClearAimMarks';
 import { Screen } from '../../components/Screen';
-import { useData } from '../../state/data-context';
-import { aimProgressPrefix, progressSummary } from '../../state/progress';
+import { progressSummary } from '../../state/progress';
 import { useEffectiveProgress } from '../../state/use-progress';
 import {
   BUILD_STEPS,
@@ -69,8 +67,9 @@ function StepIndicator({
 }
 
 /**
- * Back and Next. Once at the end of the step, and on the setup checks again (smaller) under the
- * progress count at the top, so that long step can be left without scrolling to its end.
+ * Back and Next, each naming the step it leads to. Once at the end of the step, and on the setup
+ * checks again (smaller) under the progress count at the top, so that long step can be left
+ * without scrolling to its end.
  */
 function StepPager({ plan, index, at = 'end' }: { plan: BuildPlan; index: number; at?: 'top' | 'end' }) {
   const prev = BUILD_STEPS[index - 1];
@@ -84,7 +83,7 @@ function StepPager({ plan, index, at = 'end' }: { plan: BuildPlan; index: number
     >
       {prev ? (
         <Link className={`button secondary${size}`} to={buildPath(id, prev.id)}>
-          Back
+          Back: {prev.title}
         </Link>
       ) : (
         <Link className={`button secondary${size}`} to="/build">
@@ -104,48 +103,6 @@ function StepPager({ plan, index, at = 'end' }: { plan: BuildPlan; index: number
   );
 }
 
-/**
- * Clears this loadout's aim marks, which Build my config and Tune my config share. The
- * Destiny 2 and setup ticks, shared by every loadout, stay.
- */
-function ResetLoadoutSteps({ plan }: { plan: BuildPlan }) {
-  const { clearProgress } = useData();
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
-  const name = plan.loadout.name;
-
-  return (
-    <div className="build-reset">
-      <button type="button" className="button secondary small" onClick={() => setOpen(true)}>
-        Reset this loadout’s steps
-      </button>
-      <p className="hint" role="status">
-        {message}
-      </p>
-      <ConfirmDialog
-        open={open}
-        title={`Reset the steps for “${name}”?`}
-        confirmLabel="Reset"
-        danger
-        onCancel={() => setOpen(false)}
-        onConfirm={() => {
-          clearProgress(aimProgressPrefix(plan.loadout.id));
-          setOpen(false);
-          setMessage(`Cleared the aim settings marks for “${name}”.`);
-        }}
-      >
-        <p>
-          This clears the marks on the aim settings for this loadout. Build my config and Tune my config share these
-          marks, so the changes you marked Done in Tune my config for this loadout are cleared too.
-        </p>
-        <p>
-          The Destiny 2 settings and MATRIX setup are shared with your other loadouts and with Troubleshoot by feel, so
-          they stay as they are.
-        </p>
-      </ConfirmDialog>
-    </div>
-  );
-}
 
 /** One step of the walkthrough, at /build/<loadoutId>/<stepId>. */
 export function BuildStepScreen() {
@@ -190,7 +147,7 @@ export function BuildStepScreen() {
       {step.id === 'aim' && <AimSettingsStep plan={plan} count={counts.aim} />}
       {step.id === 'sheet' && <SheetStep plan={plan} />}
       <StepPager plan={plan} index={index} />
-      <ResetLoadoutSteps plan={plan} />
+      <ClearAimMarks loadout={plan.loadout} />
     </Screen>
   );
 }

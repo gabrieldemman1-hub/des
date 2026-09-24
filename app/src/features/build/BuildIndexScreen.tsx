@@ -86,8 +86,8 @@ export function BuildIndexScreen() {
         {loadouts.length === 0 ? (
           <EmptyState title="No loadouts yet" level={3}>
             <p>
-              Each loadout gets its own Config, tuned toward its main weapon’s aim style, so the build starts from a
-              loadout. Add the weapons you run and mark the main one.
+              Every loadout gets its own Config in MATRIX Manager, tuned toward its main weapon’s aim style, so the
+              build starts from a loadout. Add the weapons you run and mark the main one.
             </p>
             <p>
               <Link className="button primary" to="/loadouts/new">
@@ -98,8 +98,8 @@ export function BuildIndexScreen() {
         ) : (
           <>
             <p className="hint">
-              Each loadout gets its own config sheet. The Destiny 2 settings and the MATRIX setup steps are shared by
-              every loadout, so what you tick there counts for all of them.
+              One config sheet per loadout. The Destiny 2 settings and the MATRIX setup steps are shared by every
+              loadout, so what you tick there counts for all of them.
             </p>
             <ul className="flow-cards" aria-label="Your loadouts">
               {loadouts.map((loadout) => (

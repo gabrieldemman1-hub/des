@@ -1,7 +1,7 @@
 /**
  * The config sheet as plain text, for "Copy as text". Every recommendation keeps its
- * confidence label and caveat, and every reasoned one says it was worked out; the reasons and
- * sources stay in the app.
+ * confidence label and caveat, and a legend at the top says once what Reasoned means; the
+ * reasons and sources stay in the app.
  */
 import type { Statement } from '../../../../knowledge/index';
 import { CONFIDENCE_INFO, LEVER_DIRECTION_LABELS, reasonedLabel } from '../../content/labels';
@@ -12,10 +12,16 @@ import {
   smoothingNote,
   type CheckContextLine,
 } from '../../state/current-values';
-import { PER_CONFIG_CHECK_IDS, PER_CONFIG_CHECK_NOTE, progressSummary, type ProgressMap } from '../../state/progress';
+import {
+  PER_CONFIG_CHECK_IDS,
+  PER_CONFIG_CHECK_NOTE,
+  STATUS_TEXT,
+  progressSummary,
+  type ProgressMap,
+} from '../../state/progress';
 import type { CurrentConfig, InGameSettings, Profile } from '../../state/schema';
 import { planProgress, type BuildPlan, type GuidanceItem, type GuidanceValue } from './build-plan';
-import { STATUS_TEXT, aimStyleName, statusOf, type WeaponLine } from './format';
+import { aimStyleName, statusOf, type WeaponLine } from './format';
 
 type ContextProfile = Pick<Profile, 'mouseDpi' | 'pollingRate'>;
 
@@ -41,12 +47,34 @@ export function sharedCaveat(statements: readonly Statement[]): string | undefin
   return caveat && rest.every((s) => s.caveat === caveat) ? caveat : undefined;
 }
 
-/** The lines under a statement: "worked out" for a reasoned one, then its caveat. */
+const PER_CONFIG_TAG = 'Per Config';
+
+/** The line under a statement: its caveat (the legend at the top says what Reasoned means). */
 function noteLines(statement: Statement, indent: string, { caveat = true } = {}): string[] {
-  const lines: string[] = [];
-  if (statement.confidence === 'reasoned') lines.push(`${indent}${reasonedLabel(statement)}`);
-  if (caveat && statement.caveat) lines.push(`${indent}Caveat: ${statement.caveat}`);
-  return lines;
+  return caveat && statement.caveat ? [`${indent}Caveat: ${statement.caveat}`] : [];
+}
+
+/** Every statement the sheet prints, in order, so the legend can say once what its labels mean. */
+function allStatements(plan: BuildPlan): Statement[] {
+  const guidance = (item: GuidanceItem | undefined) => (item ? [...item.lead, ...item.more] : []);
+  return [
+    ...(plan.main ? [plan.main.mapping] : []),
+    ...(plan.style ? [plan.style.favours] : []),
+    ...plan.settings.map((s) => s.statement),
+    ...guidance(plan.sensitivity),
+    ...guidance(plan.smoothing),
+    ...plan.levers.map((l) => l.lever.statement),
+    ...plan.mechanics.flatMap(guidance),
+  ];
+}
+
+/**
+ * What [Reasoned] means, once, for the statements that carry it: worked out from XIM's
+ * definitions, or (with nothing cited) Dialed's own reading. Each wording that occurs, once.
+ */
+function reasonedLegend(statements: readonly Statement[]): string[] {
+  const labels = new Set(statements.filter((s) => s.confidence === 'reasoned').map(reasonedLabel));
+  return [...labels].map((label) => `[${CONFIDENCE_INFO.reasoned.label}] means: ${label}`);
 }
 
 function statementLines(statement: Statement, indent: string): string[] {
@@ -84,7 +112,8 @@ export function sheetText(input: SheetTextInput): string {
     lines.push('What the settings should favour:');
     lines.push(...statementLines(style.favours, '  '));
   }
-  lines.push(`Progress: ${progressSummary(planProgress(plan, progress), 'items')}`);
+  lines.push(`Progress: ${progressSummary(planProgress(plan, progress))}`);
+  lines.push(...reasonedLegend(allStatements(plan)));
 
   // Destiny 2 settings
   lines.push('', 'DESTINY 2 SETTINGS');
@@ -101,11 +130,14 @@ export function sheetText(input: SheetTextInput): string {
 
   // MATRIX setup
   lines.push('', 'MATRIX SETUP');
+  if (plan.checks.some(({ check }) => PER_CONFIG_CHECK_IDS.has(check.id))) {
+    lines.push(`${PER_CONFIG_TAG}: ${PER_CONFIG_CHECK_NOTE}`);
+  }
   for (const { key, check } of plan.checks) {
     const parts = [`- ${check.title} ${label(check.why)}`, status(key)];
+    if (PER_CONFIG_CHECK_IDS.has(check.id)) parts.push(PER_CONFIG_TAG);
     for (const line of checkContext(check.id, profile, config)) parts.push(contextText(line));
     lines.push(parts.join(' · '));
-    if (PER_CONFIG_CHECK_IDS.has(check.id)) lines.push(`  ${PER_CONFIG_CHECK_NOTE}`);
   }
   if (plan.checks.length === 0) lines.push('- None in this build of the knowledge base.');
 

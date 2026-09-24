@@ -18,7 +18,7 @@ function matches(term: GlossaryTerm, query: string): boolean {
   return [term.name, ...term.aliases, term.summary].some((text) => normalize(text).includes(query));
 }
 
-/** Flow D: every MATRIX setting in plain words, plus the aim styles behind weapon-aware advice. */
+/** Flow D, "Explain a concept": every MATRIX setting in plain words, plus the aim styles behind weapon-aware advice. */
 export function LearnScreen() {
   const { kb } = useKnowledge();
   const searchId = useId();
@@ -33,7 +33,7 @@ export function LearnScreen() {
 
   return (
     <Screen
-      title="Explain a concept"
+      title="Learn"
       intro={
         <p className="lede">
           What each XIM MATRIX setting actually does, in plain words, with XIM’s own definition and where every claim

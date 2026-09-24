@@ -28,7 +28,8 @@ export function TuneIndexScreen() {
       {loadouts.length === 0 ? (
         <EmptyState title="No loadouts yet">
           <p>
-            Each loadout gets its own Config, so Dialed tunes one loadout at a time. Add the loadout you want to tune.
+            Every loadout has its own Config in MATRIX Manager, so Dialed tunes one loadout at a time. Add the loadout
+            you want to tune.
           </p>
           <p>
             <Link className="button primary" to="/loadouts/new">
@@ -41,7 +42,7 @@ export function TuneIndexScreen() {
           <h2 className="section-title" id="tune-pick">
             Pick a loadout
           </h2>
-          <p className="hint">Each loadout has its own Config. Pick the one you want to tune.</p>
+          <p className="hint">Every loadout has its own Config in MATRIX Manager. Pick the one you want to tune.</p>
           <ul className="flow-cards" aria-labelledby="tune-pick">
             {loadouts.map((loadout) => (
               <LoadoutCard key={loadout.id} loadout={loadout} to={tunePath(loadout.id)} />

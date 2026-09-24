@@ -80,7 +80,7 @@ export function TermScreen() {
   return (
     <Screen
       title={term.name}
-      back={{ to: '/learn', label: 'Explain a concept' }}
+      back={{ to: '/learn', label: 'Learn' }}
       intro={
         <>
           <p className="lede">{term.summary}</p>

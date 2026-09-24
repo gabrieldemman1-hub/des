@@ -20,9 +20,7 @@ export interface Flow {
   question: string;
   /** One line for the Home card. */
   summary: string;
-  /** Built and usable. Every flow is; an old /flows/<id> address redirects to `to`. */
-  available: boolean;
-  /** Where the Home card leads. */
+  /** Where the Home card leads (an old /flows/<id> address redirects here too). */
   to: string;
   sections: FlowSection[];
 }
@@ -30,7 +28,6 @@ export interface Flow {
 export const FLOWS: readonly Flow[] = [
   {
     id: 'build',
-    available: true,
     to: '/build',
     code: 'Flow A',
     title: 'Build my config',
@@ -62,7 +59,6 @@ export const FLOWS: readonly Flow[] = [
   },
   {
     id: 'tune',
-    available: true,
     to: '/tune',
     code: 'Flow B',
     title: 'Tune my config',
@@ -72,14 +68,13 @@ export const FLOWS: readonly Flow[] = [
       {
         paragraphs: [
           'You enter the settings you have now. Dialed compares them with the evidence and your profile, flags what’s off (and what’s fine), and proposes targeted changes.',
-          'Changes come in impact order, one at a time, so you can tell what each one did. Your current config is the starting point: Dialed says what to change, not to start over.',
+          'Changes come in impact order, one at a time, so you can tell what each one did. Your current settings are the starting point: Dialed says what to change, not to start over.',
         ],
       },
     ],
   },
   {
     id: 'troubleshoot',
-    available: true,
     to: '/troubleshoot',
     code: 'Flow C',
     title: 'Troubleshoot by feel',
@@ -97,7 +92,7 @@ export const FLOWS: readonly Flow[] = [
         bullets: [
           'Firmware and the Smart Translator are current.',
           'Destiny 2’s required in-game settings are exact.',
-          'The DPI in your Config matches your mouse.',
+          'The DPI in your MATRIX Config matches your mouse.',
           'Your mouse actually reaches its polling rate.',
           'Nothing is changing real-world cm/360 before you judge sensitivity (a non-linear curve, quantization, or an Elite 2 stick curve on Xbox).',
           'Light notifications are switched on, and what they say.',
@@ -115,7 +110,6 @@ export const FLOWS: readonly Flow[] = [
   },
   {
     id: 'learn',
-    available: true,
     to: '/learn',
     code: 'Flow D',
     title: 'Explain a concept',

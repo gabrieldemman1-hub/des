@@ -24,7 +24,7 @@ function ManagedLoadout({ loadout }: { loadout: Loadout }) {
         </Link>
       }
     >
-      <div className="loadout-card-actions" role="group" aria-label={`${loadout.name}: config`}>
+      <div className="loadout-card-actions" role="group" aria-label={`${loadout.name}: sheet, build and tune`}>
         <Link className="button primary block" to={sheetPath(loadout.id)}>
           Config sheet
         </Link>
@@ -52,8 +52,8 @@ export function LoadoutsScreen() {
       title="Loadouts"
       intro={
         <p className="lede">
-          The weapon combinations you actually run. Each loadout gets its own Config, tuned toward its main weapon’s aim
-          style.
+          The weapon combinations you actually run. Each loadout gets its own Config in MATRIX Manager, tuned toward its
+          main weapon’s aim style.
         </p>
       }
     >

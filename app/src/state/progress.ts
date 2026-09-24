@@ -13,6 +13,13 @@ import type { CurrentConfig, InGameSettings, Profile, ProgressState } from './sc
 
 export type ProgressMap = Readonly<Record<string, ProgressState>>;
 
+/** A checklist item's state, as the toggles, the status chips and the config sheet's text name it. */
+export const STATUS_TEXT: Record<ProgressState | 'none', string> = {
+  done: 'Done',
+  problem: 'Needs fixing',
+  none: 'Not checked yet',
+};
+
 /**
  * The setup check that covers Destiny 2's required in-game settings. That is layer 1, which
  * Build my config covers setting by setting, so its state follows those settings unless the

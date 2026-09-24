@@ -298,12 +298,12 @@ describe('Tune my config: what to change', () => {
     // The first change isn't hidden behind "Why".
     const first = section('Change this first');
     expect(within(first).getByRole('heading', { level: 3, name: 'Look Sensitivity' })).toBeInTheDocument();
-    expect(within(first).queryByText('Why, and the source')).not.toBeInTheDocument();
+    expect(within(first).queryByText('Why and source')).not.toBeInTheDocument();
     expect(within(first).getByRole('link', { name: 'Update your settings' })).toHaveAttribute('href', '/tune/l1/settings');
 
     const fix = section('Fix these Destiny 2 settings');
     expect(within(fix).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual(['Axial Deadzone']);
-    expect(within(fix).getByText('Why, and the source').closest('details')).not.toHaveAttribute('open');
+    expect(within(fix).getByText('Why and source').closest('details')).not.toHaveAttribute('open');
     expect(fix).toHaveTextContent(
       'Already the same as XIM’s list: Movement Controls, Button Layout, ADS Sensitivity Modifier, Radial Deadzone.',
     );
@@ -351,10 +351,15 @@ describe('Tune my config: what to change', () => {
     expect(within(first()).getByRole('heading', { level: 3, name: 'Precision' })).toBeInTheDocument();
     expect(Object.keys(stored(storage).progress)).toEqual([progressKey.aim.sensitivity('l1')]);
 
-    // Sensitivity is now in the list, marked done, and can be undone.
+    // Sensitivity is now in the list, marked done (a chip in its head, the pressed toggle at its
+    // end, neither in the accent fill), and can be undone.
     const aim = section('Aim settings for tracking');
     const done = within(aim).getByRole('button', { name: 'Sensitivity: done' });
     expect(done).toHaveAttribute('aria-pressed', 'true');
+    expect(done).not.toHaveClass('primary');
+    const card = done.closest('li')!;
+    expect(within(card).getByText('Done', { selector: '.status-chip' })).toBeInTheDocument();
+    expect(card.querySelector('.finding-head .tag')).toBeNull();
     await user.click(done);
     expect(within(first()).getByRole('heading', { level: 3, name: 'Sensitivity' })).toBeInTheDocument();
     expect(stored(storage).progress).toEqual({});
@@ -487,7 +492,7 @@ describe('Tune my config: marking changes done', () => {
     await waitFor(() => expect(within(first).getByRole('heading', { level: 2 })).toHaveFocus());
   });
 
-  it('asks before starting the aim changes again, and clears the marks Build my config shares', async () => {
+  it('asks before clearing the aim marks, which Build my config shares, from the end of the page', async () => {
     const { user, storage } = render(
       '/tune/l1/changes',
       storageWith({
@@ -501,18 +506,32 @@ describe('Tune my config: marking changes done', () => {
         },
       }),
     );
-    await user.click(screen.getByRole('button', { name: 'Start the aim changes again' }));
-    const dialog = screen.getByRole('alertdialog', { name: 'Start the aim changes again?' });
+    const clear = screen.getByRole('button', { name: 'Clear aim marks' });
+    // After the last section and its links, not beside "Done: show the next change".
+    const last = section('One change at a time');
+    const links = screen.getByRole('list', { name: 'More for this loadout' });
+    expect(last.compareDocumentPosition(clear) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(links.compareDocumentPosition(clear) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(section('Change this first')).queryByRole('button', { name: 'Clear aim marks' })).toBeNull();
+
+    await user.click(clear);
+    const dialog = screen.getByRole('alertdialog', { name: 'Clear the aim marks for “Pulse + shotgun”?' });
     expect(dialog).toHaveTextContent('Build my config and Tune my config share these marks');
     await user.click(within(dialog).getByRole('button', { name: 'Cancel' }));
     expect(stored(storage).progress[progressKey.aim.sensitivity('l1')]).toBe('done');
 
-    await user.click(screen.getByRole('button', { name: 'Start the aim changes again' }));
-    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Start again' }));
+    await user.click(clear);
+    await user.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Clear marks' }));
     expect(stored(storage).progress).toEqual({
       [progressKey.aim.sensitivity('l2')]: 'done',
       'check:firmware-current': 'done',
     });
+    expect(within(clear.closest('.clear-marks')!).getByRole('status')).toHaveTextContent(
+      'Cleared the aim marks for “Pulse + shotgun”.',
+    );
+    // Nothing left to clear for this loadout: the button stays (focus returns to it) but is inert.
+    expect(clear).toHaveFocus();
+    expect(clear).toHaveAttribute('aria-disabled', 'true');
   });
 });
 
@@ -539,7 +558,7 @@ describe('Tune my config: cards', () => {
     for (const note of notes) expect(note).toBeVisible();
     // The full statement stays one tap away, and opens with why it counts as worked out; the
     // caveat above isn't repeated inside.
-    expect(within(easing).getByText('Why, and the source').closest('details')).not.toHaveAttribute('open');
+    expect(within(easing).getByText('Why and source').closest('details')).not.toHaveAttribute('open');
     const workedOut = within(easing).getByText(/^Worked out from XIM’s definitions, not stated by a source\. /);
     expect(workedOut).not.toBeVisible();
     expect(within(easing).getAllByText(/Caveat:/)).toHaveLength(1);

@@ -2,17 +2,17 @@ import { useEffect, useId, useRef, useState, type ReactNode, type Ref } from 're
 import { Link } from 'react-router';
 import type { Statement } from '../../../../knowledge/index';
 import { AimStyleSummary } from '../../components/AimStyleSummary';
+import { ClearAimMarks } from '../../components/ClearAimMarks';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
-import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { EmptyState } from '../../components/EmptyState';
 import { SharedCaveatNote, StatementView } from '../../components/StatementView';
 import { hoistedCaveat } from '../../components/statements';
+import { StatusChip, StatusMark } from '../../components/StatusToggles';
 import { TermLink } from '../../components/TermLink';
-import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS } from '../../content/labels';
+import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, whySummary } from '../../content/labels';
 import { useData } from '../../state/data-context';
 import { leversForProfile } from '../../state/guidance';
 import { useKnowledge } from '../../state/knowledge-context';
-import { aimProgressPrefix } from '../../state/progress';
 import type { Loadout } from '../../state/schema';
 import { sheetLinkState } from '../build/sheet-navigation';
 import { sheetPath } from '../build/use-build-plan';
@@ -84,7 +84,7 @@ function FindingStatements({ finding, showCaveat = true }: { finding: Finding; s
 }
 
 /**
- * What a card shows of its statement before "Why, and the source": its caveat, like the config
+ * What a card shows of its statement before "Why and source": its caveat, like the config
  * sheet, unless a note above the cards (`hoisted`) already has it.
  */
 function StatementNotes({ statement, hoisted }: { statement: Statement; hoisted?: string }) {
@@ -132,7 +132,7 @@ function FindingCard({ finding, first = false, done = false, hoisted, actions }:
               {LEVER_DIRECTION_LABELS[finding.direction]}
             </span>
           )}
-          {done && <span className="tag">Done</span>}
+          {done && <StatusChip state="done" />}
         </span>
       </div>
       <FindingValues finding={finding} />
@@ -143,7 +143,7 @@ function FindingCard({ finding, first = false, done = false, hoisted, actions }:
         <>
           <StatementNotes statement={finding.statement} hoisted={hoisted} />
           <details className="why">
-            <summary>Why, and the source</summary>
+            <summary>{whySummary([finding.statement, ...finding.more])}</summary>
             <FindingStatements finding={finding} showCaveat={false} />
           </details>
         </>
@@ -191,36 +191,6 @@ function NothingEntered({ settingsPath }: { settingsPath: string }) {
   );
 }
 
-/** Clears the loadout's aim marks, after a confirmation that says Build my config shares them. */
-function StartAgain({ loadout }: { loadout: Loadout }) {
-  const { clearProgress } = useData();
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <p>
-        <button type="button" className="button secondary small" onClick={() => setOpen(true)}>
-          Start the aim changes again
-        </button>
-      </p>
-      <ConfirmDialog
-        open={open}
-        title="Start the aim changes again?"
-        confirmLabel="Start again"
-        danger
-        onCancel={() => setOpen(false)}
-        onConfirm={() => {
-          clearProgress(aimProgressPrefix(loadout.id));
-          setOpen(false);
-        }}
-      >
-        <p>
-          This clears the aim changes you’ve marked Done for “{loadout.name}”. Build my config and Tune my config share
-          these marks, so the marks in Build my config’s Aim settings step for this loadout are cleared too.
-        </p>
-      </ConfirmDialog>
-    </>
-  );
-}
 
 /** "What to change": the findings for this loadout, the first one up front, then by group. */
 export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; settingsPath: string }) {
@@ -261,7 +231,6 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
   const configDpi = config?.matrix.configDpi ?? null;
   const mouseDpi = data.profile.mouseDpi;
   const dpiMatches = configDpi !== null && configDpi === mouseDpi;
-  const anyDone = findings.some(isDone);
 
   const markDone = (finding: Finding & { progressKey: string }, done: boolean) =>
     setProgress(finding.progressKey, done ? 'done' : null);
@@ -288,11 +257,12 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
             <div className="checklist-actions">
               <button
                 type="button"
-                className={`button small ${done ? 'primary' : 'secondary'}`}
+                className="button small secondary status-toggle is-done"
                 aria-pressed={done}
                 aria-label={`${finding.title}: done`}
                 onClick={() => markDone(finding, !done)}
               >
+                <StatusMark state={done ? 'done' : 'none'} />
                 Done
               </button>
             </div>
@@ -337,7 +307,6 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
         ) : (
           <p>Dialed has no other change to suggest from what you’ve entered.</p>
         )}
-        {anyDone && <StartAgain loadout={loadout} />}
       </Section>
 
       <Section title={groups.fix.length > 0 ? 'Fix these Destiny 2 settings' : 'Destiny 2 settings'}>
@@ -377,7 +346,7 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
                   </dl>
                   <StatementNotes statement={setting.statement} hoisted={fixCaveat} />
                   <details className="why">
-                    <summary>Why, and the source</summary>
+                    <summary>Why and source</summary>
                     <StatementView statement={setting.statement} showBadge={false} showCaveat={false} />
                   </details>
                 </li>
@@ -389,10 +358,11 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
 
       <Section title="Setup">
         {groups.setup.length > 0 && <ul className="finding-list">{groups.setup.map((finding) => cardFor(finding))}</ul>}
-        {dpiMatches && <p>The DPI in your Config matches the mouse DPI in your profile.</p>}
+        {dpiMatches && <p>The DPI in your MATRIX Config matches the mouse DPI in your profile.</p>}
         {configDpi !== null && mouseDpi === null && (
           <p>
-            Add your mouse DPI to your <Link to="/profile">profile</Link> so Dialed can compare it with your Config’s.
+            Add your mouse DPI to your <Link to="/profile">profile</Link> so Dialed can compare it with the DPI in your
+            MATRIX Config.
           </p>
         )}
         {groups.setup.length === 0 && (configDpi === null || mouseDpi !== null) && !dpiMatches && (
@@ -441,6 +411,9 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
           <Link to="/troubleshoot">Troubleshoot by feel</Link>
         </li>
       </ul>
+
+      {/* After everything, away from "Done: show the next change": the aim marks, cleared with a confirmation. */}
+      <ClearAimMarks loadout={loadout} />
     </>
   );
 }

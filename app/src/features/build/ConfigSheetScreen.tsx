@@ -6,7 +6,8 @@ import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { PerConfigHint, PerConfigNote } from '../../components/PerConfigNote';
 import { Screen } from '../../components/Screen';
 import { StatementView } from '../../components/StatementView';
-import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS } from '../../content/labels';
+import { StatusChip, StatusToggles } from '../../components/StatusToggles';
+import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, whySummary } from '../../content/labels';
 import { checkContext, currentAimValue, currentRequiredValue, smoothingNote } from '../../state/current-values';
 import { useData } from '../../state/data-context';
 import { useKnowledge } from '../../state/knowledge-context';
@@ -14,50 +15,12 @@ import { derivedProblemNote, progressSummary } from '../../state/progress';
 import type { ProgressState } from '../../state/schema';
 import { useDerivedProblemKeys, useEffectiveProgress } from '../../state/use-progress';
 import { planProgress, type BuildPlan, type GuidanceItem } from './build-plan';
-import { STATUS_TEXT, statusOf, weaponLines } from './format';
+import { statusOf, weaponLines } from './format';
 import { CheckContext, CurrentValue, Label, LoadoutNotFound, SmoothingNote } from './parts';
 import { sheetBack } from './sheet-navigation';
 import { sharedCaveat, sheetText } from './sheet-text';
 import { buildPath, tunePath, tuneSettingsPath, useBuildPlan } from './use-build-plan';
 import './build.css';
-
-/** A state worked out from the player's values (see `derivedProblemKeys`), so it can't be changed here. */
-function StatusChip({ state }: { state: ProgressState | 'none' }) {
-  return (
-    <span className={`sheet-status is-${state}`}>
-      <span className="sheet-status-mark" aria-hidden="true" />
-      {STATUS_TEXT[state]}
-    </span>
-  );
-}
-
-const TOGGLE_STATES: readonly ProgressState[] = ['done', 'problem'];
-
-/**
- * The same "Done" and "Needs fixing" pair as every checklist (see ChecklistItem), bound to the
- * row's progress key, which Build my config, Tune my config and Troubleshoot by feel share.
- * Tapping the active one again clears it.
- */
-function StatusToggles({ itemKey, state, nameId }: { itemKey: string; state: ProgressState | 'none'; nameId: string }) {
-  const { data, setProgress } = useData();
-  const saved = data.progress[itemKey] ?? null;
-  return (
-    <div className="checklist-actions sheet-toggles" role="group" aria-label="Status">
-      {TOGGLE_STATES.map((s) => (
-        <button
-          key={s}
-          type="button"
-          className={`button small ${state === s ? 'primary' : 'secondary'}`}
-          aria-pressed={state === s}
-          aria-describedby={nameId}
-          onClick={() => setProgress(itemKey, saved === s ? null : s)}
-        >
-          {STATUS_TEXT[s]}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 /** "What is this?": the setting's explanation in Explain a concept, as a chip beside the name. */
 function ExplainLink({ termId, name }: { termId: string; name: string }) {
@@ -74,8 +37,9 @@ function ExplainLink({ termId, name }: { termId: string; name: string }) {
 
 /**
  * One line of the sheet, the same shape in every section: the setting's name and its value,
- * then its confidence and state, then details. The state is the player's to change, unless
- * `derived` (worked out from their values, so shown, with a note saying why).
+ * then its confidence and state, then details. The state is the player's to change (the shared
+ * Done / Needs fixing pair), unless `derived` (worked out from their values, so shown as a chip,
+ * with a note saying why).
  */
 function SheetRow({
   name,
@@ -119,7 +83,16 @@ function SheetRow({
       </div>
       <div className="sheet-meta">
         {confidence !== undefined && <ConfidenceBadge level={confidence} />}
-        {derived ? <StatusChip state={state} /> : <StatusToggles itemKey={itemKey} state={state} nameId={nameId} />}
+        {derived ? (
+          <StatusChip state={state} />
+        ) : (
+          <StatusToggles
+            itemKey={itemKey}
+            state={state === 'none' ? null : state}
+            describedBy={nameId}
+            className="sheet-toggles"
+          />
+        )}
       </div>
       {children}
     </li>
@@ -140,12 +113,12 @@ function DerivedNote({ saved, differs }: { saved: ProgressState | undefined; dif
 }
 
 /**
- * The full statements, one tap away. `showBadge` false when the row already shows the badge,
- * `showCaveat` false when the row or the section shows the caveat; `badge` puts one in the
- * summary line itself.
+ * The full statements, one tap away, behind "Why and source" (with a count when there are
+ * several). `showBadge` false when the row already shows the badge, `showCaveat` false when the
+ * row or the section shows the caveat; `badge` puts one in the summary line itself.
  */
 function Why({
-  summary = 'Reasons and sources',
+  summary,
   badge,
   statements,
   showBadge = true,
@@ -162,7 +135,7 @@ function Why({
       <summary>
         {/* The badge inside the text, so it wraps like its last word rather than beside a column of text. */}
         <span>
-          {summary}
+          {summary ?? whySummary(statements)}
           {badge && (
             <>
               {' '}
@@ -322,7 +295,7 @@ function Sheet({ plan }: { plan: BuildPlan }) {
             <p className="hint">The main weapon isn’t in the knowledge base any more, so its aim style is unknown.</p>
           )}
           <p className="sheet-progress">
-            <span className="build-count">{progressSummary(planProgress(plan, progress), 'items')}</span>
+            <span className="build-count">{progressSummary(planProgress(plan, progress))}</span>
             <Link to={buildPath(loadout.id)}>Continue building</Link>
           </p>
         </>
@@ -381,7 +354,7 @@ function Sheet({ plan }: { plan: BuildPlan }) {
                     <DerivedNote saved={saved[setting.key]} differs={`your value differs from ${setting.value}`} />
                   )}
                   {!shared && setting.statement.caveat && <Caveat text={setting.statement.caveat} />}
-                  <Why summary="Why and source" statements={[setting.statement]} showBadge={false} showCaveat={false} />
+                  <Why statements={[setting.statement]} showBadge={false} showCaveat={false} />
                 </SheetRow>
               );
             })}
@@ -517,7 +490,7 @@ function Sheet({ plan }: { plan: BuildPlan }) {
         </Link>
         <ul className="related-links" aria-label="More for this loadout">
           <li>
-            <Link to={tunePath(loadout.id)}>Tune this config</Link>
+            <Link to={tunePath(loadout.id)}>Tune this loadout</Link>
           </li>
           <li>
             <Link to="/troubleshoot">Troubleshoot by feel</Link>
