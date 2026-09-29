@@ -5,38 +5,58 @@
    order, so a feature modifier such as .tag-direction always wins over .tag. Keep new
    feature-level rules out of this layer. */
 @layer base {
+  /* Calibration: a night-slate instrument panel where the numbers are the brightest thing on
+     screen, one amber signal marks the next action or where you are, and green and red mean only
+     Done and Needs fixing. Every text pair here is at least 4.5:1 on the surfaces it sits on. */
   :root {
     color-scheme: dark;
-    --bg: #0d1117;
-    --surface: #161b22;
-    --surface-2: #1f2630;
-    --border: #30363d;
-    --border-strong: #4a5360;
+    --bg: #0c1220;
+    --surface: #131b2b;
+    --surface-2: #1a2438;
+    --surface-3: #223049;
+    --border: #26334b;
+    --border-strong: #3a4a66;
     /* Edges of form controls: at least 3:1 against the page and the control's own background. */
-    --input-border: #656d76;
-    --text: #e6edf3;
-    --text-muted: #9ea8b3;
-    --accent: #ffa630;
-    --accent-text: #ffb85c;
-    --on-accent: #1d1305;
-    --focus: #79c0ff;
-    --danger: #ff7b72;
-    --success: #56d364;
-    --warning-bg: #2d2413;
-    --warning-border: #9e6a03;
-    --backdrop: rgb(1 4 9 / 0.72);
+    --input-border: #5f6f8c;
+    --text: #e9eef7;
+    --text-muted: #a2aec3;
+    /* Small-caps labels on --bg and --surface only (5:1 there, not enough on --surface-2). */
+    --text-faint: #7d8aa2;
+    /* The one signal: the next action, and where you are. */
+    --accent: #ffb547;
+    --accent-text: #ffc46e;
+    --on-accent: #1e1304;
+    /* Target-lock brackets: at least 3:1 against every surface. */
+    --lock: #ffb547;
+    /* Data ink: icons, diagrams, links' focus. */
+    --data: #7ccbff;
+    --focus: #7ccbff;
+    --danger: #ff7a70;
+    --success: #4ad68c;
+    /* The unfilled ticks of a progress ruler. */
+    --tick-empty: #2c3a55;
+    --warning-bg: #2a2314;
+    --warning-border: #a07820;
+    --backdrop: rgb(4 8 16 / 0.72);
     /* Behind the iOS status bar in the installed app: its text is always white (black-translucent). */
-    --status-scrim: #0d1117;
+    --status-scrim: #0c1220;
 
-    --c-official: #56d364;
-    --c-expert: #79c0ff;
-    --c-contested: #ffa657;
-    --c-reasoned: #d2a8ff;
-    --c-gap: #9ea8b3;
+    --c-official: #4ad68c;
+    --c-expert: #7ccbff;
+    --c-contested: #ff9f5a;
+    --c-reasoned: #c3a6ff;
+    --c-gap: #a2aec3;
     --c-publisher: #ff9bce;
 
-    --radius: 14px;
-    --radius-sm: 10px;
+    /* Three faces with three jobs: titles and small-caps labels, reading, values. Bundled
+       (fonts.css), so they work offline; the fallbacks keep the same jobs. */
+    --f-display: 'Dialed Display', 'Arial Narrow', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --f-body: 'Dialed Text', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --f-num: 'Dialed Numbers', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+    --radius: 16px;
+    --radius-sm: 11px;
+    --radius-lg: 22px;
     --tabbar-height: 60px;
     /* The tab bar's full height. TabBar measures it (large text can wrap its labels); this is the
        starting value. */
@@ -44,14 +64,12 @@
     --gutter: 16px;
     --content-width: 480px;
 
-    font-family:
-      system-ui,
-      -apple-system,
-      'Segoe UI',
-      Roboto,
-      'Helvetica Neue',
-      Arial,
-      sans-serif;
+    --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --dur-fast: 120ms;
+    --dur: 220ms;
+    --shadow-float: 0 18px 40px -18px rgb(0 0 0 / 0.7);
+
+    font-family: var(--f-body);
     font-size: 100%;
     line-height: 1.5;
     -webkit-text-size-adjust: 100%;
@@ -61,30 +79,36 @@
   @media (prefers-color-scheme: light) {
     :root {
       color-scheme: light;
-      --bg: #f6f8fa;
+      --bg: #eef2f7;
       --surface: #ffffff;
-      --surface-2: #eef1f4;
-      --border: #d0d7de;
-      --border-strong: #8c959f;
-      --input-border: #818b98;
-      --text: #1f2328;
-      --text-muted: #59636e;
-      --accent: #b35900;
-      --accent-text: #9a4d00;
-      --on-accent: #ffffff;
-      --focus: #0969da;
-      --danger: #cf222e;
-      --success: #1a7f37;
-      --warning-bg: #fff8c5;
-      --warning-border: #d4a72c;
-      --backdrop: rgb(31 35 40 / 0.5);
+      --surface-2: #f4f7fb;
+      --surface-3: #e4eaf3;
+      --border: #d5dde8;
+      --border-strong: #aebbcd;
+      --input-border: #7a879b;
+      --text: #0f1626;
+      --text-muted: #4a5870;
+      --text-faint: #5e6b82;
+      --accent: #ffb547;
+      --accent-text: #9a5800;
+      --on-accent: #1e1304;
+      --lock: #c77700;
+      --data: #0a74b0;
+      --focus: #0a74b0;
+      --danger: #c8322b;
+      --success: #127a45;
+      --tick-empty: #d3dbe7;
+      --warning-bg: #fff6d9;
+      --warning-border: #c99a1e;
+      --backdrop: rgb(15 22 38 / 0.45);
+      --shadow-float: 0 18px 40px -20px rgb(15 22 38 / 0.35);
 
       /* Dark enough for 4.5:1 as badge text on their own tint over white, --bg and --surface-2. */
-      --c-official: #116329;
-      --c-expert: #0550ae;
-      --c-contested: #953800;
-      --c-reasoned: #6639ba;
-      --c-gap: #505963;
+      --c-official: #127a45;
+      --c-expert: #0a5fa0;
+      --c-contested: #a64a00;
+      --c-reasoned: #6a44c2;
+      --c-gap: #4f5b6e;
       --c-publisher: #99286e;
     }
   }
@@ -125,32 +149,64 @@
   h1,
   h2,
   h3 {
-    line-height: 1.25;
     margin: 0;
-  }
-
-  h1 {
-    font-size: 1.75rem;
-    letter-spacing: -0.01em;
+    font-family: var(--f-display);
+    line-height: 1.15;
+    text-wrap: balance;
   }
 
   /* One clear step per level: screen title, section title, card title (h3, .checklist-title,
-     .sheet-name, .flow-card-title), body. */
+     .sheet-name, .flow-card-title), body. Titles are the display face, narrowed. */
+  h1 {
+    font-size: 1.95rem;
+    font-weight: 750;
+    font-stretch: 85%;
+    line-height: 1.08;
+    letter-spacing: -0.005em;
+  }
+
   h2 {
-    font-size: 1.35rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-stretch: 90%;
   }
 
   h3 {
-    font-size: 1.1rem;
+    font-size: 1.12rem;
+    font-weight: 700;
+    font-stretch: 92%;
+  }
+
+  /* Small-caps label: what a group or a value is, stepped back behind it. */
+  .micro {
+    font-family: var(--f-display);
+    font-size: 0.72rem;
+    font-weight: 650;
+    font-stretch: 87.5%;
+    letter-spacing: 0.14em;
+    line-height: 1.3;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  /* A value: the numeric face, figures lined up. */
+  .num {
+    font-family: var(--f-num);
+    font-stretch: 87.5%;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
   }
 
   p {
     margin: 0;
   }
 
+  /* Links read as text with an amber underline: amber is the signal, not the colour of words. */
   a {
-    color: var(--accent-text);
-    text-underline-offset: 0.15em;
+    color: var(--text);
+    text-decoration-color: var(--accent-text);
+    text-decoration-thickness: 0.09em;
+    text-underline-offset: 0.18em;
   }
 
   button,
