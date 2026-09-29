@@ -4,6 +4,7 @@
  * the loadout's settings are entered.
  */
 import { buildPlan, planProgress, type BuildPlan, type ProgressCount } from '../features/build/build-plan';
+import { customSyncKeys, withCustomSync } from '../features/build/custom-sync';
 import { hasConfigValues } from '../state/current-values';
 import { useData } from '../state/data-context';
 import { useKnowledge, type KnowledgeApi } from '../state/knowledge-context';
@@ -34,7 +35,8 @@ export function useLoadoutSummary(loadout: Loadout): LoadoutSummary {
   return {
     main: plan.main,
     style: plan.style,
-    sheet: planProgress(plan, progress),
+    // Counted as the sheet counts it, with a Custom-sync Config's rows at the player's own mark.
+    sheet: planProgress(plan, withCustomSync(progress, data.progress, customSyncKeys(plan, config))),
     settings: hasConfigValues(config) ? 'config' : hasInGameValues(data.inGame) ? 'in-game' : 'none',
     updatedAt: config?.updatedAt ?? null,
   };
