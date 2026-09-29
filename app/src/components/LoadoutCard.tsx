@@ -5,7 +5,8 @@ import { useKnowledge } from '../state/knowledge-context';
 import type { Loadout } from '../state/schema';
 import { ConfidenceBadge } from './ConfidenceBadge';
 import { ChevronIcon } from './icons';
-import { settingsStatus, sheetStatus, useLoadoutSummary, weaponsLine } from './loadout-summary';
+import { settingsStatus, useLoadoutSummary, weaponsLine } from './loadout-summary';
+import { TickRuler } from './TickRuler';
 
 interface Props {
   loadout: Loadout;
@@ -22,7 +23,7 @@ interface Props {
 /**
  * One loadout, the same way in every list: its weapons on one line, its main weapon's aim style
  * with the confidence of that mapping, and where the player is with it (the config sheet's
- * progress and whether its settings are entered). The why behind the aim style stays on the
+ * progress as a tick ruler, and whether its settings are entered). The why behind the aim style stays on the
  * sheet and in the build's aim step.
  */
 export function LoadoutCard({ loadout, to, level = 2, aside, children }: Props) {
@@ -42,15 +43,8 @@ export function LoadoutCard({ loadout, to, level = 2, aside, children }: Props) 
       ) : (
         <span className="hint">The main weapon isn’t in the knowledge base any more, so its aim style is unknown.</span>
       )}
-      <span className="loadout-card-status">
-        {summary.sheet.total > 0 && (
-          <>
-            <span className={summary.sheet.problem > 0 ? 'is-problem' : undefined}>{sheetStatus(summary.sheet)}</span>
-            {' · '}
-          </>
-        )}
-        {settingsStatus(summary)}
-      </span>
+      {summary.sheet.total > 0 && <TickRuler count={summary.sheet} prefix="Sheet" />}
+      <span className="loadout-card-status">{settingsStatus(summary)}</span>
     </>
   );
 

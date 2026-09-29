@@ -279,8 +279,14 @@
     min-height: 44px;
     margin: -8px 0 -4px -4px;
     padding: 0 8px 0 4px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
     font-weight: 600;
     text-decoration: none;
+  }
+
+  .back-link:active {
+    color: var(--text);
   }
 
   .lede {
@@ -288,9 +294,15 @@
     font-size: 1.02rem;
   }
 
+  /* What kind of screen this is, under its title: a small-caps label. */
   .eyebrow {
-    color: var(--text-muted);
-    font-style: italic;
+    font-family: var(--f-display);
+    font-size: 0.75rem;
+    font-weight: 650;
+    font-stretch: 87.5%;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
   }
 
   .section-title {
@@ -318,21 +330,24 @@
     font-weight: 600;
   }
 
+  /* A tonal chip. The transparent border becomes a real one in forced-colours mode. */
   .tag {
     display: inline-block;
-    padding: 1px 8px;
-    border: 1px solid var(--border-strong);
+    padding: 2px 9px;
+    border: 1px solid transparent;
     border-radius: 999px;
+    background: var(--surface-3);
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    letter-spacing: 0.02em;
-    vertical-align: 0.1em;
+    line-height: 1.45;
+    vertical-align: 0.05em;
   }
 
+  /* Surfaces are tonal steps, not outlines: a card is a lighter panel on the page. */
   .card {
     background: var(--surface);
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     border-radius: var(--radius);
     padding: 16px;
   }
@@ -345,7 +360,7 @@
     bottom: 0;
     left: 0;
     z-index: 10;
-    background: color-mix(in srgb, var(--surface) 97%, transparent);
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
     border-top: 1px solid var(--border);
     padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     /* Unprefixed only: the build adds -webkit- for older Safari. A hand-written pair was minified
@@ -356,13 +371,13 @@
   /* Without the blur, page text would read through the bar, so it goes opaque instead. */
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .tabbar {
-      background: var(--surface);
+      background: var(--bg);
     }
   }
 
   @media (prefers-reduced-transparency: reduce) {
     .tabbar {
-      background: var(--surface);
+      background: var(--bg);
     }
   }
 
@@ -381,11 +396,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
+    gap: 4px;
     min-height: var(--tabbar-height);
     min-width: 44px;
     padding: 6px 0;
-    color: var(--text-muted);
+    color: var(--text-faint);
     font-size: 0.75rem;
     font-weight: 600;
     text-decoration: none;
@@ -403,11 +418,12 @@
   }
 
   .tab-icon {
+    position: relative;
     display: grid;
     place-items: center;
-    width: 56px;
+    width: 40px;
     height: 30px;
-    border-radius: 999px;
+    border-radius: 8px;
   }
 
   .tab:active .tab-icon {
@@ -418,10 +434,10 @@
     color: var(--text);
   }
 
-  /* The current tab gets a filled pill as well as a colour change. */
+  /* The current tab: target-lock brackets around its icon (drawn with .lock's rule below), and
+     its label brightens. */
   .tab[aria-current='page'] .tab-icon {
-    background: var(--accent);
-    color: var(--on-accent);
+    --lock-arm: 7px;
   }
 
   .tab:focus-visible {
@@ -437,7 +453,6 @@
     margin-bottom: 16px;
     padding: 10px 6px 10px 14px;
     border: 1px solid var(--warning-border);
-    border-left-width: 4px;
     border-radius: var(--radius-sm);
     background: var(--warning-bg);
     font-size: 0.92rem;
@@ -465,10 +480,9 @@
   .flash {
     margin-bottom: 16px;
     padding: 10px 14px;
-    border: 1px solid var(--success);
-    border-left-width: 4px;
+    border: 1px solid transparent;
     border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--success) 10%, var(--surface));
+    background: color-mix(in srgb, var(--success) 16%, var(--surface));
     font-weight: 600;
   }
 
@@ -486,10 +500,10 @@
     justify-content: space-between;
     gap: 8px 12px;
     padding: 12px 14px;
-    border: 1px solid var(--border-strong);
+    border: 1px solid transparent;
     border-radius: var(--radius);
-    background: var(--surface-2);
-    box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+    background: var(--surface-3);
+    box-shadow: var(--shadow-float);
   }
 
   .toast-actions {
@@ -508,7 +522,7 @@
     padding: 10px 20px;
     border: 1px solid transparent;
     border-radius: 12px;
-    font-weight: 650;
+    font-weight: 700;
     line-height: 1.2;
     text-align: center;
     text-decoration: none;
@@ -521,9 +535,9 @@
     color: var(--on-accent);
   }
 
+  /* Tonal: a step lighter than the surface it sits on. */
   .button.secondary {
-    background: var(--surface-2);
-    border-color: var(--border);
+    background: var(--surface-3);
     color: var(--text);
   }
 
@@ -541,7 +555,7 @@
 
   .button.secondary:active,
   .button.danger:active {
-    background: color-mix(in srgb, var(--surface-2), var(--text) 8%);
+    background: color-mix(in srgb, var(--surface-3), var(--text) 10%);
   }
 
   .button.small {
@@ -562,13 +576,12 @@
   }
 
   .status-toggle[aria-pressed='true'] {
-    border-color: var(--tone);
-    background: color-mix(in srgb, var(--tone) 18%, var(--surface));
+    background: color-mix(in srgb, var(--tone) 20%, var(--surface));
     color: var(--tone);
   }
 
   .status-toggle[aria-pressed='true']:active {
-    background: color-mix(in srgb, var(--tone) 28%, var(--surface));
+    background: color-mix(in srgb, var(--tone) 30%, var(--surface));
   }
 
   /* The state as a mark and a word, where it can't be changed: the same shape as the toggles. */
@@ -578,7 +591,7 @@
     gap: 6px;
     color: var(--text-muted);
     font-size: 0.85rem;
-    font-weight: 700;
+    font-weight: 650;
   }
 
   .status-chip.is-done {
@@ -627,6 +640,197 @@
     outline-offset: 2px;
   }
 
+  /* ---- Instrument parts: target lock, tick ruler, readout, slide-up sheet --------------- */
+
+  /* Target lock: corner brackets, as on a scope, around the one thing that is "here" or "first":
+     the current tab, the current build step, the change to make first. Drawn with gradients,
+     so the element keeps its own background and border. */
+  .lock {
+    position: relative;
+  }
+
+  .lock::before,
+  .tab[aria-current='page'] .tab-icon::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    pointer-events: none;
+    --c: var(--lock);
+    --l: var(--lock-arm, 10px);
+    --w: 2px;
+    background:
+      linear-gradient(var(--c), var(--c)) top left / var(--l) var(--w),
+      linear-gradient(var(--c), var(--c)) top left / var(--w) var(--l),
+      linear-gradient(var(--c), var(--c)) top right / var(--l) var(--w),
+      linear-gradient(var(--c), var(--c)) top right / var(--w) var(--l),
+      linear-gradient(var(--c), var(--c)) bottom left / var(--l) var(--w),
+      linear-gradient(var(--c), var(--c)) bottom left / var(--w) var(--l),
+      linear-gradient(var(--c), var(--c)) bottom right / var(--l) var(--w),
+      linear-gradient(var(--c), var(--c)) bottom right / var(--w) var(--l);
+    background-repeat: no-repeat;
+  }
+
+  /* Tight around the tab icon, so the brackets clear its label. */
+  .tab[aria-current='page'] .tab-icon::before {
+    inset: 0 -2px;
+  }
+
+  /* A card that is locked sits a little inside its column, so the brackets stay on screen. */
+  .card.lock {
+    margin-inline: 5px;
+  }
+
+  .ruler-block {
+    display: grid;
+    gap: 6px;
+  }
+
+  .ruler {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 3px;
+    height: 10px;
+  }
+
+  .ruler > span {
+    border-radius: 2px;
+    background: var(--tick-empty);
+  }
+
+  .ruler > .is-done {
+    background: var(--success);
+  }
+
+  .ruler > .is-problem {
+    background: var(--danger);
+  }
+
+  .ruler-summary {
+    color: var(--text-muted);
+    font-family: var(--f-num);
+    font-size: 0.72rem;
+    font-stretch: 87.5%;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  .readout {
+    display: grid;
+    gap: 2px;
+  }
+
+  .readout .micro {
+    font-size: 0.66rem;
+  }
+
+  .readout-value {
+    font-size: 1.8rem;
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+  }
+
+  .readout-value.is-muted {
+    color: var(--text-muted);
+  }
+
+  /* Yours → target, side by side. */
+  .readouts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 6px 14px;
+  }
+
+  .readouts-arrow {
+    flex: none;
+    padding-bottom: 6px;
+    color: var(--text-faint);
+  }
+
+  .sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: var(--backdrop);
+  }
+
+  .sheet {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: calc(var(--content-width) + 2 * var(--gutter));
+    max-height: min(88dvh, 100% - env(safe-area-inset-top) - 24px);
+    border: 1px solid transparent;
+    border-bottom: 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    background: var(--surface);
+    box-shadow: var(--shadow-float);
+  }
+
+  .sheet-grip {
+    flex: none;
+    width: 40px;
+    height: 4px;
+    margin: 8px auto 0;
+    border-radius: 2px;
+    background: var(--border-strong);
+  }
+
+  .sheet-head {
+    display: flex;
+    flex: none;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px var(--gutter) 10px;
+  }
+
+  .sheet-heading {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .sheet-close {
+    flex: none;
+  }
+
+  .sheet-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px var(--gutter) calc(env(safe-area-inset-bottom) + 20px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet {
+      animation: sheet-in var(--dur) var(--ease-out);
+    }
+
+    .sheet-backdrop {
+      animation: fade-in var(--dur) ease;
+    }
+  }
+
+  @keyframes sheet-in {
+    from {
+      transform: translateY(24px);
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+
   /* ---- Home ------------------------------------------------------------------------- */
 
   .install-card {
@@ -667,7 +871,7 @@
 
   .home-loadout {
     overflow: hidden;
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     border-radius: var(--radius);
     background: var(--surface);
   }
@@ -709,8 +913,10 @@
   }
 
   .home-loadout-name {
-    font-size: 1.1rem;
+    font-family: var(--f-display);
+    font-size: 1.15rem;
     font-weight: 700;
+    font-stretch: 90%;
     overflow-wrap: anywhere;
   }
 
@@ -728,7 +934,7 @@
     gap: 12px;
     min-height: 44px;
     padding: 16px;
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     border-radius: var(--radius);
     background: var(--surface);
     color: var(--text);
@@ -742,7 +948,7 @@
 
   .flow-card > svg {
     flex: none;
-    color: var(--text-muted);
+    color: var(--text-faint);
   }
 
   .flow-card-text {
@@ -753,8 +959,10 @@
   }
 
   .flow-card-title {
-    font-size: 1.1rem;
+    font-family: var(--f-display);
+    font-size: 1.12rem;
     font-weight: 700;
+    font-stretch: 92%;
   }
 
   .flow-card-summary {
@@ -764,8 +972,8 @@
 
   /* Where the player is in a flow, from what is saved (never a constant label). */
   .flow-card-status {
-    color: var(--accent-text);
-    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-size: 0.82rem;
     font-weight: 600;
   }
 
@@ -841,7 +1049,7 @@
   .field > label,
   .field > legend,
   .field-label {
-    font-weight: 650;
+    font-weight: 700;
   }
 
   .slot-field > label {
@@ -893,7 +1101,9 @@
     padding: 10px 12px;
     border: 1px dashed var(--border-strong);
     border-radius: var(--radius-sm);
-    font-weight: 600;
+    font-family: var(--f-num);
+    font-stretch: 87.5%;
+    font-weight: 500;
   }
 
   .save-status {
@@ -983,13 +1193,14 @@
   }
 
   .segment input:active + span {
-    background: var(--surface-2);
+    background: var(--surface-3);
   }
 
+  /* The chosen option is inverted (text colour as the fill): a choice, not the amber signal. */
   .segment input:checked + span {
-    background: var(--accent);
-    color: var(--on-accent);
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+    background: var(--text);
+    color: var(--bg);
+    font-weight: 700;
   }
 
   .segment input:focus-visible + span {
@@ -1009,19 +1220,19 @@
     gap: 12px;
     min-height: 56px;
     padding: 8px 14px;
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     border-radius: var(--radius-sm);
     background: var(--surface);
     cursor: pointer;
   }
 
   .choice:has(input:checked) {
-    border-color: var(--accent);
-    box-shadow: inset 0 0 0 1px var(--accent);
+    background: var(--surface-2);
+    box-shadow: inset 0 0 0 2px var(--text);
   }
 
   .choice:not(.is-disabled):active {
-    background: var(--surface-2);
+    background: var(--surface-3);
   }
 
   .choice input {
@@ -1029,7 +1240,7 @@
     width: 22px;
     height: 22px;
     margin: 0;
-    accent-color: var(--accent);
+    accent-color: var(--text);
   }
 
   .choice.is-disabled {
@@ -1043,7 +1254,7 @@
   }
 
   .choice-title {
-    font-weight: 650;
+    font-weight: 700;
   }
 
   .choice-sub {
@@ -1135,7 +1346,7 @@
   }
 
   .loadout-card-status {
-    color: var(--accent-text);
+    color: var(--text-muted);
     font-size: 0.85rem;
     font-weight: 600;
   }
@@ -1202,9 +1413,21 @@
     font-weight: 400;
   }
 
+  /* The main weapon: an amber diamond before the word, the signal for "this one leads". */
   .tag-main {
-    border-color: var(--accent);
-    color: var(--accent-text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text);
+  }
+
+  .tag-main::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    transform: rotate(45deg);
   }
 
   .main-preview {
@@ -1236,12 +1459,13 @@
     font-size: 0.85rem;
   }
 
+  /* A disclosure row reads as text with a chevron: amber is kept for the next action. */
   .why summary {
     display: flex;
     align-items: center;
     gap: 10px;
     min-height: 44px;
-    color: var(--accent-text);
+    color: var(--text);
     font-weight: 600;
     cursor: pointer;
     list-style: none;
@@ -1258,7 +1482,7 @@
     width: 7px;
     height: 7px;
     margin: 0 2px;
-    border: solid currentColor;
+    border: solid var(--text-muted);
     border-width: 0 2px 2px 0;
     transform: rotate(-45deg);
   }
@@ -1287,9 +1511,9 @@
      box, not the left rule that marks a quotation. */
   .shared-caveat {
     padding: 10px 14px;
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     border-radius: var(--radius-sm);
-    background: var(--surface);
+    background: var(--surface-2);
     color: var(--text-muted);
     font-size: 0.92rem;
   }
@@ -1308,7 +1532,7 @@
     gap: 12px;
     margin: 0;
     padding: 0 0 0 12px;
-    border-left: 3px solid var(--border-strong);
+    border-left: 2px solid var(--border-strong);
     list-style: none;
   }
 
@@ -1398,18 +1622,20 @@
     gap: 4px 10px;
   }
 
+  /* One chip style for every level: a shape and a word on a tint of the level's colour. The
+     shape differs per level, so the badge never relies on colour alone. */
   .badge {
     --tone: var(--c-gap);
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 2px 10px;
-    border: 1px solid var(--tone);
+    padding: 2px 9px;
+    border: 1px solid transparent;
     border-radius: 999px;
     background: color-mix(in srgb, var(--tone) 14%, transparent);
     color: var(--tone);
-    font-size: 0.8rem;
-    font-weight: 700;
+    font-size: 0.78rem;
+    font-weight: 650;
     line-height: 1.5;
     white-space: nowrap;
   }
@@ -1418,16 +1644,8 @@
     flex: none;
   }
 
-  /* Official is the default, so it is a dot and a word; the pill marks the other levels. */
   .badge-official {
     --tone: var(--c-official);
-    padding: 2px 0;
-    border-color: transparent;
-    background: transparent;
-    color: var(--text-muted);
-  }
-  .badge-official .badge-shape {
-    color: var(--tone);
   }
   .badge-expert {
     --tone: var(--c-expert);
@@ -1483,7 +1701,7 @@
 
   .legend li {
     padding: 12px 14px;
-    border: 1px solid var(--border);
+    border: 1px solid transparent;
     border-radius: var(--radius-sm);
     background: var(--surface);
   }
@@ -1516,10 +1734,10 @@
     flex-direction: column;
     gap: 12px;
     padding: 20px;
-    border: 1px solid var(--border-strong);
-    border-radius: 18px;
-    background: var(--surface);
-    box-shadow: 0 12px 40px rgb(0 0 0 / 0.45);
+    border: 1px solid transparent;
+    border-radius: var(--radius-lg);
+    background: var(--surface-2);
+    box-shadow: var(--shadow-float);
   }
 
   .dialog-body {
@@ -1542,10 +1760,14 @@
   @media (prefers-reduced-motion: no-preference) {
     .button,
     .flow-card,
-    .tab-icon {
+    .tab,
+    .tab-icon,
+    .segment span,
+    .choice {
       transition:
-        background-color 120ms ease,
-        color 120ms ease;
+        background-color var(--dur-fast) ease,
+        color var(--dur-fast) ease,
+        box-shadow var(--dur-fast) ease;
     }
   }
 
@@ -1573,6 +1795,25 @@
     /* An opaque bar, so page text doesn't show through it. */
     .tabbar {
       background: Canvas;
+    }
+
+    /* Tonal panels and chips lose their fills here, so their (otherwise transparent) borders
+       draw the edges instead. */
+    .card,
+    .tag,
+    .badge,
+    .button,
+    .choice,
+    .flow-card,
+    .home-loadout,
+    .toast,
+    .dialog,
+    .sheet,
+    .legend li,
+    .shared-caveat,
+    .flash,
+    .related-links a {
+      border-color: CanvasText;
     }
   }
 
@@ -1626,9 +1867,15 @@
     align-items: center;
     min-height: 44px;
     padding: 0 14px;
-    border: 1px solid var(--border-strong);
+    border: 1px solid transparent;
     border-radius: 999px;
+    background: var(--surface-3);
+    font-weight: 600;
     text-decoration: none;
+  }
+
+  .related-links a:active {
+    background: color-mix(in srgb, var(--surface-3), var(--text) 10%);
   }
 
   /* ---- Checklists (Build my config, Troubleshoot by feel) ------------------------------- */
@@ -1647,15 +1894,6 @@
     gap: 10px;
   }
 
-  /* The border echoes the state; the chip in the title row and the marks in the toggles carry it. */
-  .checklist-item.is-done {
-    border-color: var(--success, var(--border-strong));
-  }
-
-  .checklist-item.is-problem {
-    border-color: var(--danger);
-  }
-
   .checklist-head {
     display: flex;
     flex-wrap: wrap;
@@ -1670,8 +1908,11 @@
 
   .checklist-title {
     margin: 0;
-    font-size: 1.1rem;
+    font-family: var(--f-display);
+    font-size: 1.12rem;
     font-weight: 700;
+    font-stretch: 92%;
+    line-height: 1.2;
   }
 
   .checklist-body {
