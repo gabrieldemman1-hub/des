@@ -8,6 +8,7 @@ import { PerConfigHint, PerConfigNote } from '../../components/PerConfigNote';
 import { SharedCaveatNote, StatementView } from '../../components/StatementView';
 import { hoistedCaveat } from '../../components/statements';
 import { TermLink } from '../../components/TermLink';
+import { TickRuler } from '../../components/TickRuler';
 import {
   AIMING_SOURCE_LABELS,
   FEEL_LABELS,
@@ -22,6 +23,7 @@ import { useKnowledge } from '../../state/knowledge-context';
 import { derivedProblemNote, progressSummary } from '../../state/progress';
 import type { Profile } from '../../state/schema';
 import { useDerivedProblemKeys, useEffectiveProgress } from '../../state/use-progress';
+import { CUSTOM_SYNC_STATEMENT } from '../tune/analysis';
 import {
   BUILD_STEPS,
   CHECKLIST_STEPS,
@@ -33,6 +35,7 @@ import {
   type GuidanceItem,
   type ProgressCount,
 } from './build-plan';
+import { customSyncKeys, useLoadoutProgress } from './custom-sync';
 import { CheckContext, CurrentValue, GuidanceStatements, Label, SmoothingNote, StatementLine, Why } from './parts';
 import { sheetLinkState } from './sheet-navigation';
 import { buildPath, sheetPath, tuneSettingsPath } from './use-build-plan';
@@ -57,8 +60,9 @@ function StepSection({ title, children }: { title: string; children: ReactNode }
   );
 }
 
+/** The step's progress: a ruler with one tick per item, and the counts under it. */
 function StepCount({ count }: { count: ProgressCount }) {
-  return <p className="build-count">{progressSummary(count)}</p>;
+  return <TickRuler count={count} className="build-count" />;
 }
 
 // ---------------------------------------------------------------------------------------
@@ -88,6 +92,8 @@ export function GameSettingsStep({ plan, count }: StepProps) {
   const more = moreGameNoteIds(data.profile.platform).flatMap((id) => noteById(id) ?? []);
   // XIM's list comes with one caveat for every value, so the step says it once above the cards.
   const caveat = hoistedCaveat(plan.settings.map((s) => s.statement));
+  // A Custom-sync Config takes two of these from the game, so they aren't compared with XIM's list.
+  const custom = customSyncKeys(plan, data.configs[plan.loadout.id]);
 
   return (
     <>
@@ -130,6 +136,19 @@ export function GameSettingsStep({ plan, count }: StepProps) {
         ) : (
           <ol className="checklist build-checklist">
             {plan.settings.map((setting) => {
+              if (custom.has(setting.key)) {
+                return (
+                  <ChecklistItem
+                    key={setting.key}
+                    itemKey={setting.key}
+                    title={`${setting.name}: match your Config`}
+                    actionsPlacement="header"
+                    ownMarkOnly
+                  >
+                    <StatementView statement={CUSTOM_SYNC_STATEMENT} />
+                  </ChecklistItem>
+                );
+              }
               const current = currentRequiredValue(data.inGame, setting.name, setting.value);
               return (
                 <ChecklistItem
@@ -467,7 +486,7 @@ export function AimSettingsStep({ plan, count }: StepProps) {
 
 export function SheetStep({ plan }: { plan: BuildPlan }) {
   const { kb } = useKnowledge();
-  const progress = useEffectiveProgress();
+  const progress = useLoadoutProgress(plan);
   const counts = stepProgress(plan, progress);
   const id = plan.loadout.id;
 

@@ -25,7 +25,7 @@ function ManagedLoadout({ loadout }: { loadout: Loadout }) {
       }
     >
       <div className="loadout-card-actions" role="group" aria-label={`${loadout.name}: sheet, build and tune`}>
-        <Link className="button primary block" to={sheetPath(loadout.id)}>
+        <Link className="button secondary block" to={sheetPath(loadout.id)}>
           Config sheet
         </Link>
         <div className="loadout-card-row">

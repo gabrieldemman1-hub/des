@@ -1,5 +1,5 @@
 /**
- * The four flows: the line each Home card shows, and the fuller account (CONCEPT.md §5 wording)
+ * The four flows: the words each Home tile shows, and the fuller account (CONCEPT.md §5 wording)
  * that a flow's index screen keeps a tap away under "How this works".
  */
 export type FlowId = 'build' | 'tune' | 'troubleshoot' | 'learn';
@@ -18,7 +18,7 @@ export interface Flow {
   title: string;
   /** The question the flow answers, in the user's words. */
   question: string;
-  /** One line for the Home card. */
+  /** A few words for the Home tile, under the title. */
   summary: string;
   /** Where the Home card leads (an old /flows/<id> address redirects here too). */
   to: string;
@@ -32,7 +32,7 @@ export const FLOWS: readonly Flow[] = [
     code: 'Flow A',
     title: 'Build my config',
     question: '"Build my config"',
-    summary: 'A guided, step-by-step setup in dependency order, with the reasoning and the source at every step.',
+    summary: 'Step by step, in dependency order',
     sections: [
       {
         paragraphs: [
@@ -63,7 +63,7 @@ export const FLOWS: readonly Flow[] = [
     code: 'Flow B',
     title: 'Tune my config',
     question: '"What should I change?"',
-    summary: 'Enter your current settings and get targeted changes, ordered by impact, one at a time.',
+    summary: 'Changes by impact, one at a time',
     sections: [
       {
         paragraphs: [
@@ -79,7 +79,7 @@ export const FLOWS: readonly Flow[] = [
     code: 'Flow C',
     title: 'Troubleshoot by feel',
     question: '"My aim feels…"',
-    summary: 'Rule out setup mistakes first, then go from what you feel to where to look.',
+    summary: 'Setup first, then what you feel',
     sections: [
       {
         paragraphs: [
@@ -114,7 +114,7 @@ export const FLOWS: readonly Flow[] = [
     code: 'Flow D',
     title: 'Explain a concept',
     question: '"What does this actually do?"',
-    summary: 'Plain-language, sourced explanations of key MATRIX settings and terms, and why they matter.',
+    summary: 'Settings and terms, explained',
     sections: [
       {
         paragraphs: ['A learn and glossary mode for the MATRIX’s own vocabulary. Each term shows:'],

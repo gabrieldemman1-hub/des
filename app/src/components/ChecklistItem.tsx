@@ -20,6 +20,11 @@ interface Props {
    * and `derivedProblemNote`). The Destiny 2 settings check explains itself.
    */
   derivedNote?: string;
+  /**
+   * Show only the player's own mark, never a state worked out from their values: a Destiny 2
+   * setting that a Custom-sync Config takes from the game (see `customSyncKeys`).
+   */
+  ownMarkOnly?: boolean;
 }
 
 /** Why the Destiny 2 settings check shows a state the player didn't mark. */
@@ -35,11 +40,18 @@ const DERIVED_NOTE: Record<ProgressState, string> = {
  * then marks the item itself. With the pair at the end of a long item, the title row repeats the
  * state as a chip, so it can be read before the buttons scroll into view.
  */
-export function ChecklistItem({ itemKey, title, children, actionsPlacement = 'end', derivedNote }: Props) {
+export function ChecklistItem({
+  itemKey,
+  title,
+  children,
+  actionsPlacement = 'end',
+  derivedNote,
+  ownMarkOnly = false,
+}: Props) {
   const { data } = useData();
   const progress = useEffectiveProgress();
   const saved = data.progress[itemKey] ?? null;
-  const state = progress[itemKey] ?? null;
+  const state = ownMarkOnly ? saved : (progress[itemKey] ?? null);
   const titleId = useId();
 
   const actions = <StatusToggles itemKey={itemKey} state={state} describedBy={titleId} />;

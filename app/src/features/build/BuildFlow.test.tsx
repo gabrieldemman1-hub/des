@@ -178,6 +178,40 @@ describe('Build my config: the steps', () => {
     expect(screen.getByRole('listitem', { name: 'Look Sensitivity: 20' })).toHaveTextContent('Your current value: 18');
   });
 
+  it('step 1 leaves the two Custom-sync values to the player when this loadout’s Config uses Custom sync', async () => {
+    const data = withProfile({});
+    data.inGame = { ...emptyInGame(), lookSensitivity: 18 };
+    const config = emptyConfig();
+    config.matrix.syncMethod = 'custom';
+    data.configs = { l1: config };
+    const { user, unmount } = render('/build/l1/destiny-2', data);
+    // Not compared with XIM's list: no "Differs", no Needs fixing worked out, just the player's mark.
+    const look = screen.getByRole('listitem', { name: 'Look Sensitivity: match your Config' });
+    expect(look).not.toHaveTextContent('Differs');
+    expect(within(look).getByRole('button', { name: 'Needs fixing' })).toHaveAttribute('aria-pressed', 'false');
+    expect(look).toHaveTextContent(/doesn't compare Look Sensitivity or ADS Sensitivity Modifier with XIM's list/);
+    expect(screen.getByRole('listitem', { name: 'ADS Sensitivity Modifier: match your Config' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: '0 of 6 done' })).toBeInTheDocument();
+    await user.click(within(look).getByRole('button', { name: 'Done' }));
+    expect(screen.getByRole('img', { name: '1 of 6 done' })).toBeInTheDocument();
+    unmount();
+
+    // The other loadout's Config uses Standard sync, so 18 still differs from XIM's 20 there.
+    render('/build/l2/destiny-2', data);
+    const standard = screen.getByRole('listitem', { name: 'Look Sensitivity: 20' });
+    expect(within(standard).getByText('Differs from 20')).toBeInTheDocument();
+    expect(within(standard).getByRole('button', { name: 'Needs fixing' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('step 1 shows its progress as a ruler with one tick per setting', () => {
+    const data = withProfile({});
+    data.progress = { [progressKey.requiredSetting('Axial Deadzone')]: 'done' };
+    render('/build/l1/destiny-2', data);
+    const ruler = screen.getByRole('img', { name: '1 of 6 done' });
+    expect(ruler.children).toHaveLength(6);
+    expect(ruler.querySelectorAll('.is-done')).toHaveLength(1);
+  });
+
   it('step 2 shows the Xbox checks for an Xbox profile', () => {
     render('/build/l1/matrix', withProfile({ platform: 'xbox', outputType: 'xbox-controller' }));
     expect(screen.getByRole('heading', { level: 1, name: 'MATRIX setup' })).toBeInTheDocument();
@@ -531,7 +565,14 @@ describe('Build my config: moving between steps', () => {
     data.progress = Object.fromEntries(knowledge.game.requiredSettings.map((s) => [progressKey.requiredSetting(s.name), 'done']));
     render('/build/l1/matrix', data);
     const steps = screen.getByRole('navigation', { name: 'Build steps' });
-    expect(within(steps).getByRole('link', { name: 'Step 1: Destiny 2 settings, 6 of 6 done' })).toBeInTheDocument();
+    const done = within(steps).getByRole('link', { name: 'Step 1: Destiny 2 settings, 6 of 6 done' });
+    expect(done).toHaveClass('is-complete');
+    // The step you're on sits in the target-lock brackets, and the rail into it is green.
+    const current = within(steps).getByRole('link', { name: /^Step 2: / });
+    expect(current).toHaveAttribute('aria-current', 'step');
+    expect(current.querySelector('.build-step-number')).toHaveClass('lock');
+    expect(done.querySelector('.build-step-number')).not.toHaveClass('lock');
+    expect(current.closest('li')).toHaveClass('is-after-complete');
   });
 
   it('shows not found for an unknown loadout, with a way back', async () => {

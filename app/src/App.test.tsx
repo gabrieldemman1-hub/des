@@ -41,19 +41,28 @@ describe('app shell', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Dialed' })).toBeInTheDocument();
     expect(screen.getByText(/Evidence-based XIM MATRIX setup for Destiny 2/)).toBeInTheDocument();
 
-    // Each loadout: its config sheet with the sheet's progress, and the build behind it.
+    // The loadout touched last leads (a tie keeps the list's order): its sheet's progress as a
+    // ruler, the next step as the one amber button, and its config sheet. The others are one row each.
     const total = planProgress(plan, data.progress).total;
     const strip = screen.getByRole('list', { name: 'Your loadouts' });
     expect(within(strip).getAllByRole('listitem')).toHaveLength(2);
-    const sheet = within(strip).getByRole('link', { name: /^Pulse \+ shotgun/ });
-    expect(sheet).toHaveAttribute('href', '/loadouts/l1/sheet');
-    expect(sheet).toHaveTextContent(`Sheet 1 of ${total} done · 1 needs fixing`);
-    const build = within(strip).getByRole('link', { name: 'Continue build for Pulse + shotgun' });
+    const hero = within(strip).getByRole('listitem', { name: 'Pulse + shotgun' });
+    expect(within(hero).getByRole('img', { name: `Sheet 1 of ${total} done · 1 needs fixing` })).toBeInTheDocument();
+    const build = within(hero).getByRole('link', { name: 'Continue build for Pulse + shotgun' });
     expect(build).toHaveAttribute('href', '/build/l1');
+    expect(build).toHaveClass('primary');
+    expect(within(hero).getByRole('link', { name: 'Config sheet for Pulse + shotgun' })).toHaveAttribute(
+      'href',
+      '/loadouts/l1/sheet',
+    );
+    expect(strip.querySelectorAll('.button.primary')).toHaveLength(1);
+    const peek = within(strip).getByRole('link', { name: /^Peek/ });
+    expect(peek).toHaveAttribute('href', '/loadouts/l2/sheet');
+    expect(peek).toHaveAccessibleName(`Peek Sheet 1 of ${total} done · 1 needs fixing`);
     expect(screen.queryByRole('heading', { name: 'Start here' })).not.toBeInTheDocument();
 
-    const flows = within(screen.getByRole('list', { name: 'What do you want to do?' })).getAllByRole('link');
-    expect(flows.map((f) => [f.querySelector('.flow-card-title')?.textContent, f.getAttribute('href')])).toEqual([
+    const flows = within(screen.getByRole('list', { name: 'Tools' })).getAllByRole('link');
+    expect(flows.map((f) => [f.querySelector('.tool-tile-title')?.textContent, f.getAttribute('href')])).toEqual([
       ['Build my config', '/build'],
       ['Tune my config', '/tune'],
       ['Troubleshoot by feel', '/troubleshoot'],
@@ -61,11 +70,39 @@ describe('app shell', () => {
     ]);
     // No constant label: each card says where you are in it, or nothing.
     expect(screen.queryByText('Ready to use')).not.toBeInTheDocument();
-    expect(flows[0]!.querySelector('.flow-card-status')).toBeNull();
+    expect(flows[0]!.querySelector('.tool-tile-status')).toBeNull();
     expect(flows[1]).toHaveTextContent('Settings entered for 1 of 2 loadouts');
     const checks = checksForProfile(knowledge.foundation, data.profile).length;
     expect(flows[2]).toHaveTextContent(`0 of ${checks} setup checks done · 1 needs fixing`);
-    expect(flows[3]!.querySelector('.flow-card-status')).toBeNull();
+    expect(flows[2]!.querySelector('.tool-tile-status')).toHaveClass('is-problem');
+    expect(flows[3]!.querySelector('.tool-tile-status')).toBeNull();
+    // Gap statements cite nothing, so Home doesn't promise a source for everything.
+    expect(screen.getByText(/with its source wherever one exists/)).toHaveClass('footnote');
+  });
+
+  it('home leads with the loadout edited last', () => {
+    const data = sampleData({
+      loadouts: [
+        sampleLoadout({ updatedAt: '2026-08-01T00:00:00.000Z' }),
+        sampleLoadout({ id: 'l2', name: 'Peek', updatedAt: '2026-09-01T00:00:00.000Z' }),
+      ],
+    });
+    renderApp({ storage: new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(data) }) });
+    const strip = screen.getByRole('list', { name: 'Your loadouts' });
+    expect(strip.firstElementChild).toHaveAccessibleName('Peek');
+    expect(within(strip).getByRole('link', { name: /^Start build for Peek$/ })).toHaveAttribute('href', '/build/l2');
+  });
+
+  it('home counts saving a loadout’s settings as touching it', () => {
+    const data = sampleData({
+      loadouts: [
+        sampleLoadout({ updatedAt: '2026-08-01T00:00:00.000Z' }),
+        sampleLoadout({ id: 'l2', name: 'Peek', updatedAt: '2026-09-01T00:00:00.000Z' }),
+      ],
+    });
+    data.configs = { l1: { ...emptyConfig(), updatedAt: '2026-09-20T00:00:00.000Z' } };
+    renderApp({ storage: new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(data) }) });
+    expect(screen.getByRole('list', { name: 'Your loadouts' }).firstElementChild).toHaveAccessibleName('Pulse + shotgun');
   });
 
   it('home starts a first-run user with a loadout, the one step Build and Tune need', () => {
@@ -79,7 +116,7 @@ describe('app shell', () => {
     );
     expect(screen.queryByRole('list', { name: 'Your loadouts' })).not.toBeInTheDocument();
 
-    const flows = within(screen.getByRole('list', { name: 'What do you want to do?' })).getAllByRole('link');
+    const flows = within(screen.getByRole('list', { name: 'Tools' })).getAllByRole('link');
     expect(flows[0]).toHaveTextContent('Needs a loadout');
     expect(flows[1]).toHaveTextContent('Needs a loadout');
     expect(flows[2]).not.toHaveTextContent('Needs a loadout');

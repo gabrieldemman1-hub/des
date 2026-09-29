@@ -4,9 +4,11 @@
  * with XIM's list: those rows keep only the player's own mark, never a Needs fixing worked out
  * from a differing value.
  */
+import { useData } from '../../state/data-context';
 import type { ProgressMap } from '../../state/progress';
 import { requiredSettingField } from '../../state/required-settings';
 import type { CurrentConfig } from '../../state/schema';
+import { useEffectiveProgress } from '../../state/use-progress';
 import { CUSTOM_SYNC_FIELDS } from '../tune/analysis';
 import type { BuildPlan } from './build-plan';
 
@@ -33,4 +35,11 @@ export function withCustomSync(progress: ProgressMap, saved: ProgressMap, keys: 
     else delete out[key];
   }
   return out;
+}
+
+/** The effective progress as this loadout's sheet and Build steps count it. */
+export function useLoadoutProgress(plan: Pick<BuildPlan, 'settings' | 'loadout'>): ProgressMap {
+  const { data } = useData();
+  const progress = useEffectiveProgress();
+  return withCustomSync(progress, data.progress, customSyncKeys(plan, data.configs[plan.loadout.id]));
 }

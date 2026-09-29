@@ -84,3 +84,51 @@ export function LearnIcon() {
     </Icon>
   );
 }
+
+/** Build my config: steps up, one layer on the last. */
+export function StepsIcon() {
+  return (
+    <Icon strokeWidth="1.8">
+      <path d="M3.5 20h4.5v-5h4.5v-5h4.5V5h3.5" />
+    </Icon>
+  );
+}
+
+/** Tune my config: two sliders. */
+export function SlidersIcon() {
+  return (
+    <Icon strokeWidth="1.8">
+      <path d="M4 7h9M17 7h3M4 17h3M11 17h9" />
+      <circle cx="15" cy="7" r="2" />
+      <circle cx="9" cy="17" r="2" />
+    </Icon>
+  );
+}
+
+/** Troubleshoot by feel: a trace with a spike in it. */
+export function WaveIcon() {
+  return (
+    <Icon strokeWidth="1.8">
+      <path d="M2.5 12h4l2.5-6 4 12 2.5-6h6" />
+    </Icon>
+  );
+}
+
+/** Explain a concept: a book. */
+export function BookIcon() {
+  return (
+    <Icon strokeWidth="1.8">
+      <path d="M4 5.5A2 2 0 0 1 6 3.5h13.5v15H6a2 2 0 0 0-2 2z" />
+      <path d="M4 20.5v-15M8 7.5h7.5" />
+    </Icon>
+  );
+}
+
+/** Forward: the arrow on a primary action that moves you on. */
+export function ArrowIcon() {
+  return (
+    <Icon width="20" height="20">
+      <path d="M4 12h15M13 6l6 6-6 6" />
+    </Icon>
+  );
+}

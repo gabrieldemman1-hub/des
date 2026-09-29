@@ -2,7 +2,6 @@ import { Link, Navigate, useParams } from 'react-router';
 import { ClearAimMarks } from '../../components/ClearAimMarks';
 import { Screen } from '../../components/Screen';
 import { progressSummary } from '../../state/progress';
-import { useEffectiveProgress } from '../../state/use-progress';
 import {
   BUILD_STEPS,
   stepById,
@@ -13,6 +12,7 @@ import {
   type ProgressCount,
 } from './build-plan';
 import { AimSettingsStep, GameSettingsStep, MatrixSetupStep, SheetStep } from './BuildSteps';
+import { useLoadoutProgress } from './custom-sync';
 import { LoadoutNotFound } from './parts';
 import { buildPath, useBuildPlan } from './use-build-plan';
 import './build.css';
@@ -23,6 +23,10 @@ function CheckMark() {
       <path d="m3 8.5 3.2 3L13 4.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
     </svg>
   );
+}
+
+function isComplete(count: ProgressCount | undefined): boolean {
+  return count !== undefined && count.total > 0 && count.done === count.total;
 }
 
 function StepIndicator({
@@ -39,16 +43,19 @@ function StepIndicator({
       <ol className="build-steps">
         {BUILD_STEPS.map((step, i) => {
           const count = step.id === 'sheet' ? undefined : counts[step.id];
-          const complete = count !== undefined && count.total > 0 && count.done === count.total;
+          const complete = isComplete(count);
           const isCurrent = step.id === current.id;
+          const previous = BUILD_STEPS[i - 1];
+          // The rail into a step is green once the step before it is complete.
+          const afterComplete = previous !== undefined && previous.id !== 'sheet' && isComplete(counts[previous.id]);
           return (
-            <li key={step.id}>
+            <li key={step.id} className={afterComplete ? 'is-after-complete' : undefined}>
               <Link
                 className={`build-step${complete ? ' is-complete' : ''}`}
                 to={buildPath(plan.loadout.id, step.id)}
                 aria-current={isCurrent ? 'step' : undefined}
               >
-                <span className="build-step-number" aria-hidden="true">
+                <span className={`build-step-number${isCurrent ? ' lock' : ''}`} aria-hidden="true">
                   {complete ? <CheckMark /> : i + 1}
                 </span>
                 <span className="build-step-name" aria-hidden="true">
@@ -107,7 +114,6 @@ function StepPager({ plan, index, at = 'end' }: { plan: BuildPlan; index: number
 /** One step of the walkthrough, at /build/<loadoutId>/<stepId>. */
 export function BuildStepScreen() {
   const { loadoutId, stepId } = useParams();
-  const progress = useEffectiveProgress();
   const plan = useBuildPlan(loadoutId);
   if (!plan) {
     return (
@@ -119,6 +125,11 @@ export function BuildStepScreen() {
   }
   const step = stepById(stepId);
   if (!step) return <Navigate to={buildPath(plan.loadout.id)} replace />;
+  return <BuildStep plan={plan} step={step} />;
+}
+
+function BuildStep({ plan, step }: { plan: BuildPlan; step: BuildStepInfo }) {
+  const progress = useLoadoutProgress(plan);
 
   const index = BUILD_STEPS.indexOf(step);
   const counts = stepProgress(plan, progress);

@@ -859,8 +859,29 @@
     padding-left: 1.4em;
   }
 
-  /* Your loadouts: each one is two rows, the config sheet (what a returning player opens most)
-     and the build behind it. */
+  /* A section's name as a small-caps label, with a count at the right when it has one. */
+  .section-label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    color: var(--text-faint);
+  }
+
+  .section-label h2 {
+    font-family: var(--f-display);
+    font-size: 0.78rem;
+    font-weight: 650;
+    font-stretch: 87.5%;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .section-label .num {
+    font-size: 0.85rem;
+  }
+
   .home-loadouts {
     display: grid;
     gap: 10px;
@@ -869,55 +890,140 @@
     list-style: none;
   }
 
+  /* The loadout touched last: its weapons, its sheet's ruler, and the page's one amber button. */
+  .home-hero {
+    display: grid;
+    gap: 12px;
+  }
+
+  .home-hero-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-stretch: 90%;
+    overflow-wrap: anywhere;
+  }
+
+  .home-weapons {
+    margin-top: -6px;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  .home-weapons .tag-main {
+    color: var(--text);
+    font-weight: 650;
+  }
+
+  .home-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .home-hero-actions .button {
+    flex: 1 1 auto;
+  }
+
+  .home-hero-actions .button.primary {
+    flex-grow: 1.6;
+  }
+
+  /* Every other loadout: one row to its sheet, the ruler under the name. */
   .home-loadout {
-    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 14px 16px;
     border: 1px solid transparent;
     border-radius: var(--radius);
     background: var(--surface);
-  }
-
-  .home-loadout-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height: 44px;
-    padding: 12px 16px;
     color: var(--text);
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
   }
 
-  .home-loadout-link:active {
+  .home-loadout:active {
     background: var(--surface-2);
   }
 
-  .home-loadout-link > svg {
-    flex: none;
-    color: var(--text-muted);
+  .home-loadout > svg {
+    color: var(--text-faint);
   }
 
-  .home-loadout-link.is-build {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border-top: 1px solid var(--border);
-    font-size: 0.95rem;
-    font-weight: 650;
-  }
-
-  .home-loadout-text {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
+  .home-loadout .ruler-block {
+    grid-column: 1 / -1;
   }
 
   .home-loadout-name {
     font-family: var(--f-display);
-    font-size: 1.15rem;
+    font-size: 1.08rem;
     font-weight: 700;
     font-stretch: 90%;
     overflow-wrap: anywhere;
+  }
+
+  /* The four flows as tiles, two across on a phone (one when the text is large). */
+  .tool-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tool-tiles > li {
+    display: grid;
+  }
+
+  .tool-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    padding: 14px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .tool-tile:active {
+    background: var(--surface-2);
+  }
+
+  .tool-tile > svg {
+    margin-bottom: 8px;
+    color: var(--data);
+  }
+
+  .tool-tile-title {
+    font-family: var(--f-display);
+    font-size: 1.02rem;
+    font-weight: 700;
+    font-stretch: 92%;
+    line-height: 1.2;
+  }
+
+  .tool-tile-summary {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+
+  /* Where the player is in a flow, from what is saved (never a constant label). */
+  .tool-tile-status {
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 650;
+  }
+
+  .tool-tile-status.is-problem {
+    color: var(--danger);
   }
 
   .flow-cards {
@@ -1806,6 +1912,7 @@
     .choice,
     .flow-card,
     .home-loadout,
+    .tool-tile,
     .toast,
     .dialog,
     .sheet,

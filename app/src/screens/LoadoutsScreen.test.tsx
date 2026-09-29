@@ -250,7 +250,7 @@ describe('Loadouts', () => {
 });
 
 describe('Loadout config links', () => {
-  it('links each loadout to its config sheet (the main action), build and tune pages', () => {
+  it('links each loadout to its config sheet (first), build and tune pages', () => {
     renderApp({ path: '/loadouts', storage: storageWith(sampleData({ loadouts: [sampleLoadout()] })) });
     const links = within(screen.getByRole('group', { name: 'Pulse + shotgun: sheet, build and tune' })).getAllByRole('link');
     expect(links.map((l) => [l.textContent, l.getAttribute('href')])).toEqual([
@@ -258,8 +258,11 @@ describe('Loadout config links', () => {
       ['Build', '/build/l1'],
       ['Tune', '/tune/l1'],
     ]);
-    expect(links[0]).toHaveClass('primary');
+    // The sheet leads (full width), but amber is kept for the screen's one forward action.
+    expect(links[0]).toHaveClass('secondary', 'block');
     expect(links[1]).not.toHaveClass('primary');
+    expect(document.querySelectorAll('main .button.primary')).toHaveLength(1);
+    expect(screen.getByRole('link', { name: 'Add a loadout' })).toHaveClass('primary');
   });
 
   it('shows each loadout’s sheet progress and whether its settings are entered', () => {
