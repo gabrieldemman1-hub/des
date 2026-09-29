@@ -4,6 +4,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { InstallSection } from '../components/Install';
 import { Screen } from '../components/Screen';
 import { SegmentedField } from '../components/SegmentedField';
+import { SourcesLink } from '../components/SourcesLink';
 import { StatementView } from '../components/StatementView';
 import {
   AIMING_SOURCE_LABELS,
@@ -441,6 +442,7 @@ export function ProfileScreen() {
       </form>
       <InstallSection />
       <BackupSection />
+      <SourcesLink from={{ to: '/profile', label: 'Profile' }} />
     </Screen>
   );
 }

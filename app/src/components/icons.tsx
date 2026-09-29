@@ -46,16 +46,6 @@ export function ProfileIcon() {
   );
 }
 
-export function SourcesIcon() {
-  return (
-    <Icon>
-      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5Z" />
-      <path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5" />
-      <path d="M9 8h7M9 12h5" />
-    </Icon>
-  );
-}
-
 export function CrosshairMark({ size = 40 }: { size?: number }) {
   return (
     <svg viewBox="0 0 512 512" width={size} height={size} aria-hidden="true" focusable="false" className="mark">
@@ -72,15 +62,6 @@ export function ChevronIcon() {
   return (
     <Icon width="20" height="20">
       <path d="m9 6 6 6-6 6" />
-    </Icon>
-  );
-}
-
-export function LearnIcon() {
-  return (
-    <Icon>
-      <path d="M9 18h6M10 21h4" />
-      <path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3Z" />
     </Icon>
   );
 }

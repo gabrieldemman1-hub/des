@@ -5,6 +5,7 @@ import { AimStyleGlyph } from '../components/AimStyleGlyph';
 import { EmptyState } from '../components/EmptyState';
 import { ChevronIcon } from '../components/icons';
 import { Screen } from '../components/Screen';
+import { SourcesLink } from '../components/SourcesLink';
 import { StatementView } from '../components/StatementView';
 import { TERM_CATEGORY_LABELS } from '../content/labels';
 import { useKnowledge } from '../state/knowledge-context';
@@ -130,6 +131,8 @@ export function LearnScreen() {
           ))}
         </section>
       )}
+
+      {!q && <SourcesLink from={{ to: '/learn', label: 'Learn' }} />}
     </Screen>
   );
 }

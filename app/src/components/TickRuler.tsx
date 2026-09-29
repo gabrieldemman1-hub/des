@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { progressSummary, type ProgressCount } from '../state/progress';
 
 interface Props {
@@ -26,8 +27,9 @@ export function TickRuler({ count, prefix, showSummary = true, className }: Prop
   return (
     <div className={`ruler-block${className ? ` ${className}` : ''}`}>
       <div className="ruler" role="img" aria-label={summary}>
+        {/* --i staggers the sweep in (see styles.css; off with reduced motion). */}
         {ticks.map((state, i) => (
-          <span key={i} className={state || undefined} />
+          <span key={i} className={state || undefined} style={{ '--i': i } as CSSProperties} />
         ))}
       </div>
       {showSummary && (

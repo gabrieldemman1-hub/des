@@ -1,16 +1,20 @@
+import { useLocation } from 'react-router';
 import { CONFIDENCE_LEVELS } from '../../../knowledge/index';
 import { ConfidenceBadge } from '../components/ConfidenceBadge';
 import { NoticeBanner } from '../components/NoticeBanner';
+import { backLinkFrom } from '../components/back-link';
 import { Screen } from '../components/Screen';
 import { SOURCE_TIER_LABELS } from '../content/labels';
 import { useKnowledge } from '../state/knowledge-context';
 
 export function SourcesScreen() {
   const { kb, issues } = useKnowledge();
+  const location = useLocation();
 
   return (
     <Screen
       title="Sources"
+      back={backLinkFrom(location.state, { to: '/learn', label: 'Learn' })}
       intro={
         <>
           <p className="lede">Dialed only uses the sources below. Adding one requires a logged decision.</p>

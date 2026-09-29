@@ -9,6 +9,7 @@ import {
   StepsIcon,
   WaveIcon,
 } from '../components/icons';
+import { backLinkState } from '../components/back-link';
 import { InstallCard } from '../components/Install';
 import { mostRecentLoadout, useLoadoutSummary } from '../components/loadout-summary';
 import { Screen } from '../components/Screen';
@@ -236,7 +237,9 @@ export function HomeScreen() {
 
       <p className="footnote">
         Every recommendation says how sure it is and why, with its source wherever one exists.{' '}
-        <Link to="/sources">See the sources</Link>
+        <Link to="/sources" state={backLinkState({ to: '/', label: 'Home' })}>
+          See the sources
+        </Link>
       </p>
     </Screen>
   );

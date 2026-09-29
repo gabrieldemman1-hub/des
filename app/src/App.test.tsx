@@ -12,18 +12,43 @@ import { MemoryStorage } from './test/memory-storage';
 import { renderApp } from './test/render';
 
 describe('app shell', () => {
-  it('has a tab bar with the current tab marked', async () => {
+  it('has four tabs with the current one marked', async () => {
     const { user } = renderApp();
     const nav = screen.getByRole('navigation', { name: 'Main' });
     const tabs = within(nav).getAllByRole('link');
-    expect(tabs.map((t) => t.textContent)).toEqual(['Home', 'Learn', 'Loadouts', 'Profile', 'Sources']);
+    expect(tabs.map((t) => t.textContent)).toEqual(['Home', 'Loadouts', 'Learn', 'Profile']);
     expect(within(nav).getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
 
-    await user.click(within(nav).getByRole('link', { name: 'Sources' }));
-    expect(screen.getByRole('heading', { level: 1, name: 'Sources' })).toBeInTheDocument();
-    expect(within(nav).getByRole('link', { name: 'Sources' })).toHaveAttribute('aria-current', 'page');
+    await user.click(within(nav).getByRole('link', { name: 'Profile' }));
+    expect(screen.getByRole('heading', { level: 1, name: 'Profile' })).toBeInTheDocument();
+    expect(within(nav).getByRole('link', { name: 'Profile' })).toHaveAttribute('aria-current', 'page');
     expect(within(nav).getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current');
+    expect(document.title).toBe('Profile · Dialed');
+  });
+
+  it('reaches Sources from Learn and Profile, and goes back to where it was opened from', async () => {
+    const { user } = renderApp({ path: '/profile' });
+    const nav = screen.getByRole('navigation', { name: 'Main' });
+    await user.click(screen.getByRole('link', { name: /^Sources and confidence labels/ }));
+    expect(screen.getByRole('heading', { level: 1, name: 'Sources' })).toBeInTheDocument();
     expect(document.title).toBe('Sources · Dialed');
+    // Reference material: the Learn tab stays lit, and the back link returns to Profile.
+    expect(within(nav).getByRole('link', { name: 'Learn' })).toHaveAttribute('aria-current', 'page');
+    const back = document.querySelector<HTMLAnchorElement>('.back-link')!;
+    expect(back).toHaveTextContent('Profile');
+    await user.click(back);
+    expect(screen.getByRole('heading', { level: 1, name: 'Profile' })).toBeInTheDocument();
+
+    await user.click(within(nav).getByRole('link', { name: 'Learn' }));
+    await user.click(screen.getByRole('link', { name: /^Sources and confidence labels/ }));
+    expect(document.querySelector('.back-link')).toHaveTextContent('Learn');
+  });
+
+  it('sends Sources opened any other way back to Learn', () => {
+    renderApp({ path: '/sources' });
+    const back = document.querySelector('.back-link')!;
+    expect(back).toHaveTextContent('Learn');
+    expect(back).toHaveAttribute('href', '/learn');
   });
 
   it('home lists your loadouts with their progress, then the four flows with where you are in them', () => {

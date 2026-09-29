@@ -12,7 +12,15 @@ export function StatusMark({ state }: { state: ProgressState | 'none' }) {
     <svg className="status-mark" viewBox="0 0 14 14" width="14" height="14" aria-hidden="true" focusable="false">
       <rect x="1" y="1" width="12" height="12" rx="3" fill="none" stroke="currentColor" strokeWidth="1.6" />
       {state === 'done' && (
-        <path d="m3.8 7.3 2.2 2.2 4.4-4.8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          className="status-mark-check"
+          d="m3.8 7.3 2.2 2.2 4.4-4.8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       )}
       {state === 'problem' && (
         <>

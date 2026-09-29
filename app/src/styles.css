@@ -1869,6 +1869,46 @@
     }
   }
 
+  /* Motion, only for those who haven't asked for less: a new screen rises in, a ruler sweeps in
+     tick by tick (then each tick changes colour in place), and a Done mark draws its tick. */
+  @media (prefers-reduced-motion: no-preference) {
+    .screen {
+      animation: screen-in var(--dur) var(--ease-out);
+    }
+
+    .ruler > span {
+      transform-origin: bottom;
+      animation: tick-in var(--dur) var(--ease-out) backwards;
+      animation-delay: calc(min(var(--i, 0), 30) * 10ms);
+      transition: background-color var(--dur) ease;
+    }
+
+    .status-mark-check {
+      stroke-dasharray: 10;
+      animation: check-draw var(--dur) var(--ease-out);
+    }
+  }
+
+  @keyframes screen-in {
+    from {
+      transform: translateY(8px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes tick-in {
+    from {
+      transform: scaleY(0.2);
+      opacity: 0;
+    }
+  }
+
+  @keyframes check-draw {
+    from {
+      stroke-dashoffset: 10;
+    }
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .button,
     .flow-card,
