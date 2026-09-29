@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { CrosshairMark } from './icons';
 
 interface Props {
   title: string;
@@ -7,10 +8,14 @@ interface Props {
   children: ReactNode;
 }
 
+/** Nothing here yet: an empty slot with the reticle in a quiet tone, what's missing and what to do. */
 export function EmptyState({ title, level = 2, children }: Props) {
   const Heading = level === 3 ? 'h3' : 'h2';
   return (
     <div className="empty-state">
+      <span className="empty-state-mark" aria-hidden="true">
+        <CrosshairMark size={32} />
+      </span>
       <Heading className="empty-state-title">{title}</Heading>
       {children}
     </div>

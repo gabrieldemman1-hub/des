@@ -20,8 +20,8 @@
     --input-border: #5f6f8c;
     --text: #e9eef7;
     --text-muted: #a2aec3;
-    /* Small-caps labels on --bg and --surface only (5:1 there, not enough on --surface-2). */
-    --text-faint: #7d8aa2;
+    /* Small-caps labels and captions: at least 4.5:1 on --bg, --surface and --surface-2. */
+    --text-faint: #8190a8;
     /* The one signal: the next action, and where you are. */
     --accent: #ffb547;
     --accent-text: #ffc46e;
@@ -95,8 +95,8 @@
       --lock: #c77700;
       --data: #0a74b0;
       --focus: #0a74b0;
-      --danger: #c8322b;
-      --success: #127a45;
+      --danger: #b02a24;
+      --success: #0f6e3e;
       --tick-empty: #d3dbe7;
       --warning-bg: #fff6d9;
       --warning-border: #c99a1e;
@@ -104,9 +104,9 @@
       --shadow-float: 0 18px 40px -20px rgb(15 22 38 / 0.35);
 
       /* Dark enough for 4.5:1 as badge text on their own tint over white, --bg and --surface-2. */
-      --c-official: #127a45;
+      --c-official: #0f6e3e;
       --c-expert: #0a5fa0;
-      --c-contested: #a64a00;
+      --c-contested: #9a4400;
       --c-reasoned: #6a44c2;
       --c-gap: #4f5b6e;
       --c-publisher: #99286e;
@@ -407,8 +407,11 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* The display face, narrowed, so "Loadouts" still fits its quarter of the bar at large text. */
   .tab-label {
     max-width: 100%;
+    font-family: var(--f-display);
+    font-stretch: 87.5%;
     line-height: 1.15;
     text-align: center;
     /* Large text on a narrow phone: wrap inside the tab rather than run off the screen. */
@@ -1391,14 +1394,23 @@
 
   /* ---- Loadouts --------------------------------------------------------------------- */
 
+  /* An empty slot: dashed edge, a quiet reticle, then what's missing and what to do. */
   .empty-state {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 8px;
-    padding: 20px 16px;
+    padding: 24px 16px;
     border: 1px dashed var(--border-strong);
     border-radius: var(--radius);
+    background: color-mix(in srgb, var(--surface) 55%, transparent);
     text-align: center;
+  }
+
+  .empty-state-mark {
+    display: inline-flex;
+    margin-bottom: 4px;
+    color: var(--text-faint);
   }
 
   .empty-state-title {
@@ -1942,6 +1954,28 @@
     .tab[aria-current='page'] .tab-label {
       text-decoration: underline;
       text-underline-offset: 3px;
+    }
+
+    /* Fills are dropped here, so the ruler's ticks and the main weapon's diamond are drawn in
+       system colours: an outlined tick to go, a filled one done, a highlighted one to fix. */
+    .ruler > span,
+    .tag-main::before {
+      forced-color-adjust: none;
+    }
+
+    .ruler > span {
+      border: 1px solid CanvasText;
+      background: Canvas;
+    }
+
+    .ruler > .is-done,
+    .tag-main::before {
+      background: CanvasText;
+    }
+
+    .ruler > .is-problem {
+      border-color: Highlight;
+      background: Highlight;
     }
 
     /* An opaque bar, so page text doesn't show through it. */
