@@ -28,17 +28,18 @@ export const STATUS_TEXT: Record<ProgressState | 'none', string> = {
 export const REQUIRED_SETTINGS_CHECK_ID = 'destiny2-required-settings';
 
 /**
- * Setup checks about one specific Config. The marks are global, but each loadout has its own
- * Config, so wherever these checks are shown they say to check every Config.
+ * Setup checks about one specific Config. The marks are global, but Dialed plans one Config per
+ * loadout, so wherever these checks are shown they say to check every Config.
  */
 export const PER_CONFIG_CHECK_IDS: ReadonlySet<string> = new Set([
   'mouse-dpi-matches',
   'smart-translator-current',
   'light-notifications',
   'clean-sensitivity-test',
+  'pc-dualsense-stick-upscaling',
 ]);
 
-export const PER_CONFIG_CHECK_NOTE = 'Check this in every Config you use — each loadout has its own.';
+export const PER_CONFIG_CHECK_NOTE = 'Check this in every Config you use: Dialed plans one per loadout.';
 
 export function loadoutPrefix(loadoutId: string): string {
   return `loadout:${loadoutId}:`;

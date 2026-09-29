@@ -5,7 +5,7 @@ import type { ProgressState } from '../state/schema';
 /**
  * A checklist state as a shape, never a colour alone: a ticked box for Done, a box with a mark
  * for Needs fixing, an empty box for not checked yet. A rounded square, so it never looks like a
- * confidence badge (those are circles, diamonds and triangles).
+ * confidence badge (those are circles, diamonds, triangles and a shield).
  */
 export function StatusMark({ state }: { state: ProgressState | 'none' }) {
   return (

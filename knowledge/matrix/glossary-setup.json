@@ -224,7 +224,7 @@
           ]
         },
         {
-          "text": "Which methods a Config can use depends on the game. Every game the MATRIX supports has Standard. Custom is only there for games that support it. Manual exists for any controller-output Config, but XIM discourages it.",
+          "text": "Which methods a Config can use depends on the game. Every game the MATRIX supports has Standard. Custom is only there for games that support it. XIM discourages Manual for Configs that output as controller, because it may not produce accurate results.",
           "confidence": "official",
           "citations": [
             {
@@ -252,7 +252,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Not aim-style specific: it sets the footing every aim style relies on. If the game's settings are out of sync, every aim setting on top of them is off too, whatever weapon you use.",
+          "text": "Not aim-style specific: it sets the footing every aim style relies on, whatever weapon you use. If the game's settings are out of sync, XIM says your aim suffers and real-world speeds, such as your cm/360 sensitivity, are no longer accurate.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -264,9 +264,14 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
               "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+              "quote": "Accurate real world velocity requires your game settings be configured correctly if outputting as controller, or, your velocity be calibrated correctly if outputting as mouse."
             }
           ],
-          "reasoning": "XIM says Smart Translation must be synchronized with the game's aim settings for correct, precise aim. It also says wrong settings hurt aiming. Neither depends on the weapon or the kind of aim. No source ties sync to aim styles."
+          "reasoning": "XIM says Smart Translation must be synchronized with the game's aim settings for correct, precise aim, that wrong settings hurt aiming, and that accurate real-world speeds such as cm/360 need correct game settings when outputting as controller. None of this depends on the weapon or the kind of aim. No source ties sync to aim styles."
         }
       ],
       "notToBeConfusedWith": [
@@ -564,7 +569,7 @@
           ]
         },
         {
-          "text": "Custom is only there for games that support it. To find out whether a game does, look at the Game Settings of a Config for that game in Manager. XIM's public list of game settings marks some games as supporting Custom, but only games that also require SAB, so a game without that mark may still support it.",
+          "text": "Custom is only there for games that support it. To find out whether a game does, look at the Game Settings of a Config for that game in Manager. On the public copy of XIM's list of game settings, 15 entries say \"This game supports Custom In-Game Settings\", and each of them also requires Simulate Analog Behavior (SAB). The Destiny 2 entry has no such line. That copy has entries for only about a third of the games in its index, and the list does not say whether a game without that line has Custom.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -581,16 +586,16 @@
               "source": "xim-game-settings",
               "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
               "quote": "This game supports Custom In-Game Settings. Setting values in green can be customized when using this feature.",
-              "note": "From the Apex Legends (ALC) entry. The public list has 15 entries with this line, and every one of them also has the SAB line quoted next."
+              "note": "From the Apex Legends (ALC) entry, one of 15 entries with this line in the public copy, whose entries stop at FragPunk. The Destiny 2 entry has no such line."
             },
             {
               "source": "xim-game-settings",
               "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
               "quote": "Input Requirements: This game has additional input requirements that must be observed in order to play. With a XIM MATRIX, it is required that Simulate Analog Behavior (SAB) be enabled.",
-              "note": "From the same Apex Legends (ALC) entry. The public list has 15 entries with this line: the same 15."
+              "note": "From the Apex Legends (ALC) entry, one of 15 entries with this line in the public copy, whose entries stop at FragPunk. The Destiny 2 entry has no such line."
             }
           ],
-          "reasoning": "The guide describes Custom as one of a Config's Game Settings methods, available 'when custom is available for the game'. So a Config's own Game Settings is where to see whether its game has it. On the public list, the line that marks Custom support only ever appears in entries that also require Simulate Analog Behavior (SAB). So a missing line is weak evidence that a game lacks Custom.",
+          "reasoning": "The guide describes Custom as one of a Config's Game Settings methods, available 'when custom is available for the game'. So a Config's own Game Settings is where to see whether its game has it. On the public list, the line that marks Custom support appears in 15 entries, all of which also require SAB, among the entries the public copy has (about a third of the games in its index). No source says whether a game without the line has Custom.",
           "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
         }
       ],
@@ -646,7 +651,7 @@
       },
       "explanation": [
         {
-          "text": "It uses Velocity Calibration: you do full turns in game so the MATRIX learns how your settings behave. This adjusts the Smart Translator's behavior so you can use different in-game values.",
+          "text": "It uses Velocity Calibration: in game you do a full horizontal turn (X) and aim from straight down up to straight up (Y), for hip fire and, if the game has it, for ADS. This lets you augment the Smart Translator's behavior so you can use different in-game values.",
           "confidence": "official",
           "citations": [
             {
@@ -658,6 +663,16 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Velocity-Calibration/#performing-x-calibration",
               "quote": "Use your mouse or controller to perform a full turn and return back to your starting point."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Velocity-Calibration/#preparing-calibration",
+              "quote": "There are four different types of velocity calibration: Hip X, Hip Y, ADS X, ADS Y. If your game doesn't have an ADS mode, then, it'll only be X and Y."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Velocity-Calibration/#performing-y-calibration",
+              "quote": "Vertical (Y) calibration is the same process as horizontal (X) calibration except you will start with your reticle pointing straight down (at your \"feet\") and end pointing straight up (at the \"ceiling\")."
             },
             {
               "source": "xim-guide",
@@ -763,6 +778,62 @@
             }
           ],
           "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
+        },
+        {
+          "text": "Maximum sensitivity is what Standard sync asks for, and every game has Standard. XIM's guide also describes cases where your in-game sensitivity is not at maximum. With Custom sync (only in games that support it), you choose your own in-game aim settings, such as Hip and ADS sensitivity, and copy them into your Config. Manual sync calibrates to your own in-game settings, but XIM discourages it for controller output. If you turn on Simulate Analog Behavior (SAB), XIM says to lower in-game sensitivity so it is not at or near maximum, and all other settings must still match the required list.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#standard",
+              "quote": "Every game that XIM MATRIX supports has the standard game settings synchronization option."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#standard",
+              "quote": "Sensitivity is set to maximum"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#custom",
+              "quote": "Custom is a powerful synchronization option that let's you choose your game's aim settings including:"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#custom",
+              "quote": "Hip and ADS sensitivity"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#custom",
+              "quote": "To use, copy your game's aim settings into your Config:"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#manual",
+              "quote": "The manual synchronization method is an advanced option that lets you calibrate to your particular set of in-game aim settings."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Game-Settings/#manual",
+              "quote": "Manual reticle velocity calibration for Configs that output as controller may not produce accurate results and is thus discouraged from being used."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+              "quote": "Or, if you are a controller gamer (and the game has support for it), aim is customized in your game and settings are copied to your Config."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#lower-in-game-sensitivity",
+              "quote": "When using SAB, you will need to turn your game's aim sensitivity down so it's not at or near maximum."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#required-in-game-settings",
+              "quote": "Other than lowering your in-game sensitivity, ensure all other game settings match those listed on the official required game settings list."
+            }
+          ]
         },
         {
           "text": "The game's deadzone settings must match the required ones.",
@@ -891,13 +962,23 @@
           ]
         },
         {
-          "text": "Xbox: the guide's Xbox setup says the output must be Controller (Xbox, PS4). A genuine Xbox controller, or an officially licensed wired third-party one, in USB Port 3 handles authentication.",
+          "text": "Xbox: choose the Controller (Xbox, PS, PC) output. The guide's Xbox page text still calls it Controller (Xbox, PS4), but the Manager screenshot directly under that sentence, and the guide's PC and PlayStation 5 pages, show Controller (Xbox, PS, PC). A genuine Xbox Series, One or Elite controller in USB Port 3 handles authentication. XIM also supports officially licensed wired third-party Xbox controllers for authentication, but its Hardware Compatibility List says only most are supported and to check its support forum before buying. A third-party controller must be the only wired Xbox controller connected to the MATRIX, in Port 3.",
           "confidence": "official",
           "citations": [
             {
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Gaming-On-Xbox/#custom-configs",
               "quote": "Next, choose your inputs and outputs. For an Xbox Config, the output must be Controller (Xbox, PS4)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#controller",
+              "quote": "Xbox Controller Output, select Controller (Xbox, PS, PC)"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Gaming-On-PlayStation-5/#usb-connection-alternative",
+              "quote": "When creating your Config, choose the Controller (Xbox, PS, PC) output type"
             },
             {
               "source": "xim-guide",
@@ -908,11 +989,21 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Troubleshooting-Xbox/#3rd-party-controller-problems",
               "quote": "XIM MATRIX supports officially licensed 3rd party wired Xbox controllers. You can use these controllers for authentication as well."
+            },
+            {
+              "source": "xim-hardware-compatibility",
+              "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+              "quote": "NOTE: Most wired officially licensed 3rd party Xbox controllers supported (check with our support forum to confirm before purchase)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Xbox/#3rd-party-controller-problems",
+              "quote": "If you are using a licensed 3rd party Xbox controller on your Xbox, please ensure it's the only wired Xbox controller connected to your XIM MATRIX. It should be connected to port 3."
             }
           ]
         },
         {
-          "text": "PC: the MATRIX can present as a standard XInput controller, an Xbox controller or a DualSense controller. Xbox and DualSense output each need that controller in Port 3 for authentication. There is also the Mouse, Keyboard, Controller option.",
+          "text": "PC: XIM's PC controller-output page says the MATRIX can present as a standard XInput controller, an Xbox controller or a DualSense controller. Xbox and DualSense output each need that controller in Port 3 for authentication. XIM's outputs table also lists DualShock 4 controller output for PC, which requires a DualShock 4 v2 controller for authentication. There is also the Mouse, Keyboard, Controller option.",
           "confidence": "official",
           "citations": [
             {
@@ -939,6 +1030,12 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#connect-devices",
               "quote": "To output as an Xbox controller, you must have an Xbox controller plugged into Port 3 (●●●). Likewise, for DualSense output, you must have a DualSense plugged into Port 3 (●●●)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Inputs-Outputs/#outputs",
+              "quote": "Requires a DualShock 4 v2 controller for authentication",
+              "note": "The outputs table row for DualShock 4 Controller output, listed for PS4 and PC over USB."
             }
           ]
         },
@@ -1000,7 +1097,7 @@
         {
           "name": "Inputs",
           "statement": {
-            "text": "The devices you plug into the MATRIX, such as a mouse and keyboard, a gamepad or a gyro gamepad. The output type is what the MATRIX presents as to your console or PC.",
+            "text": "The devices you connect to the MATRIX, such as a mouse and keyboard, a gamepad or a gyro gamepad. Gamepads can be plugged in or, if they support Bluetooth, paired wirelessly. The output type is what the MATRIX presents as to your console or PC.",
             "confidence": "official",
             "citations": [
               {
@@ -1017,6 +1114,11 @@
                 "source": "xim-guide",
                 "url": "https://guide.xim.tech/Inputs-Outputs/#inputs",
                 "quote": "Console gamer input with gyro (motion) aim"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Hardware-Compatibility/#wireless-devices",
+                "quote": "XIM MATRIX supports use of controllers wirelessly too as long as those controllers support Bluetooth."
               },
               {
                 "source": "xim-guide",
@@ -1052,7 +1154,7 @@
       ],
       "category": "sync",
       "location": "Edit your Config (pencil icon). For controller output: scroll down, press the \"...\", then Reticle Velocity Calibration.",
-      "summary": "Teaches the MATRIX how fast the reticle moves in your game, by doing full turns. Required for mouse-and-keyboard output. For controller output it is an optional, advanced tool that XIM discourages.",
+      "summary": "Teaches the MATRIX how the reticle behaves in your game. You do full horizontal turns and, on controller output, also aim from straight down to straight up. Required for mouse-and-keyboard output. For controller output it is an optional, advanced tool that XIM discourages.",
       "definition": {
         "text": "Velocity Calibration is only required for Mouse and Keyboard Output Configs. It teaches the MATRIX how the reticle behaves in your game.",
         "confidence": "official",
@@ -1221,12 +1323,11 @@
       "id": "simulate-analog-behavior",
       "name": "Simulate Analog Behavior",
       "aliases": [
-        "SAB",
-        "Advanced SAB"
+        "SAB"
       ],
       "category": "output",
       "location": "Under Mappings, press the \"...\" and select Behavior Simulation.",
-      "summary": "Makes the sticks and triggers the MATRIX sends look more like a human hand. Only for games whose entry in XIM's list requires it.",
+      "summary": "Makes the sticks and triggers the MATRIX sends look more analog, simulating natural human behavior patterns. XIM's guide says to use it for games with additional input requirements; some entries in XIM's game settings list say SAB is required.",
       "definition": {
         "text": "Simulate Analog Behavior (SAB) simulates natural human behavior patterns. It makes the sticks and triggers sent to your console or PC look more analog.",
         "confidence": "official",
@@ -1500,7 +1601,7 @@
       "feel": [],
       "guidance": [
         {
-          "text": "Check that the MATRIX sees your ADS: it quickly flashes green when you enter ADS and yellow when you return to Hip.",
+          "text": "Check that the MATRIX sees your ADS: it quickly flashes green when you enter ADS and yellow when you return to Hip. The flashes only appear if your game is configured for both modes, and not at all if the light notifications have been disabled in the Config's additional options.",
           "confidence": "official",
           "citations": [
             {
@@ -1512,6 +1613,21 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
               "quote": "When you return to Hip, your XIM MATRIX will quickly flash yellow."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+              "quote": "Your XIM MATRIX will notify you whenever you switch between Hip and Aim Down Sight (if your game is configured for both modes). This is done so that you can know that your Config's game roles are set up correctly."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#additional-options",
+              "quote": "Press the \"...\" to view additional configuration options available. These include:"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#additional-options",
+              "quote": "Disabling light aim speed and mode light notifications"
             }
           ]
         }
@@ -1670,12 +1786,11 @@
       "id": "ads-activation-delay",
       "name": "ADS Activation Delay",
       "aliases": [
-        "Smooth ADS Transition",
         "ADS delay"
       ],
       "category": "ads",
-      "location": "Press the \"...\" under Activation.",
-      "summary": "Makes the MATRIX wait before switching between Hip and ADS aim, to match games that zoom in over time.",
+      "location": "Edit your Config (pencil icon). In the Aim Down Sight aim settings, press the \"...\" on the Activation card (\"Customize how Aim Down Sight gets activated\"). This is not a binding's Activation button.",
+      "summary": "Makes the MATRIX wait before switching between Hip and ADS aim, to match games that zoom in over time. Its Smooth ADS Transition option blends the reticle's movement over that delay.",
       "definition": {
         "text": "Some games move from Hip to ADS (and back) over time rather than instantly. This delay makes the MATRIX wait before switching its ADS aim mode on or off, to match the game.",
         "confidence": "official",
@@ -1748,7 +1863,7 @@
         {
           "name": "Activation (bindings)",
           "statement": {
-            "text": "A binding's Activation setting decides when that binding runs: always (Active), only in Hip, only in ADS, or never (Inactive). The delay sits under Activation but is a separate setting.",
+            "text": "A binding's Activation setting decides when that binding runs: always (Active), only in Hip, only in ADS, or never (Inactive). ADS Activation Delay is not found there. It is one of your Config's aim settings: in the Aim Down Sight settings, press the \"...\" under Activation.",
             "confidence": "official",
             "citations": [
               {
@@ -1770,6 +1885,11 @@
                 "source": "xim-guide",
                 "url": "https://guide.xim.tech/Activation/#activation-states",
                 "quote": "Inactive: Binding is disabled"
+              },
+              {
+                "source": "xim-guide",
+                "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+                "quote": "To access these settings, press the \"...\" under Activation."
               }
             ]
           }
@@ -1942,7 +2062,7 @@
           ]
         },
         {
-          "text": "Check them with the ADS light. XIM flashes green on entering ADS and yellow on returning to Hip so you can tell your game roles are set up correctly.",
+          "text": "Check them with the ADS light. XIM flashes green on entering ADS and yellow on returning to Hip so you can tell your game roles are set up correctly. The flashes don't appear if the light notifications have been disabled in the Config's additional options.",
           "confidence": "official",
           "citations": [
             {
@@ -1959,6 +2079,16 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
               "quote": "When you return to Hip, your XIM MATRIX will quickly flash yellow."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#additional-options",
+              "quote": "Press the \"...\" to view additional configuration options available. These include:"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Identity/#additional-options",
+              "quote": "Disabling light aim speed and mode light notifications"
             }
           ]
         }
@@ -2092,9 +2222,19 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
               "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+              "quote": "Enable gyro motion aim. Only enabled while action is active."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+              "quote": "Toggles gyro motion aim on/off."
             }
           ],
-          "reasoning": "Mouse Aim holds Sensitivity and Smoothing, with Aiming Curve, Y Scale and Quantization under its \"...\". The documented actions that touch aim settings, Modify Aim Sensitivity and Sight Override (scopes, with Custom sync), change sensitivity only. Config Switching actions exist for changes like on-foot vs vehicle.",
+          "reasoning": "Mouse Aim holds Sensitivity and Smoothing, with Aiming Curve, Y Scale and Quantization under its \"...\". Modify Aim Sensitivity and Sight Override (scopes, with Custom sync) change sensitivity only. The Motion Activation actions (Engage, Pause and Toggle Motion Aim) only turn gyro motion aim on or off. No documented Smart Action sets Smoothing, Aiming Curve or Quantization within one Config. Config Switching actions exist for changes like on-foot vs vehicle.",
           "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
         }
       ],
@@ -2112,13 +2252,13 @@
         {
           "name": "Global Settings",
           "statement": {
-            "text": "Device-wide settings that apply whatever Config is loaded. Open them from the vertical \"...\" menu.",
+            "text": "XIM MATRIX settings that are global (not per-Config), so they apply whatever Config is loaded, plus settings for the Manager app itself. Open them from the vertical \"...\" menu and select Global Settings.",
             "confidence": "official",
             "citations": [
               {
                 "source": "xim-guide",
                 "url": "https://guide.xim.tech/Global-Settings/#global-settings",
-                "quote": "XIM MATRIX has several settings that are global (not per-Config)."
+                "quote": "XIM MATRIX has several settings that are global (not per-Config). In addition, there are settings specific to the XIM MATRIX Manager application."
               },
               {
                 "source": "xim-guide",
@@ -2153,7 +2293,7 @@
       ],
       "category": "config-switching",
       "location": "Assign a binding with its group button. Name groups under Mappings: press the \"...\" and select Group Customization.",
-      "summary": "Sets of bindings you switch on and off with actions, for example to track which weapon you hold. They switch bindings, not aim settings.",
+      "summary": "Sets of bindings you switch on and off with actions, for example to track which weapon you hold. They switch bindings; with Custom sync, in games with configurable scope levels, a weapon group can also carry a scope level. The guide documents no way for them to change smoothing, aiming curve or quantization.",
       "definition": {
         "text": "Group Membership lets you enable and disable sets of bindings using actions.",
         "confidence": "official",
@@ -2167,7 +2307,7 @@
       },
       "explanation": [
         {
-          "text": "A binding in a group stays off until its group is enabled. Bindings with no group are not affected.",
+          "text": "A binding in a group stays off until its group is enabled. Bindings with no group are not affected, unless you set a group to Input Exclusive (select the settings box next to the group name). Then, while that group is enabled, ungrouped bindings that share its inputs are turned off.",
           "confidence": "official",
           "citations": [
             {
@@ -2179,6 +2319,21 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Groups/#disabling-ungrouped-bindings",
               "quote": "Ungrouped bindings are independent and unaffected by groups."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Groups/#disabling-ungrouped-bindings",
+              "quote": "However, for additional flexibility, you can configure your groups to automatically disable ungrouped bindings if they share the same inputs."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Groups/#disabling-ungrouped-bindings",
+              "quote": "To activate this feature, select settings box next to the group name and choose Input Exclusive."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Groups/#disabling-ungrouped-bindings",
+              "quote": "Your ungrouped bindings that share the same inputs will disable only while the vehicle group is enabled."
             }
           ]
         },
@@ -2191,7 +2346,8 @@
               "url": "https://guide.xim.tech/Groups/#groups",
               "quote": "This feature can open a variety of scenarios such as weapon tracking where subsets of bindings are enabled to match the behavior of the current weapon in use."
             }
-          ]
+          ],
+          "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
         },
         {
           "text": "Ways to switch: enable and disable actions, an exclusive enable (crown icon) that turns all other groups off, or group cycling. XIM's loadout example: press 1 or 2 once to pick a loadout, and the weapon-swap key cycles to the matching group.",
@@ -2248,9 +2404,19 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
               "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+              "quote": "Enable gyro motion aim. Only enabled while action is active."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+              "quote": "Toggles gyro motion aim on/off."
             }
           ],
-          "reasoning": "The guide defines groups as sets of bindings. The documented actions that touch aim settings, Modify Aim Sensitivity and Sight Override (scopes, with Custom sync), change sensitivity only.",
+          "reasoning": "The guide defines groups as sets of bindings. Modify Aim Sensitivity and Sight Override (scopes, with Custom sync) change sensitivity only. The Motion Activation actions (Engage, Pause and Toggle Motion Aim) only turn gyro motion aim on or off. No documented Smart Action sets Smoothing, Aiming Curve or Quantization within one Config.",
           "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
         }
       ],
@@ -2296,14 +2462,14 @@
             }
           ],
           "reasoning": "Groups switch bindings. Smoothing is an aim setting, and no documented action changes it within one Config.",
-          "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
+          "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done. In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
         }
       ],
       "notToBeConfusedWith": [
         {
           "name": "Loading another Config",
           "termId": "load-config",
-          "note": "Changes everything, aim settings included. Groups only change which bindings run."
+          "note": "Loads that Config's own settings, aim settings included. Global Settings stay the same. Groups switch which bindings run; with Custom sync, in games with configurable weapon scope levels, a weapon group can also be assigned a scope level."
         },
         {
           "name": "Input Modifiers",
@@ -2381,7 +2547,8 @@
               "url": "https://guide.xim.tech/Rumble-Triggers/#rumble-triggers",
               "quote": "A common use case for this is the automatic enablement of recoil control groups for a weapon just by firing it."
             }
-          ]
+          ],
+          "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
         },
         {
           "text": "It can replace manual weapon tracking if the game has a unique pattern per weapon. If not, some automatic syncing is usually still possible.",
@@ -2423,9 +2590,19 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
               "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+              "quote": "Enable gyro motion aim. Only enabled while action is active."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+              "quote": "Toggles gyro motion aim on/off."
             }
           ],
-          "reasoning": "A rumble trigger only starts a binding. Bindings run Smart Actions. The documented actions that touch aim settings, Modify Aim Sensitivity and Sight Override (scopes, with Custom sync), change sensitivity only.",
+          "reasoning": "A rumble trigger only starts a binding. Bindings run Smart Actions. Modify Aim Sensitivity and Sight Override (scopes, with Custom sync) change sensitivity only. The Motion Activation actions (Engage, Pause and Toggle Motion Aim) only turn gyro motion aim on or off. No documented Smart Action sets Smoothing, Aiming Curve or Quantization within one Config.",
           "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
         }
       ],
@@ -2455,6 +2632,43 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Rumble-Triggers/#start-your-game",
               "quote": "Start your game and enter a private game or training area that is free of enemies."
+            }
+          ]
+        },
+        {
+          "text": "To learn a weapon's pattern: make sure no rumble is active, press Learn, fire the weapon, then press Accept.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+              "quote": "Ensure no rumble is active"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+              "quote": "Press Learn"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+              "quote": "Fire the weapon"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+              "quote": "Press Accept"
+            }
+          ]
+        },
+        {
+          "text": "Patterns are only detected (and learned) when they change, so you may see \"PATTERN INACTIVE\" even while rumble is happening in game.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+              "quote": "Rumble patterns are only detected (and learned) when they change. This means you may see \"PATTERN INACTIVE\" even though rumble is actively occurring in-game."
             }
           ]
         },
@@ -2591,7 +2805,8 @@
               "url": "https://guide.xim.tech/Recoil-Control/#vertical-sensitivity-boost",
               "quote": "If you prefer simply increasing your vertical aim sensitivity temporarily as a form of recoil control, you use can use a vertical only aim sensitivity modifier action."
             }
-          ]
+          ],
+          "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
         },
         {
           "text": "It changes sensitivity only. It does not change smoothing, aiming curve or quantization.",
@@ -2693,7 +2908,7 @@
       ],
       "category": "config-switching",
       "location": "Manager: press the vertical \"...\" and select Load Config. Or use a hotkey (set in the Config's \"...\" options), or a Config Switching Smart Action.",
-      "summary": "Switching to another Config, which changes everything, aim settings included. Load from Manager, by hotkey, or with a Smart Action.",
+      "summary": "Switching to another Config, which brings in that Config's own settings, aim settings and mappings included. Global Settings are not per-Config, so they stay the same. Load from Manager, by hotkey, or with a Smart Action.",
       "definition": {
         "text": "You can load a Config through a hotkey, by Config cycling, or from Manager (vertical \"...\" then Load Config).",
         "confidence": "official",
@@ -2779,13 +2994,18 @@
       "feel": [],
       "guidance": [
         {
-          "text": "Loading is slower while Manager is connected, and you can't hotkey-load while editing a Config. Close Manager for instant switching.",
+          "text": "Loading by hotkey or with a Config Switching Smart Action is slower while Manager is connected, and it won't happen while you are editing a Config. Close Manager for instant switching.",
           "confidence": "official",
           "citations": [
             {
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Loading-Configs/#choosing-a-config-to-load",
               "quote": "Loading configs through hotkey will be slower if Manager is connected. You cannot use a hotkey load if you are currently editing a Config."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+              "quote": "Use the config loading actions for this."
             },
             {
               "source": "xim-guide",
@@ -2813,7 +3033,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Loading a Config is the documented way to change smoothing, aiming curve or quantization between loadouts. So Dialed gives each loadout its own Config, loaded when you switch loadouts.",
+          "text": "No Smart Action in XIM's reference changes smoothing, aiming curve or quantization; they are part of a Config's aim settings. So, rather than re-editing one Config, Dialed gives each loadout its own Config, which you load (by hotkey, Smart Action or from Manager) when you switch loadouts.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -2833,12 +3053,42 @@
             },
             {
               "source": "xim-guide",
+              "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-right-stick-sensitivity",
+              "quote": "Reduce right thumbstick sensitivity."
+            },
+            {
+              "source": "xim-guide",
               "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
               "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+              "quote": "Enable gyro motion aim. Only enabled while action is active."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+              "quote": "Toggles gyro motion aim on/off."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+              "quote": "While a majority of the benefit of sub-Configs have been replaced by Smart Actions and groups, it can still be useful to quickly jump to a Config and back (\"chaining\") if there are significant changes in gameplay that occur that justify it."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Weapon-Loadouts/#weapon-loadouts",
+              "quote": "Uses group assignment and cycle group actions for weapon loadout tracking."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Groups/#groups",
+              "quote": "Group Membership is a powerful tool that allows you to selectively enable and disable sets of bindings using actions."
             }
           ],
-          "reasoning": "Config switching exists for different modes within one game. The documented actions that touch aim settings, Modify Aim Sensitivity and Sight Override (scopes, with Custom sync), change sensitivity only.",
-          "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
+          "reasoning": "XIM suggests the Config loading actions for chaining Configs for different modes in one game, such as on foot vs vehicle. In the Smart Actions Reference, the actions that affect aim are these. Modify Aim Sensitivity and Modify Right Stick Sensitivity change sensitivity. Sight Override changes the sight of enabled weapon groups. Aim Magnitude, Aim Angle and Aim Turn Assist move the reticle. Engage, Pause and Toggle Motion Aim enable, pause or toggle gyro motion aim. None of them changes smoothing, aiming curve or quantization.",
+          "caveat": "This is not how XIM documents loadouts. Its Weapon Loadouts example uses group assignment and cycle group actions, and groups enable and disable sets of bindings. XIM says most of the benefit of sub-Configs has been replaced by Smart Actions and groups. It also says jumping to another Config and back can still be useful 'if there are significant changes in gameplay that occur that justify it.' The guide never says these settings can't be changed inside one Config."
         }
       ],
       "notToBeConfusedWith": [
@@ -2879,6 +3129,7 @@
       "name": "Navigate Mode",
       "aliases": [
         "Auto Navigate Mode",
+        "Gamepad Auto Activate",
         "Navigate Only Hotkey Mode"
       ],
       "category": "config-switching",
@@ -2902,13 +3153,18 @@
       },
       "explanation": [
         {
-          "text": "The default toggle is View + Menu on an Xbox gamepad, or [ + ] on a keyboard. While it is on, the MATRIX light breathes white.",
+          "text": "The default toggle is View + Menu on an Xbox gamepad, Touchpad-Press + Options on a DualSense or DualShock 4, or [ + ] on a keyboard. While it is on, the MATRIX light breathes white.",
           "confidence": "official",
           "citations": [
             {
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Navigate-Mode/#enabling-navigate-mode",
               "quote": "View + Menu for Xbox gamepads"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Navigate-Mode/#enabling-navigate-mode",
+              "quote": "Touchpad-Press + Options for DualSense and DualShock 4 gamepads"
             },
             {
               "source": "xim-guide",
@@ -2934,7 +3190,7 @@
           ]
         },
         {
-          "text": "Auto Navigate Mode turns it on when you use the gamepad in Port 3, and off when you use any other input device.",
+          "text": "Auto Navigate Mode: with the Gamepad Auto Activate setting, you can make Navigate Mode turn on automatically when the gamepad in Port 3 is in use. It turns off automatically when you use any other connected input device.",
           "confidence": "official",
           "citations": [
             {
@@ -3095,7 +3351,7 @@
       ],
       "aimStyles": [
         {
-          "text": "Matters most for fast snaps and big turns. Slow tracking and small corrections stay well below it.",
+          "text": "Matters most for fast movements, such as snaps and quick turns. It caps speed, not distance: any movement slower than the game's limit is never capped, and the limit differs by aiming angle.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -3104,14 +3360,14 @@
               "quote": "All controller console shooters are limited by a maximum turn speed that the game cannot exceed. This maximum turn speed limit actually differs depending on aiming angle."
             }
           ],
-          "reasoning": "The limit caps top speed only. Slow, small movements never reach it."
+          "reasoning": "XIM defines it as a maximum turn speed the game cannot exceed, and says the limit differs by aiming angle. A speed cap affects only movements fast enough to reach it, whatever their size. No source gives Destiny 2's limit, so the app cannot say how close tracking comes to it."
         }
       ],
       "notToBeConfusedWith": [
         {
           "name": "Limit (Velocity Mapping)",
           "termId": "velocity-mapping",
-          "note": "A cap you set yourself that can't be exceeded. The game's maximum turn speed is fixed by the game."
+          "note": "A cap you set yourself that can't be exceeded. The game's maximum turn speed is built into the game; with Custom sync, your in-game settings affect it."
         },
         {
           "name": "Sensitivity",
@@ -3204,7 +3460,7 @@
           ]
         },
         {
-          "text": "Keep them on while you set up and tune. They are how you confirm the MATRIX sees your ADS, and how you spot turns hitting the game's limit.",
+          "text": "Keep them on while you set up and tune. They let you confirm the MATRIX sees your ADS (Manager's dashboard also shows which aiming mode is active), and spot turns hitting the game's limit.",
           "confidence": "reasoned",
           "citations": [
             {
@@ -3221,6 +3477,11 @@
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Identity/#additional-options",
               "quote": "Disabling light aim speed and mode light notifications"
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Dashboard/#current-input-and-aiming-mode",
+              "quote": "Beneath the box art is the current input (button or key being pressed) and the aiming mode that is active (Hip or Aiming Down Sight)."
             }
           ],
           "reasoning": "XIM says the ADS flash lets you know your game roles are set up correctly, and the red flash lets you adjust when you hit the limit. Both only help if the notifications are on."
@@ -3231,7 +3492,7 @@
         {
           "name": "Warning Lights",
           "termId": "warning-lights",
-          "note": "Repeated or unusual light sequences that signal a fault, like rapid purple blinking. A quick yellow flash is Hip; repeated yellow blinking is a lost authentication controller."
+          "note": "Repeated or unusual light sequences that signal a fault, like rapid purple blinking. A quick yellow flash is Hip; repeated yellow blinking is a lost authentication controller. A quick red flash means you hit the game's maximum turn speed; repeated red and yellow blinking is a power fault."
         },
         {
           "name": "Breathing light",
@@ -3360,7 +3621,7 @@
           ]
         },
         {
-          "text": "A solid white light means a crash. Yellow, cyan and purple blinking at startup means a hardware failure. Both are rare; XIM asks you to let them know.",
+          "text": "A solid white light while the MATRIX is not responding means there was a crash. Repeated yellow, cyan and purple blinking at startup means a hardware failure. Both are rare; XIM asks you to let them know.",
           "confidence": "official",
           "citations": [
             {
@@ -3501,7 +3762,7 @@
           ]
         },
         {
-          "text": "It won't match exactly, but it should be in range. If it isn't, check that your DPI setting is really saving to the mouse.",
+          "text": "It's normal for the reading not to match your DPI exactly, but it should be within range. If it isn't, check that your DPI setting is really saving to the mouse.",
           "confidence": "official",
           "citations": [
             {
@@ -3603,7 +3864,7 @@
           ]
         },
         {
-          "text": "Wireless: an adapter in Port 1 sits close to the MATRIX's Bluetooth antenna. XIM recommends moving it away with a USB extension, or using Port 2.",
+          "text": "Wireless: an adapter in Port 1 sits close to the MATRIX's Bluetooth antenna. XIM recommends moving it away from the MATRIX with a USB extension. If that isn't possible, plug the adapter directly into Port 2 instead.",
           "confidence": "official",
           "citations": [
             {
@@ -3719,7 +3980,7 @@
         "firmware flash"
       ],
       "category": "hardware",
-      "location": "See your version: press the vertical \"...\" and select About. Update with the XIM MATRIX Firmware Flash Tool on a Windows PC or Mac.",
+      "location": "See your version: press the vertical \"...\" and select About. Update with the XIM MATRIX Firmware Flash Tool on a Windows 10/11 x64 PC or a Mac with macOS 13 or higher.",
       "summary": "The MATRIX's own software. It updates often, and you flash it from a PC or Mac over USB.",
       "definition": {
         "text": "The MATRIX is updated often with new features and fixes. Even a new MATRIX may have out-of-date firmware.",
@@ -3734,13 +3995,18 @@
       },
       "explanation": [
         {
-          "text": "You update it over USB from a Windows PC or a Mac, using the Firmware Flash Tool.",
+          "text": "You update it over USB, using the XIM MATRIX Firmware Flash Tool, from a PC running Windows 10/11 x64 or a Mac running macOS 13 or higher.",
           "confidence": "official",
           "citations": [
             {
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
               "quote": "You will need access to a PC running Windows or a Mac. Your XIM MATRIX is upgraded over USB."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
+              "quote": "Running the XIM MATRIX flash upgrade tools requires the following OS versions: Windows 10/11 x64 or macOS 13 or higher."
             },
             {
               "source": "xim-guide",
@@ -3822,6 +4088,22 @@
           ]
         },
         {
+          "text": "Take care when restoring: XIM warns that restoring a backup of your Configs using an older firmware can corrupt them. Corrupted Configs can't be recovered. You would need to factory reset your MATRIX with the flash tool and rebuild them.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Warning-Lights/#config-corruption",
+              "quote": "Your Configs can be corrupted if your XIM MATRIX loses power while it is writing itself, or, if you restore a backup of your Configs using an older firmware."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Warning-Lights/#config-corruption",
+              "quote": "Unfortunately you won't be able to recover your Configs in this case. You will need to factory reset your XIM MATRIX using the flash tool and rebuild them."
+            }
+          ]
+        },
+        {
           "text": "Xbox: don't update your Xbox controller's firmware through the MATRIX. Update it while it is connected directly to the Xbox.",
           "confidence": "official",
           "citations": [
@@ -3885,7 +4167,8 @@
             "url": "https://guide.xim.tech/Smart-Actions-Reference/#aim-magnitude",
             "quote": "Move reticle at specified speed. Seamlessly integrates with user aim. Use in scenarios such as recoil control or auto-turn. (Use with Aim Angle.)"
           }
-        ]
+        ],
+        "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
       },
       "explanation": [
         {
@@ -3927,7 +4210,8 @@
               "url": "https://guide.xim.tech/Recoil-Control/#recoil-control",
               "quote": "This is basic recoil control and isn't intended to match the recoil pattern exactly. For a complete solution, see Recoil Modeling."
             }
-          ]
+          ],
+          "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
         }
       ],
       "aimStyles": [],
@@ -3940,7 +4224,7 @@
         {
           "name": "Aim Magnitude Variance",
           "termId": "behavior-variance",
-          "note": "Adds a slight random offset to this action's value."
+          "note": "Offsets this action's speed slightly above or below the value you set."
         },
         {
           "name": "Right Stick Magnitude",
@@ -3989,7 +4273,8 @@
             "url": "https://guide.xim.tech/Smart-Actions-Reference/#aim-angle",
             "quote": "Move reticle at specified angle. Seamlessly integrates with user aim. Use in scenarios such as recoil control or auto-turn. (Use with Aim Magnitude.)"
           }
-        ]
+        ],
+        "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
       },
       "explanation": [
         {
@@ -4027,7 +4312,7 @@
         {
           "name": "Aim Angle Variance",
           "termId": "behavior-variance",
-          "note": "Adds a slight random offset to this action's angle."
+          "note": "Offsets this action's angle slightly above or below the value you set."
         },
         {
           "name": "Right Stick Angle",
@@ -4152,6 +4437,38 @@
               "quote": "The icon will turn red when it's off."
             }
           ]
+        },
+        {
+          "text": "By default, Wait Variance is 20%, so each Wait can run anywhere from 20% shorter to 20% longer than the value you set (XIM's example: a 150 ms Wait runs between 120 ms and 180 ms). Aim Angle Variance defaults to 2.5° and Aim Magnitude Variance to 2.5.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#wait-variance-on",
+              "quote": "By default, this value is 20%."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Behavior-Variance/#wait-variance",
+              "quote": "For example, 20% for a 150ms wait time means, when run, the wait will be between 120ms and 180ms."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#aim-variance-on",
+              "quote": "By default, these values are 2.5°/s and 2.5° respectively."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Behavior-Variance/#aim-magnitude-variance",
+              "quote": "Aim Magnitude Variance is a percentage of variance above or below the specified value."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Behavior-Variance/#aim-magnitude-variance",
+              "quote": "For example, 2.5% for a 10°/s magnitude action means, when run, the value will be between 10.25°/s and 9.75°/s."
+            }
+          ],
+          "caveat": "XIM's two pages disagree on the unit for Aim Magnitude Variance. The Simulate Analog Behavior page gives its default as 2.5°/s. The Behavior Variance page calls it a percentage, and its example uses 2.5% on a 10°/s action (10.25°/s to 9.75°/s)."
         },
         {
           "text": "Setting a variance value to 0 turns that type of variance off for all bindings.",

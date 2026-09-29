@@ -12,7 +12,16 @@ import {
 } from '../../state/progress';
 import { defaultProfile, emptyConfig, emptyInGame, type Profile } from '../../state/schema';
 import { sampleLoadout } from '../../test/fixtures';
-import { MECHANICS_DEFAULTS, MECHANICS_TERM_IDS, buildPlan, planProgress, resumeStep, stepKeys } from './build-plan';
+import {
+  GAME_NOTE_IDS,
+  MECHANICS_DEFAULTS,
+  MECHANICS_TERM_IDS,
+  buildPlan,
+  leverDefaultCaption,
+  planProgress,
+  resumeStep,
+  stepKeys,
+} from './build-plan';
 import { weaponLines } from './format';
 import { sharedCaveat, sheetText } from './sheet-text';
 
@@ -98,6 +107,54 @@ describe('buildPlan', () => {
     ]);
   });
 
+  it('gives the aiming curve once to a precision-hold loadout: as its lever, carrying XIM’s default and guidance', () => {
+    const scout = buildPlan(real, profile(), sampleLoadout({ weapons: { kinetic: 'scout-rifle', energy: null, power: null } }));
+    const keys = stepKeys(scout).aim;
+    expect(keys).toContain('loadout:l1:aim:lever:precision-hold:aiming-curve');
+    expect(keys).not.toContain('loadout:l1:aim:term:aiming-curve');
+    expect(scout.mechanics.map((m) => m.term.id)).toEqual(['quantization', 'velocity-mapping']);
+
+    const curve = scout.levers.find((l) => l.lever.termId === 'aiming-curve')!;
+    expect(curve.guidance?.value).toEqual({ text: 'Linear', caption: 'default', confidence: 'official' });
+    expect(leverDefaultCaption(curve)).toBe('XIM’s default: Linear');
+    // Nothing sourced is lost: every line of XIM's guidance on the curve comes with the lever.
+    const all = real.termById('aiming-curve')!.guidance;
+    expect([...curve.guidance!.lead, ...curve.guidance!.more]).toEqual(all);
+    // Other levers carry no guidance of their own.
+    expect(scout.levers.filter((l) => l.guidance).map((l) => l.lever.termId)).toEqual(['aiming-curve']);
+    expect(leverDefaultCaption(scout.levers.find((l) => l.lever.termId === 'precision')!)).toBeUndefined();
+  });
+
+  it('keeps every mechanics row for aim styles without a lever on them', () => {
+    const pulse = buildPlan(real, profile(), sampleLoadout());
+    expect(pulse.mechanics.map((m) => m.term.id)).toEqual([...MECHANICS_TERM_IDS]);
+    expect(pulse.levers.every((l) => l.guidance === undefined)).toBe(true);
+  });
+
+  it('shows the cm/360 Sensitivity only when the profile aims with a mouse, and counts it as hidden otherwise', () => {
+    const scout = sampleLoadout({ weapons: { kinetic: 'scout-rifle', energy: null, power: null } });
+    const gyro = buildPlan(real, profile({ aimingSources: ['gyro'] }), scout);
+    expect(gyro.sensitivity).toBeUndefined();
+    expect(stepKeys(gyro).aim).not.toContain(progressKey.aim.sensitivity('l1'));
+    // No lever of precision-hold is hidden from a gyro player; the Sensitivity row is.
+    expect(gyro.hiddenLevers).toBe(1);
+
+    const thumbstick = buildPlan(real, profile({ aimingSources: ['thumbstick'] }), scout);
+    expect(thumbstick.sensitivity).toBeUndefined();
+    // Precision, Response, Easing and Stability (mouse or gyro only), plus the Sensitivity row.
+    expect(thumbstick.levers.map((l) => l.lever.termId)).toEqual(['aiming-curve']);
+    expect(thumbstick.hiddenLevers).toBe(5);
+
+    const mouse = buildPlan(real, profile({ aimingSources: ['mouse', 'thumbstick'] }), scout);
+    expect(mouse.sensitivity?.key).toBe(progressKey.aim.sensitivity('l1'));
+    expect(mouse.hiddenLevers).toBe(1);
+  });
+
+  it('adds Bungie’s adapter policy as the last note before the Destiny 2 settings', () => {
+    expect(GAME_NOTE_IDS.at(-1)).toBe('bungie-adapter-policy');
+    expect(GAME_NOTE_IDS.slice(0, 3)).toEqual(['max-sensitivity-and-defaults', 'sync-method', 'confirm-in-manager']);
+  });
+
   it('shows the no-cm/360-range gap next to XIM’s sensitivity advice', () => {
     const plan = buildPlan(real, profile(), sampleLoadout());
     expect(plan.sensitivity?.lead.map((s) => s.confidence)).toContain('gap');
@@ -161,6 +218,23 @@ describe('sheetText', () => {
 
 
 
+  it('prints the aiming curve once for a precision-hold loadout, with XIM’s default and guidance', () => {
+    const loadout = sampleLoadout({ weapons: { kinetic: 'scout-rifle', energy: null, power: null } });
+    const plan = buildPlan(real, profile(), loadout);
+    const text = sheetText({
+      plan,
+      weapons: weaponLines(loadout, real),
+      progress: {},
+      inGame: emptyInGame(),
+      config: undefined,
+      profile: profile(),
+      termName,
+    });
+    expect(text).toContain('- Aiming Curve: It depends (XIM’s default: Linear) · Not checked yet\n');
+    expect(text).not.toContain('- Aiming Curve: Linear (default)');
+    for (const statement of real.termById('aiming-curve')!.guidance) expect(text).toContain(statement.text);
+  });
+
   it('says once at the top what [Reasoned] means, instead of under every reasoned line', () => {
     const loadout = sampleLoadout({ weapons: { kinetic: 'hand-cannon', energy: null, power: null } });
     const plan = buildPlan(real, profile(), loadout);
@@ -206,7 +280,7 @@ describe('sheetText', () => {
     config.aim.smoothing = 'preset';
     config.aim.presetName = 'Fast';
     expect(make()).toContain(
-      'Note: Your smoothing is a preset (Fast). Dialed can’t tell which mode a preset uses. These directions assume Standard smoothing.',
+      'Note: Your smoothing is a preset (Fast). These directions are for custom Standard smoothing, where you set the values yourself instead of using a preset. XIM’s advice is to start by trying each preset and keep the one that feels most natural.',
     );
   });
 

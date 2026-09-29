@@ -26,6 +26,7 @@ import {
   BUILD_STEPS,
   CHECKLIST_STEPS,
   GAME_NOTE_IDS,
+  leverDefaultCaption,
   moreGameNoteIds,
   stepProgress,
   type BuildPlan,
@@ -384,7 +385,12 @@ export function AimSettingsStep({ plan, count }: StepProps) {
       </StepSection>
 
       <StepSection title="Work through these in Manager">
-        <p className="hint">Tick each one once you’ve dealt with it in this loadout’s Config in Manager.</p>
+        <p className="hint">
+          Tick each one once you’ve dealt with it in this loadout’s Config in Manager. Smoothing comes first: XIM’s advice
+          is to try each preset and keep the one that feels most natural. The smoothing directions after it (such as
+          Precision or Easing) are for custom Standard smoothing, where you set the values yourself instead of using a
+          preset.
+        </p>
         <StepCount count={count} />
         <ol className="checklist build-checklist">
           {plan.sensitivity && (
@@ -405,8 +411,10 @@ export function AimSettingsStep({ plan, count }: StepProps) {
               current={currentAimValue(config, 'smoothing')}
             />
           )}
-          {plan.levers.map(({ key, lever }) => {
+          {plan.levers.map((item) => {
+            const { key, lever, guidance } = item;
             const current = currentAimValue(config, lever.termId);
+            const caption = leverDefaultCaption(item);
             return (
               <ChecklistItem
                 key={key}
@@ -415,6 +423,7 @@ export function AimSettingsStep({ plan, count }: StepProps) {
                   <>
                     <TermLink id={lever.termId}>{termById(lever.termId)?.name ?? lever.termId}</TermLink>:{' '}
                     <span className="build-direction">{LEVER_DIRECTION_LABELS[lever.direction]}</span>
+                    {caption && ` (${caption})`}
                   </>
                 }
                 actionsPlacement="header"
@@ -424,6 +433,8 @@ export function AimSettingsStep({ plan, count }: StepProps) {
                   <StatementLine statement={lever.statement} />
                   <Why statements={[lever.statement]} showBadge={false} showText={false} showCaveat={false} />
                 </div>
+                {/* XIM's own guidance on the setting, which this row carries in place of a row of its own. */}
+                {guidance && <GuidanceStatements item={guidance} />}
               </ChecklistItem>
             );
           })}
@@ -508,7 +519,7 @@ export function SheetStep({ plan }: { plan: BuildPlan }) {
       </StepSection>
 
       <StepSection title="Loading this loadout’s Config">
-        <p className="hint">Each loadout has its own Config in Manager. Read how Configs are loaded and switched:</p>
+        <p className="hint">Dialed plans one Config in Manager per loadout. Read how Configs are loaded and switched:</p>
         <ul className="related-links">
           {['config', 'load-config', 'navigate-mode'].map((termId) => (
             <li key={termId}>

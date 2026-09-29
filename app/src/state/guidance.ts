@@ -26,3 +26,11 @@ export function leversForProfile(levers: readonly Lever[], profile: Pick<Profile
     (lever) => lever.aimingSources === undefined || lever.aimingSources.some((s) => profile.aimingSources.includes(s)),
   );
 }
+
+/**
+ * True when the player aims with a mouse. Mouse sensitivity is set in cm/360 (motion and
+ * thumbstick sensitivity use other units), so the cm/360 Sensitivity advice is for them.
+ */
+export function aimsWithMouse(profile: Pick<Profile, 'aimingSources'>): boolean {
+  return profile.aimingSources.includes('mouse');
+}

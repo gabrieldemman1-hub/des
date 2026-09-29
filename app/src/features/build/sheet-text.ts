@@ -20,7 +20,7 @@ import {
   type ProgressMap,
 } from '../../state/progress';
 import type { CurrentConfig, InGameSettings, Profile } from '../../state/schema';
-import { planProgress, type BuildPlan, type GuidanceItem, type GuidanceValue } from './build-plan';
+import { leverDefaultCaption, planProgress, type BuildPlan, type GuidanceItem, type GuidanceValue } from './build-plan';
 import { aimStyleName, statusOf, type WeaponLine } from './format';
 
 type ContextProfile = Pick<Profile, 'mouseDpi' | 'pollingRate'>;
@@ -54,16 +54,20 @@ function noteLines(statement: Statement, indent: string, { caveat = true } = {})
   return caveat && statement.caveat ? [`${indent}Caveat: ${statement.caveat}`] : [];
 }
 
+/** A setting's guidance, all of it: what the sheet prints under the setting. */
+function guidance(item: GuidanceItem | undefined): Statement[] {
+  return item ? [...item.lead, ...item.more] : [];
+}
+
 /** Every statement the sheet prints, in order, so the legend can say once what its labels mean. */
 function allStatements(plan: BuildPlan): Statement[] {
-  const guidance = (item: GuidanceItem | undefined) => (item ? [...item.lead, ...item.more] : []);
   return [
     ...(plan.main ? [plan.main.mapping] : []),
     ...(plan.style ? [plan.style.favours] : []),
     ...plan.settings.map((s) => s.statement),
     ...guidance(plan.sensitivity),
     ...guidance(plan.smoothing),
-    ...plan.levers.map((l) => l.lever.statement),
+    ...plan.levers.flatMap((l) => [l.lever.statement, ...guidance(l.guidance)]),
     ...plan.mechanics.flatMap(guidance),
   ];
 }
@@ -88,7 +92,7 @@ export function guidanceValueText(value: GuidanceValue): string {
 
 function guidanceLines(item: GuidanceItem, status: string, current: string | null): string[] {
   const head = [`- ${item.term.name}: ${guidanceValueText(item.value)}`, status, ...(current ? [`Yours: ${current}`] : [])];
-  return [head.join(' · '), ...[...item.lead, ...item.more].flatMap((s) => statementLines(s, '  '))];
+  return [head.join(' · '), ...guidance(item).flatMap((s) => statementLines(s, '  '))];
 }
 
 function contextText(line: CheckContextLine): string {
@@ -150,16 +154,20 @@ export function sheetText(input: SheetTextInput): string {
   if (plan.smoothing) {
     lines.push(...guidanceLines(plan.smoothing, status(plan.smoothing.key), currentAimValue(config, 'smoothing')));
   }
-  for (const { key, lever } of plan.levers) {
+  for (const item of plan.levers) {
+    const { key, lever } = item;
     const current = currentAimValue(config, lever.termId);
+    const caption = leverDefaultCaption(item);
     lines.push(
       [
-        `- ${termName(lever.termId)}: ${LEVER_DIRECTION_LABELS[lever.direction]}`,
+        `- ${termName(lever.termId)}: ${LEVER_DIRECTION_LABELS[lever.direction]}${caption ? ` (${caption})` : ''}`,
         status(key),
         ...(current ? [`Yours: ${current}`] : []),
       ].join(' · '),
     );
     lines.push(...statementLines(lever.statement, '  '));
+    // XIM's own guidance on the setting, which this line carries in place of a line of its own.
+    for (const statement of guidance(item.guidance)) lines.push(...statementLines(statement, '  '));
   }
   for (const item of plan.mechanics) {
     lines.push(...guidanceLines(item, status(item.key), currentAimValue(config, item.term.id)));

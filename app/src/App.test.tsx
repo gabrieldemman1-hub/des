@@ -73,6 +73,10 @@ describe('app shell', () => {
     const start = screen.getByRole('region', { name: 'Start here' });
     expect(within(start).getByRole('link', { name: 'Add your first loadout' })).toHaveAttribute('href', '/loadouts/new');
     expect(within(start).getByRole('link', { name: 'Fill in your profile' })).toHaveAttribute('href', '/profile');
+    // Only platform and output type filter the setup checks; the mouse values are shown, not used as a filter.
+    expect(start).toHaveTextContent(
+      'Platform and output type decide which setup checks apply to you. Your mouse DPI and polling rate are shown on the DPI and polling-rate checks in Build my config.',
+    );
     expect(screen.queryByRole('list', { name: 'Your loadouts' })).not.toBeInTheDocument();
 
     const flows = within(screen.getByRole('list', { name: 'What do you want to do?' })).getAllByRole('link');
@@ -93,7 +97,7 @@ describe('app shell', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Dialed' })).toBeInTheDocument();
   });
 
-  it('sources lists the whitelist and the five confidence labels', () => {
+  it('sources lists the whitelist and the six confidence labels', () => {
     renderApp({ path: '/sources', knowledge: weaponKnowledge });
     const guide = screen.getByRole('link', { name: /XIM MATRIX User Guide/ });
     expect(guide).toHaveAttribute('href', 'https://guide.xim.tech/');

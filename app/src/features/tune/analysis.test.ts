@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { knowledge, type KnowledgeBase, type Statement } from '../../../../knowledge/index';
 import { EASING_CAVEAT } from '../../../../knowledge/integrity';
+import { Statement as StatementSchema } from '../../../../knowledge/schema';
 import type { ConfigPatch } from '../../state/data-context';
 import { progressKey } from '../../state/progress';
 import {
@@ -16,12 +17,17 @@ import { sampleLoadout } from '../../test/fixtures';
 import {
   analyzeConfig,
   checkRequiredSettings,
+  CUSTOM_SYNC_FIELDS,
+  CUSTOM_SYNC_STATEMENT,
+  DPI_FIX_STATEMENT,
   FINDING_GROUPS,
   firstChange,
   groupFindings,
   hasEnteredSettings,
   mainWeapon,
   requiredSettingField,
+  requiredSettingsFor,
+  TUNE_STATEMENTS,
   type Finding,
   type InGameField,
 } from './analysis';
@@ -185,9 +191,10 @@ describe('Destiny 2 required settings', () => {
     expect(groupFindings(same).fix).toEqual([]);
   });
 
-  it('links the deadzone settings to the Deadzone explanation', () => {
-    const findings = analyze(kb, profile(), PULSE, config({ inGame: { axialDeadzone: 3 } }));
-    expect(byId(findings, 'fix:axialDeadzone').termIds).toEqual(['required-game-settings', 'deadzone']);
+  it('doesn’t link Destiny 2’s deadzones to the MATRIX’s own deadzone setting', () => {
+    const findings = analyze(kb, profile(), PULSE, config({ inGame: { axialDeadzone: 3, radialDeadzone: 0.2 } }));
+    expect(byId(findings, 'fix:axialDeadzone').termIds).toEqual(['required-game-settings']);
+    expect(byId(findings, 'fix:radialDeadzone').termIds).toEqual(['required-game-settings']);
   });
 
   it('reports settings not entered yet without turning them into findings', () => {
@@ -234,7 +241,11 @@ describe('Setup', () => {
     expect(dpi.current).toContain('800');
     expect(dpi.current).toContain('1600');
     expect(dpi.statement).toBe(check('mouse-dpi-matches').why);
-    expect(dpi.more).toEqual([check('mouse-dpi-matches').fix]);
+    // The card doesn't show the check's own text, so its fix says what to set and how Check DPI reads.
+    expect(dpi.more).toEqual([DPI_FIX_STATEMENT]);
+    expect(DPI_FIX_STATEMENT.confidence).toBe('official');
+    expect(DPI_FIX_STATEMENT.text).toMatch(/^Set the DPI in your Config to your mouse's DPI\. /);
+    expect(DPI_FIX_STATEMENT.text).not.toMatch(/test again|doesn't have to match exactly/);
     expect(dpi.termIds).toContain('mouse-dpi');
   });
 
@@ -283,6 +294,54 @@ describe('Setup', () => {
   });
 });
 
+describe('Custom sync', () => {
+  const custom = (inGame: Partial<InGameSettings>) =>
+    config({ matrix: { syncMethod: 'custom' }, inGame: { ...requiredInGame(), ...inGame } });
+
+  it('doesn’t ask a Custom-sync Config to change the sensitivity it copies from the game, but still flags the deadzones', () => {
+    const current = custom({ lookSensitivity: 12, adsSensitivityModifier: 1.2, axialDeadzone: 5, radialDeadzone: 0.2 });
+    const findings = analyze(kb, profile(), PULSE, current);
+    expect(ids(findings)).not.toContain('fix:lookSensitivity');
+    expect(ids(findings)).not.toContain('fix:adsSensitivityModifier');
+    expect(ids(groupFindings(findings).fix)).toEqual(['fix:axialDeadzone', 'fix:radialDeadzone']);
+    expect(firstChange(findings)?.id).toBe('fix:axialDeadzone');
+  });
+
+  it('lists the two as settings to check yourself, with the Custom sync statement, never as the same or missing', () => {
+    for (const inGame of [{ lookSensitivity: 12 }, { lookSensitivity: 20, adsSensitivityModifier: 1.5 }]) {
+      const current = config({ matrix: { syncMethod: 'custom' }, inGame });
+      const states = requiredSettingsFor(kb, current.inGame, current.config);
+      const copied = states.filter((s) => s.field !== null && CUSTOM_SYNC_FIELDS.has(s.field));
+      expect(copied.map((s) => s.field)).toEqual(['lookSensitivity', 'adsSensitivityModifier']);
+      for (const setting of copied) {
+        expect(setting).toMatchObject({ state: 'unknown', customSync: true });
+        expect(setting.statement).toBe(CUSTOM_SYNC_STATEMENT);
+      }
+      // Movement Controls, Button Layout and the deadzones are still compared (here: not entered).
+      expect(states.filter((s) => !s.customSync).map((s) => s.state)).toEqual(['missing', 'missing', 'missing', 'missing']);
+    }
+  });
+
+  it('keeps comparing every setting for Standard, Manual or no sync method', () => {
+    for (const syncMethod of ['standard', 'manual', null] as const) {
+      const current = config({ matrix: { syncMethod }, inGame: { ...requiredInGame(), lookSensitivity: 12 } });
+      expect(ids(groupFindings(analyze(kb, profile(), PULSE, current)).fix), String(syncMethod)).toEqual(['fix:lookSensitivity']);
+      expect(requiredSettingsFor(kb, current.inGame, current.config)).toEqual(checkRequiredSettings(kb, current.inGame));
+    }
+    // With no Config at all, too.
+    expect(requiredSettingsFor(kb, requiredInGame(), undefined)).toEqual(checkRequiredSettings(kb, requiredInGame()));
+  });
+
+  it('says why, as a reasoned statement that still gives XIM’s values for Standard sync', () => {
+    expect(CUSTOM_SYNC_STATEMENT.confidence).toBe('reasoned');
+    expect(CUSTOM_SYNC_STATEMENT.reasoning).toBeTruthy();
+    expect(CUSTOM_SYNC_STATEMENT.caveat).toMatch(/still needs 20 and 1\.5\.$/);
+    expect(CUSTOM_SYNC_STATEMENT.text).toContain(
+      `use XIM's list: Look Sensitivity ${required('lookSensitivity').value}, ADS Sensitivity Modifier ${required('adsSensitivityModifier').value}.`,
+    );
+  });
+});
+
 describe('Aim settings', () => {
   it('starts with Sensitivity, then the tracking levers for a pulse rifle', () => {
     const findings = groupFindings(analyze(kb, profile(), PULSE, config())).aim;
@@ -310,6 +369,14 @@ describe('Aim settings', () => {
     expect(byId(findings, 'aim:response').direction).toBe('depends');
   });
 
+  it('gives the cm/360 Sensitivity only to a profile that aims with a mouse', () => {
+    expect(ids(analyze(kb, profile({ aimingSources: ['mouse', 'gyro'] }), PULSE, config()))).toContain('aim:sensitivity');
+    for (const aimingSources of [['gyro'], ['thumbstick'], ['gyro', 'thumbstick']] as const) {
+      const findings = analyze(kb, profile({ aimingSources: [...aimingSources] }), PULSE, config());
+      expect(ids(findings), aimingSources.join()).not.toContain('aim:sensitivity');
+    }
+  });
+
   it('hides the gyro-only lever from a mouse-only profile', () => {
     const mouse = ids(analyze(kb, profile(), SCOUT, config()));
     expect(mouse).not.toContain('aim:stability');
@@ -331,7 +398,8 @@ describe('Aim settings', () => {
     const note = byId(aim, 'aim:smoothing-mode');
     expect(note.title).toBe('These directions assume Standard smoothing');
     expect(note.statement).toBe(style('precision-hold').favours);
-    expect(note.statement.text).toMatch(/These directions assume Standard smoothing/);
+    // The aim style's own words (m67, M9): the smoothing directions assume custom Standard smoothing.
+    expect(note.statement.text).toMatch(/assume custom Standard smoothing \(your own values, not a preset\)/);
     expect(note.actionable).toBe(false);
     expect(note.smoothing?.text).toBe(text);
     // It comes before the levers it is about.
@@ -346,21 +414,25 @@ describe('Aim settings', () => {
     expect(byId(aim, 'aim:aiming-curve')).toMatchObject({ actionable: true, smoothing: undefined });
   });
 
-  it('doesn’t rule the directions out for a preset, since Dialed can’t tell its mode', () => {
+  it('rules the directions out for a preset, like Classic and Off, and points to XIM’s advice on presets', () => {
     const findings = analyze(kb, profile(), SCOUT, config({ aim: { smoothing: 'preset', presetName: 'Fast', precision: 50 } }));
     const aim = groupFindings(findings).aim;
     const note = byId(aim, 'aim:smoothing-mode');
     expect(note.current).toBe('Preset: Fast');
     expect(note.smoothing?.text).toBe(
-      'Your smoothing is a preset (Fast). Dialed can’t tell which mode a preset uses. These directions assume Standard smoothing.',
+      'Your smoothing is a preset (Fast). These directions are for custom Standard smoothing, where you set the values yourself instead of using a preset. XIM’s advice is to start by trying each preset and keep the one that feels most natural.',
     );
     for (const id of ['aim:precision', 'aim:response', 'aim:easing']) {
       const lever = byId(aim, id);
-      // Still a change to try, but the Standard value isn't shown: a preset has no values in Dialed.
-      expect(lever).toMatchObject({ actionable: true, current: undefined, status: undefined });
-      expect(lever.progressKey).toBe(progressKey.aim.lever('l1', 'precision-hold', id.slice(4)));
-      expect(lever.smoothing?.text).toMatch(/can’t tell which mode a preset uses\. This direction assumes Standard/);
+      // Not a change to make, and no "Not entered yet" for a value the form doesn't ask for with a preset.
+      expect(lever).toMatchObject({ actionable: false, current: undefined, status: undefined, progressKey: undefined });
+      expect(lever.smoothing?.text).toMatch(/^Your smoothing is a preset \(Fast\)\. This direction is for custom Standard smoothing/);
     }
+    // The aiming curve isn't a smoothing setting, so its direction still applies.
+    expect(byId(aim, 'aim:aiming-curve')).toMatchObject({ actionable: true, smoothing: undefined });
+    // So a preset's smoothing directions are never "Change this first".
+    const presetOnly = analyze(kb, profile(), PULSE, config({ inGame: requiredInGame(), aim: { smoothing: 'preset' } }));
+    expect(firstChange(presetOnly, (f) => f.id === 'aim:sensitivity')).toBeUndefined();
   });
 
   it('adds no smoothing note for custom Standard or when smoothing isn’t entered', () => {
@@ -477,8 +549,8 @@ describe('Ordering and invariants', () => {
     expect(firstChange(aimOnly, () => true)).toBeUndefined();
   });
 
-  it('gives unique ids and only knowledge-base statements and terms', () => {
-    const statements = allStatements(kb);
+  it('gives unique ids and only knowledge-base statements (or Tune’s own) and terms', () => {
+    const statements = new Set([...allStatements(kb), ...TUNE_STATEMENTS]);
     const termIds = new Set(kb.glossary.terms.map((t) => t.id));
     expect(new Set(ids(findings)).size).toBe(findings.length);
     for (const finding of findings) {
@@ -499,6 +571,33 @@ describe('Ordering and invariants', () => {
     // Destiny 2's settings count for every loadout, with or without a Config of its own.
     expect(entered(config({ inGame: { lookSensitivity: 20 } }))).toBe(true);
     expect(hasEnteredSettings(undefined, config({ inGame: { buttonLayout: 'other' } }).inGame)).toBe(true);
+  });
+});
+
+describe('Tune’s own statements', () => {
+  /** Every quote the knowledge base cites, by page (anchor stripped), which verify:citations checks. */
+  const citedQuotes = new Map<string, string[]>();
+  const normalize = (text: string) => text.replace(/[‘’]/g, "'").replace(/\s+/g, ' ').trim();
+  for (const statement of allStatements(kb)) {
+    for (const c of statement.citations) {
+      const page = c.url.split('#')[0]!;
+      citedQuotes.set(page, [...(citedQuotes.get(page) ?? []), normalize(c.quote)]);
+    }
+  }
+
+  it.each(TUNE_STATEMENTS.map((s) => [s.text.slice(0, 40), s] as const))('follow the evidence rules: %s…', (_, statement) => {
+    expect(StatementSchema.safeParse(statement).success).toBe(true);
+    for (const c of statement.citations) {
+      const source = kb.sources.find((s) => s.id === c.source);
+      expect(source, c.source).toBeDefined();
+      expect(source!.hosts).toContain(new URL(c.url).hostname);
+      // Only passages the knowledge base already cites from the same page, so they are checked word for word.
+      const page = c.url.split('#')[0]!;
+      expect(
+        (citedQuotes.get(page) ?? []).some((quote) => quote.includes(normalize(c.quote))),
+        `${c.url}: ${c.quote}`,
+      ).toBe(true);
+    }
   });
 });
 

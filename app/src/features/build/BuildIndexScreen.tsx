@@ -86,8 +86,8 @@ export function BuildIndexScreen() {
         {loadouts.length === 0 ? (
           <EmptyState title="No loadouts yet" level={3}>
             <p>
-              Every loadout gets its own Config in MATRIX Manager, tuned toward its main weapon’s aim style, so the
-              build starts from a loadout. Add the weapons you run and mark the main one.
+              Dialed plans one Config in MATRIX Manager per loadout (you create each one), tuned toward its main
+              weapon’s aim style, so the build starts from a loadout. Add the weapons you run and mark the main one.
             </p>
             <p>
               <Link className="button primary" to="/loadouts/new">

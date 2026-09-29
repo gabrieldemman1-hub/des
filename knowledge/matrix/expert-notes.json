@@ -82,9 +82,45 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Dashboard/#notifications",
             "quote": "Recreate the Config to update its translation."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#config-edit",
+            "quote": "To edit the current Config, press the pencil icon.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#copying-configs",
+            "quote": "Simply press the Copy button and a text encoded version of the config will be placed in your clipboard.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#config-summaries",
+            "quote": "Press and hold the Copy button and a summary of the config will be placed in your clipboard.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#additional-options",
+            "quote": "Paste a Config for sharing with others",
+            "note": "One of the options under the identity section's \"...\" (used in the caveat)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#pasting-configs",
+            "quote": "You will be asked how much of the Config you'd like to use: all of it, only aim settings, only mappings.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#notifications",
+            "quote": "A game's Smart Translator can be updated if the game's aiming system changed. If that happens, you will be notified with a warning exclamation icon.",
+            "note": "Used in the caveat."
           }
         ],
-        "caveat": "From a 2023 tutorial, so Manager's menus may have moved since. Write down your current values before you recreate a Config."
+        "caveat": "From a 2023 tutorial, so Manager's menus may have moved since. Before you recreate a Config, edit your current one and press Copy in its identity section (a short press; holding copies a summary instead). Then edit the new Config, press Paste and choose all of it, only aim settings or only mappings. XIM doesn't say whether pasting brings back anything from the old translator, so check that the new Config shows no warning exclamation icon."
       }
     },
     {
@@ -96,7 +132,7 @@
         "jitter"
       ],
       "statement": {
-        "text": "XIM Central found that the Light smoothing preset gives far better micro movements (very small aim adjustments) than the Off preset. The official guide leaves the choice to you: try each preset and keep the one that feels most natural.",
+        "text": "XIM Central has said the Light smoothing preset gives better micro movements (very small aim adjustments) than having smoothing off. In a May 2023 Rainbow Six Siege tutorial, he recommended Light for that game and said it gives \"far better micro movements than the off preset\". In a July 2023 MATRIX video not tied to one game, he said the micro movements are \"just a little bit better\" with Light, which he prefers personally. In his July 2023 Overwatch 2 tutorial, he called both Light and Deactivated good presets but preferred custom smoothing for aim assist. The official guide leaves the choice to you: try each preset and keep the one that feels most natural.",
         "confidence": "expert",
         "citations": [
           {
@@ -104,7 +140,21 @@
             "url": "https://controlc.com/2a9abfe4",
             "quote": "It provides far better micro movements than the off preset",
             "matrixEra": true,
-            "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). The recommendation to use Light was made for Rainbow Six Siege; only this comparison with the off preset is general."
+            "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). The recommendation to use Light, and this comparison with the off preset, were made in this Rainbow Six Siege tutorial."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/29911c9b",
+            "quote": "Personally I prefer Light though. The micro movements are just a little bit better when using Light.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/29911c9b\" in the description of XIM Central's video \"XIM Matrix   Turn Matrix Into A XIM Apex   Emulate XIM Apex Synchronization On XIM Matrix\" (https://www.youtube.com/watch?v=QEnXv5lNUkg, 27 Jul 2023). Description read on 2026-09-29 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). The video is not tied to one game."
+          },
+          {
+            "source": "xim-central",
+            "url": "https://controlc.com/ee24428c",
+            "quote": "I strongly recommend to use a custom preset. While Light, and Deactivated are good presets, I prefer the aim assist when using custom smoothing.",
+            "matrixEra": true,
+            "note": "Linked as \"English text: https://controlc.com/ee24428c\" in the description of XIM Central's video \"XIM Matrix - Competitive Overwatch 2 Config Tutorial + Orbital Aim Assist + Aim Assist Curve Booster\" (https://www.youtube.com/watch?v=df1tVzFlV-w, 11 Jul 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). Said about Overwatch 2."
           },
           {
             "source": "xim-guide",
@@ -112,7 +162,7 @@
             "quote": "Start by trying each out to see what feels most natural to you. It's strictly based on preference."
           }
         ],
-        "caveat": "The preset names come from 2023 versions of Manager. The official guide does not list preset names, so check what your Manager offers. XIM Central's newer MATRIX smoothing video could not be read."
+        "caveat": "The preset names come from 2023 versions of Manager. The official guide does not give a full list of preset names, so check what your Manager offers. XIM Central's newer MATRIX smoothing video could not be read. XIM Central's 2023 scripts name the option with smoothing switched off differently: \"off\" (May) and \"Deactivated\" (July)."
       }
     },
     {
@@ -162,7 +212,7 @@
             "quote": "Group Membership is a powerful tool that allows you to selectively enable and disable sets of bindings using actions."
           }
         ],
-        "caveat": "XIM Central's example is Rainbow Six Siege (2023). We found no source that confirms this method with Destiny 2's weapon switching. XIM Central's 2023 script does not mention the Cycle Reset action that the current guide offers."
+        "caveat": "XIM Central's example is Rainbow Six Siege (2023). We found no source that confirms this method with Destiny 2's weapon switching. XIM Central's 2023 script does not mention the Cycle Reset action that the current guide offers. In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
       }
     },
     {
@@ -200,9 +250,33 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Smart-Actions-Reference/#aim-angle",
             "quote": "Move reticle at specified angle. Seamlessly integrates with user aim."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+            "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed.",
+            "note": "Angle Quantization (used in the caveat)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Behavior-Variance/#aim-angle-variance",
+            "quote": "The Aim Angle Variance value is a variance offset above or below the specified value.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Behavior-Variance/#behavior-variance",
+            "quote": "Variance is controlled per-binding and is enabled by default.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Behavior-Variance/#behavior-variance",
+            "quote": "To configure variance, under Mappings press the \"...\" and select Behavior Simulation.",
+            "note": "Used in the caveat."
           }
         ],
-        "caveat": "From a 2023 recoil tutorial. Use it only for direction, and check it with a short test: the tutorial sets magnitude in %, while the current guide sets Aim Magnitude in degrees per second. The script talks about moving the stick. Do not confuse Aim Angle, which moves the reticle, with the separate Right Stick Angle action. Quantization Angle and Behavior Variance also use \"Angle\" for different things."
+        "caveat": "From a 2023 recoil tutorial. Use it only for direction, and check it with a short test: the tutorial sets magnitude in %, while the current guide sets Aim Magnitude in degrees per second. The script talks about moving the stick. Do not confuse Aim Angle, which moves the reticle, with the separate Right Stick Angle action. Angle Quantization is a separate aim setting that snaps your reticle to predefined angles. Aim Angle Variance, set under Behavior Simulation, does act on this action: it offsets an Aim Angle action's angle slightly above or below the value you set, and variance is on by default. In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
       }
     },
     {

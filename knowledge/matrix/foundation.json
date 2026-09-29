@@ -41,7 +41,7 @@
         ]
       },
       "fix": {
-        "text": "Update with the XIM MATRIX Firmware Flash Tool from xim.tech/downloads. You need a Windows PC or a Mac and a USB connection. Start with the MATRIX unplugged. Hold the button on the MATRIX while you plug it into the computer: it lights blue, which means it is ready to flash. Back up your MATRIX, then press Update Firmware and wait for the rainbow startup sequence. If the update fails on a PC, XIM suggests rebooting, trying another USB port or cable, and disabling extra anti-virus software.",
+        "text": "Update with the XIM MATRIX Firmware Flash Tool from xim.tech/downloads. You need a Windows PC or a Mac and a USB connection. XIM's guide says the flash tool requires Windows 10/11 x64 or macOS 13 or higher; XIM's Hardware Compatibility List gives macOS 10.13 or higher for Mac. Start with the MATRIX unplugged. Hold the button on the MATRIX while you plug it into the computer: it lights blue, which means it is ready to flash. Back up your MATRIX, then press Update Firmware and wait for the rainbow startup sequence. If the update fails on a PC, XIM suggests rebooting, trying another USB port or cable, and disabling extra anti-virus software.",
         "confidence": "official",
         "citations": [
           {
@@ -53,6 +53,17 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
             "quote": "You will need access to a PC running Windows or a Mac. Your XIM MATRIX is upgraded over USB."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
+            "quote": "Running the XIM MATRIX flash upgrade tools requires the following OS versions: Windows 10/11 x64 or macOS 13 or higher."
+          },
+          {
+            "source": "xim-hardware-compatibility",
+            "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+            "quote": "macOS 10.13 or higher",
+            "note": "Listed for Mac under the Hardware Compatibility List's supported platforms for firmware upgrades."
           },
           {
             "source": "xim-guide",
@@ -205,7 +216,7 @@
         ]
       },
       "fix": {
-        "text": "If Manager shows a down-arrow icon, press it to download updated game support. You can also force a games database download in Global Settings. Then recreate the Config: press the vertical \"...\", select New Config and build a new Destiny 2 Config.",
+        "text": "If Manager shows a down-arrow icon, press it to download updated game support. You can also force a games database download in Global Settings. To update the Config's translation, recreate it: press the vertical \"...\", select New Config and build a new Destiny 2 Config.",
         "confidence": "official",
         "citations": [
           {
@@ -232,9 +243,45 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Gaming-On-Xbox/#creating-an-xbox-config",
             "quote": "Load XIM MATRIX Manager and create a new Config by pressing the vertical \"...\" on the top right and selecting New Config"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#config-edit",
+            "quote": "To edit the current Config, press the pencil icon.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#copying-configs",
+            "quote": "Simply press the Copy button and a text encoded version of the config will be placed in your clipboard.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#config-summaries",
+            "quote": "Press and hold the Copy button and a summary of the config will be placed in your clipboard.",
+            "note": "Why the caveat says to use a short press."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#custom-configs",
+            "quote": "To build a custom Config, press Custom.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#additional-options",
+            "quote": "Paste a Config for sharing with others",
+            "note": "One of the options under the identity section's \"...\" (used in the caveat)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#pasting-configs",
+            "quote": "You will be asked how much of the Config you'd like to use: all of it, only aim settings, only mappings.",
+            "note": "Used in the caveat."
           }
         ],
-        "caveat": "Recreating makes a new Config, so write down your current settings first and enter them again afterwards."
+        "caveat": "Recreating makes a new Config, but you don't have to rebuild your setup by hand. First edit your current Config (pencil icon) and press Copy in its identity section: Manager puts a text copy of the Config on your clipboard. Use a short press, because press and hold copies a summary instead. Build the new Destiny 2 Config with Custom, then edit it and press Paste (in the identity section's \"...\" options). Manager asks how much to use: all of it, only aim settings or only mappings. XIM doesn't say whether pasting brings back anything from the old translator, so check afterwards that the new Config shows no warning exclamation icon. If it does, recreate the Config again and enter your settings by hand."
       },
       "termIds": [
         "smart-translation",
@@ -247,7 +294,7 @@
       "platforms": [
         "xbox"
       ],
-      "check": "A genuine Xbox Series, One or Elite controller is plugged into Port 3 (●●●, on the back of the MATRIX) with a USB data cable. Plug it in while it is powered off, before you connect the MATRIX to the Xbox. Most licensed third-party wired Xbox controllers also work, but XIM's Hardware Compatibility List reports some, such as the PDP Xbox Neon and Power A Fusion Pro 3, as not working, so check it first. A third-party controller must be the only wired Xbox controller on the MATRIX.",
+      "check": "A genuine Xbox Series, One or Elite controller is plugged into Port 3 (●●●, on the back of the MATRIX) with a USB data cable. Plug it in while it is powered off, before you connect the MATRIX to the Xbox. Most licensed third-party wired Xbox controllers also work, but XIM's Hardware Compatibility List reports some, such as the PDP Xbox Neon and Power A Fusion Pro 3, as not working, so check it first. Whichever controller is in Port 3, keep it the only wired Xbox controller on the MATRIX: XIM's guide says the MATRIX doesn't support multiple wired Xbox controllers connected at the same time (it notes this in its advice on licensed third-party controllers).",
       "why": {
         "text": "On Xbox, the MATRIX needs this controller to run on your console. If the MATRIX loses contact with it, the light blinks yellow over and over.",
         "confidence": "official",
@@ -285,6 +332,12 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Troubleshooting-Xbox/#3rd-party-controller-problems",
             "quote": "If you are using a licensed 3rd party Xbox controller on your Xbox, please ensure it's the only wired Xbox controller connected to your XIM MATRIX. It should be connected to port 3.",
+            "note": "Used in the check."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Xbox/#3rd-party-controller-problems",
+            "quote": "Your XIM MATRIX doesn't support multiple wired Xbox controllers connected at the same time.",
             "note": "Used in the check."
           },
           {
@@ -369,7 +422,7 @@
       "platforms": [
         "pc"
       ],
-      "check": "On PC with controller output, check for virtual controller tools that may conflict with the MATRIX, such as Steam Input or DS4Windows. XIM says not to have them installed. Steam Input comes with Steam, and XIM doesn't say how to handle it. XIM lists these tools under connection problems: if the MATRIX won't connect to your PC, check them. If you output as an Xbox controller or a DualSense (not the standard XInput controller), you also need that controller in Port 3 (●●●): see the PC authentication controller check.",
+      "check": "On PC with controller output, check for virtual controller tools that may conflict with the MATRIX, such as Steam Input or DS4Windows. XIM says not to have them installed. Steam Input comes with Steam, and XIM doesn't say how to handle that for Destiny 2. XIM lists these tools under connection problems: if the MATRIX won't connect to your PC, check them. If you output as an Xbox controller or a DualSense (not the standard XInput controller), you also need that controller in Port 3 (●●●): see the PC authentication controller check.",
       "why": {
         "text": "When the MATRIX outputs as a controller on PC, XIM warns that virtual controller tools such as Steam Input or DS4Windows may conflict with it. XIM lists this under connection problems.",
         "confidence": "official",
@@ -396,9 +449,15 @@
             "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#gaming-on-pc-controller-output",
             "quote": "DualSense controller (DualSense authentication controller required)",
             "note": "Used in the check."
+          },
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings",
+            "quote": "If your game sees an XInput/Xbox 360 controller, enable Steam Input and restart your game.",
+            "note": "From the Apex Legends entries; the Destiny 2 entry has no such line (used in the check and the caveat)."
           }
         ],
-        "caveat": "XIM gives these two tools as examples and does not say how to switch Steam Input off. Other controller emulation tools may matter too."
+        "caveat": "XIM gives these two tools as examples and does not say how to switch Steam Input off. Other controller emulation tools may matter too. XIM's Game Settings list tells PC players of Apex Legends to enable Steam Input if the game sees an XInput/Xbox 360 controller. The Destiny 2 entry says nothing about Steam Input."
       },
       "fix": {
         "text": "If the MATRIX still won't connect to your PC, try a different cable. It must carry data, not only power.",
@@ -491,15 +550,74 @@
       ]
     },
     {
+      "id": "pc-dualsense-stick-upscaling",
+      "title": "Know your Stick Upscaling setting (PC, DualSense output)",
+      "platforms": [
+        "pc"
+      ],
+      "outputTypes": [
+        "pc-dualsense"
+      ],
+      "check": "DualSense output on PC uses a PlayStation 5-platform Config. Edit your Config, open Connection Method, and look at Aiming Stick Upscaling so you know whether it is on. XIM's guide doesn't cover this setting for DualSense output on PC, so Dialed can't tell you which way to set it.",
+      "why": {
+        "text": "XIM says Xbox supports 16-bit thumbstick resolution and PlayStation only 8-bit, and that Stick Upscaling simulates higher-resolution aim on PlayStation. By default, PlayStation Configs turn it on only when firing while aiming down sight. XIM also warns that stick upscaling should only be used when gaming on PlayStation consoles.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#stick-upscaling",
+            "quote": "Xbox supports 16-bit resolution thumbsticks, whereas PlayStation only supports 8-bit."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#stick-upscaling",
+            "quote": "The Stick Upscaling feature is used simulate higher resolution aim on PlayStation to enable Configs sharing between platforms."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#stick-upscaling",
+            "quote": "By default, PlayStation Configs will activate upscaling only when firing while aiming down sight."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#stick-upscaling",
+            "quote": "Stick upscaling should only be used when gaming on PlayStation consoles."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#custom-configs",
+            "quote": "DualSense Controller Output, select PlayStation 5",
+            "note": "PC players outputting as a DualSense make a PlayStation 5-platform Config (used in the check)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#config-edit",
+            "quote": "To edit the current Config, press the pencil icon.",
+            "note": "Used in the check."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#stick-upscaling",
+            "quote": "Access through Connection Method and then Aiming Stick Upscaling:",
+            "note": "Used in the check."
+          }
+        ],
+        "caveat": "The guide doesn't say whether a PlayStation 5-platform Config used for DualSense output on PC gets this default, or whether the warning covers it. The warning names PlayStation consoles, but the reason XIM gives for the feature is PlayStation's 8-bit stick resolution, and the guide doesn't say whether DualSense output on PC has the same limit."
+      },
+      "termIds": [
+        "output-type"
+      ]
+    },
+    {
       "id": "destiny2-required-settings",
       "title": "Destiny 2's required in-game settings are exact",
       "platforms": [
         "xbox",
         "pc"
       ],
-      "check": "In Destiny 2, set every required setting exactly as Dialed lists them (Movement Controls, Button Layout, Look Sensitivity, ADS Sensitivity Modifier, Axial Deadzone, Radial Deadzone). Leave every other aim setting at its default (XIM's cm/360 checklist names field of view as one). Then press the gear icon on Manager's main screen and compare. If the two lists differ, follow Manager's: our copy comes from a public forum page that may not match XIM's current list.",
+      "check": "In Destiny 2, set every required setting exactly as Dialed lists them (Movement Controls, Button Layout, Look Sensitivity, ADS Sensitivity Modifier, Axial Deadzone, Radial Deadzone). Leave every other setting at its default: XIM's Xbox and PC setup pages say the rest of the settings should remain at default, and XIM's cm/360 checklist names field of view as one. Then, with your Destiny 2 Config as the current Config, press the gear icon on Manager's main screen and compare. If the two lists differ, follow Manager's: our copy comes from a public forum page that may not match XIM's current list.",
       "why": {
-        "text": "The MATRIX's Smart Translation must be in sync with your game's aim settings. With Standard sync, that means in-game sensitivity at maximum, every additional required aim setting, and every other aim setting at its default (XIM's cm/360 checklist names field of view as one). XIM warns that wrong settings hurt your aim and stop shared Configs from working as intended.",
+        "text": "The MATRIX's Smart Translation must be in sync with your game's aim settings. With Standard sync, that means in-game sensitivity at maximum, every additional required aim setting, and every other aim setting at its default (XIM's cm/360 checklist names field of view as one). XIM's Xbox and PC setup pages go further: the rest of the settings should remain at default. XIM's Game Settings list also asks for all other values at default unless the list says otherwise. XIM warns that wrong settings hurt your aim and stop shared Configs from working as intended.",
         "confidence": "official",
         "citations": [
           {
@@ -534,6 +652,11 @@
           },
           {
             "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#required-game-settings",
+            "quote": "The rest of the settings should be remain at default."
+          },
+          {
+            "source": "xim-guide",
             "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
             "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
           },
@@ -545,7 +668,7 @@
         ]
       },
       "fix": {
-        "text": "Correct any setting that doesn't match. You can check XIM's list again at any time: press the gear icon on Manager's main screen.",
+        "text": "Correct any setting that doesn't match. You can check XIM's list again at any time: with your Destiny 2 Config as the current Config, press the gear icon on Manager's main screen.",
         "confidence": "official",
         "citations": [
           {
@@ -562,6 +685,11 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Dashboard/#identity",
             "quote": "Use the gear icon to review the required in-game settings for the game."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#identity",
+            "quote": "Your current Config's identity is displayed in the middle of the dashboard."
           }
         ]
       },
@@ -620,7 +748,7 @@
         ]
       },
       "fix": {
-        "text": "The value doesn't have to match exactly, but it should be in range. If it isn't, make sure your DPI setting is really saving to your mouse, then test again.",
+        "text": "It's normal for the value Check DPI shows not to match your DPI exactly, but it should be within range. If it isn't, make sure your DPI setting is really saving to your mouse.",
         "confidence": "official",
         "citations": [
           {
@@ -750,7 +878,7 @@
         "xbox",
         "pc"
       ],
-      "check": "Edit your Config, press \"...\" in the Identity section, and make sure the light aim speed and mode notifications are not disabled. Then learn the signals. Rapid purple blinking at random times: timing errors. A quick red flash: you hit the game's maximum turn speed. A quick green flash: the MATRIX saw you aim down sights (ADS). A quick yellow flash: you went back to hip fire. Repeated yellow blinking is different: it means the MATRIX lost contact with the authentication controller in Port 3 (see the authentication controller check for Xbox, or for Xbox and DualSense output on PC). If the light is hard to see, you can adjust its brightness in Global Settings.",
+      "check": "Edit your Config, press \"...\" in the Identity section, and make sure the light aim speed and mode notifications are not disabled. Then learn the signals. Rapid purple blinking at random times: timing errors. A quick red flash: you hit the game's maximum turn speed. A quick green flash: the MATRIX saw you aim down sights (ADS). The MATRIX also quickly flashes green when it successfully connects to your Xbox or PC. A quick yellow flash: you went back to hip fire. Repeated yellow blinking is different: it means the MATRIX lost contact with the authentication controller in Port 3 (see the authentication controller check for Xbox, or for Xbox and DualSense output on PC). If the light is hard to see, you can adjust its brightness in Global Settings.",
       "why": {
         "text": "The MATRIX's light tells you what it is doing. Rapid purple blinking means timing errors that may hurt performance. With controller output, every console shooter has a maximum turn speed, and the MATRIX flashes red when you hit it. The green and yellow flashes tell you your Config's game roles are set up right, so the MATRIX knows when you aim down sights.",
         "confidence": "official",
@@ -788,6 +916,18 @@
           },
           {
             "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#completed-connection",
+            "quote": "And, your XIM MATRIX will quickly flash green upon successful connection as well.",
+            "note": "Used in the check."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#completed-connection",
+            "quote": "And, your XIM MATRIX will quickly flash green upon successful connection as well.",
+            "note": "Used in the check."
+          },
+          {
+            "source": "xim-guide",
             "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
             "quote": "When you return to Hip, your XIM MATRIX will quickly flash yellow."
           },
@@ -811,7 +951,7 @@
         ]
       },
       "fix": {
-        "text": "Purple blinking: check for loose USB connections, faulty cables and hubs. No green flash when you aim down sights: open Game Roles (press \"...\" and select Game Roles) and set ADS to the button Destiny 2 uses for it. If ADS is on a trigger, also check how far it must be pulled to count (Trigger Roles). XIM says to keep it at 1% if you are unsure. Red flashes: you are turning as fast as the game allows, and no setting can go past the game's limit.",
+        "text": "Purple blinking: check for loose USB connections, faulty cables and hubs. No green flash when you aim down sights: open Game Roles (press \"...\" and select Game Roles) and set ADS to the button Destiny 2 uses for it. If ADS is on a trigger, also check how far it must be pulled to count (Trigger Roles). XIM says to keep it at 1% if you are unsure. Red flashes: you hit the game's maximum turn speed, and nothing can take you past the limit built into the game. XIM flashes red so you can adjust accordingly. If you have customized Velocity Mapping, XIM notes you may see this flash more often.",
         "confidence": "official",
         "citations": [
           {
@@ -841,8 +981,13 @@
           },
           {
             "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+            "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+          },
+          {
+            "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
-            "quote": "This is because no matter what, you cannot exceed the turn speed restrictions built into the game."
+            "quote": "When customizing Velocity Mapping, your XIM MATRIX may notify that you've exceeded maximum turn speed more often. This is because no matter what, you cannot exceed the turn speed restrictions built into the game."
           }
         ]
       },
@@ -934,7 +1079,7 @@
         "caveat": "Dialed makes one config sheet per loadout, one Config each, so consistent sensitivity between Configs matters here."
       },
       "fix": {
-        "text": "Switch these off only for the test, then put back what you use. They are features, not faults: XIM offers quantization to improve compatibility with aim assist, and custom curves let you shape your aim any way you like. If your result is way off (it doesn't need to be exact), recheck your DPI, your mouse's rate (Check Rate), Config, Smart Translator and in-game settings, then test again. If the cm/360 label is red, your Config doesn't support accurate cm/360 yet. Let XIM staff know: XIM says updating that Smart Translator will then be prioritized.",
+        "text": "Switch your custom aiming curve and quantization off only for the test, then put back what you use. They are features, not faults: XIM offers quantization to improve compatibility with aim assist, and custom curves let you shape your aim any way you like. The Elite 2 stick curve is different: it's the controller's own setting, not part of your Config, and XIM's guide says only to make sure it isn't enabled. If your result is way off (it doesn't need to be exact), recheck your DPI, your mouse's rate (Check Rate), Config, Smart Translator and in-game settings, then test again. If the cm/360 label is red, your Config doesn't support accurate cm/360 yet. Let XIM staff know: XIM says updating that Smart Translator will then be prioritized.",
         "confidence": "official",
         "citations": [
           {
@@ -946,6 +1091,16 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
             "quote": "You can craft any curve you want: such as a simple acceleration curve or a more complex multiple zone curves."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "You are testing with a linear aiming curve (not a custom one)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "If using an Elite 2 on Xbox, make sure you don't have a controller stick curve enabled"
           },
           {
             "source": "xim-guide",
@@ -1090,9 +1245,30 @@
           ]
         },
         {
-          "text": "Part of Dialed's setup: an up-to-date games database is the first step to a current Smart Translator. A Config picks up an updated translator only when you recreate it.",
-          "confidence": "reasoned",
+          "text": "XIM Central's way to get the newest Smart Translator: force a games database download here, then create a new Config. XIM Central says the download includes the new Smart Translators, and only a newly created Config uses the latest one. XIM's guide says to recreate the Config when Manager flags an out-of-date Smart Translator.",
+          "confidence": "expert",
           "citations": [
+            {
+              "source": "xim-central",
+              "url": "https://controlc.com/2a9abfe4",
+              "quote": "In order to get the latest Smart Translator, just go into the global settings in your Matrix manager. Click on the force download button, and confirm your choice in the next screen.",
+              "matrixEra": true,
+              "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA). These steps are general Manager steps, not specific to Rainbow Six Siege."
+            },
+            {
+              "source": "xim-central",
+              "url": "https://controlc.com/2a9abfe4",
+              "quote": "That will download the latest database for game configurations, which also includes the new Smart Translators.",
+              "matrixEra": true,
+              "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+            },
+            {
+              "source": "xim-central",
+              "url": "https://controlc.com/2a9abfe4",
+              "quote": "Once the download has finished, you must create a new configuration. Only that way, you will use the latest Smart Translator.",
+              "matrixEra": true,
+              "note": "Linked as \"English text: https://controlc.com/2a9abfe4\" in the description of XIM Central's video \"XIM Matrix - Rainbow Six Siege Config Tutorial Guide With Everything You Must Know + Anti Recoil\" (https://www.youtube.com/watch?v=ewrYHpCAxtY, 20 May 2023). Description read on 2026-09-23 from YouTube's public watch-page data; oEmbed and the video's owner field both name the channel XIM Central (UCJQZlZVwbWQNvgCXK3gCPrA)."
+            },
             {
               "source": "xim-guide",
               "url": "https://guide.xim.tech/Global-Settings/#force-games-download",
@@ -1104,7 +1280,7 @@
               "quote": "Out-of-date Smart Translator: A game's Smart Translator can be updated if the game's aiming system changed. If that happens, you will be notified with a warning exclamation icon. Recreate the Config to update its translation."
             }
           ],
-          "reasoning": "Game support comes in the games database, and XIM says to recreate a Config to update its translation. So the download comes first, then the new Config."
+          "caveat": "From a 2023 tutorial, so Manager's menus may have moved since. To carry your settings over to the new Config, see the Copy and Paste steps in the setup check \"Your Config is for Destiny 2 and its Smart Translator is current\"."
         }
       ],
       "termIds": [
@@ -1196,7 +1372,7 @@
               "quote": "By default, XIM MATRIX Manager will automatically choose which language to display based on your phone or PC system settings. If you prefer, you can manually override it here."
             }
           ],
-          "reasoning": "XIM's description of this setting is about bindings or about Manager itself. None of Dialed's aim or setup guidance depends on it."
+          "reasoning": "XIM describes this setting as the language Manager displays: it follows your phone or PC system settings by default, and you can override it. None of Dialed's aim or setup guidance depends on it."
         }
       ],
       "termIds": []
@@ -1217,7 +1393,7 @@
               "quote": "XIM MATRIX Manager has two display modes: light and dark. By default, the mode used will follow your phone or PC system settings. If you would like to keep it in on a display mode, set it here."
             }
           ],
-          "reasoning": "XIM's description of this setting is about bindings or about Manager itself. None of Dialed's aim or setup guidance depends on it."
+          "reasoning": "XIM describes this setting as Manager's display mode: light or dark, following your phone or PC system settings by default. None of Dialed's aim or setup guidance depends on it."
         }
       ],
       "termIds": []
@@ -1245,12 +1421,12 @@
           ]
         },
         {
-          "text": "XIM gives no update-rate advice outside SAB. Dialed doesn't plan on SAB for Destiny 2 (see the Destiny 2 notes), so it has no sourced reason to change the update rate from its default.",
+          "text": "Outside SAB, XIM's guide gives no update-rate advice, and XIM's Destiny 2 settings entry doesn't mention it. Dialed doesn't plan on SAB for Destiny 2 (see the Destiny 2 notes), so it has no official reason to change the update rate from its default. XIM Central recommends 1000Hz for a MATRIX \"polling rate\", but Dialed can't confirm that it is this setting.",
           "confidence": "gap",
           "citations": []
         },
         {
-          "text": "XIM Central (2023) describes a MATRIX \"polling rate\" option at the bottom of Manager's Connectivity settings, and recommends 1000Hz for the most responsive mouse movements.",
+          "text": "XIM Central (2023) describes a MATRIX \"polling rate\" option at the bottom of Manager's Connectivity settings, and recommends 1000Hz for the most responsive mouse movements. It says the change only takes effect after you save and then unplug and re-plug the MATRIX.",
           "confidence": "expert",
           "citations": [
             {
@@ -1266,6 +1442,13 @@
               "quote": "I recommend to use 1000Hz, because that will give you the most responsive mouse movements.",
               "matrixEra": true,
               "note": "Same script. A general recommendation, not tied to Overwatch 2. The script's separate \"feel like a xim Apex\" section also sets 1000Hz; Dialed does not use that section."
+            },
+            {
+              "source": "xim-central",
+              "url": "https://controlc.com/ee24428c",
+              "quote": "When you have adjusted your polling rate, save your changes in the top left corner, and restart your xim Matrix. You do that by unplugging, and re-plugging your xim from the console. This is necessary to activate your polling rate changes.",
+              "matrixEra": true,
+              "note": "Same script, right after the 1000Hz recommendation."
             }
           ],
           "caveat": "From a 2023 tutorial, so Manager's menus may have changed. The current guide places an update rate in the Config's output connection mode, with Standard as the default, and gives no Hz values. We can't confirm that XIM Central's \"polling rate\" is the same setting, or what Standard equals. If a game needs SAB, follow the guide and keep Standard."

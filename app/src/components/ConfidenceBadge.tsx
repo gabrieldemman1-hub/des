@@ -1,7 +1,10 @@
 import type { Confidence } from '../../../knowledge/index';
 import { CONFIDENCE_INFO } from '../content/labels';
 
-/** A distinct shape per level, so the badge never relies on colour alone (the text label leads). */
+/**
+ * A distinct shape per level, so the badge never relies on colour alone (the text label leads).
+ * Bungie's is a shield, not a square: a rounded square is the checklist's status mark.
+ */
 function Shape({ level }: { level: Confidence }) {
   switch (level) {
     case 'official':
@@ -19,6 +22,8 @@ function Shape({ level }: { level: Confidence }) {
       return <path d="M5 1 9.3 8.8H0.7Z" />;
     case 'gap':
       return <circle cx="5" cy="5" r="3.3" fill="none" stroke="currentColor" strokeWidth="1.4" />;
+    case 'publisher':
+      return <path d="M1.2 1h7.6v4.6L5 9.2 1.2 5.6Z" />;
   }
 }
 

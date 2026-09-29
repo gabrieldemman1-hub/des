@@ -11,18 +11,18 @@ import { StatusChip, StatusMark } from '../../components/StatusToggles';
 import { TermLink } from '../../components/TermLink';
 import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, whySummary } from '../../content/labels';
 import { useData } from '../../state/data-context';
-import { leversForProfile } from '../../state/guidance';
+import { aimsWithMouse, leversForProfile } from '../../state/guidance';
 import { useKnowledge } from '../../state/knowledge-context';
 import type { Loadout } from '../../state/schema';
 import { sheetLinkState } from '../build/sheet-navigation';
 import { sheetPath } from '../build/use-build-plan';
 import {
   analyzeConfig,
-  checkRequiredSettings,
   firstChange,
   groupFindings,
   hasEnteredSettings,
   mainWeapon,
+  requiredSettingsFor,
   type Finding,
   type RequiredSettingStatus,
 } from './analysis';
@@ -40,6 +40,12 @@ const ONLY_ONE = 'The change above is the only one here.';
 
 function names(settings: readonly RequiredSettingStatus[]) {
   return settings.map((s) => s.name).join(', ');
+}
+
+/** "Look Sensitivity and ADS Sensitivity Modifier": a card title for settings that share one statement. */
+function joinNames(settings: readonly RequiredSettingStatus[]) {
+  const all = settings.map((s) => s.name);
+  return all.length > 1 ? `${all.slice(0, -1).join(', ')} and ${all.at(-1)!}` : (all[0] ?? '');
 }
 
 /** "Easing, Lower": how the next change is announced. */
@@ -195,7 +201,7 @@ function NothingEntered({ settingsPath }: { settingsPath: string }) {
 /** "What to change": the findings for this loadout, the first one up front, then by group. */
 export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; settingsPath: string }) {
   const { data, setProgress } = useData();
-  const { kb } = useKnowledge();
+  const { kb, termById } = useKnowledge();
   const [announcement, setAnnouncement] = useState('');
   const [moved, setMoved] = useState(0);
   const firstHeading = useRef<HTMLHeadingElement>(null);
@@ -216,16 +222,23 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
   const first = firstChange(findings, isDone);
   const groups = groupFindings(findings.filter((f) => f !== first));
 
-  const required = checkRequiredSettings(kb, inGame);
+  const required = requiredSettingsFor(kb, inGame, config);
   const missing = required.filter((s) => s.state === 'missing');
   const matching = required.filter((s) => s.state === 'ok');
   const unknown = required.filter((s) => s.state === 'unknown');
+  // With Custom sync, the settings the Config copies from the game share one card and statement.
+  const customSync = unknown.filter((s) => s.customSync);
+  const [customStatement] = customSync.map((s) => s.statement);
+  const otherUnknown = unknown.filter((s) => !s.customSync);
   // XIM's list comes with one caveat for every value, so the section says it once (the card in
   // "Change this first" sits above the section and keeps its own).
-  const fixCaveat = hoistedCaveat([...groups.fix, ...unknown].map((f) => f.statement));
+  const fixCaveat = hoistedCaveat([...groups.fix, ...otherUnknown].map((f) => f.statement));
 
   const { archetype, style } = mainWeapon(kb, loadout);
-  const hiddenLevers = style ? style.levers.length - leversForProfile(style.levers, data.profile).length : 0;
+  // The cm/360 Sensitivity card is for mouse aim, so without a mouse it is one more hidden setting.
+  const hiddenSensitivity = !aimsWithMouse(data.profile) && termById('sensitivity')?.guidance[0] !== undefined;
+  const hiddenLevers =
+    (style ? style.levers.length - leversForProfile(style.levers, data.profile).length : 0) + (hiddenSensitivity ? 1 : 0);
   const aimsWith = data.profile.aimingSources.map((s) => AIMING_SOURCE_LABELS[s].title.toLowerCase()).join(' and ');
 
   const configDpi = config?.matrix.configDpi ?? null;
@@ -330,7 +343,23 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
           <>
             <p>Dialed can’t compare these, so check them yourself:</p>
             <ul className="finding-list">
-              {unknown.map((setting) => (
+              {customStatement && (
+                <li className="card finding" key="custom-sync">
+                  <div className="finding-head">
+                    <h3>{joinNames(customSync)}</h3>
+                    <span className="finding-tags">
+                      <ConfidenceBadge level={customStatement.confidence} />
+                    </span>
+                  </div>
+                  <p>{customStatement.text}</p>
+                  <StatementNotes statement={customStatement} />
+                  <details className="why">
+                    <summary>{whySummary([customStatement])}</summary>
+                    <StatementView statement={customStatement} showBadge={false} showText={false} showCaveat={false} />
+                  </details>
+                </li>
+              )}
+              {otherUnknown.map((setting) => (
                 <li className="card finding" key={setting.name}>
                   <div className="finding-head">
                     <h3>{setting.name}</h3>

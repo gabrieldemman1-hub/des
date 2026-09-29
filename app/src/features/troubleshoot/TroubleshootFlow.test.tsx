@@ -53,6 +53,17 @@ const stage2 = () => screen.getByRole('region', { name: 'Stage 2: What do you fe
 const checkItem = (title: string) => screen.getByRole('listitem', { name: title });
 
 describe('Troubleshoot by feel: stage 1, setup check', () => {
+  it('says how its answers are labelled, without promising the setting responsible', () => {
+    renderApp({ path: '/troubleshoot', knowledge: real, storage: storageWith(XBOX) });
+    const lede = screen.getByText(/^For when something feels wrong/);
+    expect(lede).toHaveTextContent('XIM’s guide names several that make aim inaccurate, such as a wrong mouse DPI in your Config.');
+    expect(lede).toHaveTextContent('Then you pick what you feel, and Dialed points to where to look.');
+    expect(lede).toHaveTextContent(
+      'Each answer is labelled: official where XIM says it, reasoned where Dialed works it out from XIM’s definitions.',
+    );
+    expect(lede).not.toHaveTextContent(/best-documented|the setting responsible where/);
+  });
+
   it('lists only the checks that apply on Xbox', () => {
     renderApp({ path: '/troubleshoot', knowledge: real, storage: storageWith(XBOX) });
     expect(screen.getByRole('heading', { level: 1, name: 'Troubleshoot by feel' })).toBeInTheDocument();
@@ -314,25 +325,33 @@ describe('Troubleshoot by feel: stage 2, symptoms', () => {
     expect(screen.getByRole('heading', { level: 1, name: symptom.label })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Troubleshoot by feel/ })).toHaveAttribute('href', '/troubleshoot');
 
-    // Both statements carry the Easing caveat, so the page says it once under the title, with
-    // what Reasoned means; the cards don't repeat either.
-    expect(screen.getByRole('note')).toHaveTextContent(`Caveat: ${EASING_CAVEAT}`);
-    expect(screen.getAllByText(/official wording is ambiguous/)).toHaveLength(1);
-    expect(screen.getByText('Worked out from XIM’s definitions, not stated by a source.', { exact: false })).toHaveClass(
+    // Both statements carry the Easing caveat, and the change adds SAB's smoothing floor to it
+    // (report item m64), so the caveats differ: each card shows its own, and the page says what
+    // Reasoned means once.
+    expect(symptom.mapping.caveat).toBe(EASING_CAVEAT);
+    expect(symptom.suggestedChange!.caveat).toMatch(/^The official wording is ambiguous.*Simulate Analog Behavior \(SAB\)/);
+    expect(screen.queryByRole('note')).not.toBeInTheDocument();
+    expect(screen.getAllByText(/official wording is ambiguous/)).toHaveLength(2);
+    // The Reasoned meaning as labels.ts words it (report item m90).
+    expect(screen.getByText('Worked out, not stated by a source: from XIM’s definitions', { exact: false })).toHaveClass(
       'confidence-meaning',
     );
 
     const points = screen.getByRole('region', { name: 'What it points to' });
     expect(points).toHaveTextContent(symptom.mapping.text);
-    expect(points).not.toHaveTextContent(EASING_CAVEAT);
+    expect(points).toHaveTextContent(`Caveat: ${EASING_CAVEAT}`);
     expect(points).toHaveTextContent('Reasoned');
     expect(within(points).getByRole('list', { name: 'Sources' })).toBeInTheDocument();
 
     const change = screen.getByRole('region', { name: 'Try this one change' });
     expect(change).toHaveTextContent(symptom.suggestedChange!.text);
-    expect(change).not.toHaveTextContent(EASING_CAVEAT);
-    // Its quotes are the ones "What it points to" shows, so it refers up instead of repeating them.
-    expect(within(change).queryByRole('blockquote')).toBeNull();
+    expect(change).toHaveTextContent(`Caveat: ${symptom.suggestedChange!.caveat!}`);
+    // The quotes "What it points to" shows are referred up instead of repeated; only the change's
+    // own (the SAB smoothing floor, report item m64) are quoted in full.
+    const shown = new Set(symptom.mapping.citations.map((c) => c.quote));
+    for (const quote of within(change).queryAllByRole('blockquote')) {
+      expect(shown.has((quote.textContent ?? '').replace(/^“|”$/g, ''))).toBe(false);
+    }
     expect(within(change).getAllByText(/^Quoted above:/).length).toBeGreaterThan(0);
 
     expect(screen.getByRole('region', { name: 'One change at a time' })).toHaveTextContent(knowledge.guardrail.text);

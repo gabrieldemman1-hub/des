@@ -70,7 +70,7 @@
       ],
       "checkIds": [],
       "mapping": {
-        "text": "Precision controls fine aim. XIM says higher Precision smooths aim at low speeds and \"increases the heaviness of the reticle\". A heavy or sluggish feel on small adjustments matches that wording, so Precision is the first setting to look at.",
+        "text": "Precision controls fine aim. XIM says higher Precision smooths aim at low speeds and \"increases the heaviness of the reticle\". A heavy or sluggish feel on small adjustments matches that wording, so Precision is the smoothing setting that fits this feel. XIM's mouse-aim tip is to start with just Sensitivity and change other values only if necessary, so look at Precision after your Sensitivity is set.",
         "confidence": "reasoned",
         "citations": [
           {
@@ -82,6 +82,11 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#standard",
             "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+            "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary."
           }
         ],
         "reasoning": "XIM describes Precision in feel words (\"heaviness of the reticle\") and says it \"controls fine aim behavior\", but never says \"if small adjustments feel heavy, lower Precision\". Small adjustments are low-speed aim, which is what Precision covers, so we match your feel to its wording."
@@ -99,10 +104,15 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#standard",
             "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+            "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
           }
         ],
         "reasoning": "Precision \"controls fine aim behavior\", and higher values increase \"the heaviness of the reticle\", so lowering it should make small adjustments feel lighter. The same definition says higher values give \"a smoother result\", so lowering it trades some smoothness away.",
-        "caveat": "Assumes Standard smoothing. Precision is a Standard setting; Classic uses Smooth, Decay and Synch instead."
+        "caveat": "Assumes Standard smoothing. Precision is a Standard setting; Classic uses Smooth, Decay and Synch instead. If you use Simulate Analog Behavior (SAB): XIM's SAB checklist recommends a smoothing preset, and says that if you use custom smoothing, don't reduce smoothing intensity below that of the presets."
       }
     },
     {
@@ -200,10 +210,15 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#standard",
             "quote": "Higher values result in smoother transition from rest but lower response time."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+            "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
           }
         ],
         "reasoning": "Higher Easing gives a \"smoother transition from rest but lower response time\". Read as a trade-off, lowering it should give a quicker, less smooth start. Easing is a Standard smoothing setting, so this assumes Standard.",
-        "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+        "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it. If you use Simulate Analog Behavior (SAB): XIM's SAB checklist recommends a smoothing preset, and says that if you use custom smoothing, don't reduce smoothing intensity below that of the presets."
       }
     },
     {
@@ -302,6 +317,7 @@
         "light-notifications"
       ],
       "checkIds": [
+        "destiny2-required-settings",
         "light-notifications"
       ],
       "mapping": {
@@ -357,9 +373,46 @@
             "source": "xim-guide",
             "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
             "quote": "Inherit Nothing: Inherit no ADS settings from Hip"
+          },
+          {
+            "source": "xim-game-settings",
+            "url": "https://community.xim.tech/pub/xim-game-settings#X10D7",
+            "quote": "ADS Sensitivity Modifier: 1.5",
+            "note": "XIM's Destiny 2 entry (used in the caveat)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+            "quote": "Accurate real world velocity requires your game settings be configured correctly if outputting as controller, or, your velocity be calibrated correctly if outputting as mouse.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+            "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others.",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#custom",
+            "quote": "Custom is a powerful synchronization option that let's you choose your game's aim settings including:",
+            "note": "Used in the caveat."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#custom",
+            "quote": "Hip and ADS sensitivity",
+            "note": "Listed under Custom (used in the caveat)."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Game-Settings/#custom",
+            "quote": "To use, copy your game's aim settings into your Config:",
+            "note": "Used in the caveat."
           }
         ],
-        "reasoning": "XIM documents each mechanism: the MATRIX \"needs to know\" when the game is in ADS \"in order to function correctly\", it can wait before switching ADS aim mode, and Hip and ADS have separate aim settings unless ADS inherits them. None of these pages describes a feel. The link to this symptom is ours: each one changes which settings are active, and when."
+        "reasoning": "XIM documents each mechanism: the MATRIX \"needs to know\" when the game is in ADS \"in order to function correctly\", it can wait before switching ADS aim mode, and Hip and ADS have separate aim settings unless ADS inherits them. None of these pages describes a feel. The link to this symptom is ours: each one changes which settings are active, and when.",
+        "caveat": "Destiny 2's own settings count too. XIM's Destiny 2 list requires ADS Sensitivity Modifier: 1.5, and XIM says accurate real-world velocity with controller output requires your game settings be configured correctly. Run the check \"Destiny 2's required in-game settings are exact\" below before changing any aim values. Our copy of that list comes from a public forum page, so confirm it in Manager (gear icon on the main screen). If your Config uses Custom sync, the 1.5 may not apply: with Custom, XIM says you choose your game's Hip and ADS sensitivity and copy your game's aim settings into your Config."
       },
       "suggestedChange": {
         "text": "Check the ADS light before changing any aim values. First make sure light notifications are on (they can be switched off in the Config's additional options). Then aim down sights and watch for a quick green flash, and let go and watch for yellow. No flash, or a flash that doesn't line up with your sights, points to Game Roles or ADS Activation Delay.",
@@ -473,7 +526,7 @@
           }
         ],
         "reasoning": "XIM offers Quantization for aim-assist compatibility 'on games that support it'. No source says whether Destiny 2 is one, so this applies the definition.",
-        "caveat": "Thin evidence: XIM doesn't say whether Destiny 2 supports it, or how Quantization feels there. Not with Simulate Analog Behavior (SAB): XIM's SAB checklist says not to enable quantization."
+        "caveat": "Thin evidence: XIM doesn't say whether Destiny 2 supports it, or how Quantization feels there. Not with Simulate Analog Behavior (SAB): XIM's SAB checklist says not to enable quantization. Destiny 2 account risk: Bungie's policy names using keyboard/mouse adapters to \"increase aim assist\" as a violation. Bungie doesn't say whether Quantization counts. See the Destiny 2 note on Bungie's policy."
       }
     },
     {
@@ -491,6 +544,7 @@
         "xbox-authentication-controller",
         "pc-virtual-controller-tools",
         "pc-authentication-controller",
+        "pc-dualsense-stick-upscaling",
         "destiny2-required-settings",
         "mouse-dpi-matches",
         "mouse-polling-rate",
@@ -518,6 +572,7 @@
         "xbox-authentication-controller",
         "pc-virtual-controller-tools",
         "pc-authentication-controller",
+        "pc-dualsense-stick-upscaling",
         "destiny2-required-settings",
         "mouse-dpi-matches",
         "mouse-polling-rate",
@@ -545,6 +600,7 @@
         "xbox-authentication-controller",
         "pc-virtual-controller-tools",
         "pc-authentication-controller",
+        "pc-dualsense-stick-upscaling",
         "destiny2-required-settings",
         "mouse-dpi-matches",
         "mouse-polling-rate",

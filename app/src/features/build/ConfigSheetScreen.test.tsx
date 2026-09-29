@@ -61,8 +61,8 @@ describe('Config sheet', () => {
     const firmware = knowledge.foundation.find((c) => c.id === 'firmware-current')!;
     expect(pressed(within(setup).getByRole('listitem', { name: firmware.title }))).toEqual({ done: 'false', problem: 'true' });
     // Axial Deadzone done; the firmware check and Look Sensitivity (18, not 20) need fixing. The
-    // same words as the loadout cards' "Sheet 1 of 21 done".
-    expect(screen.getByText('1 of 21 done · 2 need fixing')).toBeInTheDocument();
+    // same words as the loadout cards' "Sheet 1 of 22 done".
+    expect(screen.getByText('1 of 22 done · 2 need fixing')).toBeInTheDocument();
   });
 
   it('marks a row Done or Needs fixing on the sheet itself, with the marks Build my config uses', async () => {
@@ -71,17 +71,17 @@ describe('Config sheet', () => {
     const row = within(d2).getByRole('listitem', { name: 'Movement Controls' });
     await user.click(within(row).getByRole('button', { name: 'Done' }));
     expect(pressed(row)).toEqual({ done: 'true', problem: 'false' });
-    expect(screen.getByText('2 of 21 done · 2 need fixing')).toBeInTheDocument();
+    expect(screen.getByText('2 of 22 done · 2 need fixing')).toBeInTheDocument();
     // The same toggles as every checklist: a mark in a tinted box, never the accent fill.
     expect(within(row).getByRole('button', { name: 'Done' })).toHaveClass('status-toggle', 'is-done');
     expect(within(row).getByRole('button', { name: 'Done' })).not.toHaveClass('primary');
     await user.click(within(row).getByRole('button', { name: 'Needs fixing' }));
     expect(pressed(row)).toEqual({ done: 'false', problem: 'true' });
-    expect(screen.getByText('1 of 21 done · 3 need fixing')).toBeInTheDocument();
+    expect(screen.getByText('1 of 22 done · 3 need fixing')).toBeInTheDocument();
     // Tapping the active one again clears it.
     await user.click(within(row).getByRole('button', { name: 'Needs fixing' }));
     expect(pressed(row)).toEqual({ done: 'false', problem: 'false' });
-    expect(screen.getByText('1 of 21 done · 2 need fixing')).toBeInTheDocument();
+    expect(screen.getByText('1 of 22 done · 2 need fixing')).toBeInTheDocument();
   });
 
   it('flags a current Destiny 2 value that differs from the required one as Needs fixing', () => {
@@ -115,13 +115,13 @@ describe('Config sheet', () => {
     expect(within(ads).queryByText('Done', { selector: '.status-chip' })).not.toBeInTheDocument();
     expect(ads).toHaveTextContent('You marked this Done, but your value differs from 1.5.');
     // Axial Deadzone done; firmware, Look Sensitivity and ADS Sensitivity Modifier need fixing.
-    expect(screen.getByText('1 of 21 done · 3 need fixing')).toBeInTheDocument();
+    expect(screen.getByText('1 of 22 done · 3 need fixing')).toBeInTheDocument();
 
     const writeText = vi.spyOn(navigator.clipboard, 'writeText');
     await user.click(screen.getByRole('button', { name: 'Copy as text' }));
     const text = writeText.mock.calls[0]![0];
     expect(text).toContain('- ADS Sensitivity Modifier: 1.5 [Official] · Needs fixing · Yours: 1 (differs)');
-    expect(text).toContain('Progress: 1 of 21 done · 3 need fixing');
+    expect(text).toContain('Progress: 1 of 22 done · 3 need fixing');
   });
 
   it('lists the aim settings with a value, confidence and the current value', () => {
@@ -156,6 +156,22 @@ describe('Config sheet', () => {
     // The section header's badge is part of the summary line.
     const favours = within(aim).getByText('What tracking settings should favour').closest('summary')!;
     expect(within(favours).getByText('Reasoned', { selector: '.badge' })).toBeInTheDocument();
+  });
+
+  it('shows a precision-hold loadout’s aiming curve once: its lever, with XIM’s default and guidance', () => {
+    const scout = sampleLoadout({ weapons: { kinetic: 'scout-rifle', energy: null, power: null } });
+    render('/loadouts/l1/sheet', sampleData({ loadouts: [scout] }));
+    const aim = screen.getByRole('region', { name: 'Aim settings' });
+    const curves = within(aim).getAllByRole('listitem', { name: 'Aiming Curve' });
+    expect(curves).toHaveLength(1);
+    const curve = curves[0]!;
+    expect(curve.querySelector('.sheet-value')).toHaveTextContent('It dependsXIM’s default: Linear');
+    expect(within(curve.querySelector<HTMLElement>('.sheet-meta')!).getByText('Reasoned', { selector: '.badge' })).toBeInTheDocument();
+    // XIM's guidance on the curve comes with the lever, one tap away.
+    const guidance = real.termById('aiming-curve')!.guidance;
+    const more = within(curve).getByText(`Guidance on Aiming Curve (${guidance.length})`).closest('details')!;
+    expect(more).not.toHaveAttribute('open');
+    for (const statement of guidance) expect(more).toHaveTextContent(statement.text);
   });
 
   it('links on from the top and from the end of the sheet', () => {

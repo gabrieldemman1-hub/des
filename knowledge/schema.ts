@@ -6,13 +6,22 @@ import { z } from 'zod';
  * The rules below encode the evidence policy in CONCEPT.md §8.
  */
 
-export const CONFIDENCE_LEVELS = ['official', 'expert', 'contested', 'reasoned', 'gap'] as const;
+/**
+ * `publisher`: Bungie, Destiny 2's publisher, states it. Only for Destiny 2 account policy, never
+ * for XIM MATRIX settings (CONCEPT.md §8, decision of 2026-09-29), so integrity.ts allows it only
+ * in destiny2/game.json and only with a `game-publisher` citation.
+ */
+export const CONFIDENCE_LEVELS = ['official', 'expert', 'contested', 'reasoned', 'gap', 'publisher'] as const;
 export const Confidence = z.enum(CONFIDENCE_LEVELS);
 export type Confidence = z.infer<typeof Confidence>;
 
 export const Id = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'ids are kebab-case');
 
-export const SourceTier = z.enum(['official', 'official-by-reference', 'official-inferred', 'expert']);
+/**
+ * `game-publisher`: the game's publisher (Bungie), not XIM. Cited only by `publisher`
+ * statements, for Destiny 2 account policy (checked by integrity.ts).
+ */
+export const SourceTier = z.enum(['official', 'official-by-reference', 'official-inferred', 'expert', 'game-publisher']);
 
 export const Source = z.object({
   id: Id,
@@ -61,6 +70,7 @@ export const Statement = z
     switch (s.confidence) {
       case 'official':
       case 'expert':
+      case 'publisher':
         need(s.citations.length >= 1, `${s.confidence} statements need at least one citation`);
         break;
       case 'contested':
@@ -132,7 +142,10 @@ export const GlossaryTerm = z.object({
   explanation: z.array(Statement).default([]),
   /** Official feel wording, where the guide gives one. */
   feel: z.array(Statement).default([]),
-  /** Official recommendations, defaults and warnings. */
+  /**
+   * Recommendations, defaults and warnings. Normally `official`; a `reasoned` one carries its
+   * reasoning, and its badge says so.
+   */
   guidance: z.array(Statement).default([]),
   /** Which aim styles it likely matters for (normally `reasoned`). */
   aimStyles: z.array(Statement).default([]),
@@ -155,10 +168,12 @@ export type Platform = z.infer<typeof Platform>;
 
 /**
  * What the MATRIX presents itself as, for controller output (CONCEPT.md §7; mouse-and-keyboard
- * output is out of scope). Xbox has one option; PC has three
- * (https://guide.xim.tech/Gaming-On-PC-Output-C/). The guide's PC-only "Mouse, Keyboard,
+ * output is out of scope). Xbox has one option; PC has the three on XIM's PC controller-output
+ * page (https://guide.xim.tech/Gaming-On-PC-Output-C/). The guide's PC-only "Mouse, Keyboard,
  * Controller" option also aims through the controller, but it is out of MVP scope by the
- * user's decision (CONCEPT.md §13).
+ * user's decision (CONCEPT.md §13). XIM's outputs table (https://guide.xim.tech/Inputs-Outputs/)
+ * also lists DualShock 4 controller output for PC; it is left out until a source says which
+ * Config platform and output to pick for it on PC.
  */
 export const OUTPUT_TYPES = ['xbox-controller', 'pc-xinput', 'pc-xbox-controller', 'pc-dualsense'] as const;
 export const OutputType = z.enum(OUTPUT_TYPES);

@@ -96,9 +96,11 @@ export function TroubleshootScreen() {
       intro={
         <>
           <p className="lede">
-            For when something feels wrong but you don’t know which setting is responsible. Setup mistakes are the
-            best-documented causes of bad-feeling aim, so they get ruled out first. Then you pick what you feel, and
-            Dialed points to the setting responsible where a source backs it up, or says so when none does.
+            For when something feels wrong but you don’t know which setting is responsible. Setup mistakes get ruled
+            out first: XIM’s guide names several that make aim inaccurate, such as a wrong mouse DPI in your Config.
+            Then you pick what you feel, and Dialed points to where to look. Each answer is labelled: official where
+            XIM says it, reasoned where Dialed works it out from XIM’s definitions. Where no source ties a feel to a
+            setting, Dialed says so.
           </p>
           {checks.length > 0 && kb.symptoms.length > 0 && (
             <p>

@@ -75,6 +75,15 @@ describe('Build my config: choosing a loadout', () => {
     const details = screen.getByText('How this works').closest('details')!;
     expect(details).not.toHaveAttribute('open');
     expect(within(details).getByRole('heading', { level: 3, name: 'The order it follows' })).toBeInTheDocument();
+    // DPI, output, Smart Translator and light notifications are set in each Config, not globally, and the aim step
+    // promises only what it covers.
+    expect(details).toHaveTextContent(
+      'MATRIX setup and hardware foundation: current firmware, the polling rate your mouse actually reaches, and, in each Config, controller output, mouse DPI, a current Smart Translator and light notifications.',
+    );
+    expect(details).toHaveTextContent(
+      'Aim settings, in each loadout’s own Config: sensitivity in cm/360, smoothing, any settings your main weapon’s aim style points to, then the aiming curve, quantization and velocity mapping.',
+    );
+    expect(details).not.toHaveTextContent(/global settings|Y Scale|inheritance|a complete Destiny 2 configuration/);
   });
 
   it('says when the profile has everything the build uses', () => {
@@ -315,6 +324,34 @@ describe('Build my config: the steps', () => {
     expect(screen.getByText(/hidden, because your profile says you aim with mouse/)).toBeInTheDocument();
   });
 
+  it('step 3 says smoothing comes first, and that its directions are for custom Standard smoothing', () => {
+    render('/build/l1/aim');
+    expect(
+      screen.getByText(/^Tick each one once you’ve dealt with it in this loadout’s Config in Manager\./),
+    ).toHaveTextContent(
+      'Smoothing comes first: XIM’s advice is to try each preset and keep the one that feels most natural. The smoothing directions after it (such as Precision or Easing) are for custom Standard smoothing, where you set the values yourself instead of using a preset.',
+    );
+  });
+
+  it('step 3 gives a precision-hold loadout the aiming curve once, as its lever with XIM’s default and guidance', () => {
+    const scout = sampleLoadout({ id: 'l3', name: 'Scout', weapons: { kinetic: 'scout-rifle', energy: null, power: null } });
+    render('/build/l3/aim', withProfile({}, { loadouts: [scout] }));
+    const curve = screen.getByRole('listitem', { name: 'Aiming Curve: It depends (XIM’s default: Linear)' });
+    expect(screen.queryByRole('listitem', { name: 'Aiming Curve' })).not.toBeInTheDocument();
+    // XIM's official line on the default is up front; the rest of its guidance one tap away.
+    const guidance = real.termById('aiming-curve')!.guidance;
+    expect(within(curve).getByText(guidance[0]!.text, { exact: false })).toBeVisible();
+    expect(within(curve).getByText(`More guidance on Aiming Curve (${guidance.length - 1})`)).toBeInTheDocument();
+    // The other mechanics keep their own rows.
+    for (const name of ['Quantization', 'Velocity Mapping']) expect(screen.getByRole('listitem', { name })).toBeInTheDocument();
+  });
+
+  it('step 3 leaves out the cm/360 Sensitivity without a mouse, and counts it as hidden', () => {
+    render('/build/l1/aim', withProfile({ aimingSources: ['gyro'] }));
+    expect(screen.queryByRole('listitem', { name: 'Start with Sensitivity' })).not.toBeInTheDocument();
+    expect(screen.getByText(/^One setting for other ways of aiming is hidden, because your profile says you aim with gyro/)).toBeInTheDocument();
+  });
+
   it('step 3 shows gyro-only settings when the profile aims with gyro', () => {
     const scout = sampleLoadout({ id: 'l3', name: 'Scout', weapons: { kinetic: 'scout-rifle', energy: null, power: null } });
     render('/build/l3/aim', withProfile({ aimingSources: ['mouse', 'gyro'] }, { loadouts: [scout] }));
@@ -453,7 +490,7 @@ describe('Build my config: the steps', () => {
     data.configs = { l1: config };
     render('/build/l1/aim', data);
     expect(screen.getByRole('note')).toHaveTextContent(
-      'Your smoothing is a preset (Fast). Dialed can’t tell which mode a preset uses. These directions assume Standard smoothing.',
+      'Your smoothing is a preset (Fast). These directions are for custom Standard smoothing, where you set the values yourself instead of using a preset. XIM’s advice is to start by trying each preset and keep the one that feels most natural.',
     );
   });
 });

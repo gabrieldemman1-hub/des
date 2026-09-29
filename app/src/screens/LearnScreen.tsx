@@ -18,7 +18,10 @@ function matches(term: GlossaryTerm, query: string): boolean {
   return [term.name, ...term.aliases, term.summary].some((text) => normalize(text).includes(query));
 }
 
-/** Flow D, "Explain a concept": every MATRIX setting in plain words, plus the aim styles behind weapon-aware advice. */
+/**
+ * Flow D, "Explain a concept": the MATRIX settings and terms Dialed covers (not every MATRIX
+ * setting), in plain words, plus the aim styles behind weapon-aware advice.
+ */
 export function LearnScreen() {
   const { kb } = useKnowledge();
   const searchId = useId();
@@ -36,8 +39,8 @@ export function LearnScreen() {
       title="Learn"
       intro={
         <p className="lede">
-          What each XIM MATRIX setting actually does, in plain words, with XIM’s own definition and where every claim
-          comes from.
+          What the XIM MATRIX settings and features listed here actually do, in plain words, with XIM’s own definition
+          and where every claim comes from. Not every MATRIX setting is listed.
         </p>
       }
     >
@@ -116,9 +119,9 @@ export function LearnScreen() {
       {!q && kb.glossary.nameNotes.length > 0 && (
         <section className="learn-section" aria-labelledby={`${searchId}-names`}>
           <h2 className="section-title" id={`${searchId}-names`}>
-            Names that aren’t MATRIX settings
+            Names the official guide doesn’t list as settings
           </h2>
-          <p className="hint">You may hear these in videos or from older XIM devices.</p>
+          <p className="hint">You may come across these in videos, on older XIM devices, or in the guide itself.</p>
           {kb.glossary.nameNotes.map((note) => (
             <details className="why card" key={note.name}>
               <summary>{note.name}</summary>

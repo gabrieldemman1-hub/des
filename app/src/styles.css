@@ -33,6 +33,7 @@
     --c-contested: #ffa657;
     --c-reasoned: #d2a8ff;
     --c-gap: #9ea8b3;
+    --c-publisher: #ff9bce;
 
     --radius: 14px;
     --radius-sm: 10px;
@@ -84,6 +85,7 @@
       --c-contested: #953800;
       --c-reasoned: #6639ba;
       --c-gap: #505963;
+      --c-publisher: #99286e;
     }
   }
 
@@ -1360,7 +1362,7 @@
     flex: none;
   }
 
-  /* Official is the default, so it is a dot and a word; the pill marks the four exceptions. */
+  /* Official is the default, so it is a dot and a word; the pill marks the other levels. */
   .badge-official {
     --tone: var(--c-official);
     padding: 2px 0;
@@ -1382,6 +1384,10 @@
   }
   .badge-gap {
     --tone: var(--c-gap);
+  }
+  /* Bungie, not XIM: its own tone and shape, so it never reads as Official. */
+  .badge-publisher {
+    --tone: var(--c-publisher);
   }
 
   .confidence-meaning {

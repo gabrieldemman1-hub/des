@@ -75,7 +75,8 @@ function StartHere() {
           <strong>
             <Link to="/profile">Fill in your profile</Link>
           </strong>{' '}
-          (optional). Platform, mouse DPI and polling rate narrow the setup checks to your hardware.
+          (optional). Platform and output type decide which setup checks apply to you. Your mouse DPI and polling rate are
+          shown on the DPI and polling-rate checks in Build my config.
         </li>
         <li>
           <strong>Build my config.</strong> It ends in your config sheet.

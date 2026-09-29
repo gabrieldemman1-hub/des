@@ -14,7 +14,7 @@ import { useKnowledge } from '../../state/knowledge-context';
 import { derivedProblemNote, progressSummary } from '../../state/progress';
 import type { ProgressState } from '../../state/schema';
 import { useDerivedProblemKeys, useEffectiveProgress } from '../../state/use-progress';
-import { planProgress, type BuildPlan, type GuidanceItem } from './build-plan';
+import { leverDefaultCaption, planProgress, type BuildPlan, type GuidanceItem } from './build-plan';
 import { statusOf, weaponLines } from './format';
 import { CheckContext, CurrentValue, Label, LoadoutNotFound, SmoothingNote } from './parts';
 import { sheetBack } from './sheet-navigation';
@@ -448,7 +448,8 @@ function Sheet({ plan }: { plan: BuildPlan }) {
               current={currentAimValue(config, 'smoothing')}
             />
           )}
-          {plan.levers.map(({ key, lever }) => {
+          {plan.levers.map((item) => {
+            const { key, lever, guidance } = item;
             const current = currentAimValue(config, lever.termId);
             return (
               <SheetRow
@@ -456,6 +457,7 @@ function Sheet({ plan }: { plan: BuildPlan }) {
                 name={termName(lever.termId)}
                 termId={lever.termId}
                 value={LEVER_DIRECTION_LABELS[lever.direction]}
+                caption={leverDefaultCaption(item)}
                 confidence={lever.statement.confidence}
                 state={status(key)}
                 itemKey={key}
@@ -463,6 +465,13 @@ function Sheet({ plan }: { plan: BuildPlan }) {
                 {current && <CurrentValue value={current} />}
                 {lever.statement.caveat && <Caveat text={lever.statement.caveat} />}
                 <Why statements={[lever.statement]} showBadge={false} showCaveat={false} />
+                {/* XIM's own guidance on the setting, which this row carries in place of a row of its own. */}
+                {guidance && (
+                  <Why
+                    summary={`Guidance on ${guidance.term.name} (${guidance.lead.length + guidance.more.length})`}
+                    statements={[...guidance.lead, ...guidance.more]}
+                  />
+                )}
               </SheetRow>
             );
           })}

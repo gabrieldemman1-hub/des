@@ -3,14 +3,16 @@
  * loadout with the knowledge base and lists what to change, ordered by impact, in the layer
  * order of CONCEPT.md §6 (Destiny 2 settings, then MATRIX setup, then aim settings).
  *
- * Every finding carries the knowledge-base statement behind it. Nothing here states a fact of
- * its own: the only concrete targets are Destiny 2's required values, as the knowledge base
- * spells them, and aim settings get directions (raise, lower, it depends), never numbers. A
- * value is never called too high or too low. Kept free of React so it can be tested with the
- * real knowledge base.
+ * Every finding carries the knowledge-base statement behind it, or one of the two statements
+ * below that belong to Tune alone (Custom sync, and the DPI fix); those quote only passages the
+ * knowledge base already cites, from the same pages. The only concrete targets are Destiny 2's
+ * required values, as the knowledge base spells them, and aim settings get directions (raise,
+ * lower, it depends), never numbers. A value is never called too high or too low. Kept free of
+ * React so it can be tested with the real knowledge base.
  */
 import type {
   AimStyle,
+  Citation,
   FoundationCheck,
   GlossaryTerm,
   KnowledgeBase,
@@ -29,7 +31,7 @@ import {
   smoothingNote,
   type SmoothingNote,
 } from '../../state/current-values';
-import { checksForProfile, leversForProfile } from '../../state/guidance';
+import { aimsWithMouse, checksForProfile, leversForProfile } from '../../state/guidance';
 import { progressKey } from '../../state/progress';
 import { hasInGameValues } from '../../state/required-settings';
 import {
@@ -74,9 +76,9 @@ export interface Finding {
   actionable: boolean;
   /**
    * aim levers on a Standard smoothing setting, and the note about them, while the player's
-   * smoothing isn't custom Standard: the directions assume Standard smoothing (the shared
-   * wording from `smoothingNote`). With Classic or Off the lever isn't actionable; with a
-   * preset it still is, since Dialed can't tell which mode a preset uses.
+   * smoothing isn't custom Standard: the directions are for custom Standard smoothing (the
+   * shared wording from `smoothingNote`), so with a preset, Classic or Off the lever isn't
+   * actionable.
    */
   smoothing?: SmoothingNote;
   /**
@@ -100,7 +102,120 @@ export {
   type RequiredSettingState,
   type RequiredSettingStatus,
 } from '../../state/required-settings';
-import { IN_GAME_TERMS, checkRequiredSettings } from '../../state/required-settings';
+import {
+  IN_GAME_TERMS,
+  checkRequiredSettings,
+  type InGameField,
+  type RequiredSettingStatus,
+} from '../../state/required-settings';
+
+// ---------------------------------------------------------------------------------------
+// Tune's own statements
+// ---------------------------------------------------------------------------------------
+
+const GUIDE = 'xim-guide';
+const GAME_SETTINGS = 'xim-game-settings';
+const cite = (source: string, url: string, quote: string): Citation => ({ source, url, quote });
+
+/**
+ * Why Tune doesn't compare Look Sensitivity and ADS Sensitivity Modifier for a Config with
+ * Custom sync. XIM names no Destiny 2 setting that Custom covers, so it is reasoned.
+ */
+export const CUSTOM_SYNC_STATEMENT: Statement = {
+  text: "Your Config uses Custom sync, so Dialed doesn't compare Look Sensitivity or ADS Sensitivity Modifier with XIM's list. With Custom, XIM says you choose your game's Hip and ADS sensitivity and copy your game's aim settings into your Config, and Smart Translation must be synchronized with your game's aim settings. So your Config must hold the same values that Destiny 2 has for these two. If you change them in game, copy the new values into your Config. The other required settings, including the in-game deadzones, still apply, and all other aim settings stay default. If you switch this Config to Standard, use XIM's list: Look Sensitivity 20, ADS Sensitivity Modifier 1.5.",
+  confidence: 'reasoned',
+  reasoning:
+    "XIM's Custom sync lets you choose Hip and ADS sensitivity in game, and you copy your game's aim settings into the Config. No source names which Destiny 2 settings those are. XIM's public Destiny 2 entry has no Custom line and marks no value as customizable. By their names, Look Sensitivity and ADS Sensitivity Modifier are the likely ones. Smart Translation must be synchronized with the game's aim settings, so the values in game and the values copied into the Config must match.",
+  caveat:
+    "Check which values your Config's Custom Game Settings in Manager asks for. Any Destiny 2 setting it doesn't ask for keeps XIM's list value. Dialed keeps one set of Destiny 2 settings for all your loadouts, so a loadout whose Config uses Standard sync still needs 20 and 1.5.",
+  citations: [
+    cite(
+      GUIDE,
+      'https://guide.xim.tech/Game-Settings/',
+      "XIM MATRIX's Smart Translation input system must be synchronized with your game's aim settings for correctness to ensure optimal precision aim.",
+    ),
+    cite(
+      GUIDE,
+      'https://guide.xim.tech/Game-Settings/#custom',
+      "Custom is a powerful synchronization option that let's you choose your game's aim settings including:",
+    ),
+    cite(GUIDE, 'https://guide.xim.tech/Game-Settings/#custom', 'Hip and ADS sensitivity'),
+    cite(GUIDE, 'https://guide.xim.tech/Game-Settings/#custom', "To use, copy your game's aim settings into your Config:"),
+    cite(
+      GUIDE,
+      'https://guide.xim.tech/Game-Settings/#custom',
+      'Follow all additional required aim settings including in-game deadzone. All other aim settings should be default.',
+    ),
+    cite(
+      GUIDE,
+      'https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings',
+      'Or, if you are a controller gamer (and the game has support for it), aim is customized in your game and settings are copied to your Config.',
+    ),
+    cite(GAME_SETTINGS, 'https://community.xim.tech/pub/xim-game-settings#X10D7', 'Look Sensitivity: 20'),
+    cite(GAME_SETTINGS, 'https://community.xim.tech/pub/xim-game-settings#X10D7', 'ADS Sensitivity Modifier: 1.5'),
+  ],
+};
+
+/** How to set the Config's DPI, and how Check DPI reads: its value only has to be in range. */
+export const DPI_FIX_STATEMENT: Statement = {
+  text: "Set the DPI in your Config to your mouse's DPI. To check the DPI your mouse really runs at, use Check DPI: place a ruler under your mouse (a ruler phone app works too), then in Manager press and hold the mouse icon for 3 seconds, select Check DPI, move the mouse 1 inch sideways and look at the value shown. It's normal for that value not to match your DPI exactly, but it should be within range. If it isn't, make sure your DPI setting is really saving to your mouse.",
+  confidence: 'official',
+  citations: [
+    cite(GUIDE, 'https://guide.xim.tech/Aim-Settings/#mouse-dpi', 'Make sure this value matches your mouse DPI.'),
+    cite(
+      GUIDE,
+      'https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi',
+      'Place a ruler below your mouse (a ruler phone app works too)',
+    ),
+    cite(GUIDE, 'https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi', 'Press and hold the mouse icon for 3 seconds'),
+    cite(GUIDE, 'https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi', 'Move your mouse horizontally for 1 inch'),
+    cite(
+      GUIDE,
+      'https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi',
+      "Gaming mice use high resolution sensors, it's normal to not match your DPI exactly, but, it should be within the range. If it's not, verify that your DPI selection is saving correctly to your mouse.",
+    ),
+  ],
+};
+
+/** Every statement Tune adds to the knowledge base's own. */
+export const TUNE_STATEMENTS: readonly Statement[] = [CUSTOM_SYNC_STATEMENT, DPI_FIX_STATEMENT];
+
+// ---------------------------------------------------------------------------------------
+// Destiny 2 required settings, for one loadout's Config
+// ---------------------------------------------------------------------------------------
+
+/**
+ * The Destiny 2 settings a Config with Custom sync copies from the game (by their names, the
+ * Hip and ADS sensitivity XIM says Custom lets you choose), so Tune doesn't compare them with
+ * XIM's list. Destiny 2's other required settings still apply.
+ */
+export const CUSTOM_SYNC_FIELDS: ReadonlySet<InGameField> = new Set(['lookSensitivity', 'adsSensitivityModifier']);
+
+/** A required setting as Tune shows it for one loadout's Config. */
+export interface LoadoutRequiredSetting extends RequiredSettingStatus {
+  /** True when the Config's Custom sync takes the value from the game: `unknown`, with `CUSTOM_SYNC_STATEMENT`. */
+  customSync?: true;
+}
+
+/**
+ * Destiny 2's required settings compared with what the player entered, for this loadout's
+ * Config. With Custom sync, Look Sensitivity and ADS Sensitivity Modifier aren't compared: they
+ * are `unknown` (check them yourself) and carry `CUSTOM_SYNC_STATEMENT`. Standard and Manual
+ * sync, or none entered, compare every setting.
+ */
+export function requiredSettingsFor(
+  kb: KnowledgeBase,
+  inGame: InGameSettings | undefined,
+  config: CurrentConfig | undefined,
+): LoadoutRequiredSetting[] {
+  const settings = checkRequiredSettings(kb, inGame);
+  if (config?.matrix.syncMethod !== 'custom') return settings;
+  return settings.map((setting) =>
+    setting.field !== null && CUSTOM_SYNC_FIELDS.has(setting.field)
+      ? { ...setting, state: 'unknown', statement: CUSTOM_SYNC_STATEMENT, customSync: true }
+      : setting,
+  );
+}
 
 // ---------------------------------------------------------------------------------------
 // Helpers
@@ -158,8 +273,13 @@ function statementsOf(...statements: (Statement | undefined)[]): Statement[] {
 // The analysis
 // ---------------------------------------------------------------------------------------
 
-function fixFindings(kb: KnowledgeBase, inGame: InGameSettings, known: (ids: readonly string[]) => string[]) {
-  return checkRequiredSettings(kb, inGame).flatMap((setting): Finding[] => {
+function fixFindings(
+  kb: KnowledgeBase,
+  inGame: InGameSettings,
+  config: CurrentConfig,
+  known: (ids: readonly string[]) => string[],
+) {
+  return requiredSettingsFor(kb, inGame, config).flatMap((setting): Finding[] => {
     if (setting.state !== 'mismatch' || setting.field === null) return [];
     return [
       {
@@ -249,7 +369,8 @@ function setupFindings(
         group: 'setup',
         title: 'The DPI in your Config differs from your mouse DPI',
         statement: check.why,
-        more: statementsOf(check.fix),
+        // What to do, and what Check DPI's reading means (the check's own text isn't on the card).
+        more: [DPI_FIX_STATEMENT],
         current: `Config ${matrix.configDpi} · mouse ${profile.mouseDpi} (from your profile)`,
         status: 'mismatch',
         actionable: true,
@@ -273,9 +394,10 @@ function aimFindings(
   const { aim } = config;
 
   // XIM's advice for mouse aim: start with Sensitivity alone, and change the rest only if needed.
+  // Mouse sensitivity is set in cm/360, so it is for players who aim with a mouse.
   const sensitivity = term('sensitivity');
   const startWith = sensitivity?.guidance[0];
-  if (sensitivity && startWith) {
+  if (sensitivity && startWith && aimsWithMouse(profile)) {
     const current = describeSensitivity(aim);
     findings.push({
       id: 'aim:sensitivity',
@@ -330,9 +452,9 @@ function aimFindings(
   for (const lever of levers) {
     const standardSetting = STANDARD_SMOOTHING_TERMS.has(lever.termId);
     const leverNote = standardSetting ? smoothingNote(aim, 'one') : null;
-    // Classic or Off: the direction is for a setting their Config doesn't use as it is. A preset
-    // may be Standard, so its directions stay.
-    const ruledOut = leverNote !== null && leverNote.mode !== 'preset';
+    // A preset, Classic or Off: the direction is for custom Standard smoothing, a value their
+    // Config doesn't have as it is (and the form doesn't ask for), so it is never "Change this first".
+    const ruledOut = leverNote !== null;
     const value = aimValue(aim, lever.termId);
     findings.push({
       id: `aim:${lever.termId}`,
@@ -450,7 +572,7 @@ export function analyzeConfig(
   const known = (ids: readonly string[]) => ids.filter((id) => terms.has(id));
 
   const findings = [
-    ...fixFindings(kb, inGame ?? emptyInGame(), known),
+    ...fixFindings(kb, inGame ?? emptyInGame(), current, known),
     ...setupFindings(kb, profile, current, term, known),
     ...aimFindings(kb, profile, loadout, current, term, known),
     ...infoFindings(kb, profile, current, term, known),

@@ -36,7 +36,7 @@ export const FLOWS: readonly Flow[] = [
     sections: [
       {
         paragraphs: [
-          'A step-by-step walkthrough that builds a complete Destiny 2 configuration from the ground up, in dependency order. At each step you see the recommendation for you (based on your profile), the reasoning, and the source.',
+          'A step-by-step walkthrough that builds a Destiny 2 configuration from the ground up, in dependency order. At each step you see the recommendation for you (based on your profile), the reasoning, and the source.',
           'The end state is a summary sheet you work through in XIM MATRIX Manager and in Destiny 2’s own settings.',
         ],
       },
@@ -45,14 +45,14 @@ export const FLOWS: readonly Flow[] = [
         paragraphs: ['Upper layers are meaningless if the lower ones are wrong, so the configuration is always built in this order:'],
         bullets: [
           'In-game Destiny 2 settings: the values XIM’s Smart Translation expects.',
-          'MATRIX global settings and hardware foundation: controller output, mouse DPI, polling rate, current firmware and Smart Translator, light notifications.',
-          'Aim config (Hip and ADS): sensitivity in cm/360, smoothing, aiming curve, Y Scale, quantization, velocity mapping, deadzone, Hip vs ADS inheritance.',
+          'MATRIX setup and hardware foundation: current firmware, the polling rate your mouse actually reaches, and, in each Config, controller output, mouse DPI, a current Smart Translator and light notifications.',
+          'Aim settings, in each loadout’s own Config: sensitivity in cm/360, smoothing, any settings your main weapon’s aim style points to, then the aiming curve, quantization and velocity mapping.',
         ],
       },
       {
         heading: 'One config sheet per loadout',
         paragraphs: [
-          'Each loadout you save gets its own config sheet, tuned toward that loadout’s main aim style. Weapon-aware guidance is labelled reasoned: a direction worked out from XIM’s definitions, never an invented number.',
+          'Each loadout you save gets its own config sheet, tuned toward that loadout’s main aim style. Weapon-aware guidance is labelled reasoned. Which aim style a weapon type gets is Dialed’s own reading of how that weapon fires, not taken from a source. The directions for each aim style are worked out from XIM’s definitions, never an invented number.',
         ],
       },
     ],
@@ -79,11 +79,11 @@ export const FLOWS: readonly Flow[] = [
     code: 'Flow C',
     title: 'Troubleshoot by feel',
     question: '"My aim feels…"',
-    summary: 'Rule out setup mistakes first, then go from what you feel to the setting responsible.',
+    summary: 'Rule out setup mistakes first, then go from what you feel to where to look.',
     sections: [
       {
         paragraphs: [
-          'For when something feels wrong but you don’t know which setting is responsible. Setup mistakes are the best-documented causes of bad-feeling aim, so they get ruled out before anything is tuned.',
+          'For when something feels wrong but you don’t know which setting is responsible. Setup mistakes get ruled out first: XIM’s guide names several that make aim inaccurate, such as a wrong mouse DPI in your Config.',
         ],
       },
       {
@@ -114,7 +114,7 @@ export const FLOWS: readonly Flow[] = [
     code: 'Flow D',
     title: 'Explain a concept',
     question: '"What does this actually do?"',
-    summary: 'Plain-language, sourced explanations of every MATRIX setting and why it matters for your aim.',
+    summary: 'Plain-language, sourced explanations of key MATRIX settings and terms, and why they matter.',
     sections: [
       {
         paragraphs: ['A learn and glossary mode for the MATRIX’s own vocabulary. Each term shows:'],
@@ -128,7 +128,7 @@ export const FLOWS: readonly Flow[] = [
       {
         heading: 'Confusing names, untangled',
         paragraphs: [
-          'For example, “Standard” is a smoothing mode, a sync method and a velocity-mapping mode: three unrelated things. And “Response” (a smoothing setting) is not the mouse “response rate”.',
+          'For example, “Standard” is a smoothing mode, a sync method, a velocity-mapping mode and an update-rate option: four unrelated things. And “Response” (a smoothing setting) is not the mouse “response rate”.',
           'The same explanations appear inline everywhere: every setting name in the other flows opens its explanation.',
         ],
       },
