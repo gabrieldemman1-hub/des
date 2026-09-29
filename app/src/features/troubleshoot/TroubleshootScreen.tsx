@@ -2,6 +2,7 @@ import { useId, useRef } from 'react';
 import { Link } from 'react-router';
 import type { Symptom } from '../../../../knowledge/index';
 import { EmptyState } from '../../components/EmptyState';
+import { HowThisWorks } from '../../components/HowThisWorks';
 import { ChevronIcon } from '../../components/icons';
 import { Screen } from '../../components/Screen';
 import { OUTPUT_TYPE_LABELS, PLATFORM_LABELS } from '../../content/labels';
@@ -95,13 +96,8 @@ export function TroubleshootScreen() {
       back={{ to: '/', label: 'Home' }}
       intro={
         <>
-          <p className="lede">
-            For when something feels wrong but you don’t know which setting is responsible. Setup mistakes get ruled
-            out first: XIM’s guide names several that make aim inaccurate, such as a wrong mouse DPI in your Config.
-            Then you pick what you feel, and Dialed points to where to look. Each answer is labelled: official where
-            XIM says it, reasoned where Dialed works it out from XIM’s definitions. Where no source ties a feel to a
-            setting, Dialed says so.
-          </p>
+          <p className="lede">Rule out setup mistakes first, then go from what you feel to where to look.</p>
+          <HowThisWorks flow="troubleshoot" />
           {checks.length > 0 && kb.symptoms.length > 0 && (
             <p>
               <button type="button" className="button small secondary" onClick={() => stage2Heading.current?.focus()}>

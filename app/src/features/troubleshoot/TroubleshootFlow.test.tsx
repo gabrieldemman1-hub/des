@@ -55,13 +55,18 @@ const checkItem = (title: string) => screen.getByRole('listitem', { name: title 
 describe('Troubleshoot by feel: stage 1, setup check', () => {
   it('says how its answers are labelled, without promising the setting responsible', () => {
     renderApp({ path: '/troubleshoot', knowledge: real, storage: storageWith(XBOX) });
-    const lede = screen.getByText(/^For when something feels wrong/);
-    expect(lede).toHaveTextContent('XIM’s guide names several that make aim inaccurate, such as a wrong mouse DPI in your Config.');
-    expect(lede).toHaveTextContent('Then you pick what you feel, and Dialed points to where to look.');
-    expect(lede).toHaveTextContent(
+    // One line up front; the fuller account, with how answers are labelled, a tap away.
+    expect(screen.getByText('Rule out setup mistakes first, then go from what you feel to where to look.')).toHaveClass(
+      'lede',
+    );
+    const how = screen.getByText('How this works').closest('details')!;
+    expect(how).not.toHaveAttribute('open');
+    expect(how).toHaveTextContent('XIM’s guide names several that make aim inaccurate, such as a wrong mouse DPI in your Config.');
+    expect(how).toHaveTextContent('Then you pick what you feel, and Dialed points to where to look.');
+    expect(how).toHaveTextContent(
       'Each answer is labelled: official where XIM says it, reasoned where Dialed works it out from XIM’s definitions.',
     );
-    expect(lede).not.toHaveTextContent(/best-documented|the setting responsible where/);
+    expect(how).not.toHaveTextContent(/best-documented|the setting responsible where/);
   });
 
   it('lists only the checks that apply on Xbox', () => {

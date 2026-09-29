@@ -78,12 +78,13 @@
 }
 
 .finding.is-done {
+  border-color: var(--border-strong);
   border-style: dashed;
 }
 
+/* The first change, in the target-lock brackets: a little more room, the readouts full size. */
 .tune-first {
-  border-color: var(--accent);
-  box-shadow: inset 0 0 0 1px var(--accent);
+  gap: 12px;
 }
 
 .finding-head {
@@ -101,32 +102,55 @@
 }
 
 .tag-direction {
-  border-color: var(--accent);
   color: var(--accent-text);
 }
 
-.finding-values {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 24px;
-  margin: 0;
+/* Smaller readouts on the cards below the first change. */
+.finding:not(.tune-first) .readout-value {
+  font-size: 1.3rem;
 }
 
-.finding-values div {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+.finding-text {
+  font-size: 1rem;
 }
 
-.finding-values dt {
-  color: var(--text-muted);
-  font-size: 0.85rem;
+/* A caveat cut to one line, with More beside it. */
+.caveat-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 8px;
 }
 
-.finding-values dd {
-  margin: 0;
+.caveat-line:not(.is-open) .finding-note {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.caveat-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-block: -12px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.92rem;
   font-weight: 650;
-  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-text);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.caveat-toggle:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -2px;
 }
 
 /* The main statement, then any that belong with it (e.g. a setup check's fix). */

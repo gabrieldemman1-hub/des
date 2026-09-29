@@ -12,13 +12,18 @@ export function SourcesScreen() {
     <Screen
       title="Sources"
       intro={
-        <p className="lede">
-          Dialed only uses the sources below. The official guide and the forum pages titled XIM MATRIX are written for
-          the XIM MATRIX. The XIM Game Settings list is not MATRIX-only: it was first posted in 2015 and now includes
-          notes for the XIM MATRIX. From XIM Central, Dialed uses only MATRIX-era material: nothing made for XIM APEX or
-          XIM4. Bungie’s policy page is used only for Destiny 2 account policy, never for XIM MATRIX settings. Adding a
-          source requires a logged decision.
-        </p>
+        <>
+          <p className="lede">Dialed only uses the sources below. Adding one requires a logged decision.</p>
+          <details className="why how-this-works">
+            <summary>What each source is used for</summary>
+            <p className="prose">
+              The official guide and the forum pages titled XIM MATRIX are written for the XIM MATRIX. The XIM Game
+              Settings list is not MATRIX-only: it was first posted in 2015 and now includes notes for the XIM MATRIX.
+              From XIM Central, Dialed uses only MATRIX-era material: nothing made for XIM APEX or XIM4. Bungie’s policy
+              page is used only for Destiny 2 account policy, never for XIM MATRIX settings.
+            </p>
+          </details>
+        </>
       }
     >
       {issues.length > 0 && (

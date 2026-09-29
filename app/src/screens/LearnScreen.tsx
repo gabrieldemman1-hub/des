@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import { Link } from 'react-router';
 import type { GlossaryTerm } from '../../../knowledge/index';
+import { AimStyleGlyph } from '../components/AimStyleGlyph';
 import { EmptyState } from '../components/EmptyState';
 import { ChevronIcon } from '../components/icons';
 import { Screen } from '../components/Screen';
@@ -38,41 +39,10 @@ export function LearnScreen() {
     <Screen
       title="Learn"
       intro={
-        <p className="lede">
-          What the XIM MATRIX settings and features listed here actually do, in plain words, with XIM’s own definition
-          and where every claim comes from. Not every MATRIX setting is listed.
-        </p>
+        <p className="lede">What these XIM MATRIX settings do, in plain words. Not every MATRIX setting is listed.</p>
       }
     >
-      {!q && kb.aimStyles.length > 0 && (
-        <section className="learn-section" aria-labelledby={`${searchId}-styles`}>
-          <h2 className="section-title" id={`${searchId}-styles`}>
-            Aim styles: tuning for your weapons
-          </h2>
-          <p className="hint">
-            Which settings matter for how a weapon is aimed, like a pulse rifle you track with or a hand cannon you peek
-            with.
-          </p>
-          <ul className="flow-cards">
-            {kb.aimStyles.map((style) => {
-              const weapons = kb.weapons.archetypes.filter((a) => a.aimStyle === style.id).map((a) => a.name);
-              return (
-                <li key={style.id}>
-                  <Link className="flow-card" to={`/learn/styles/${style.id}`}>
-                    <span className="flow-card-text">
-                      <span className="flow-card-title">{style.name}</span>
-                      <span className="flow-card-summary">{style.description}</span>
-                      {weapons.length > 0 && <span className="flow-card-status">{weapons.join(', ')}</span>}
-                    </span>
-                    <ChevronIcon />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
-
+      {/* Search first: most visits come looking for one setting. */}
       <div className="field">
         <label htmlFor={searchId}>Search settings</label>
         <input
@@ -88,6 +58,36 @@ export function LearnScreen() {
       <p className="hint" role="status">
         {q ? `${found.length} ${found.length === 1 ? 'setting' : 'settings'} found` : ''}
       </p>
+
+      {!q && kb.aimStyles.length > 0 && (
+        <section className="learn-section" aria-labelledby={`${searchId}-styles`}>
+          <h2 className="section-title" id={`${searchId}-styles`}>
+            Aim styles: tuning for your weapons
+          </h2>
+          <p className="hint">
+            Which settings matter for how a weapon is aimed, like a pulse rifle you track with or a hand cannon you peek
+            with.
+          </p>
+          <ul className="flow-cards">
+            {kb.aimStyles.map((style) => {
+              const weapons = kb.weapons.archetypes.filter((a) => a.aimStyle === style.id).map((a) => a.name);
+              return (
+                <li key={style.id}>
+                  <Link className="flow-card style-card" to={`/learn/styles/${style.id}`}>
+                    <AimStyleGlyph style={style.id} />
+                    <span className="flow-card-text">
+                      <span className="flow-card-title">{style.name}</span>
+                      <span className="flow-card-summary">{style.description}</span>
+                      {weapons.length > 0 && <span className="flow-card-status">{weapons.join(', ')}</span>}
+                    </span>
+                    <ChevronIcon />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       {groups.length === 0 ? (
         <EmptyState title="Nothing matches">

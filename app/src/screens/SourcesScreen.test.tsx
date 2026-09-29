@@ -20,8 +20,11 @@ describe('Sources', () => {
     expect(card).toHaveTextContent('Bungie');
     expect(card).toHaveTextContent('Destiny 2 account policy only, never XIM MATRIX settings.');
 
-    // The intro says what each kind of source is used for, Bungie included.
-    expect(screen.getByText(/Dialed only uses the sources below\./)).toHaveTextContent(
+    // The intro is one line; what each kind of source is used for, Bungie included, is a tap away.
+    expect(screen.getByText(/Dialed only uses the sources below\./)).toHaveClass('lede');
+    const uses = screen.getByText('What each source is used for').closest('details')!;
+    expect(uses).not.toHaveAttribute('open');
+    expect(uses).toHaveTextContent(
       'Bungie’s policy page is used only for Destiny 2 account policy, never for XIM MATRIX settings.',
     );
   });

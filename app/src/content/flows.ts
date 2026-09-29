@@ -83,7 +83,8 @@ export const FLOWS: readonly Flow[] = [
     sections: [
       {
         paragraphs: [
-          'For when something feels wrong but you don’t know which setting is responsible. Setup mistakes get ruled out first: XIM’s guide names several that make aim inaccurate, such as a wrong mouse DPI in your Config.',
+          'For when something feels wrong but you don’t know which setting is responsible. Setup mistakes get ruled out first: XIM’s guide names several that make aim inaccurate, such as a wrong mouse DPI in your Config. Then you pick what you feel, and Dialed points to where to look.',
+          'Each answer is labelled: official where XIM says it, reasoned where Dialed works it out from XIM’s definitions. Where no source ties a feel to a setting, Dialed says so.',
         ],
       },
       {

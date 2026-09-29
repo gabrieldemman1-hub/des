@@ -14,7 +14,12 @@ describe('Learn (Explain a concept)', () => {
     renderApp({ path: '/learn', knowledge: real });
     // Titled like its tab; the lede says what it explains.
     expect(screen.getByRole('heading', { level: 1, name: 'Learn' })).toBeInTheDocument();
-    expect(screen.getByText(/What the XIM MATRIX settings and features listed here actually do/)).toHaveClass('lede');
+    expect(screen.getByText(/^What these XIM MATRIX settings do, in plain words\./)).toHaveClass('lede');
+    // Search comes first, before the aim styles.
+    const search = screen.getByRole('searchbox', { name: 'Search settings' });
+    const styles = screen.getByRole('region', { name: /Aim styles/ });
+    expect(search.compareDocumentPosition(styles) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(styles.querySelectorAll('svg.aim-glyph')).toHaveLength(knowledge.aimStyles.length);
     // The app doesn't cover every MATRIX setting, and says so.
     expect(screen.getByText(/Not every MATRIX setting is listed\.$/)).toHaveClass('lede');
     expect(

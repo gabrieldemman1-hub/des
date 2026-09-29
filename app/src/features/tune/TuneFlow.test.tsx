@@ -152,10 +152,19 @@ describe('Tune my config: your settings', () => {
     expect(within(first).getByRole('heading', { level: 3, name: 'Look Sensitivity' })).toBeInTheDocument();
     expect(within(first).getByText('Yours').nextSibling).toHaveTextContent('15');
     expect(within(first).getByText('XIM’s list').nextSibling).toHaveTextContent('20');
-    // The knowledge base's statement, shown in full with its caveat and source.
+    // Yours against XIM's list as readouts, the one to change stepped back.
+    expect(within(first).getByText('Yours').nextSibling).toHaveClass('is-muted');
+    // The knowledge base's statement in full, its caveat on one line with More, and its sources.
     const statement = knowledge.game.requiredSettings.find((s) => s.name === 'Look Sensitivity')!.statement;
     expect(within(first).getByText(statement.text)).toBeInTheDocument();
-    expect(within(first).getByText(/Confirm it in XIM MATRIX Manager/)).toBeInTheDocument();
+    const caveat = within(first).getByText(/Confirm it in XIM MATRIX Manager/);
+    expect(caveat.closest('.caveat-line')).not.toHaveClass('is-open');
+    const more = within(first).getByRole('button', { name: 'More of the caveat' });
+    expect(more).toHaveAttribute('aria-expanded', 'false');
+    expect(more).toHaveAttribute('aria-controls', caveat.closest('p')!.id);
+    await user.click(more);
+    expect(within(first).getByRole('button', { name: 'Less of the caveat' })).toHaveAttribute('aria-expanded', 'true');
+    expect(caveat.closest('.caveat-line')).toHaveClass('is-open');
     expect(within(first).getByRole('list', { name: 'Sources' })).toBeInTheDocument();
   });
 
@@ -326,10 +335,13 @@ describe('Tune my config: what to change', () => {
       'One change at a time',
     ]);
 
-    // The first change isn't hidden behind "Why".
+    // The first change says what to do in full, in the target-lock brackets; its sources are one tap away.
     const first = section('Change this first');
     expect(within(first).getByRole('heading', { level: 3, name: 'Look Sensitivity' })).toBeInTheDocument();
-    expect(within(first).queryByText('Why and source')).not.toBeInTheDocument();
+    expect(first.querySelector('.tune-first')).toHaveClass('lock');
+    const look = knowledge.game.requiredSettings.find((s) => s.name === 'Look Sensitivity')!.statement;
+    expect(within(first).getByText(look.text)).toBeVisible();
+    expect(within(first).getByText('Why and source').closest('details')).not.toHaveAttribute('open');
     expect(within(first).getByRole('link', { name: 'Update your settings' })).toHaveAttribute('href', '/tune/l1/settings');
 
     const fix = section('Fix these Destiny 2 settings');
@@ -416,7 +428,9 @@ describe('Tune my config: what to change', () => {
     expect(note).toHaveTextContent('Your smoothing is Custom Classic. These directions assume Standard smoothing.');
     const precision = within(aim).getByRole('heading', { level: 3, name: 'Precision' }).closest('li')!;
     expect(precision).toHaveTextContent('Your smoothing is Custom Classic. This direction assumes Standard smoothing.');
-    expect(within(precision).queryByRole('button')).not.toBeInTheDocument();
+    // Nothing to mark done: the only button is the caveat's More.
+    expect(within(precision).queryByRole('button', { name: 'Precision: done' })).not.toBeInTheDocument();
+    expect(within(precision).getAllByRole('button').map((b) => b.textContent)).toEqual(['More']);
   });
 
   it('hides gyro-only settings for a mouse-only profile, and says so', () => {
@@ -584,7 +598,8 @@ describe('Tune my config: cards', () => {
     const easing = within(section('Aim settings for snap')).getByRole('heading', { level: 3, name: 'Easing' }).closest('li')!;
     expect(easing.querySelector('.finding-head .badge')).toHaveTextContent('Reasoned');
     expect(easing.querySelector('.finding-head .badge')).toBeVisible();
-    const notes = Array.from(easing.querySelectorAll<HTMLElement>(':scope > .finding-note'));
+    // On one line with More (the full text is there for a screen reader).
+    const notes = Array.from(easing.querySelectorAll<HTMLElement>(':scope > .caveat-line > .finding-note'));
     expect(notes.map((n) => n.textContent)).toEqual([
       `Caveat: ${EASING_CAVEAT} Assumes custom Standard smoothing (Easing is a Standard setting). If you use a smoothing preset, XIM suggests trying the other presets first.`,
     ]);
