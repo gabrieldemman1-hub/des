@@ -23,6 +23,7 @@ export const SMOOTHING_LABELS: Readonly<Record<SmoothingMode, string>> = {
 export const SYNC_LABELS = { standard: 'Standard', custom: 'Custom', manual: 'Manual' } as const;
 export const CURVE_LABELS = { linear: 'Linear', custom: 'Custom' } as const;
 export const VELOCITY_LABELS = { standard: 'Standard', other: 'Not Standard' } as const;
+export const QUANTIZATION_LABELS = { on: 'On', off: 'Off' } as const;
 
 /** The settings of custom Standard smoothing, which the aim-style directions assume. */
 export const STANDARD_SMOOTHING_TERMS: ReadonlySet<string> = new Set(['precision', 'response', 'easing', 'stability']);
@@ -85,12 +86,12 @@ export function describeSmoothing(aim: Aim): string | null {
 /** "Off", "On" or "On (Magnitude 25, Angle 20)": Magnitude and Angle only while it is on. */
 export function describeQuantization(aim: Aim): string | null {
   if (aim.quantization === null) return null;
-  if (!aim.quantization) return 'Off';
+  if (!aim.quantization) return QUANTIZATION_LABELS.off;
   const values = named([
     ['Magnitude', aim.quantizationMagnitude],
     ['Angle', aim.quantizationAngle],
   ]);
-  return values.length > 0 ? `On (${values.join(', ')})` : 'On';
+  return values.length > 0 ? `${QUANTIZATION_LABELS.on} (${values.join(', ')})` : QUANTIZATION_LABELS.on;
 }
 
 /**
@@ -226,7 +227,7 @@ export function checkContext(
     const configDpi = config?.matrix.configDpi ?? null;
     if (configDpi !== null) {
       lines.push({
-        label: 'This loadout’s Config (current settings)',
+        label: 'This Config',
         value: `${configDpi} DPI`,
         differs: profile.mouseDpi !== null && profile.mouseDpi !== configDpi,
       });

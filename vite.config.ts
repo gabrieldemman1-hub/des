@@ -37,7 +37,8 @@ export default defineConfig({
           'Evidence-based XIM MATRIX setup for Destiny 2 on Xbox and PC, with the why and the source behind every value.',
         lang: 'en',
         display: 'standalone',
-        orientation: 'portrait',
+        // Rotates with the phone: propped in a landscape stand next to the console is a normal case.
+        orientation: 'any',
         start_url: './',
         scope: './',
         theme_color: THEME_DARK,

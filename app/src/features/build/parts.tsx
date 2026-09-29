@@ -1,8 +1,11 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
+import type { Statement } from '../../../../knowledge/index';
+import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { Screen } from '../../components/Screen';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
+import { whySummary } from '../../content/labels';
 import type { GuidanceItem } from './build-plan';
 import type { CheckContextLine } from '../../state/current-values';
 import './build.css';
@@ -21,13 +24,71 @@ export function LoadoutNotFound({ back, link }: { back: { to: string; label: str
   );
 }
 
-/** XIM's guidance on a setting: the first statements straight away, the rest one tap away. */
+/**
+ * A statement's text, badge and caveat, for scanning; the reasoning (which says when it was
+ * worked out) and sources go behind `Why`.
+ */
+export function StatementLine({ statement }: { statement: Statement }) {
+  return (
+    <div className="statement">
+      <p>
+        <ConfidenceBadge level={statement.confidence} /> {statement.text}
+      </p>
+      {statement.caveat && (
+        <p className="statement-caveat">
+          <strong>Caveat:</strong> {statement.caveat}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The full statements (reasoning and sources), one tap away behind "Why and source". `showBadge`,
+ * `showText` and `showCaveat` false when the lines above (e.g. `StatementLine`) show them.
+ */
+export function Why({
+  summary,
+  statements,
+  showBadge = true,
+  showText = true,
+  showCaveat = true,
+}: {
+  summary?: ReactNode;
+  statements: readonly Statement[];
+  showBadge?: boolean;
+  showText?: boolean;
+  showCaveat?: boolean;
+}) {
+  return (
+    <details className="why">
+      <summary>{summary ?? whySummary(statements)}</summary>
+      <div className="build-statements">
+        {statements.map((statement, i) => (
+          <StatementView
+            key={i}
+            statement={statement}
+            showBadge={showBadge}
+            showText={showText}
+            showCaveat={showCaveat}
+          />
+        ))}
+      </div>
+    </details>
+  );
+}
+
+/**
+ * XIM's guidance on a setting: the first statements straight away (their reasons and sources a
+ * tap away), the rest one tap away.
+ */
 export function GuidanceStatements({ item }: { item: GuidanceItem }) {
   return (
     <div className="build-statements">
       {item.lead.map((statement, i) => (
-        <StatementView key={i} statement={statement} />
+        <StatementLine key={i} statement={statement} />
       ))}
+      <Why statements={item.lead} showBadge={false} showText={false} showCaveat={false} />
       {item.more.length > 0 && (
         <details className="why">
           <summary>

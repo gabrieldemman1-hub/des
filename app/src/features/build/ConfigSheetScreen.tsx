@@ -3,63 +3,97 @@ import { Link, useLocation, useParams } from 'react-router';
 import type { Confidence, Statement } from '../../../../knowledge/index';
 import { AimStyleSummary } from '../../components/AimStyleSummary';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
-import { PerConfigNote } from '../../components/PerConfigNote';
+import { PerConfigHint, PerConfigNote } from '../../components/PerConfigNote';
 import { Screen } from '../../components/Screen';
 import { StatementView } from '../../components/StatementView';
-import { TermLink } from '../../components/TermLink';
-import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, reasonedLabel } from '../../content/labels';
+import { StatusChip, StatusToggles } from '../../components/StatusToggles';
+import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, whySummary } from '../../content/labels';
 import { checkContext, currentAimValue, currentRequiredValue, smoothingNote } from '../../state/current-values';
 import { useData } from '../../state/data-context';
 import { useKnowledge } from '../../state/knowledge-context';
-import { progressSummary } from '../../state/progress';
+import { derivedProblemNote, progressSummary } from '../../state/progress';
 import type { ProgressState } from '../../state/schema';
-import { useEffectiveProgress } from '../../state/use-progress';
+import { useDerivedProblemKeys, useEffectiveProgress } from '../../state/use-progress';
 import { planProgress, type BuildPlan, type GuidanceItem } from './build-plan';
-import { STATUS_TEXT, statusOf, weaponLines } from './format';
+import { statusOf, weaponLines } from './format';
 import { CheckContext, CurrentValue, Label, LoadoutNotFound, SmoothingNote } from './parts';
 import { sheetBack } from './sheet-navigation';
-import { sharedCaveat, sheetProgress, sheetText } from './sheet-text';
-import { buildPath, tuneSettingsPath, useBuildPlan } from './use-build-plan';
+import { sharedCaveat, sheetText } from './sheet-text';
+import { buildPath, tunePath, tuneSettingsPath, useBuildPlan } from './use-build-plan';
 import './build.css';
 
-function StatusChip({ state }: { state: ProgressState | 'none' }) {
+/** "What is this?": the setting's explanation in Explain a concept, as a chip beside the name. */
+function ExplainLink({ termId, name }: { termId: string; name: string }) {
+  const { termById } = useKnowledge();
+  if (!termById(termId)) return null;
   return (
-    <span className={`sheet-status is-${state}`}>
-      <span className="sheet-status-mark" aria-hidden="true" />
-      {STATUS_TEXT[state]}
-    </span>
+    <Link className="sheet-explain" to={`/learn/${termId}`}>
+      <span className="tag">
+        What is this?<span className="visually-hidden"> ({name})</span>
+      </span>
+    </Link>
   );
 }
 
-/** One line of the sheet: the setting's name, its value, confidence and state, then details. */
+/**
+ * One line of the sheet, the same shape in every section: the setting's name and its value,
+ * then its confidence and state, then details. The state is the player's to change (the shared
+ * Done / Needs fixing pair), unless `derived` (worked out from their values, so shown as a chip,
+ * with a note saying why).
+ */
 function SheetRow({
   name,
+  termId,
   value,
+  caption,
   confidence,
   state,
+  itemKey,
+  derived = false,
   children,
 }: {
-  name: ReactNode;
-  value?: ReactNode;
+  name: string;
+  /** The glossary term the name explains, for the "What is this?" chip. */
+  termId?: string;
+  value?: string;
+  /** A word under the value saying how to read it, e.g. "default". */
+  caption?: string;
   confidence?: Confidence;
-  state?: ProgressState | 'none';
+  state: ProgressState | 'none';
+  itemKey: string;
+  derived?: boolean;
   children?: ReactNode;
 }) {
   const nameId = useId();
   return (
     <li className="sheet-row" aria-labelledby={nameId}>
       <div className="sheet-row-head">
-        <span className="sheet-name" id={nameId}>
-          {name}
+        <span className="sheet-title">
+          <span className="sheet-name" id={nameId}>
+            {name}
+          </span>
+          {termId && <ExplainLink termId={termId} name={name} />}
         </span>
-        {value !== undefined && <span className="sheet-value">{value}</span>}
+        {value !== undefined && (
+          <span className="sheet-value">
+            {value}
+            {caption && <span className="sheet-value-caption">{caption}</span>}
+          </span>
+        )}
       </div>
-      {(confidence !== undefined || state !== undefined) && (
-        <div className="sheet-meta">
-          {confidence !== undefined && <ConfidenceBadge level={confidence} />}
-          {state !== undefined && <StatusChip state={state} />}
-        </div>
-      )}
+      <div className="sheet-meta">
+        {confidence !== undefined && <ConfidenceBadge level={confidence} />}
+        {derived ? (
+          <StatusChip state={state} />
+        ) : (
+          <StatusToggles
+            itemKey={itemKey}
+            state={state === 'none' ? null : state}
+            describedBy={nameId}
+            className="sheet-toggles"
+          />
+        )}
+      </div>
       {children}
     </li>
   );
@@ -73,38 +107,46 @@ function Caveat({ text }: { text: string }) {
   );
 }
 
-/**
- * A statement's text, badge, "worked out" label (when reasoned) and caveat, for scanning; the
- * reasoning and sources are one tap away.
- */
-function StatementLine({ statement }: { statement: Statement }) {
-  return (
-    <div className="sheet-statement">
-      <p>
-        <ConfidenceBadge level={statement.confidence} /> {statement.text}
-      </p>
-      {statement.confidence === 'reasoned' && <p className="sheet-caveat">{reasonedLabel(statement)}</p>}
-      {statement.caveat && <Caveat text={statement.caveat} />}
-    </div>
-  );
+/** Why a derived row says Needs fixing: the tick it overrides, if any, and what differs. */
+function DerivedNote({ saved, differs }: { saved: ProgressState | undefined; differs: string }) {
+  return <p className="sheet-caveat">{derivedProblemNote(saved, differs)}</p>;
 }
 
-/** The full statements, one tap away. `showBadge` false when the row already shows the badge. */
+/**
+ * The full statements, one tap away, behind "Why and source" (with a count when there are
+ * several). `showBadge` false when the row already shows the badge, `showCaveat` false when the
+ * row or the section shows the caveat; `badge` puts one in the summary line itself.
+ */
 function Why({
-  summary = 'Reasons and sources',
+  summary,
+  badge,
   statements,
   showBadge = true,
+  showCaveat = true,
 }: {
   summary?: string;
+  badge?: Confidence;
   statements: readonly Statement[];
   showBadge?: boolean;
+  showCaveat?: boolean;
 }) {
   return (
     <details className="why">
-      <summary>{summary}</summary>
+      <summary>
+        {/* The badge inside the text, so it wraps like its last word rather than beside a column of text. */}
+        <span>
+          {summary ?? whySummary(statements)}
+          {badge && (
+            <>
+              {' '}
+              <ConfidenceBadge level={badge} />
+            </>
+          )}
+        </span>
+      </summary>
       <div className="build-statements">
         {statements.map((statement, i) => (
-          <StatementView key={i} statement={statement} showBadge={showBadge} />
+          <StatementView key={i} statement={statement} showBadge={showBadge} showCaveat={showCaveat} />
         ))}
       </div>
     </details>
@@ -123,22 +165,26 @@ function SheetSection({ title, children }: { title: string; children: ReactNode 
   );
 }
 
+/** A glossary setting: its value from the knowledge base, the player's own, and the guidance. */
 function GuidanceRow({
   item,
-  name,
   state,
   current,
 }: {
   item: GuidanceItem;
-  name: ReactNode;
   state: ProgressState | 'none';
   current: string | null;
 }) {
   return (
-    <SheetRow name={name} state={state}>
-      {item.lead.map((statement, i) => (
-        <StatementLine key={i} statement={statement} />
-      ))}
+    <SheetRow
+      name={item.term.name}
+      termId={item.term.id}
+      value={item.value.text}
+      caption={item.value.caption}
+      confidence={item.value.confidence}
+      state={state}
+      itemKey={item.key}
+    >
       {current && <CurrentValue value={current} />}
       <Why statements={[...item.lead, ...item.more]} />
     </SheetRow>
@@ -178,6 +224,26 @@ function useCopySheet(makeText: () => string) {
   return { state, copy, textRef };
 }
 
+/** The Destiny 2 rows' shared caveat, one line at a glance and in full on tap, with how to confirm. */
+function SharedCaveat({ text, note }: { text: string; note: { title: string; statement: Statement } | undefined }) {
+  return (
+    <details className="why">
+      <summary>
+        <span>From the public copy of XIM’s list — confirm in Manager</span>
+      </summary>
+      <div className="build-statements">
+        <Caveat text={text} />
+        {note && (
+          <>
+            <Label>{note.title}</Label>
+            <StatementView statement={note.statement} />
+          </>
+        )}
+      </div>
+    </details>
+  );
+}
+
 function Sheet({ plan }: { plan: BuildPlan }) {
   const knowledge = useKnowledge();
   const { kb, termById } = knowledge;
@@ -186,8 +252,9 @@ function Sheet({ plan }: { plan: BuildPlan }) {
   const { profile, inGame } = data;
   const { loadout, main, style } = plan;
   const config = data.configs[loadout.id];
-  const ticked = useEffectiveProgress();
-  const progress = sheetProgress(plan, ticked, profile, config);
+  const progress = useEffectiveProgress();
+  const derived = useDerivedProblemKeys();
+  const saved = data.progress;
   const weapons = weaponLines(loadout, knowledge);
   const status = (key: string) => statusOf(progress, key);
   const termName = (id: string) => termById(id)?.name ?? id;
@@ -197,9 +264,11 @@ function Sheet({ plan }: { plan: BuildPlan }) {
   const aimsWith = profile.aimingSources.map((s) => AIMING_SOURCE_LABELS[s].title.toLowerCase()).join(' and ');
   const textId = useId();
 
-  const { state: copyState, copy, textRef } = useCopySheet(() =>
-    sheetText({ plan, weapons, progress: ticked, inGame, config, profile, termName }),
-  );
+  const {
+    state: copyState,
+    copy,
+    textRef,
+  } = useCopySheet(() => sheetText({ plan, weapons, progress, inGame, config, profile, termName }));
 
   return (
     <Screen
@@ -225,19 +294,19 @@ function Sheet({ plan }: { plan: BuildPlan }) {
           ) : (
             <p className="hint">The main weapon isn’t in the knowledge base any more, so its aim style is unknown.</p>
           )}
-          <p className="build-count">{progressSummary(planProgress(plan, progress), 'items')}</p>
+          <p className="sheet-progress">
+            <span className="build-count">{progressSummary(planProgress(plan, progress))}</span>
+            <Link to={buildPath(loadout.id)}>Continue building</Link>
+          </p>
         </>
       }
     >
       <div className="button-row sheet-actions">
-        <button type="button" className="button primary" onClick={copy}>
+        <button type="button" className="button secondary small" onClick={copy}>
           Copy as text
         </button>
-        <Link className="button secondary" to={buildPath(loadout.id)}>
-          Continue building
-        </Link>
-        <Link className="button secondary" to={tuneSettingsPath(loadout.id)}>
-          Enter your current settings
+        <Link className="button secondary small" to={tuneSettingsPath(loadout.id)}>
+          Enter settings
         </Link>
       </div>
       <p className="sheet-copy-status" role="status">
@@ -253,8 +322,11 @@ function Sheet({ plan }: { plan: BuildPlan }) {
       )}
 
       <SheetSection title="Destiny 2 settings">
-        {shared && <Caveat text={shared} />}
-        {confirmNote && <Why summary={confirmNote.title} statements={[confirmNote.statement]} />}
+        {shared ? (
+          <SharedCaveat text={shared} note={confirmNote} />
+        ) : (
+          confirmNote && <Why summary={confirmNote.title} statements={[confirmNote.statement]} />
+        )}
         {plan.settings.length === 0 ? (
           <p className="hint">Destiny 2’s required settings are missing from this build of the knowledge base.</p>
         ) : (
@@ -268,6 +340,8 @@ function Sheet({ plan }: { plan: BuildPlan }) {
                   value={setting.value}
                   confidence={setting.statement.confidence}
                   state={status(setting.key)}
+                  itemKey={setting.key}
+                  derived={derived.has(setting.key)}
                 >
                   {current && (
                     <CurrentValue
@@ -276,8 +350,11 @@ function Sheet({ plan }: { plan: BuildPlan }) {
                       expected={setting.value}
                     />
                   )}
+                  {derived.has(setting.key) && (
+                    <DerivedNote saved={saved[setting.key]} differs={`your value differs from ${setting.value}`} />
+                  )}
                   {!shared && setting.statement.caveat && <Caveat text={setting.statement.caveat} />}
-                  <Why summary="Why and source" statements={[setting.statement]} showBadge={false} />
+                  <Why statements={[setting.statement]} showBadge={false} showCaveat={false} />
                 </SheetRow>
               );
             })}
@@ -289,47 +366,65 @@ function Sheet({ plan }: { plan: BuildPlan }) {
         {profile.platform === null && (
           <p className="hint">Your platform isn’t set, so the checks for both Xbox and PC are listed.</p>
         )}
+        <PerConfigHint checks={plan.checks.map(({ check }) => check)} />
         {plan.checks.length === 0 ? (
           <p className="hint">The setup checks are missing from this build of the knowledge base.</p>
         ) : (
           <ul className="sheet-rows">
-            {plan.checks.map(({ key, check }) => (
-              <SheetRow key={key} name={check.title} confidence={check.why.confidence} state={status(key)}>
-                <PerConfigNote checkId={check.id} />
-                <CheckContext lines={checkContext(check.id, profile, config)} />
-                {ticked[key] === 'done' && progress[key] === 'problem' && (
-                  <p className="sheet-caveat">You marked this Done, but the values above differ.</p>
-                )}
-                <details className="why">
-                  <summary>What to check, and why</summary>
-                  <div className="build-statements">
-                    <p>{check.check}</p>
-                    <Label>Why it matters</Label>
-                    <StatementView statement={check.why} />
-                    {check.fix && (
-                      <>
-                        <Label>How to fix it</Label>
-                        <StatementView statement={check.fix} />
-                      </>
-                    )}
-                  </div>
-                </details>
-              </SheetRow>
-            ))}
+            {plan.checks.map(({ key, check }) => {
+              const lines = checkContext(check.id, profile, config);
+              return (
+                <SheetRow
+                  key={key}
+                  name={check.title}
+                  confidence={check.why.confidence}
+                  state={status(key)}
+                  itemKey={key}
+                  derived={derived.has(key)}
+                >
+                  <PerConfigNote checkId={check.id} />
+                  <CheckContext lines={lines} />
+                  {derived.has(key) && (
+                    <DerivedNote
+                      saved={saved[key]}
+                      differs={
+                        lines.some((line) => line.differs)
+                          ? 'the values above differ'
+                          : 'another loadout’s Config differs'
+                      }
+                    />
+                  )}
+                  <details className="why">
+                    <summary>
+                      <span>What to check, and why</span>
+                    </summary>
+                    <div className="build-statements">
+                      <p>{check.check}</p>
+                      <Label>Why it matters</Label>
+                      <StatementView statement={check.why} />
+                      {check.fix && (
+                        <>
+                          <Label>How to fix it</Label>
+                          <StatementView statement={check.fix} />
+                        </>
+                      )}
+                    </div>
+                  </details>
+                </SheetRow>
+              );
+            })}
           </ul>
         )}
       </SheetSection>
 
       <SheetSection title="Aim settings">
         {style && (
-          <div className="sheet-favours">
-            <ConfidenceBadge level={style.favours.confidence} />
-            <Why
-              summary={`What ${style.name.toLowerCase()} settings should favour`}
-              statements={[style.favours]}
-              showBadge={false}
-            />
-          </div>
+          <Why
+            summary={`What ${style.name.toLowerCase()} settings should favour`}
+            badge={style.favours.confidence}
+            statements={[style.favours]}
+            showBadge={false}
+          />
         )}
         {main && main.aimStyle === null && (
           <p className="hint">
@@ -342,7 +437,6 @@ function Sheet({ plan }: { plan: BuildPlan }) {
           {plan.sensitivity && (
             <GuidanceRow
               item={plan.sensitivity}
-              name={<TermLink id="sensitivity" />}
               state={status(plan.sensitivity.key)}
               current={currentAimValue(config, 'sensitivity')}
             />
@@ -350,7 +444,6 @@ function Sheet({ plan }: { plan: BuildPlan }) {
           {plan.smoothing && (
             <GuidanceRow
               item={plan.smoothing}
-              name={<TermLink id="smoothing" />}
               state={status(plan.smoothing.key)}
               current={currentAimValue(config, 'smoothing')}
             />
@@ -360,17 +453,16 @@ function Sheet({ plan }: { plan: BuildPlan }) {
             return (
               <SheetRow
                 key={key}
-                name={<TermLink id={lever.termId}>{termName(lever.termId)}</TermLink>}
+                name={termName(lever.termId)}
+                termId={lever.termId}
                 value={LEVER_DIRECTION_LABELS[lever.direction]}
                 confidence={lever.statement.confidence}
                 state={status(key)}
+                itemKey={key}
               >
                 {current && <CurrentValue value={current} />}
-                {lever.statement.confidence === 'reasoned' && (
-                  <p className="sheet-caveat">{reasonedLabel(lever.statement)}</p>
-                )}
                 {lever.statement.caveat && <Caveat text={lever.statement.caveat} />}
-                <Why statements={[lever.statement]} showBadge={false} />
+                <Why statements={[lever.statement]} showBadge={false} showCaveat={false} />
               </SheetRow>
             );
           })}
@@ -378,7 +470,6 @@ function Sheet({ plan }: { plan: BuildPlan }) {
             <GuidanceRow
               key={item.key}
               item={item}
-              name={<TermLink id={item.term.id} />}
               state={status(item.key)}
               current={currentAimValue(config, item.term.id)}
             />
@@ -391,6 +482,24 @@ function Sheet({ plan }: { plan: BuildPlan }) {
           </p>
         )}
       </SheetSection>
+
+      {/* After the last row, like the build steps' pager: pick the build up, or go on from here. */}
+      <div className="sheet-end">
+        <Link className="button primary" to={buildPath(loadout.id)}>
+          Continue building
+        </Link>
+        <ul className="related-links" aria-label="More for this loadout">
+          <li>
+            <Link to={tunePath(loadout.id)}>Tune this loadout</Link>
+          </li>
+          <li>
+            <Link to="/troubleshoot">Troubleshoot by feel</Link>
+          </li>
+          <li>
+            <Link to="/loadouts">All loadouts</Link>
+          </li>
+        </ul>
+      </div>
     </Screen>
   );
 }
@@ -401,7 +510,10 @@ export function ConfigSheetScreen() {
   const plan = useBuildPlan(loadoutId);
   if (!plan) {
     return (
-      <LoadoutNotFound back={{ to: '/loadouts', label: 'Loadouts' }} link={{ to: '/loadouts', label: 'See your loadouts' }} />
+      <LoadoutNotFound
+        back={{ to: '/loadouts', label: 'Loadouts' }}
+        link={{ to: '/loadouts', label: 'See your loadouts' }}
+      />
     );
   }
   return <Sheet key={plan.loadout.id} plan={plan} />;

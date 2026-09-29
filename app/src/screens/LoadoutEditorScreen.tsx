@@ -146,7 +146,8 @@ function LoadoutForm({ loadout }: { loadout?: Loadout }) {
       >
         <legend>Main weapon</legend>
         <p className="hint" id={ids.mainHint}>
-          This loadout’s Config is tuned toward its main weapon’s aim style. Only a filled slot can be the main one.
+          This loadout’s Config in MATRIX Manager is tuned toward its main weapon’s aim style. Only a filled slot can be
+          the main one.
         </p>
         <div className="choice-list">
           {SLOTS.map((slot: WeaponSlot) => {

@@ -9,10 +9,15 @@ import { STORAGE_KEY } from '../state/storage';
 
 const real = createKnowledgeApi(knowledge);
 
-describe('Explain a concept', () => {
+describe('Learn (Explain a concept)', () => {
   it('lists the aim styles and every setting, grouped by category', () => {
     renderApp({ path: '/learn', knowledge: real });
-    expect(screen.getByRole('heading', { level: 1, name: 'Explain a concept' })).toBeInTheDocument();
+    // Titled like its tab; the lede says what it explains.
+    expect(screen.getByRole('heading', { level: 1, name: 'Learn' })).toBeInTheDocument();
+    expect(screen.getByText(/What each XIM MATRIX setting actually does/)).toHaveClass('lede');
+    expect(
+      within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name: 'Learn' }),
+    ).toHaveAttribute('aria-current', 'page');
     expect(screen.getByRole('link', { name: /Tracking.*Pulse Rifle/ })).toHaveAttribute('href', '/learn/styles/tracking');
     const smoothing = screen.getByRole('region', { name: 'Smoothing' });
     expect(within(smoothing).getByRole('link', { name: /^Easing/ })).toHaveAttribute('href', '/learn/easing');
@@ -39,6 +44,8 @@ describe('Explain a concept', () => {
     const { user } = renderApp({ path: '/learn/easing', knowledge: real });
     const easing = knowledge.glossary.terms.find((t) => t.id === 'easing')!;
     expect(screen.getByRole('heading', { level: 1, name: easing.name })).toBeInTheDocument();
+    // The back link reads like the tab and the screen it opens.
+    expect(document.querySelector('.back-link')).toHaveTextContent('Learn');
     const definition = screen.getByRole('region', { name: 'XIM’s definition' });
     expect(definition).toHaveTextContent(easing.definition.text);
     expect(within(definition).getByRole('list', { name: 'Sources' })).toBeInTheDocument();
@@ -80,11 +87,11 @@ describe('Explain a concept', () => {
 
   it('treats unknown settings and aim styles as not found', () => {
     renderApp({ path: '/learn/not-a-setting', knowledge: real });
-    expect(screen.getByRole('heading', { level: 1 })).not.toHaveTextContent('Explain a concept');
+    expect(screen.getByRole('heading', { level: 1 })).not.toHaveTextContent('Learn');
   });
 
   it('sends the old placeholder address to the real screen', () => {
     renderApp({ path: '/flows/learn', knowledge: real });
-    expect(screen.getByRole('heading', { level: 1, name: 'Explain a concept' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Learn' })).toBeInTheDocument();
   });
 });

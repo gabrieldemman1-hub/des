@@ -2,16 +2,17 @@ import { useEffect, useId, useRef, useState, type ReactNode, type Ref } from 're
 import { Link } from 'react-router';
 import type { Statement } from '../../../../knowledge/index';
 import { AimStyleSummary } from '../../components/AimStyleSummary';
+import { ClearAimMarks } from '../../components/ClearAimMarks';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
-import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { EmptyState } from '../../components/EmptyState';
-import { StatementView } from '../../components/StatementView';
+import { SharedCaveatNote, StatementView } from '../../components/StatementView';
+import { hoistedCaveat } from '../../components/statements';
+import { StatusChip, StatusMark } from '../../components/StatusToggles';
 import { TermLink } from '../../components/TermLink';
-import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, reasonedLabel } from '../../content/labels';
+import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, whySummary } from '../../content/labels';
 import { useData } from '../../state/data-context';
 import { leversForProfile } from '../../state/guidance';
 import { useKnowledge } from '../../state/knowledge-context';
-import { aimProgressPrefix } from '../../state/progress';
 import type { Loadout } from '../../state/schema';
 import { sheetLinkState } from '../build/sheet-navigation';
 import { sheetPath } from '../build/use-build-plan';
@@ -67,11 +68,14 @@ function FindingValues({ finding }: { finding: Finding }) {
   );
 }
 
-/** The main statement (its badge is in the card's head), then the ones that belong with it. */
-function FindingStatements({ finding }: { finding: Finding }) {
+/**
+ * The main statement (its badge is in the card's head; `showCaveat` false when the card shows
+ * the caveat above), then the ones that belong with it.
+ */
+function FindingStatements({ finding, showCaveat = true }: { finding: Finding; showCaveat?: boolean }) {
   return (
     <div className="finding-statements">
-      <StatementView statement={finding.statement} showBadge={false} />
+      <StatementView statement={finding.statement} showBadge={false} showCaveat={showCaveat} />
       {finding.more.map((statement, i) => (
         <StatementView key={i} statement={statement} />
       ))}
@@ -80,19 +84,15 @@ function FindingStatements({ finding }: { finding: Finding }) {
 }
 
 /**
- * What a card shows of its statement before "Why, and the source": whether it was worked out,
- * and its caveat, like the config sheet.
+ * What a card shows of its statement before "Why and source": its caveat, like the config
+ * sheet, unless a note above the cards (`hoisted`) already has it.
  */
-function StatementNotes({ statement }: { statement: Statement }) {
+function StatementNotes({ statement, hoisted }: { statement: Statement; hoisted?: string }) {
+  if (!statement.caveat || statement.caveat === hoisted) return null;
   return (
-    <>
-      {statement.confidence === 'reasoned' && <p className="finding-note">{reasonedLabel(statement)}</p>}
-      {statement.caveat && (
-        <p className="finding-note">
-          <strong>Caveat:</strong> {statement.caveat}
-        </p>
-      )}
-    </>
+    <p className="finding-note">
+      <strong>Caveat:</strong> {statement.caveat}
+    </p>
   );
 }
 
@@ -113,10 +113,12 @@ interface FindingCardProps {
   /** The prominent "Change this first" card: its statement shows in full. */
   first?: boolean;
   done?: boolean;
+  /** A caveat the section shows once above its cards. */
+  hoisted?: string;
   actions?: ReactNode;
 }
 
-function FindingCard({ finding, first = false, done = false, actions }: FindingCardProps) {
+function FindingCard({ finding, first = false, done = false, hoisted, actions }: FindingCardProps) {
   const Tag = first ? 'div' : 'li';
   return (
     <Tag className={`card finding${first ? ' tune-first' : ''}${done ? ' is-done' : ''}`}>
@@ -130,7 +132,7 @@ function FindingCard({ finding, first = false, done = false, actions }: FindingC
               {LEVER_DIRECTION_LABELS[finding.direction]}
             </span>
           )}
-          {done && <span className="tag">Done</span>}
+          {done && <StatusChip state="done" />}
         </span>
       </div>
       <FindingValues finding={finding} />
@@ -139,10 +141,10 @@ function FindingCard({ finding, first = false, done = false, actions }: FindingC
         <FindingStatements finding={finding} />
       ) : (
         <>
-          <StatementNotes statement={finding.statement} />
+          <StatementNotes statement={finding.statement} hoisted={hoisted} />
           <details className="why">
-            <summary>Why, and the source</summary>
-            <FindingStatements finding={finding} />
+            <summary>{whySummary([finding.statement, ...finding.more])}</summary>
+            <FindingStatements finding={finding} showCaveat={false} />
           </details>
         </>
       )}
@@ -189,36 +191,6 @@ function NothingEntered({ settingsPath }: { settingsPath: string }) {
   );
 }
 
-/** Clears the loadout's aim marks, after a confirmation that says Build my config shares them. */
-function StartAgain({ loadout }: { loadout: Loadout }) {
-  const { clearProgress } = useData();
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <p>
-        <button type="button" className="button secondary small" onClick={() => setOpen(true)}>
-          Start the aim changes again
-        </button>
-      </p>
-      <ConfirmDialog
-        open={open}
-        title="Start the aim changes again?"
-        confirmLabel="Start again"
-        danger
-        onCancel={() => setOpen(false)}
-        onConfirm={() => {
-          clearProgress(aimProgressPrefix(loadout.id));
-          setOpen(false);
-        }}
-      >
-        <p>
-          This clears the aim changes you’ve marked Done for “{loadout.name}”. Build my config and Tune my config share
-          these marks, so the marks in Build my config’s Aim settings step for this loadout are cleared too.
-        </p>
-      </ConfirmDialog>
-    </>
-  );
-}
 
 /** "What to change": the findings for this loadout, the first one up front, then by group. */
 export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; settingsPath: string }) {
@@ -248,6 +220,9 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
   const missing = required.filter((s) => s.state === 'missing');
   const matching = required.filter((s) => s.state === 'ok');
   const unknown = required.filter((s) => s.state === 'unknown');
+  // XIM's list comes with one caveat for every value, so the section says it once (the card in
+  // "Change this first" sits above the section and keeps its own).
+  const fixCaveat = hoistedCaveat([...groups.fix, ...unknown].map((f) => f.statement));
 
   const { archetype, style } = mainWeapon(kb, loadout);
   const hiddenLevers = style ? style.levers.length - leversForProfile(style.levers, data.profile).length : 0;
@@ -256,7 +231,6 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
   const configDpi = config?.matrix.configDpi ?? null;
   const mouseDpi = data.profile.mouseDpi;
   const dpiMatches = configDpi !== null && configDpi === mouseDpi;
-  const anyDone = findings.some(isDone);
 
   const markDone = (finding: Finding & { progressKey: string }, done: boolean) =>
     setProgress(finding.progressKey, done ? 'done' : null);
@@ -270,23 +244,25 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
     setMoved((n) => n + 1);
   };
 
-  const cardFor = (finding: Finding) => {
+  const cardFor = (finding: Finding, hoisted?: string) => {
     const done = isDone(finding);
     return (
       <FindingCard
         key={finding.id}
         finding={finding}
         done={done}
+        hoisted={hoisted}
         actions={
           canMarkDone(finding) && (
             <div className="checklist-actions">
               <button
                 type="button"
-                className={`button small ${done ? 'primary' : 'secondary'}`}
+                className="button small secondary status-toggle is-done"
                 aria-pressed={done}
                 aria-label={`${finding.title}: done`}
                 onClick={() => markDone(finding, !done)}
               >
+                <StatusMark state={done ? 'done' : 'none'} />
                 Done
               </button>
             </div>
@@ -331,12 +307,14 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
         ) : (
           <p>Dialed has no other change to suggest from what you’ve entered.</p>
         )}
-        {anyDone && <StartAgain loadout={loadout} />}
       </Section>
 
       <Section title={groups.fix.length > 0 ? 'Fix these Destiny 2 settings' : 'Destiny 2 settings'}>
         <p className="hint">Your Destiny 2 settings are shared by every loadout.</p>
-        {groups.fix.length > 0 && <ul className="finding-list">{groups.fix.map(cardFor)}</ul>}
+        {fixCaveat && <SharedCaveatNote>{fixCaveat}</SharedCaveatNote>}
+        {groups.fix.length > 0 && (
+          <ul className="finding-list">{groups.fix.map((finding) => cardFor(finding, fixCaveat))}</ul>
+        )}
         {matching.length > 0 && <p>Already the same as XIM’s list: {names(matching)}.</p>}
         {missing.length > 0 && (
           <p>
@@ -366,10 +344,10 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
                       <dd>{setting.required}</dd>
                     </div>
                   </dl>
-                  <StatementNotes statement={setting.statement} />
+                  <StatementNotes statement={setting.statement} hoisted={fixCaveat} />
                   <details className="why">
-                    <summary>Why, and the source</summary>
-                    <StatementView statement={setting.statement} showBadge={false} />
+                    <summary>Why and source</summary>
+                    <StatementView statement={setting.statement} showBadge={false} showCaveat={false} />
                   </details>
                 </li>
               ))}
@@ -379,11 +357,12 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
       </Section>
 
       <Section title="Setup">
-        {groups.setup.length > 0 && <ul className="finding-list">{groups.setup.map(cardFor)}</ul>}
-        {dpiMatches && <p>The DPI in your Config matches the mouse DPI in your profile.</p>}
+        {groups.setup.length > 0 && <ul className="finding-list">{groups.setup.map((finding) => cardFor(finding))}</ul>}
+        {dpiMatches && <p>The DPI in your MATRIX Config matches the mouse DPI in your profile.</p>}
         {configDpi !== null && mouseDpi === null && (
           <p>
-            Add your mouse DPI to your <Link to="/profile">profile</Link> so Dialed can compare it with your Config’s.
+            Add your mouse DPI to your <Link to="/profile">profile</Link> so Dialed can compare it with the DPI in your
+            MATRIX Config.
           </p>
         )}
         {groups.setup.length === 0 && (configDpi === null || mouseDpi !== null) && !dpiMatches && (
@@ -397,7 +376,7 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
         ) : (
           <p className="hint">The main weapon isn’t in the knowledge base any more, so its aim style is unknown.</p>
         )}
-        {groups.aim.length > 0 && <ul className="finding-list">{groups.aim.map(cardFor)}</ul>}
+        {groups.aim.length > 0 && <ul className="finding-list">{groups.aim.map((finding) => cardFor(finding))}</ul>}
         {hiddenLevers > 0 && (
           <p className="footnote">
             {hiddenLevers === 1 ? 'One setting' : `${hiddenLevers} settings`} for other ways of aiming{' '}
@@ -409,7 +388,7 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
 
       {groups.info.length > 0 && (
         <Section title="Good to know">
-          <ul className="finding-list">{groups.info.map(cardFor)}</ul>
+          <ul className="finding-list">{groups.info.map((finding) => cardFor(finding))}</ul>
         </Section>
       )}
 
@@ -432,6 +411,9 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
           <Link to="/troubleshoot">Troubleshoot by feel</Link>
         </li>
       </ul>
+
+      {/* After everything, away from "Done: show the next change": the aim marks, cleared with a confirmation. */}
+      <ClearAimMarks loadout={loadout} />
     </>
   );
 }

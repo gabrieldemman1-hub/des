@@ -6,14 +6,11 @@
   gap: 12px;
 }
 
-/* "Your settings" / "What to change": two links drawn like the segmented control. */
+/* "Your settings" / "What to change": two links drawn as underlined tabs on a rule, so they don't
+   look like the segmented radio fields below them (those write a value; these navigate). */
 .tune-tabs {
   display: flex;
-  gap: 4px;
-  padding: 4px;
-  border: 1px solid var(--input-border);
-  border-radius: 12px;
-  background: var(--surface);
+  border-bottom: 1px solid var(--border-strong);
 }
 
 .tune-tab {
@@ -23,8 +20,9 @@
   justify-content: center;
   min-width: 0;
   min-height: 44px;
+  margin-bottom: -1px;
   padding: 4px 8px;
-  border-radius: 9px;
+  border-bottom: 3px solid transparent;
   color: var(--text-muted);
   font-size: 0.95rem;
   font-weight: 650;
@@ -35,14 +33,18 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.tune-tab:active {
+  background: var(--surface-2);
+}
+
 .tune-tab[aria-current='page'] {
-  background: var(--accent);
-  color: var(--on-accent);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  border-bottom-color: var(--accent);
+  color: var(--accent-text);
+  font-weight: 700;
 }
 
 .tune-tab:focus-visible {
-  outline-offset: 1px;
+  outline-offset: -3px;
 }
 
 /* Fields that belong to the choice above them (smoothing values, quantization values). */
@@ -157,15 +159,18 @@
   color: var(--text-muted);
 }
 
+/* Forced colours keep borders but drop custom text colours, so the current tab is marked by its
+   underline in a system colour. */
 @media (forced-colors: active) {
   .tune-tab[aria-current='page'] {
     forced-color-adjust: none;
-    background: Highlight;
-    color: HighlightText;
+    background: Canvas;
+    border-bottom-color: Highlight;
+    color: CanvasText;
   }
 }
 
-/* What a card shows of its statement before "Why, and the source": worked out, and the caveat. */
+/* What a card shows of its statement before "Why and source": worked out, and the caveat. */
 .finding-note {
   color: var(--text-muted);
   font-size: 0.92rem;

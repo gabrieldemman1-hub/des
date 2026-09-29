@@ -3,23 +3,33 @@ import type { FoundationCheck } from '../../../../knowledge/index';
 import { ChecklistItem } from '../../components/ChecklistItem';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
-import { PerConfigNote } from '../../components/PerConfigNote';
+import { PerConfigHint, PerConfigNote } from '../../components/PerConfigNote';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
 import { useData } from '../../state/data-context';
-import { REQUIRED_SETTINGS_CHECK_ID, progressKey, progressSummary } from '../../state/progress';
-import { useEffectiveProgress } from '../../state/use-progress';
+import { REQUIRED_SETTINGS_CHECK_ID, derivedProblemNote, progressKey, progressSummary } from '../../state/progress';
+import { useDerivedProblemKeys, useEffectiveProgress } from '../../state/use-progress';
 import { CHECK_PREFIX, hasCheckMarks, summarizeChecks } from './setup-progress';
 import './troubleshoot.css';
 
 /** One setup check: what to do, why (sourced), and how to fix it (sourced). */
 function SetupCheckItem({ check }: { check: FoundationCheck }) {
+  const { data } = useData();
   const progress = useEffectiveProgress();
+  const derived = useDerivedProblemKeys();
   const key = progressKey.check(check.id);
   const needsFixing = progress[key] === 'problem';
 
   return (
-    <ChecklistItem itemKey={key} title={check.title}>
+    <ChecklistItem
+      itemKey={key}
+      title={check.title}
+      derivedNote={
+        derived.has(key)
+          ? derivedProblemNote(data.progress[key], 'a saved Config’s values differ (see Build my config)')
+          : undefined
+      }
+    >
       <p>{check.check}</p>
       <PerConfigNote checkId={check.id} />
       <details className="why">
@@ -60,11 +70,14 @@ function SetupCheckItem({ check }: { check: FoundationCheck }) {
 /** The setup checks as a checklist. Marks are shared with Build my config (same keys). */
 export function SetupChecklist({ checks }: { checks: readonly FoundationCheck[] }) {
   return (
-    <ul className="checklist">
-      {checks.map((check) => (
-        <SetupCheckItem key={check.id} check={check} />
-      ))}
-    </ul>
+    <>
+      <PerConfigHint checks={checks} />
+      <ul className="checklist">
+        {checks.map((check) => (
+          <SetupCheckItem key={check.id} check={check} />
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -100,7 +113,7 @@ export function SetupSummary({ checks, allowReset = false }: SummaryProps) {
               if (canReset) setConfirming(true);
             }}
           >
-            Clear all marks
+            Clear setup-check marks
           </button>
           <ConfirmDialog
             open={confirming}

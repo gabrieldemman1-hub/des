@@ -1,6 +1,9 @@
 import { Link, useParams } from 'react-router';
+import type { Statement } from '../../../knowledge/index';
+import { ReasonedLegend } from '../components/ConfidenceBadge';
 import { Screen } from '../components/Screen';
-import { StatementView } from '../components/StatementView';
+import { SharedCaveatNote, StatementView } from '../components/StatementView';
+import { hoistedCaveat, needsReasonedLegend, quotesShownAbove } from '../components/statements';
 import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS } from '../content/labels';
 import { useData } from '../state/data-context';
 import { leversForProfile } from '../state/guidance';
@@ -20,11 +23,24 @@ export function AimStyleScreen() {
   const weapons = kb.weapons.archetypes.filter((a) => a.aimStyle === style.id).map((a) => a.name);
   const aimsWith = data.profile.aimingSources.map((s) => AIMING_SOURCE_LABELS[s].title.toLowerCase()).join(' and ');
 
+  // The page's statements in reading order: a caveat they share is said once under the title,
+  // and a passage one of them quotes is shown in full once.
+  const statements: Statement[] = [style.favours, ...levers.map((lever) => lever.statement)];
+  const caveat = hoistedCaveat(statements);
+  const above = quotesShownAbove(statements);
+  const view = (statement: Statement) => (
+    <StatementView
+      statement={statement}
+      showCaveat={caveat === undefined || statement.caveat !== caveat}
+      shownAbove={above.get(statement)}
+    />
+  );
+
   return (
     <Screen
       title={style.name}
       documentTitle={`${style.name} aim style`}
-      back={{ to: '/learn', label: 'Explain a concept' }}
+      back={{ to: '/learn', label: 'Learn' }}
       intro={
         <>
           <p className="lede">{style.description}</p>
@@ -33,14 +49,14 @@ export function AimStyleScreen() {
               <strong>Weapons:</strong> {weapons.join(', ')}
             </p>
           )}
+          {caveat && <SharedCaveatNote>{caveat}</SharedCaveatNote>}
+          {needsReasonedLegend(statements) && <ReasonedLegend />}
         </>
       }
     >
       <section className="learn-section">
         <h2 className="section-title">What the settings should favour</h2>
-        <div className="card">
-          <StatementView statement={style.favours} />
-        </div>
+        <div className="card">{view(style.favours)}</div>
       </section>
 
       <section className="learn-section">
@@ -52,7 +68,7 @@ export function AimStyleScreen() {
                 <Link to={`/learn/${lever.termId}`}>{termById(lever.termId)?.name ?? lever.termId}</Link>
                 <span className="tag">{LEVER_DIRECTION_LABELS[lever.direction]}</span>
               </p>
-              <StatementView statement={lever.statement} />
+              {view(lever.statement)}
             </li>
           ))}
         </ul>

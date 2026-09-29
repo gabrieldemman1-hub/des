@@ -11,8 +11,9 @@ are in [docs/research/](docs/research/).
 in its config sheet), Tune my config (enter your current settings, get changes ordered by
 impact), Troubleshoot by feel (setup check, then symptom → setting) and Explain a concept (every
 MATRIX setting, and the aim styles). Profile, loadouts, sources, backup and offline support are
-in place. Once GitHub Pages is switched on, every merge to `main` publishes it (see Publishing to
-GitHub Pages).
+in place. It is live at https://gabrieldemman1-hub.github.io/des/ and installs to a phone's home
+screen; every merge to `main` publishes it (see Publishing to GitHub Pages). A professional UI
+design review and the fixes it led to are recorded in [docs/reviews/](docs/reviews/).
 
 ## Run it on your computer
 
