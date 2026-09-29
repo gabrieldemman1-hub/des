@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { knowledge, type FoundationCheck, type Lever } from '../../../knowledge/index';
-import { checksForProfile, leversForProfile } from './guidance';
+import { aimsWithMouse, checksForProfile, leversForProfile } from './guidance';
+import { PER_CONFIG_CHECK_IDS } from './progress';
 import { defaultProfile } from './schema';
 
 const reasoned = { text: 't', confidence: 'reasoned' as const, citations: [], reasoning: 'r', caveat: 'c' };
@@ -27,6 +28,17 @@ describe('checksForProfile', () => {
     expect(ids('pc', null)).toEqual(['everywhere', 'pc-auth']);
     expect(ids('pc', 'pc-dualsense')).toEqual(['everywhere', 'pc-auth']);
     expect(ids('pc', 'pc-xinput')).toEqual(['everywhere']);
+  });
+
+  it('shows the Stick Upscaling check only for DualSense output on PC', () => {
+    const ids = (profile: Parameters<typeof checksForProfile>[1]) => checksForProfile(knowledge.foundation, profile).map((c) => c.id);
+    expect(ids({ platform: 'pc', outputType: 'pc-dualsense' })).toContain('pc-dualsense-stick-upscaling');
+    for (const outputType of ['pc-xinput', 'pc-xbox-controller'] as const) {
+      expect(ids({ platform: 'pc', outputType }), outputType).not.toContain('pc-dualsense-stick-upscaling');
+    }
+    expect(ids({ platform: 'xbox', outputType: 'xbox-controller' })).not.toContain('pc-dualsense-stick-upscaling');
+    // It is set in each Config, so it is marked Per Config.
+    expect(PER_CONFIG_CHECK_IDS.has('pc-dualsense-stick-upscaling')).toBe(true);
   });
 
   it('shows the PC authentication controller check only for Xbox and DualSense output', () => {
@@ -58,5 +70,29 @@ describe('leversForProfile', () => {
   it('marks Stability in the real data as gyro-only', () => {
     const hold = knowledge.aimStyles.find((s) => s.id === 'precision-hold');
     expect(hold?.levers.find((l) => l.termId === 'stability')?.aimingSources).toEqual(['gyro']);
+  });
+
+  it('marks the smoothing levers in the real data as mouse or gyro, since the guide gives smoothing only there', () => {
+    const smoothing = knowledge.aimStyles.flatMap((s) => s.levers).filter((l) => ['precision', 'response', 'easing'].includes(l.termId));
+    expect(smoothing.length).toBeGreaterThan(0);
+    for (const lever of smoothing) expect(lever.aimingSources, lever.termId).toEqual(['mouse', 'gyro']);
+  });
+
+  it('leaves a thumbstick-only player only the aiming curve for precision holds', () => {
+    const hold = knowledge.aimStyles.find((s) => s.id === 'precision-hold')!;
+    expect(leversForProfile(hold.levers, { aimingSources: ['thumbstick'] }).map((l) => l.termId)).toEqual(['aiming-curve']);
+    // Every style's smoothing directions are hidden from them.
+    for (const style of knowledge.aimStyles) {
+      const kept = leversForProfile(style.levers, { aimingSources: ['thumbstick'] }).map((l) => l.termId);
+      expect(kept.filter((id) => ['precision', 'response', 'easing', 'stability'].includes(id)), style.id).toEqual([]);
+    }
+  });
+});
+
+describe('aimsWithMouse', () => {
+  it('is true only when the profile aims with a mouse', () => {
+    expect(aimsWithMouse({ aimingSources: ['mouse'] })).toBe(true);
+    expect(aimsWithMouse({ aimingSources: ['gyro', 'thumbstick'] })).toBe(false);
+    expect(aimsWithMouse(defaultProfile())).toBe(true);
   });
 });

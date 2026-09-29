@@ -4,6 +4,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { InstallSection } from '../components/Install';
 import { Screen } from '../components/Screen';
 import { SegmentedField } from '../components/SegmentedField';
+import { SourcesLink } from '../components/SourcesLink';
 import { StatementView } from '../components/StatementView';
 import {
   AIMING_SOURCE_LABELS,
@@ -67,7 +68,8 @@ function OutputTypeField() {
     <fieldset className="field" aria-labelledby={ids.label} aria-describedby={ids.hint}>
       <legend id={ids.label}>Output type</legend>
       <p className="hint" id={ids.hint}>
-        Controller output only; PC mouse-and-keyboard output is out of scope.
+        Controller output only. On PC, Dialed doesn’t cover mouse-and-keyboard output, Mouse, Keyboard, Controller
+        output, or DualShock 4 controller output.
       </p>
       {platform === null && <p className="fixed-value">Pick a platform first.</p>}
       {platform === 'xbox' && (
@@ -121,8 +123,8 @@ function AimingSourcesField() {
     <fieldset className="field" aria-describedby={hintId}>
       <legend>What you aim with</legend>
       <p className="hint" id={hintId}>
-        Pick every aiming source your Configs use. Advice that only applies to gyro aim, such as Stability, shows only if
-        you pick Gyro.
+        Pick every aiming source your Configs use. Advice on a setting XIM’s guide places under certain aiming sources
+        shows only if you pick one of them: Stability needs Gyro, and Precision, Response and Easing need Mouse or Gyro.
       </p>
       <div className="choice-list">
         {AIMING_SOURCES.map((source) => {
@@ -258,7 +260,10 @@ function ProfileFields() {
 
       <section className="form-section" aria-labelledby="profile-feel">
         <h2 id="profile-feel">Feel preferences</h2>
-        <p className="hint">Where the evidence supports a range, these pick the point within it.</p>
+        <p className="hint">
+          No source gives a recommended range for either of these, so they don’t set any number. Build my config shows
+          what the evidence says about each one.
+        </p>
         <SegmentedField
           legend="Snappy or smooth"
           hint="How you like your aim to feel. This isn’t the Smooth or Smoothing setting."
@@ -421,7 +426,12 @@ export function ProfileScreen() {
   return (
     <Screen
       title="Profile"
-      intro={<p className="lede">Dialed tailors its advice to these. Change them any time.</p>}
+      intro={
+        <p className="lede">
+          Your platform, output type and what you aim with decide which advice applies, and Dialed compares your mouse DPI
+          with the DPI in your MATRIX Config. Change them any time.
+        </p>
+      }
     >
       <p className={saveState === 'failed' ? 'save-status is-failed' : 'save-status'} aria-live="polite">
         {SAVE_STATUS[saveState]}
@@ -432,6 +442,7 @@ export function ProfileScreen() {
       </form>
       <InstallSection />
       <BackupSection />
+      <SourcesLink from={{ to: '/profile', label: 'Profile' }} />
     </Screen>
   );
 }

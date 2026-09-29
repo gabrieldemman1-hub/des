@@ -2,6 +2,7 @@ import { useId, useRef } from 'react';
 import { Link } from 'react-router';
 import type { Symptom } from '../../../../knowledge/index';
 import { EmptyState } from '../../components/EmptyState';
+import { HowThisWorks } from '../../components/HowThisWorks';
 import { ChevronIcon } from '../../components/icons';
 import { Screen } from '../../components/Screen';
 import { OUTPUT_TYPE_LABELS, PLATFORM_LABELS } from '../../content/labels';
@@ -95,11 +96,8 @@ export function TroubleshootScreen() {
       back={{ to: '/', label: 'Home' }}
       intro={
         <>
-          <p className="lede">
-            For when something feels wrong but you don’t know which setting is responsible. Setup mistakes are the
-            best-documented causes of bad-feeling aim, so they get ruled out first. Then you pick what you feel, and
-            Dialed points to the setting responsible where a source backs it up, or says so when none does.
-          </p>
+          <p className="lede">Rule out setup mistakes first, then go from what you feel to where to look.</p>
+          <HowThisWorks flow="troubleshoot" />
           {checks.length > 0 && kb.symptoms.length > 0 && (
             <p>
               <button type="button" className="button small secondary" onClick={() => stage2Heading.current?.focus()}>

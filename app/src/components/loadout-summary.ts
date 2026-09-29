@@ -4,14 +4,14 @@
  * the loadout's settings are entered.
  */
 import { buildPlan, planProgress, type BuildPlan, type ProgressCount } from '../features/build/build-plan';
+import { useLoadoutProgress } from '../features/build/custom-sync';
 import { hasConfigValues } from '../state/current-values';
 import { useData } from '../state/data-context';
 import { useKnowledge, type KnowledgeApi } from '../state/knowledge-context';
 import { SLOTS } from '../state/loadouts';
 import { progressSummary } from '../state/progress';
 import { hasInGameValues } from '../state/required-settings';
-import type { Loadout } from '../state/schema';
-import { useEffectiveProgress } from '../state/use-progress';
+import type { AppData, Loadout } from '../state/schema';
 
 export interface LoadoutSummary {
   /** The main weapon's archetype and aim style; undefined when the knowledge base no longer has it. */
@@ -28,16 +28,29 @@ export interface LoadoutSummary {
 export function useLoadoutSummary(loadout: Loadout): LoadoutSummary {
   const knowledge = useKnowledge();
   const { data } = useData();
-  const progress = useEffectiveProgress();
   const plan = buildPlan(knowledge, data.profile, loadout);
+  const progress = useLoadoutProgress(plan);
   const config = data.configs[loadout.id];
   return {
     main: plan.main,
     style: plan.style,
+    // Counted as the sheet counts it, with a Custom-sync Config's rows at the player's own mark.
     sheet: planProgress(plan, progress),
     settings: hasConfigValues(config) ? 'config' : hasInGameValues(data.inGame) ? 'in-game' : 'none',
     updatedAt: config?.updatedAt ?? null,
   };
+}
+
+/**
+ * The loadout the player touched last (its own edit or its Config's), which Home puts first with
+ * the one amber button. Ties go to the first in the list, so a fresh set of loadouts keeps its order.
+ */
+export function mostRecentLoadout({ loadouts, configs }: Pick<AppData, 'loadouts' | 'configs'>): Loadout | undefined {
+  const touched = (l: Loadout) => {
+    const config = configs[l.id]?.updatedAt ?? '';
+    return config > l.updatedAt ? config : l.updatedAt;
+  };
+  return loadouts.reduce<Loadout | undefined>((best, l) => (best && touched(best) >= touched(l) ? best : l), undefined);
 }
 
 /** "Sheet 5 of 19 done · 1 needs fixing": the build progress, as the config sheet counts it. */

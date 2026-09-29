@@ -1,21 +1,33 @@
+import { useLocation } from 'react-router';
 import { CONFIDENCE_LEVELS } from '../../../knowledge/index';
 import { ConfidenceBadge } from '../components/ConfidenceBadge';
 import { NoticeBanner } from '../components/NoticeBanner';
+import { backLinkFrom } from '../components/back-link';
 import { Screen } from '../components/Screen';
 import { SOURCE_TIER_LABELS } from '../content/labels';
 import { useKnowledge } from '../state/knowledge-context';
 
 export function SourcesScreen() {
   const { kb, issues } = useKnowledge();
+  const location = useLocation();
 
   return (
     <Screen
       title="Sources"
+      back={backLinkFrom(location.state, { to: '/learn', label: 'Learn' })}
       intro={
-        <p className="lede">
-          Dialed only uses the sources below, and only material written for the XIM MATRIX: nothing for XIM APEX or XIM4.
-          Adding a source requires a logged decision.
-        </p>
+        <>
+          <p className="lede">Dialed only uses the sources below. Adding one requires a logged decision.</p>
+          <details className="why how-this-works">
+            <summary>What each source is used for</summary>
+            <p className="prose">
+              The official guide and the forum pages titled XIM MATRIX are written for the XIM MATRIX. The XIM Game
+              Settings list is not MATRIX-only: it was first posted in 2015 and now includes notes for the XIM MATRIX.
+              From XIM Central, Dialed uses only MATRIX-era material: nothing made for XIM APEX or XIM4. Bungie’s policy
+              page is used only for Destiny 2 account policy, never for XIM MATRIX settings.
+            </p>
+          </details>
+        </>
       }
     >
       {issues.length > 0 && (
@@ -49,7 +61,11 @@ export function SourcesScreen() {
       )}
 
       <h2 className="section-title">Confidence labels</h2>
-      <p className="hint">Every recommendation and explanation carries one of these, with its source.</p>
+      <p className="hint">
+        Each badge in Dialed shows one of these labels. Official, expert, contested and Bungie statements cite their
+        sources. Reasoned ones either cite the XIM sources they are worked out from, or say they were worked out by
+        Dialed, with no source. Gaps cite no source and say so.
+      </p>
       <ul className="legend">
         {CONFIDENCE_LEVELS.map((level) => (
           <li key={level}>

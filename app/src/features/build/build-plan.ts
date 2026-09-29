@@ -16,7 +16,7 @@ import type {
 } from '../../../../knowledge/index';
 import { CURVE_LABELS, QUANTIZATION_LABELS, VELOCITY_LABELS } from '../../state/current-values';
 import type { KnowledgeApi } from '../../state/knowledge-context';
-import { checksForProfile, leversForProfile } from '../../state/guidance';
+import { aimsWithMouse, checksForProfile, leversForProfile } from '../../state/guidance';
 import {
   REQUIRED_SETTINGS_CHECK_ID,
   countProgress,
@@ -54,23 +54,37 @@ export function stepById(id: string | undefined): BuildStepInfo | undefined {
 }
 
 /** Game notes shown before the Destiny 2 settings, in this order (missing ones are skipped). */
-export const GAME_NOTE_IDS = ['max-sensitivity-and-defaults', 'sync-method', 'confirm-in-manager'] as const;
+export const GAME_NOTE_IDS = [
+  'max-sensitivity-and-defaults',
+  'sync-method',
+  'confirm-in-manager',
+  'bungie-adapter-policy',
+] as const;
 
 /** Further game notes that bear on the Destiny 2 settings, shown on request. */
 export function moreGameNoteIds(platform: Profile['platform']): string[] {
   return ['simulate-analog-behavior', 'xbox-vs-pc', ...(platform === 'xbox' ? [] : ['pc-destiny-specific'])];
 }
 
-/** Mechanics whose defaults the glossary's official guidance covers, checked after the levers. */
+/**
+ * Mechanics whose defaults the glossary's official guidance covers, checked after the levers.
+ * A loadout whose aim style has a lever for one of them gets that lever instead of the row.
+ */
 export const MECHANICS_TERM_IDS = ['aiming-curve', 'quantization', 'velocity-mapping'] as const;
 export type MechanicsTermId = (typeof MECHANICS_TERM_IDS)[number];
 
+function isMechanicsTerm(termId: string): termId is MechanicsTermId {
+  return (MECHANICS_TERM_IDS as readonly string[]).includes(termId);
+}
+
 /**
  * Each mechanic's default, as XIM's official guidance on the term states it ("The default is
- * linear", "It is off by default", "The default is Standard"). The sheet shows it as the value
- * to keep: XIM's advice is to start with Sensitivity alone and change the rest only if
- * necessary, and the guidance on each term says when that is. Spelled as the player's own
- * values are, so the two read alike. `build-plan.test.ts` checks them against the guidance.
+ * linear", "It is off by default", "The default is Standard"). Where no lever of the loadout's
+ * aim style covers the setting, the sheet shows it as the value to keep: XIM's advice is to
+ * start with Sensitivity alone and change the rest only if necessary, and the guidance on each
+ * term says when that is. Where a lever covers it, the lever row names it as XIM's default
+ * beside the lever's direction. Spelled as the player's own values are, so the two read alike.
+ * `build-plan.test.ts` checks them against the guidance.
  */
 export const MECHANICS_DEFAULTS: Readonly<Record<MechanicsTermId, string>> = {
   'aiming-curve': CURVE_LABELS.linear,
@@ -120,6 +134,11 @@ export interface GuidanceItem {
 export interface LeverItem {
   key: string;
   lever: Lever;
+  /**
+   * For a lever on one of the mechanics (the aiming curve): XIM's default and official guidance
+   * on the setting, which the lever row carries in place of a row of its own.
+   */
+  guidance?: GuidanceItem;
 }
 
 export interface BuildPlan {
@@ -133,7 +152,10 @@ export interface BuildPlan {
   sensitivity: GuidanceItem | undefined;
   smoothing: GuidanceItem | undefined;
   levers: LeverItem[];
-  /** Levers left out because they are for another aiming source (e.g. gyro-only). */
+  /**
+   * Aim items left out because they are for another aiming source: levers (e.g. gyro-only), and
+   * the cm/360 Sensitivity without a mouse.
+   */
   hiddenLevers: number;
   mechanics: GuidanceItem[];
 }
@@ -162,13 +184,26 @@ export function buildPlan(lookups: Lookups, profile: Profile, loadout: Loadout):
   const mainId = loadout.weapons[loadout.mainSlot];
   const main = mainId === null ? undefined : lookups.archetypeById(mainId);
   const style = main?.aimStyle ? lookups.aimStyleById(main.aimStyle) : undefined;
+  // Profile-filtered, so a hidden lever never takes a mechanics row away.
   const levers = style ? leversForProfile(style.levers, profile) : [];
+  const leverTerms = new Set(levers.map((lever) => lever.termId));
+  const mechanicsItem = (termId: MechanicsTermId, key: string) =>
+    guidanceItem(lookups, termId, key, { text: MECHANICS_DEFAULTS[termId], caption: 'default' });
 
   // Where no source gives a sensitivity number, the knowledge base says so: show that gap
   // next to XIM's advice rather than leave the player expecting a number.
   const sensitivityGaps = kb.game.preferences
     .filter((p) => p.input === 'sensitivity' && p.statement.confidence === 'gap')
     .map((p) => p.statement);
+  // Mouse sensitivity is set in cm/360, so the row is for players who aim with a mouse.
+  const sensitivity = guidanceItem(
+    lookups,
+    'sensitivity',
+    progressKey.aim.sensitivity(loadout.id),
+    { text: 'Your cm/360', caption: BY_FEEL },
+    sensitivityGaps,
+  );
+  const withMouse = aimsWithMouse(profile);
 
   return {
     loadout,
@@ -184,29 +219,32 @@ export function buildPlan(lookups: Lookups, profile: Profile, loadout: Loadout):
     checks: checksForProfile(kb.foundation, profile)
       .filter((check) => check.id !== REQUIRED_SETTINGS_CHECK_ID)
       .map((check) => ({ key: progressKey.check(check.id), check })),
-    sensitivity: guidanceItem(
-      lookups,
-      'sensitivity',
-      progressKey.aim.sensitivity(loadout.id),
-      { text: 'Your cm/360', caption: BY_FEEL },
-      sensitivityGaps,
-    ),
+    sensitivity: withMouse ? sensitivity : undefined,
     smoothing: guidanceItem(lookups, 'smoothing', progressKey.aim.smoothing(loadout.id), {
       text: 'A preset',
       caption: BY_FEEL,
     }),
     levers: style
-      ? levers.map((lever) => ({ key: progressKey.aim.lever(loadout.id, style.id, lever.termId), lever }))
+      ? levers.map((lever): LeverItem => {
+          const key = progressKey.aim.lever(loadout.id, style.id, lever.termId);
+          const guidance = isMechanicsTerm(lever.termId) ? mechanicsItem(lever.termId, key) : undefined;
+          return guidance ? { key, lever, guidance } : { key, lever };
+        })
       : [],
-    hiddenLevers: style ? style.levers.length - levers.length : 0,
-    mechanics: MECHANICS_TERM_IDS.flatMap((termId) => {
-      const item = guidanceItem(lookups, termId, progressKey.aim.term(loadout.id, termId), {
-        text: MECHANICS_DEFAULTS[termId],
-        caption: 'default',
-      });
+    hiddenLevers: (style ? style.levers.length - levers.length : 0) + (sensitivity && !withMouse ? 1 : 0),
+    mechanics: MECHANICS_TERM_IDS.filter((termId) => !leverTerms.has(termId)).flatMap((termId) => {
+      const item = mechanicsItem(termId, progressKey.aim.term(loadout.id, termId));
       return item ? [item] : [];
     }),
   };
+}
+
+/**
+ * "XIM’s default: Linear": what a lever row adds after its direction when it carries XIM's
+ * guidance on the setting (see `LeverItem.guidance`). Undefined for other levers.
+ */
+export function leverDefaultCaption(item: LeverItem): string | undefined {
+  return item.guidance ? `XIM’s default: ${item.guidance.value.text}` : undefined;
 }
 
 /** The progress keys each checklist step asks the player to tick. */

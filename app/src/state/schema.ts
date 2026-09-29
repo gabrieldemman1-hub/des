@@ -155,9 +155,10 @@ export const CurrentConfig = z.object({
       /** A preset (its name in presetName), custom Standard, custom Classic, or smoothing off. */
       smoothing: z.enum(['preset', 'standard', 'classic', 'off']).nullable().default(null),
       presetName: z.string().max(40).default(''),
-      precision: Num(0, 100),
-      response: Num(0, 100),
-      easing: Num(0, 100),
+      /** The guide gives no range for these: the bounds only reject nonsense. */
+      precision: Num(0, 1000),
+      response: Num(0, 1000),
+      easing: Num(0, 1000),
       smooth: Num(0, 1000),
       decay: Num(0, 1000),
       synch: Num(0, 1000),

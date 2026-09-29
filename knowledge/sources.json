@@ -49,6 +49,16 @@
       "tier": "expert",
       "accessed": "2026-09-22",
       "notes": "Not XIM's official channel. XIM MATRIX-era material only (user decision): nothing made for XIM APEX or XIM4. Video transcripts could not be retrieved; only scripts confirmed as the channel's may be cited."
+    },
+    {
+      "id": "bungie-help",
+      "title": "Destiny Account Restrictions and Banning Policies",
+      "publisher": "Bungie",
+      "url": "https://help.bungie.net/hc/en-us/articles/360049517431-Destiny-Account-Restrictions-and-Banning-Policies",
+      "hosts": ["help.bungie.net", "web.archive.org"],
+      "tier": "game-publisher",
+      "accessed": "2026-09-24",
+      "notes": "Destiny 2 account policy only, never XIM MATRIX settings. help.bungie.net blocks automated checks, so citations point to the Internet Archive copy of 9 June 2026."
     }
   ]
 }

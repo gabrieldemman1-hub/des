@@ -13,7 +13,9 @@ impact), Troubleshoot by feel (setup check, then symptom → setting) and Explai
 MATRIX setting, and the aim styles). Profile, loadouts, sources, backup and offline support are
 in place. It is live at https://gabrieldemman1-hub.github.io/des/ and installs to a phone's home
 screen; every merge to `main` publishes it (see Publishing to GitHub Pages). A professional UI
-design review and the fixes it led to are recorded in [docs/reviews/](docs/reviews/).
+design review and the fixes it led to are recorded in [docs/reviews/](docs/reviews/). The visual
+design (colour roles, type, the instrument parts, motion and the accessibility checks) is
+described in [docs/design.md](docs/design.md).
 
 ## Run it on your computer
 
@@ -105,8 +107,11 @@ app/                      the web app (Vite root)
   src/
     main.tsx              entry: hash router, data provider, service worker updates
     routes.tsx            the screens and their URLs (#/, #/loadouts, #/profile, …)
-    styles.css            phone-first styles; dark theme, light via prefers-color-scheme
-    components/           Screen, TabBar, ConfidenceBadge, ConfirmDialog, SegmentedField, …
+    styles.css            phone-first styles and the design tokens (docs/design.md); dark theme,
+                          light via prefers-color-scheme
+    fonts.css             the three bundled faces (assets/fonts/, SIL OFL)
+    components/           Screen, TabBar, ConfidenceBadge, ConfirmDialog, SegmentedField,
+                          TickRuler, Readout, Sheet, …
     screens/              Home, Profile, Loadouts, LoadoutEditor, Sources, Explain a concept
                           (Learn, Term, AimStyle), Flow (redirects old flow addresses)
     features/             build/ (Build my config + config sheet), tune/ (Tune my config),
@@ -129,6 +134,8 @@ scripts/
   verify-citations.mjs    npm run verify:citations
   lib/citations.mjs       HTML-to-text and quote normalisation (unit-tested)
   generate-icons.mjs      npm run icons
+  theme-contrast.test.ts  WCAG AA for every colour pair in both themes
+docs/design.md            the visual design
 docs/research/            research notes behind the concept
 CONCEPT.md                the agreed concept
 ```

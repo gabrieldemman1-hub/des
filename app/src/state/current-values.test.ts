@@ -99,12 +99,12 @@ describe('current values', () => {
       'Your smoothing is Off. These directions assume Standard smoothing.',
     );
     expect(smoothingNote({ ...aim, smoothing: 'preset' })?.text).toBe(
-      'Your smoothing is a preset. Dialed can’t tell which mode a preset uses. These directions assume Standard smoothing.',
+      'Your smoothing is a preset. These directions are for custom Standard smoothing, where you set the values yourself instead of using a preset. XIM’s advice is to start by trying each preset and keep the one that feels most natural.',
     );
     expect(smoothingNote({ ...aim, smoothing: 'preset', presetName: 'Fast' }, 'one')).toEqual({
       mode: 'preset',
       current: 'Preset: Fast',
-      text: 'Your smoothing is a preset (Fast). Dialed can’t tell which mode a preset uses. This direction assumes Standard smoothing.',
+      text: 'Your smoothing is a preset (Fast). This direction is for custom Standard smoothing, where you set the values yourself instead of using a preset. XIM’s advice is to start by trying each preset and keep the one that feels most natural.',
     });
   });
 

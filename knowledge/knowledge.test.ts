@@ -16,7 +16,14 @@ import {
   type KnowledgeFileName,
   type RawKnowledgeFiles,
 } from './index';
-import { EASING_CAVEAT, collectCitations, findIntegrityProblems, formatProblem, givesEasingDirection } from './integrity';
+import {
+  EASING_CAVEAT,
+  collectCitations,
+  collectStatements,
+  findIntegrityProblems,
+  formatProblem,
+  givesEasingDirection,
+} from './integrity';
 
 const knowledgeDir = fileURLToPath(new URL('.', import.meta.url));
 const fileNames = Object.keys(KNOWLEDGE_SCHEMAS) as KnowledgeFileName[];
@@ -59,6 +66,15 @@ describe('knowledge base data (the real files)', () => {
   it('always has the three Destiny 2 weapon slots', () => {
     expect(knowledge.weapons.slots.map((s) => s.id)).toEqual(['kinetic', 'energy', 'power']);
   });
+
+  it('cites Bungie only in the Destiny 2 account-policy note, under its own label', () => {
+    const bungie = new Set(knowledge.sources.filter((s) => s.tier === 'game-publisher').map((s) => s.id));
+    expect([...bungie]).toEqual(['bungie-help']);
+    const citing = collectStatements(knowledgeFiles).filter((ref) => ref.statement.citations.some((c) => bungie.has(c.source)));
+    expect(citing.map((ref) => `${ref.file} ${ref.entryId} ${ref.statement.confidence}`)).toEqual([
+      'destiny2/game.json bungie-adapter-policy publisher',
+    ]);
+  });
 });
 
 // ---------------------------------------------------------------------------------------
@@ -73,6 +89,41 @@ function official(text: string, url = `${GUIDE}#smoothing`, source = 'xim-guide'
 
 function gap(text: string) {
   return { text, confidence: 'gap', citations: [] };
+}
+
+const BUNGIE = 'https://web.archive.org/web/20260609015510/https://help.bungie.net/hc/en-us/articles/1';
+
+/** A Bungie policy statement: cites the game-publisher source (and XIM, for context). */
+function publisher(text: string) {
+  return {
+    text,
+    confidence: 'publisher',
+    citations: [
+      { source: 'bungie-help', url: BUNGIE, quote: text },
+      { source: 'xim-guide', url: `${GUIDE}What-Is-XIM-MATRIX/`, quote: 'multi-input adapter' },
+    ],
+  };
+}
+
+/** The valid fixture plus Bungie as a game-publisher source and a policy note in the game file. */
+function withBungie(edit?: (raw: any) => void): RawKnowledgeFiles {
+  const raw = structuredClone(validRaw()) as any;
+  (raw['sources.json'].sources as unknown[]).push({
+    id: 'bungie-help',
+    title: 'Destiny Account Restrictions and Banning Policies',
+    publisher: 'Bungie',
+    url: 'https://help.bungie.net/hc/en-us/articles/1',
+    hosts: ['help.bungie.net', 'web.archive.org'],
+    tier: 'game-publisher',
+    accessed: '2026-09-24',
+  });
+  (raw['destiny2/game.json'].notes as unknown[]).push({
+    id: 'bungie-policy',
+    title: 'Bungie policy',
+    statement: publisher('Bungie says so.'),
+  });
+  edit?.(raw);
+  return raw as RawKnowledgeFiles;
 }
 
 function validRaw(): RawKnowledgeFiles {
@@ -416,6 +467,41 @@ describe('integrity checks', () => {
     expect(problemsFor(withCaveat)).toEqual([]);
   });
 
+  it('accept a publisher statement in the game file that cites Bungie (and XIM for context)', () => {
+    expect(problemsFor(withBungie())).toEqual([]);
+  });
+
+  it('flag publisher statements that cite no game-publisher source', () => {
+    const raw = withBungie((r) => {
+      (r['destiny2/game.json'].notes[1].statement.citations as unknown[]).shift();
+    });
+    expect(problemsFor(raw)).toContainEqual(expect.stringContaining('must cite at least one game-publisher source'));
+  });
+
+  it('flag game-publisher citations in statements that are not publisher statements', () => {
+    const raw = withBungie((r) => {
+      const bungie = (quote: string) => ({ source: 'bungie-help', url: BUNGIE, quote });
+      (r['destiny2/game.json'].notes[0].statement.citations as unknown[]).push(bungie('x'));
+      (r['matrix/glossary-aim.json'].terms[0].definition.citations as unknown[]).push(bungie('y'));
+    });
+    const problems = problemsFor(raw);
+    expect(problems).toContainEqual(
+      expect.stringMatching(/game\.json › sync: .*\(official\) cites a game-publisher source, which only publisher statements may cite/),
+    );
+    expect(problems).toContainEqual(
+      expect.stringMatching(/glossary-aim\.json › precision: definition \(official\) cites a game-publisher source/),
+    );
+  });
+
+  it('flag publisher statements outside the Destiny 2 game file', () => {
+    const raw = withBungie((r) => {
+      r['matrix/expert-notes.json'].notes[0].statement = publisher('Bungie says so.');
+    });
+    expect(problemsFor(raw)).toContainEqual(
+      expect.stringContaining('expert-notes.json › central-precision: statement (publisher) is only allowed in destiny2/game.json'),
+    );
+  });
+
   it('tell an Easing direction from a plain mention of Easing', () => {
     const s = (text: string, reasoning?: string) => ({ text, confidence: 'reasoned' as const, citations: [], reasoning });
     expect(givesEasingDirection(s('Raise Easing a little.'))).toBe(true);
@@ -462,6 +548,14 @@ describe('loader', () => {
     });
     const { issues } = parseKnowledgeFiles(raw);
     expect(issues.map((i) => i.message)).toContain('reasoned statements must explain their reasoning');
+  });
+
+  it('requires a citation on publisher statements', () => {
+    const raw = withBungie((r) => {
+      r['destiny2/game.json'].notes[1].statement.citations = [];
+    });
+    const { issues } = parseKnowledgeFiles(raw);
+    expect(issues.map((i) => i.message)).toContain('publisher statements need at least one citation');
   });
 
   it('merges glossaries and provides lookups', () => {

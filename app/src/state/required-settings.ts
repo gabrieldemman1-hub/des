@@ -25,8 +25,9 @@ export const IN_GAME_TERMS: Readonly<Record<InGameField, readonly string[]>> = {
   buttonLayout: ['required-game-settings'],
   lookSensitivity: ['required-game-settings'],
   adsSensitivityModifier: ['required-game-settings'],
-  axialDeadzone: ['required-game-settings', 'deadzone'],
-  radialDeadzone: ['required-game-settings', 'deadzone'],
+  // Not 'deadzone': that term is the MATRIX's own aiming stick deadzone, a separate setting.
+  axialDeadzone: ['required-game-settings'],
+  radialDeadzone: ['required-game-settings'],
 };
 
 /** How the player's Default / not-Default choices read. */
@@ -80,7 +81,8 @@ export interface RequiredSettingStatus {
   current: string | null;
   /**
    * ok: matches. mismatch: differs. missing: not entered yet. unknown: Dialed can't compare it
-   * (no field for the setting, or a required value it can't read).
+   * (no field for the setting, or a required value it can't read; in Tune, also a value a
+   * Config with Custom sync copies from the game, see `requiredSettingsFor`).
    */
   state: RequiredSettingState;
 }

@@ -75,6 +75,15 @@ describe('Build my config: choosing a loadout', () => {
     const details = screen.getByText('How this works').closest('details')!;
     expect(details).not.toHaveAttribute('open');
     expect(within(details).getByRole('heading', { level: 3, name: 'The order it follows' })).toBeInTheDocument();
+    // DPI, output, Smart Translator and light notifications are set in each Config, not globally, and the aim step
+    // promises only what it covers.
+    expect(details).toHaveTextContent(
+      'MATRIX setup and hardware foundation: current firmware, the polling rate your mouse actually reaches, and, in each Config, controller output, mouse DPI, a current Smart Translator and light notifications.',
+    );
+    expect(details).toHaveTextContent(
+      'Aim settings, in each loadout’s own Config: sensitivity in cm/360, smoothing, any settings your main weapon’s aim style points to, then the aiming curve, quantization and velocity mapping.',
+    );
+    expect(details).not.toHaveTextContent(/global settings|Y Scale|inheritance|a complete Destiny 2 configuration/);
   });
 
   it('says when the profile has everything the build uses', () => {
@@ -167,6 +176,40 @@ describe('Build my config: the steps', () => {
     // Destiny 2's settings are game-wide: the other loadout shows the same value.
     render('/build/l2/destiny-2', data);
     expect(screen.getByRole('listitem', { name: 'Look Sensitivity: 20' })).toHaveTextContent('Your current value: 18');
+  });
+
+  it('step 1 leaves the two Custom-sync values to the player when this loadout’s Config uses Custom sync', async () => {
+    const data = withProfile({});
+    data.inGame = { ...emptyInGame(), lookSensitivity: 18 };
+    const config = emptyConfig();
+    config.matrix.syncMethod = 'custom';
+    data.configs = { l1: config };
+    const { user, unmount } = render('/build/l1/destiny-2', data);
+    // Not compared with XIM's list: no "Differs", no Needs fixing worked out, just the player's mark.
+    const look = screen.getByRole('listitem', { name: 'Look Sensitivity: match your Config' });
+    expect(look).not.toHaveTextContent('Differs');
+    expect(within(look).getByRole('button', { name: 'Needs fixing' })).toHaveAttribute('aria-pressed', 'false');
+    expect(look).toHaveTextContent(/doesn't compare Look Sensitivity or ADS Sensitivity Modifier with XIM's list/);
+    expect(screen.getByRole('listitem', { name: 'ADS Sensitivity Modifier: match your Config' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: '0 of 6 done' })).toBeInTheDocument();
+    await user.click(within(look).getByRole('button', { name: 'Done' }));
+    expect(screen.getByRole('img', { name: '1 of 6 done' })).toBeInTheDocument();
+    unmount();
+
+    // The other loadout's Config uses Standard sync, so 18 still differs from XIM's 20 there.
+    render('/build/l2/destiny-2', data);
+    const standard = screen.getByRole('listitem', { name: 'Look Sensitivity: 20' });
+    expect(within(standard).getByText('Differs from 20')).toBeInTheDocument();
+    expect(within(standard).getByRole('button', { name: 'Needs fixing' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('step 1 shows its progress as a ruler with one tick per setting', () => {
+    const data = withProfile({});
+    data.progress = { [progressKey.requiredSetting('Axial Deadzone')]: 'done' };
+    render('/build/l1/destiny-2', data);
+    const ruler = screen.getByRole('img', { name: '1 of 6 done' });
+    expect(ruler.children).toHaveLength(6);
+    expect(ruler.querySelectorAll('.is-done')).toHaveLength(1);
   });
 
   it('step 2 shows the Xbox checks for an Xbox profile', () => {
@@ -315,6 +358,34 @@ describe('Build my config: the steps', () => {
     expect(screen.getByText(/hidden, because your profile says you aim with mouse/)).toBeInTheDocument();
   });
 
+  it('step 3 says smoothing comes first, and that its directions are for custom Standard smoothing', () => {
+    render('/build/l1/aim');
+    expect(
+      screen.getByText(/^Tick each one once you’ve dealt with it in this loadout’s Config in Manager\./),
+    ).toHaveTextContent(
+      'Smoothing comes first: XIM’s advice is to try each preset and keep the one that feels most natural. The smoothing directions after it (such as Precision or Easing) are for custom Standard smoothing, where you set the values yourself instead of using a preset.',
+    );
+  });
+
+  it('step 3 gives a precision-hold loadout the aiming curve once, as its lever with XIM’s default and guidance', () => {
+    const scout = sampleLoadout({ id: 'l3', name: 'Scout', weapons: { kinetic: 'scout-rifle', energy: null, power: null } });
+    render('/build/l3/aim', withProfile({}, { loadouts: [scout] }));
+    const curve = screen.getByRole('listitem', { name: 'Aiming Curve: It depends (XIM’s default: Linear)' });
+    expect(screen.queryByRole('listitem', { name: 'Aiming Curve' })).not.toBeInTheDocument();
+    // XIM's official line on the default is up front; the rest of its guidance one tap away.
+    const guidance = real.termById('aiming-curve')!.guidance;
+    expect(within(curve).getByText(guidance[0]!.text, { exact: false })).toBeVisible();
+    expect(within(curve).getByText(`More guidance on Aiming Curve (${guidance.length - 1})`)).toBeInTheDocument();
+    // The other mechanics keep their own rows.
+    for (const name of ['Quantization', 'Velocity Mapping']) expect(screen.getByRole('listitem', { name })).toBeInTheDocument();
+  });
+
+  it('step 3 leaves out the cm/360 Sensitivity without a mouse, and counts it as hidden', () => {
+    render('/build/l1/aim', withProfile({ aimingSources: ['gyro'] }));
+    expect(screen.queryByRole('listitem', { name: 'Start with Sensitivity' })).not.toBeInTheDocument();
+    expect(screen.getByText(/^One setting for other ways of aiming is hidden, because your profile says you aim with gyro/)).toBeInTheDocument();
+  });
+
   it('step 3 shows gyro-only settings when the profile aims with gyro', () => {
     const scout = sampleLoadout({ id: 'l3', name: 'Scout', weapons: { kinetic: 'scout-rifle', energy: null, power: null } });
     render('/build/l3/aim', withProfile({ aimingSources: ['mouse', 'gyro'] }, { loadouts: [scout] }));
@@ -453,7 +524,7 @@ describe('Build my config: the steps', () => {
     data.configs = { l1: config };
     render('/build/l1/aim', data);
     expect(screen.getByRole('note')).toHaveTextContent(
-      'Your smoothing is a preset (Fast). Dialed can’t tell which mode a preset uses. These directions assume Standard smoothing.',
+      'Your smoothing is a preset (Fast). These directions are for custom Standard smoothing, where you set the values yourself instead of using a preset. XIM’s advice is to start by trying each preset and keep the one that feels most natural.',
     );
   });
 });
@@ -494,7 +565,14 @@ describe('Build my config: moving between steps', () => {
     data.progress = Object.fromEntries(knowledge.game.requiredSettings.map((s) => [progressKey.requiredSetting(s.name), 'done']));
     render('/build/l1/matrix', data);
     const steps = screen.getByRole('navigation', { name: 'Build steps' });
-    expect(within(steps).getByRole('link', { name: 'Step 1: Destiny 2 settings, 6 of 6 done' })).toBeInTheDocument();
+    const done = within(steps).getByRole('link', { name: 'Step 1: Destiny 2 settings, 6 of 6 done' });
+    expect(done).toHaveClass('is-complete');
+    // The step you're on sits in the target-lock brackets, and the rail into it is green.
+    const current = within(steps).getByRole('link', { name: /^Step 2: / });
+    expect(current).toHaveAttribute('aria-current', 'step');
+    expect(current.querySelector('.build-step-number')).toHaveClass('lock');
+    expect(done.querySelector('.build-step-number')).not.toHaveClass('lock');
+    expect(current.closest('li')).toHaveClass('is-after-complete');
   });
 
   it('shows not found for an unknown loadout, with a way back', async () => {

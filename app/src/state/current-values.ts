@@ -184,9 +184,9 @@ export interface SmoothingNote {
 
 /**
  * When the player's smoothing isn't custom Standard: what that means for the aim-style
- * directions, which (in the knowledge base's words) assume Standard smoothing. Classic and Off
- * are named as they are. A preset doesn't rule the directions out, since Dialed can't tell
- * which mode it uses. Null for custom Standard, or when smoothing isn't entered.
+ * directions, which (in the knowledge base's words) assume custom Standard smoothing. Classic
+ * and Off are named as they are. A preset has no values of its own to set, so its note points
+ * to XIM's advice for presets instead. Null for custom Standard, or when smoothing isn't entered.
  *
  * `scope` 'one' words it for a single direction (a Tune my config card).
  */
@@ -196,10 +196,14 @@ export function smoothingNote(aim: Aim | undefined, scope: 'all' | 'one' = 'all'
   const assumes = scope === 'all' ? 'These directions assume Standard smoothing.' : 'This direction assumes Standard smoothing.';
   if (aim.smoothing === 'preset') {
     const preset = aim.presetName.trim();
+    const which = scope === 'all' ? 'These directions are' : 'This direction is';
     return {
       mode: 'preset',
       current,
-      text: `Your smoothing is a preset${preset ? ` (${preset})` : ''}. Dialed can’t tell which mode a preset uses. ${assumes}`,
+      text:
+        `Your smoothing is a preset${preset ? ` (${preset})` : ''}. ${which} for custom Standard smoothing, where you ` +
+        'set the values yourself instead of using a preset. XIM’s advice is to start by trying each preset and keep ' +
+        'the one that feels most natural.',
     };
   }
   return { mode: aim.smoothing, current, text: `Your smoothing is ${SMOOTHING_LABELS[aim.smoothing]}. ${assumes}` };

@@ -149,7 +149,7 @@ describe('current settings and checklist progress', () => {
   it('does not save invalid settings', () => {
     const storage = new MemoryStorage({ [STORAGE_KEY]: JSON.stringify(sampleData({ loadouts: [sampleLoadout()] })) });
     const api = renderProvider(storage);
-    act(() => api().updateConfig('l1', { aim: { easing: 500 } }));
+    act(() => api().updateConfig('l1', { aim: { easing: 5000 } }));
     expect(api().data.configs.l1).toBeUndefined();
   });
 

@@ -91,7 +91,7 @@ export function TermScreen() {
           )}
           {term.aliases.length > 0 && (
             <p className="hint">
-              <strong>Also called:</strong> {term.aliases.join(', ')}
+              <strong>Related terms:</strong> {term.aliases.join(', ')}
             </p>
           )}
           {page.caveat && <SharedCaveatNote>{page.caveat}</SharedCaveatNote>}
@@ -106,7 +106,7 @@ export function TermScreen() {
       </TermSection>
       <Statements title="What it changes" statements={term.explanation} page={page} />
       <Statements title="How it feels" statements={term.feel} page={page} />
-      <Statements title="XIM’s guidance" statements={term.guidance} page={page} />
+      <Statements title="Guidance" statements={term.guidance} page={page} />
       <Statements title="Which aim styles it matters for" statements={term.aimStyles} page={page} />
       <Statements title="XIM Central notes" statements={expertNotes.map((n) => n.statement)} page={page} />
 

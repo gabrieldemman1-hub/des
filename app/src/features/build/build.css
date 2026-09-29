@@ -18,34 +18,56 @@
 
 /* ---- Walkthrough header: step count and step indicator ------------------------------ */
 
+/* "Step 2 of 4 · Pulse + shotgun" as a small-caps label, like the other screens' eyebrows. */
 .build-step-of {
-  color: var(--text-muted);
-  font-weight: 600;
+  color: var(--text-faint);
+  font-family: var(--f-display);
+  font-size: 0.75rem;
+  font-weight: 650;
+  font-stretch: 87.5%;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   overflow-wrap: anywhere;
 }
 
 .build-steps {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   padding: 0;
   list-style: none;
 }
 
+.build-steps > li {
+  position: relative;
+}
+
+/* The rail: a line from each step back to the one before, behind the numbers. */
+.build-steps > li + li::before {
+  content: '';
+  position: absolute;
+  top: 21px;
+  right: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--border-strong);
+}
+
+.build-steps > li.is-after-complete::before {
+  background: var(--success);
+}
+
 .build-step {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
+  gap: 6px;
   min-height: 60px;
-  padding: 6px 2px;
-  border: 1px solid var(--border);
+  padding: 6px 2px 4px;
   border-radius: var(--radius-sm);
-  background: var(--surface);
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 650;
   line-height: 1.15;
   text-align: center;
@@ -53,20 +75,31 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Pressed: the surface the other tap targets use, so a tap reads as a tap. */
-.build-step:active {
+.build-step:active .build-step-number {
   background: var(--surface-2);
 }
 
+.build-step:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 0;
+}
+
 .build-step-number {
+  --lock-arm: 7px;
+  /* Above the rail, which the next step draws back to this one. */
+  position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
-  border: 2px solid var(--border-strong);
+  width: 30px;
+  height: 30px;
   border-radius: 999px;
+  background: var(--surface-3);
+  color: var(--text-muted);
+  font-family: var(--f-num);
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 600;
+  font-stretch: 87.5%;
 }
 
 .build-step-name {
@@ -75,28 +108,24 @@
 }
 
 .build-step.is-complete .build-step-number {
-  border-color: var(--success);
+  background: color-mix(in srgb, var(--success) 22%, var(--surface));
   color: var(--success);
 }
 
+/* The step you're on: the number inverted, in the target-lock brackets. */
 .build-step[aria-current='step'] {
-  border-color: var(--accent);
-  box-shadow: inset 0 0 0 1px var(--accent);
   color: var(--text);
 }
 
 .build-step[aria-current='step'] .build-step-number {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--text);
+  color: var(--bg);
 }
 
 /* ---- Walkthrough body ---------------------------------------------------------------- */
 
 .build-count {
-  color: var(--accent-text);
-  font-size: 0.92rem;
-  font-weight: 650;
+  margin-block: 2px 4px;
 }
 
 .build-note-title {
@@ -269,37 +298,237 @@ textarea.sheet-text {
   resize: vertical;
 }
 
-.sheet-rows {
-  display: grid;
+/* Show All / Needs fixing / To go, then the two compact actions. */
+.sheet-toolbar {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* A pill that inverts when chosen, like the selected segment. */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 650;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.filter-chip .num {
+  color: var(--text-faint);
+}
+
+.filter-chip:active {
+  background: var(--surface-3);
+}
+
+.filter-chip[aria-pressed='true'] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.filter-chip[aria-pressed='true'] .num {
+  color: inherit;
+}
+
+.filter-chip:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* The section's title with its badge, when every row in it shares one. */
+.sheet-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin-top: 12px;
+}
+
+.sheet-section-head .section-title {
+  margin-top: 0;
+}
+
+/* One tonal panel per section, a hairline between rows: a list to run down, not a stack of cards. */
+.sheet-rows {
   margin: 0;
   padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--surface);
   list-style: none;
 }
 
-.sheet-row {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 14px 4px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
+.sheet-row + .sheet-row {
+  border-top: 1px solid var(--border);
 }
 
-/* The name wraps under a value pinned top right, so the values line up down the sheet. */
-.sheet-row-head {
+/* State, name (with the player's value under it), the value at the right, a chevron. */
+.sheet-row-button {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
   column-gap: 12px;
-  align-items: baseline;
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 12px 10px 14px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sheet-row:first-child .sheet-row-button {
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
+.sheet-row:last-child .sheet-row-button {
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+.sheet-row-button:active {
+  background: var(--surface-2);
+}
+
+@media (hover: hover) {
+  .sheet-row-button:hover {
+    background: var(--surface-2);
+  }
+}
+
+.sheet-row-button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+
+.sheet-row-button > svg:last-child {
+  grid-column: 4;
+  color: var(--text-faint);
+}
+
+.sheet-status {
+  display: grid;
+  place-items: center;
+  color: var(--text-faint);
+  font-size: 1.05rem;
+}
+
+.sheet-status.is-done {
+  color: var(--success);
+}
+
+.sheet-status.is-problem {
+  color: var(--danger);
+}
+
+.sheet-row-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
 }
 
 /* Readable at arm's length, next to the console. */
 .sheet-name {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-family: var(--f-display);
+  font-size: 1.02rem;
+  font-weight: 650;
+  font-stretch: 92%;
+  line-height: 1.2;
   overflow-wrap: anywhere;
+}
+
+/* The player's value and the row's badge, on one line under the name while they fit. */
+.sheet-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 8px;
+}
+
+.sheet-yours {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.sheet-yours.is-differs {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* One size for every value, number or word: it is the column the eye runs down. */
+.sheet-value {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 11ch;
+  text-align: right;
+}
+
+.sheet-value .num {
+  font-size: 1.2rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.sheet-value-caption {
+  color: var(--text-faint);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* ---- A row's detail sheet ------------------------------------------------------------- */
+
+.sheet-detail-head {
+  display: grid;
+  gap: 10px;
+}
+
+.sheet-detail-head .readout-value {
+  font-size: 1.55rem;
+}
+
+.readout-caption {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-family: var(--f-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-stretch: 100%;
+  letter-spacing: normal;
+}
+
+.sheet-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
 }
 
 /* "What is this?": a 44px tap target around a small chip, so the name itself stays a label. */
@@ -308,8 +537,6 @@ textarea.sheet-text {
   align-items: center;
   min-height: 44px;
   margin: -10px 0;
-  padding: 0 4px;
-  vertical-align: middle;
   text-decoration: none;
 }
 
@@ -326,41 +553,18 @@ textarea.sheet-text {
   outline-offset: 2px;
 }
 
-/* One size for every value, number or word: it is the column the eye runs down. */
-.sheet-value {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  color: var(--text);
-  font-size: 1.35rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.2;
-  text-align: right;
-}
-
-.sheet-value-caption {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.sheet-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 10px;
-}
-
-/* The Done / Needs fixing pair sits right of the badge, or on its own line when that is narrow. */
-.sheet-toggles {
-  margin-left: auto;
-}
-
-/* A little tighter than elsewhere, so the pair shares the badge's line on a 390px phone. */
+/* The Done / Needs fixing pair, full width at the top of the panel. */
 .sheet-toggles .button {
-  padding-inline: 10px;
+  flex: 1 1 0;
+}
+
+/* A state worked out from the player's values, with why: in place of the pair. */
+.sheet-derived {
+  display: grid;
+  gap: 4px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface-2));
 }
 
 .sheet-caveat {
@@ -393,6 +597,18 @@ textarea.sheet-text {
 }
 
 @media (forced-colors: active) {
+  .sheet-rows,
+  .filter-chip {
+    border-color: CanvasText;
+  }
+
+  .filter-chip[aria-pressed='true'] {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
+
   .build-step[aria-current='step'] .build-step-number {
     forced-color-adjust: none;
     background: Highlight;

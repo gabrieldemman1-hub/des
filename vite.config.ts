@@ -8,7 +8,7 @@ const appRoot = fileURLToPath(new URL('./app', import.meta.url));
 const outDir = fileURLToPath(new URL('./dist', import.meta.url));
 
 /** Dark theme background: the manifest, <meta name="theme-color"> and CSS all use it. */
-const THEME_DARK = '#0d1117';
+const THEME_DARK = '#0c1220';
 
 export default defineConfig({
   root: appRoot,
@@ -51,7 +51,8 @@ export default defineConfig({
       },
       workbox: {
         // manifest.webmanifest is not listed: the plugin precaches it on its own.
-        globPatterns: ['**/*.{js,css,html,svg,png}'],
+        // woff2: the bundled fonts, so the app looks the same offline.
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         cleanupOutdatedCaches: true,
       },
     }),

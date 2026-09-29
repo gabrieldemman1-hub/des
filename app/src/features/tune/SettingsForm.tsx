@@ -109,6 +109,8 @@ function NumberField({ label, value, rule, onSave, hint, termId, placeholder }: 
 const RULES = {
   lookSensitivity: { min: 0, max: 1000 },
   percent: { min: 0, max: 100 },
+  /** Precision, Response and Easing: the guide gives no range, so only a sanity check. */
+  standard: { min: 0, max: 1000 },
   dpi: { min: 1, max: 1_000_000, integer: true },
   cm360: { min: 0, max: 10_000 },
   classic: { min: 0, max: 1000 },
@@ -190,7 +192,7 @@ function InGameSection({ values, save }: { values: InGameSettings; save: (patch:
   return (
     <Section
       title="Destiny 2 settings"
-      hint="Copy these from Destiny 2’s own settings. Dialed keeps one set of these for all your loadouts, so what you enter here shows for every loadout."
+      hint="Copy these from Destiny 2’s controller settings (on PC, not its mouse settings, which use some of the same names). Dialed keeps one set of these for all your loadouts, so what you enter here shows for every loadout."
       termId="required-game-settings"
     >
       <ChoiceField
@@ -221,14 +223,12 @@ function InGameSection({ values, save }: { values: InGameSettings; save: (patch:
         label={name.inGame('axialDeadzone', 'Axial Deadzone')}
         value={values.axialDeadzone}
         rule={RULES.percent}
-        termId="deadzone"
         onSave={(axialDeadzone) => save({ axialDeadzone })}
       />
       <NumberField
         label={name.inGame('radialDeadzone', 'Radial Deadzone')}
         value={values.radialDeadzone}
         rule={RULES.percent}
-        termId="deadzone"
         onSave={(radialDeadzone) => save({ radialDeadzone })}
       />
     </Section>
@@ -283,16 +283,19 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
   const name = useNames();
   const sensitivity = name.term('sensitivity', 'Sensitivity');
   return (
-    <Section title="Aim settings" hint="From this Config’s aim settings in Manager.">
+    <Section
+      title="Aim settings"
+      hint="From this Config’s aim settings in Manager. For Sensitivity, Smoothing, Aiming Curve, Y Scale and Quantization, enter your Mouse Aim values. Motion Aim (gyro) has its own, so don’t copy those here."
+    >
       <NumberField
-        label={`Hip ${sensitivity} (cm/360)`}
+        label={`Mouse Aim Hip ${sensitivity} (cm/360)`}
         value={config.hipSensitivity}
         rule={RULES.cm360}
         termId="sensitivity"
         onSave={(hipSensitivity) => save({ hipSensitivity })}
       />
       <NumberField
-        label={`ADS ${sensitivity} (cm/360)`}
+        label={`Mouse Aim ADS ${sensitivity} (cm/360)`}
         value={config.adsSensitivity}
         rule={RULES.cm360}
         termId="sensitivity"
@@ -334,21 +337,21 @@ function AimSection({ config, save }: { config: CurrentConfig['aim']; save: (pat
           <NumberField
             label={name.term('precision', 'Precision')}
             value={config.precision}
-            rule={RULES.percent}
+            rule={RULES.standard}
             termId="precision"
             onSave={(precision) => save({ precision })}
           />
           <NumberField
             label={name.term('response', 'Response')}
             value={config.response}
-            rule={RULES.percent}
+            rule={RULES.standard}
             termId="response"
             onSave={(response) => save({ response })}
           />
           <NumberField
             label={name.term('easing', 'Easing')}
             value={config.easing}
-            rule={RULES.percent}
+            rule={RULES.standard}
             termId="easing"
             onSave={(easing) => save({ easing })}
           />

@@ -25,7 +25,7 @@ function ManagedLoadout({ loadout }: { loadout: Loadout }) {
       }
     >
       <div className="loadout-card-actions" role="group" aria-label={`${loadout.name}: sheet, build and tune`}>
-        <Link className="button primary block" to={sheetPath(loadout.id)}>
+        <Link className="button secondary block" to={sheetPath(loadout.id)}>
           Config sheet
         </Link>
         <div className="loadout-card-row">
@@ -52,8 +52,8 @@ export function LoadoutsScreen() {
       title="Loadouts"
       intro={
         <p className="lede">
-          The weapon combinations you actually run. Each loadout gets its own Config in MATRIX Manager, tuned toward its
-          main weapon’s aim style.
+          The weapon combinations you actually run. Dialed plans one Config in MATRIX Manager per loadout (you create
+          each one), tuned toward its main weapon’s aim style.
         </p>
       }
     >

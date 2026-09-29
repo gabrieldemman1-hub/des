@@ -42,14 +42,14 @@ without a redesign.
 |---|---|
 | A **guide + recommender**: tailored guidance with full rationale and citations | A beginner tutorial or generic "what is XIM" content |
 | **Reference-only**: you apply values yourself in XIM MATRIX Manager | Connected to the device (no Bluetooth, no config-code import/export in v1) |
-| **Evidence-based**: official XIM documentation + XIM Central, XIM MATRIX-era material only | A dump of random forum configs, unverified YouTube claims, or advice written for older XIM devices |
+| **Evidence-based**: official XIM documentation + XIM Central, XIM MATRIX-era material only (plus Bungie's account policy, for Destiny 2 account policy only: §8) | A dump of random forum configs, unverified YouTube claims, or advice written for older XIM devices |
 | **Destiny 2 first** (Xbox and PC), deep rather than broad | A shallow database of many games (that may come later) |
 | A **concept explainer**: plain-language, sourced definitions of every MATRIX setting | A copy of the manual — explanations are about *why it matters for your aim*, not just what the slider is |
 
 ## 5. Core experience — four flows
 
 ### Flow A: Guided setup ("build my config")
-A step-by-step walkthrough that builds a complete Destiny 2 configuration from the
+A step-by-step walkthrough that builds a Destiny 2 configuration from the
 ground up, in dependency order (see §6). At each step the app shows the
 recommendation *for this user* (based on their profile, §7), the reasoning, and the
 source. The end state is a summary sheet the user works through in XIM MATRIX
@@ -63,8 +63,9 @@ stay observable.
 
 ### Flow C: Troubleshoot by feel ("my aim feels…")
 For when something feels wrong but you don't know which setting is responsible. It
-works in two stages. Setup mistakes are the best-documented causes of bad-feeling
-aim, so they get ruled out before anything is tuned.
+works in two stages. Setup mistakes get ruled out first, before anything is tuned:
+XIM's guide names several that make aim inaccurate, such as a wrong mouse DPI in your
+Config.
 
 **Stage 1 — Setup check.** A checklist built from XIM's own troubleshooting,
 cm/360-validation and warning-light pages:
@@ -86,15 +87,17 @@ cm/360-validation and warning-light pages:
 - on PC with controller output: XIM warns that tools like Steam Input or DS4Windows
   may conflict. It lists this under connection problems.
 
-Every item is sourced. Together they cover the best-documented setup causes of
+Every item is sourced. Together they cover the documented setup causes of
 "stuttery" and "sensitivity feels wrong". Hand or hardware jitter is what Smoothing
 is officially for, so that's handled in stage 2.
 
-**Stage 2 — Symptom → setting.** You pick what you feel, and the app points to the
-setting whose official definition describes that feel. It explains the mechanism
-and suggests *one* change. The official guide describes several settings in feel
-words ("heaviness", "lighter feeling reticle", "smoother transition from rest"), so
-many symptoms map directly:
+**Stage 2 — Symptom → setting.** You pick what you feel, and the app points to where
+to look: where it can, the setting whose official definition describes that feel. It
+explains the mechanism and suggests *one* change. Each answer is labelled: *official*
+where XIM says it, *reasoned* where the app works it out from XIM's definitions. Where
+no source ties a feel to a setting, the app says so. The official guide describes
+several settings in feel words ("heaviness", "lighter feeling reticle", "smoother
+transition from rest"), so many symptoms map directly:
 
 | You feel… | Where the app points | Basis |
 |---|---|---|
@@ -133,8 +136,8 @@ Each term shows:
   §8), because no source we could read ties settings to aim styles.
 
 The glossary also untangles confusing names:
-- **"Standard"** is a smoothing mode, a sync method and a velocity-mapping mode,
-  three unrelated things.
+- **"Standard"** is a smoothing mode, a sync method, a velocity-mapping mode and an
+  update-rate option: four unrelated things.
 - **"Angle" and "Magnitude"** mean different things in quantization, in Smart
   Actions, and in Behavior Variance.
 - **"Response"** (a smoothing setting) is not the mouse "response rate".
@@ -164,11 +167,11 @@ because upper layers are meaningless if the lower ones are wrong:
    supports Custom sync, so the plan is **Standard sync**: maximum in-game
    sensitivity, the required values, everything else default. XIM documents no
    Xbox vs PC difference for Destiny 2.
-2. **MATRIX global settings & hardware foundation.** The device-level footing
-   shared by all configs: controller output, mouse DPI entered
-   correctly, the mouse's polling rate, current firmware and Smart Translator, and
-   the light notifications Flow C relies on. Which other MATRIX Manager global
-   settings belong here is knowledge-base work.
+2. **MATRIX setup & hardware foundation.** Current firmware, the polling rate
+   your mouse actually reaches, and, in each Config, controller output, mouse DPI,
+   a current Smart Translator and the light notifications Flow C relies on. Which
+   other MATRIX Manager settings (global or per Config) belong here is
+   knowledge-base work.
 3. **Aim config (Hip & ADS).** This is the heart of the "perfect config", and
    where personalization matters most:
    - sensitivity in cm/360
@@ -235,7 +238,11 @@ numbers:
   When you switch loadouts, you load the matching Config in one of three ways:
   - by hotkey (this needs Navigate Mode by default)
   - with a Load Config Smart Action
-  - from Manager (loading is slower while Manager is connected)
+  - from Manager
+
+  Loading by hotkey or with a Config Switching Smart Action is slower while Manager
+  is connected, and it won't happen while you are editing a Config. Close Manager for
+  instant switching.
 
 *(Exact recommended values are intentionally **not** in this concept doc. They are
 the knowledge-base work of the next milestone, where each value gets researched and
@@ -257,7 +264,8 @@ anytime (stored locally in the browser; no account needed):
 - **Current config.** Your existing settings as the starting point for Flow B, so
   advice is a diff, not a restart.
 - **Feel preferences.** Snappy vs smooth, high vs low sensitivity targets.
-  Where the evidence supports a *range*, preferences pick the point within it.
+  No source gives a recommended range for either, so they don't set any number:
+  the app shows what the evidence says about each one.
 
 ## 8. Evidence & citation model
 
@@ -271,6 +279,7 @@ This is the app's identity, so it's a hard rule, not a style choice.
 | **Official** (by reference) | XIM's public forum pages: the [Game Settings list](https://community.xim.tech/pub/xim-game-settings) (Destiny 2's required in-game settings) and the [Hardware Compatibility List](https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list) | The guide's "required aim settings" links go to a login-walled forum topic. This page is a public copy of its first post and may differ from it. The Game Settings list's author ("mist") is not confirmed as XIM staff. |
 | **Official** *(inferred)* | OBsIV's posts and the @OBsIV YouTube channel | Part of your original "official XIM docs" choice. OBsIV writes in XIM's voice and hosts XIM's Quick Start video, but no page states their role. |
 | **Community expert** | [XIM Central](https://www.youtube.com/@XIMCentral) (YouTube) | Not XIM's official channel: the creator says so in an older video script, and xim.tech presents its videos as community-made. **MATRIX-era content only** (your decision). Anything made for XIM APEX or XIM4 is excluded, and that includes every XIM Central Destiny 2 video found so far. Its MATRIX videos (2025–2026) cover smoothing, quantization and curves, but our tools couldn't read their transcripts (see §12). |
+| **Game publisher** (not XIM) | Bungie's [Destiny Account Restrictions and Banning Policies](https://help.bungie.net/hc/en-us/articles/360049517431-Destiny-Account-Restrictions-and-Banning-Policies) (help.bungie.net) | **Destiny 2 account policy only, never XIM MATRIX settings** (decision of 2026-09-29, below). help.bungie.net blocks automated checks, so citations point to the Internet Archive copy of 9 June 2026. |
 
 **Every recommendation ships with** a plain-language rationale (the mechanism, not
 "trust me"), its source with a link, and one confidence label:
@@ -278,13 +287,28 @@ This is the app's identity, so it's a hard rule, not a style choice.
 - *expert*: XIM Central states it, in MATRIX-era content
 - *contested*: sources disagree, and both positions are shown (e.g. XIM Central vs
   the official guide)
-- *reasoned*: derived from an official mechanism definition where no source states
-  the recommendation itself. It gives a direction, never an invented number, and
-  is always shown as "worked out from XIM's definitions, not stated by a source".
-  This is how the pulse rifle vs hand cannon guidance works (your decision).
+- *reasoned*: worked out, not stated by a source: from XIM's definitions where no
+  source states the recommendation itself or, when nothing is cited, by Dialed alone
+  (such as which aim style a weapon type gets). It gives a direction, never an
+  invented number, and is always marked as worked out. This is how the pulse rifle
+  vs hand cannon guidance works (your decision).
+- *Bungie* (`publisher`): Bungie, Destiny 2's publisher, states it. Not an XIM
+  statement. Only for Destiny 2 account policy, never for MATRIX settings, with its
+  own badge so it is never shown as *official*.
 
 **No orphan values.** If an exact value can't be sourced, it doesn't go in the app.
 Gaps are shown honestly as gaps.
+
+**Decision (2026-09-29, approved by the user): Bungie as a source, for Destiny 2
+account policy only.** Bungie's account policy counts keyboard/mouse adapters as
+external accessibility aides and names using them to "reduce recoil or increase aim
+assist" as a violation, and the app said nothing about it. So Bungie's policy page is
+added to the whitelist with its own tier (*game publisher*) and its own confidence
+label (*Bungie*: "Bungie, Destiny 2's publisher, states it. Not an XIM statement.").
+It is cited only for Destiny 2 account policy, never for XIM MATRIX settings, and never
+shown under the *official* badge. The knowledge base's integrity checks enforce this:
+a *Bungie* statement must cite Bungie and may live only in the Destiny 2 game file, and
+only *Bungie* statements may cite Bungie.
 
 **Explanations are sourced too.** Flow D's definitions come from the official guide
 and are cited the same way. Any "which aim style it matters for" part is labelled
@@ -388,15 +412,16 @@ Choices made during concept alignment (2026-09-22):
 | First game | Destiny 2 |
 | Platforms | Xbox and PC |
 | Output types | Controller output only. Out of scope: PC mouse-and-keyboard output, and the PC-only "Mouse, Keyboard, Controller" mode (it also aims through the controller, per the guide; can be added later) |
-| Knowledge policy | Evidence-based whitelist: official XIM documentation + XIM Central; additions require a logged decision |
+| Knowledge policy | Evidence-based whitelist: official XIM documentation + XIM Central; additions require a logged decision (Bungie added 2026-09-29, below) |
 | Official guide | XIM MATRIX User Guide — https://guide.xim.tech |
 | Device generation | XIM MATRIX only — no XIM APEX or XIM4 advice, including XIM Central's older videos |
-| Confidence labels | *official*, *expert*, *contested*, *reasoned* (worked out from XIM's definitions, always clearly marked) |
+| Confidence labels | *official*, *expert*, *contested*, *reasoned* (worked out from XIM's definitions, always clearly marked); *Bungie* added 2026-09-29, below |
 | Rationale display | Full rationale + source on every value |
-| Guidance scope | In-game D2 settings, MATRIX global settings (with hardware foundation), aim config (Hip/ADS), troubleshooting by feel |
+| Guidance scope | In-game D2 settings, MATRIX setup (with hardware foundation), aim config (Hip/ADS), troubleshooting by feel |
 | Troubleshoot by feel in MVP | Yes — both stages: setup check + symptom → setting |
 | Personalization inputs | Hardware (incl. platform), playstyle (incl. loadouts), current config, feel preferences |
 | Weapon-aware guidance | Yes — pulse rifle (tracking) vs hand cannon (peek) and other aim styles, as *reasoned* guidance |
 | Multiple weapons | Separate Configs per loadout, loaded when you switch loadouts |
 | Concept explainer | Yes — Flow D glossary, inline on every setting name; in the MVP (proposed in v0.3, no objection) |
 | Hosting (2026-09-23) | GitHub Pages from a public repository, published on every merge to `main`; installed to the home screen as a Progressive Web App |
+| Bungie as a source (2026-09-29) | Bungie's account-policy page, for Destiny 2 account policy only, never for MATRIX settings; its own tier (*game publisher*) and confidence label (*Bungie*), never shown as *official* (§8) |

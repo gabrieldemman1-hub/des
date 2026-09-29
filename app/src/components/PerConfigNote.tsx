@@ -4,8 +4,8 @@ import { PER_CONFIG_CHECK_IDS } from '../state/progress';
 const PER_CONFIG_TAG = 'Per Config';
 
 /**
- * Marks a setup check about one specific Config: its mark counts for every loadout, but each
- * loadout has its own Config, so it is checked in each of them (`PerConfigHint` says so once,
+ * Marks a setup check about one specific Config: its mark counts for every loadout, but Dialed
+ * plans one Config per loadout, so it is checked in each of them (`PerConfigHint` says so once,
  * above the list). Nothing for other checks.
  */
 export function PerConfigNote({ checkId }: { checkId: string }) {
@@ -22,8 +22,8 @@ export function PerConfigHint({ checks }: { checks: readonly Pick<FoundationChec
   if (!checks.some((c) => PER_CONFIG_CHECK_IDS.has(c.id))) return null;
   return (
     <p className="hint per-config-hint">
-      <span className="tag">{PER_CONFIG_TAG}</span> marks a check to repeat in every Config you use: each loadout has
-      its own.
+      <span className="tag">{PER_CONFIG_TAG}</span> marks a check to repeat in every Config you use: Dialed plans one
+      per loadout.
     </p>
   );
 }

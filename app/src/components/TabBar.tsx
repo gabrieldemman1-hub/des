@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router';
-import { HomeIcon, LearnIcon, LoadoutsIcon, ProfileIcon, SourcesIcon } from './icons';
+import { BookIcon, HomeIcon, LoadoutsIcon, ProfileIcon } from './icons';
 
 interface Tab {
   to: string;
@@ -17,10 +17,15 @@ const TABS: Tab[] = [
     // The flows open from Home.
     isActive: (p) => p === '/' || ['/flows/', '/build', '/tune', '/troubleshoot'].some((prefix) => p.startsWith(prefix)),
   },
-  { to: '/learn', label: 'Learn', icon: <LearnIcon />, isActive: (p) => p.startsWith('/learn') },
   { to: '/loadouts', label: 'Loadouts', icon: <LoadoutsIcon />, isActive: (p) => p.startsWith('/loadouts') },
+  {
+    to: '/learn',
+    label: 'Learn',
+    icon: <BookIcon />,
+    // Sources has no tab: it is reference material, reached from Learn (and Profile).
+    isActive: (p) => p.startsWith('/learn') || p.startsWith('/sources'),
+  },
   { to: '/profile', label: 'Profile', icon: <ProfileIcon />, isActive: (p) => p.startsWith('/profile') },
-  { to: '/sources', label: 'Sources', icon: <SourcesIcon />, isActive: (p) => p.startsWith('/sources') },
 ];
 
 export function TabBar() {

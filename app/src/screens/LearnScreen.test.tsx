@@ -14,7 +14,14 @@ describe('Learn (Explain a concept)', () => {
     renderApp({ path: '/learn', knowledge: real });
     // Titled like its tab; the lede says what it explains.
     expect(screen.getByRole('heading', { level: 1, name: 'Learn' })).toBeInTheDocument();
-    expect(screen.getByText(/What each XIM MATRIX setting actually does/)).toHaveClass('lede');
+    expect(screen.getByText(/^What these XIM MATRIX settings do, in plain words\./)).toHaveClass('lede');
+    // Search comes first, before the aim styles.
+    const search = screen.getByRole('searchbox', { name: 'Search settings' });
+    const styles = screen.getByRole('region', { name: /Aim styles/ });
+    expect(search.compareDocumentPosition(styles) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(styles.querySelectorAll('svg.aim-glyph')).toHaveLength(knowledge.aimStyles.length);
+    // The app doesn't cover every MATRIX setting, and says so.
+    expect(screen.getByText(/Not every MATRIX setting is listed\.$/)).toHaveClass('lede');
     expect(
       within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name: 'Learn' }),
     ).toHaveAttribute('aria-current', 'page');
@@ -56,6 +63,27 @@ describe('Learn (Explain a concept)', () => {
     const name = first.textContent ?? '';
     await user.click(first);
     expect(screen.getByRole('heading', { level: 1, name })).toBeInTheDocument();
+  });
+
+  it('lists aliases as related terms, not other names, and heads the guidance plainly', () => {
+    renderApp({ path: '/learn/deadzone', knowledge: real });
+    const deadzone = knowledge.glossary.terms.find((t) => t.id === 'deadzone')!;
+    expect(deadzone.aliases.length).toBeGreaterThan(0);
+    // Options, parts and tools are search words, not synonyms for the setting.
+    expect(screen.getByText('Related terms:').closest('p')).toHaveTextContent(
+      `Related terms: ${deadzone.aliases.join(', ')}`,
+    );
+    expect(screen.queryByText(/Also called/)).not.toBeInTheDocument();
+    // Some guidance is Dialed's own reasoning, so it isn't headed as XIM's.
+    expect(screen.getByRole('region', { name: 'Guidance' })).toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'XIM’s guidance' })).not.toBeInTheDocument();
+  });
+
+  it('lists the names the official guide doesn’t list as settings', () => {
+    renderApp({ path: '/learn', knowledge: real });
+    const names = screen.getByRole('region', { name: 'Names the official guide doesn’t list as settings' });
+    expect(names).toHaveTextContent('You may come across these in videos, on older XIM devices, or in the guide itself.');
+    expect(screen.queryByRole('heading', { name: 'Names that aren’t MATRIX settings' })).not.toBeInTheDocument();
   });
 
   it('gives the hand-cannon (snap) advice with its direction and the Easing caveat', () => {

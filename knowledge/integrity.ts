@@ -223,6 +223,17 @@ export function findIntegrityProblems(files: ParsedKnowledgeFiles): IntegrityPro
   // --- evidence policy (CONCEPT.md §6 and §8) --------------------------------------------
   for (const { file, entryId, field, statement } of collectStatements(files)) {
     const where = `${field} (${statement.confidence})`;
+    // Bungie (a game-publisher source) speaks only to Destiny 2 account policy, never to MATRIX
+    // settings, and only under its own label: CONCEPT.md §8, decision of 2026-09-29.
+    const citesPublisher = statement.citations.some((c) => sources.get(c.source)?.tier === 'game-publisher');
+    if (statement.confidence === 'publisher') {
+      if (file !== 'destiny2/game.json') {
+        report(file, entryId, `${where} is only allowed in destiny2/game.json (Destiny 2 account policy)`);
+      }
+      if (!citesPublisher) report(file, entryId, `${where} must cite at least one game-publisher source`);
+    } else if (citesPublisher) {
+      report(file, entryId, `${where} cites a game-publisher source, which only publisher statements may cite`);
+    }
     if (statement.confidence === 'reasoned' && statement.citations.length === 0 && !statement.caveat?.trim()) {
       report(file, entryId, `${where} cites no definitions, so it needs a caveat saying why`);
     }

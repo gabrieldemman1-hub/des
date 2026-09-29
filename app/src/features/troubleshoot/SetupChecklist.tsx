@@ -6,6 +6,7 @@ import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { PerConfigHint, PerConfigNote } from '../../components/PerConfigNote';
 import { StatementView } from '../../components/StatementView';
 import { TermLink } from '../../components/TermLink';
+import { TickRuler } from '../../components/TickRuler';
 import { useData } from '../../state/data-context';
 import { REQUIRED_SETTINGS_CHECK_ID, derivedProblemNote, progressKey, progressSummary } from '../../state/progress';
 import { useDerivedProblemKeys, useEffectiveProgress } from '../../state/use-progress';
@@ -98,6 +99,7 @@ export function SetupSummary({ checks, allowReset = false }: SummaryProps) {
 
   return (
     <div className="card ts-summary">
+      <TickRuler count={summary} showSummary={false} className="ts-summary-ruler" />
       <p className="ts-summary-count" role="status">
         {progressSummary(summary)}
       </p>

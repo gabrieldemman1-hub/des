@@ -250,7 +250,7 @@ describe('Loadouts', () => {
 });
 
 describe('Loadout config links', () => {
-  it('links each loadout to its config sheet (the main action), build and tune pages', () => {
+  it('links each loadout to its config sheet (first), build and tune pages', () => {
     renderApp({ path: '/loadouts', storage: storageWith(sampleData({ loadouts: [sampleLoadout()] })) });
     const links = within(screen.getByRole('group', { name: 'Pulse + shotgun: sheet, build and tune' })).getAllByRole('link');
     expect(links.map((l) => [l.textContent, l.getAttribute('href')])).toEqual([
@@ -258,8 +258,11 @@ describe('Loadout config links', () => {
       ['Build', '/build/l1'],
       ['Tune', '/tune/l1'],
     ]);
-    expect(links[0]).toHaveClass('primary');
+    // The sheet leads (full width), but amber is kept for the screen's one forward action.
+    expect(links[0]).toHaveClass('secondary', 'block');
     expect(links[1]).not.toHaveClass('primary');
+    expect(document.querySelectorAll('main .button.primary')).toHaveLength(1);
+    expect(screen.getByRole('link', { name: 'Add a loadout' })).toHaveClass('primary');
   });
 
   it('shows each loadout’s sheet progress and whether its settings are entered', () => {
@@ -275,11 +278,16 @@ describe('Loadout config links', () => {
 
     const total = planProgress(plan, data.progress).total;
     const first = screen.getByRole('heading', { level: 2, name: 'Pulse + shotgun' }).closest('li')!;
-    expect(first).toHaveTextContent(`Sheet 1 of ${total} done · 1 needs fixing · Settings entered`);
-    expect(within(first).getByText(/needs fixing/)).toHaveClass('is-problem');
+    // Progress is a tick ruler named with the counts, and the same counts are written under it.
+    const ruler = within(first).getByRole('img', { name: `Sheet 1 of ${total} done · 1 needs fixing` });
+    expect(ruler.querySelectorAll('.is-done')).toHaveLength(1);
+    expect(ruler.querySelectorAll('.is-problem')).toHaveLength(1);
+    expect(within(first).getByText(`Sheet 1 of ${total} done · 1 needs fixing`)).toHaveClass('has-problem');
+    expect(within(first).getByText('Settings entered')).toBeInTheDocument();
     // The Destiny 2 and MATRIX steps are shared, so the second loadout counts the same marks.
     const second = screen.getByRole('heading', { level: 2, name: 'Peek' }).closest('li')!;
-    expect(second).toHaveTextContent(`Sheet 1 of ${total} done · 1 needs fixing · No settings entered`);
+    expect(within(second).getByRole('img', { name: `Sheet 1 of ${total} done · 1 needs fixing` })).toBeInTheDocument();
+    expect(within(second).getByText('No settings entered')).toBeInTheDocument();
     // The why behind the aim style stays on the sheet: the list shows the style and its confidence only.
     expect(within(first).getByText('Reasoned')).toBeInTheDocument();
     expect(within(first).queryByText(/Why tracking/)).not.toBeInTheDocument();

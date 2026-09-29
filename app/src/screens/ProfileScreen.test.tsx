@@ -21,7 +21,9 @@ describe('Profile screen', () => {
 
     const output = screen.getByRole('group', { name: 'Output type' });
     expect(output).toHaveTextContent('Pick a platform first.');
-    expect(output).toHaveAccessibleDescription('Controller output only; PC mouse-and-keyboard output is out of scope.');
+    expect(output).toHaveAccessibleDescription(
+      'Controller output only. On PC, Dialed doesn’t cover mouse-and-keyboard output, Mouse, Keyboard, Controller output, or DualShock 4 controller output.',
+    );
 
     const aim = screen.getByRole('group', { name: 'What you aim with' });
     const sources = within(aim).getAllByRole('checkbox');
@@ -31,6 +33,10 @@ describe('Profile screen', () => {
       'Thumbstick',
     ]);
     expect(sources.map((c) => (c as HTMLInputElement).checked)).toEqual([true, false, false]);
+    // Smoothing advice is placed under Mouse Aim and Motion Aim in XIM's guide, Stability under motion aim only.
+    expect(aim).toHaveAccessibleDescription(
+      'Pick every aiming source your Configs use. Advice on a setting XIM’s guide places under certain aiming sources shows only if you pick one of them: Stability needs Gyro, and Precision, Response and Easing need Mouse or Gyro.',
+    );
 
     expect(screen.getByRole('textbox', { name: 'Mouse model' })).toHaveValue('');
     expect(screen.getByRole('textbox', { name: 'Mouse DPI' })).toHaveValue('');
@@ -59,6 +65,14 @@ describe('Profile screen', () => {
     expect(screen.getByRole('group', { name: 'Sensitivity' })).toHaveAccessibleDescription(/Faster means a lower cm\/360/);
     expect(screen.getByRole('group', { name: 'Snappy or smooth' })).toHaveAccessibleDescription(/isn’t the Smooth or Smoothing setting/);
     expect(screen.getByRole('group', { name: 'How you play' })).toHaveAccessibleDescription(/isn’t the Precision setting/);
+    // The profile says what it changes, and the feel preferences don't claim a range to pick from.
+    expect(
+      screen.getByText(/^Your platform, output type and what you aim with decide which advice applies/),
+    ).toHaveTextContent('Dialed compares your mouse DPI with the DPI in your MATRIX Config. Change them any time.');
+    expect(
+      screen.getByText(/^No source gives a recommended range for either of these, so they don’t set any number\./),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/pick the point within it/)).not.toBeInTheDocument();
   });
 
   it('offers the PC output types, and fixes the Xbox one', async () => {
@@ -80,7 +94,7 @@ describe('Profile screen', () => {
     // Xbox has a single output type, so switching platform sets it.
     await user.click(screen.getByRole('radio', { name: 'Xbox' }));
     expect(stored(storage).profile.outputType).toBe('xbox-controller');
-    expect(screen.getByRole('group', { name: 'Output type' })).toHaveTextContent('Controller (Xbox, PS4)');
+    expect(screen.getByRole('group', { name: 'Output type' })).toHaveTextContent('Controller (Xbox, PS, PC)');
     expect(within(screen.getByRole('group', { name: 'Output type' })).queryByRole('radio')).not.toBeInTheDocument();
 
     // Back on PC, the Xbox output type no longer fits, so it is cleared.
@@ -181,7 +195,7 @@ describe('Profile screen', () => {
     expect(screen.getByRole('textbox', { name: 'Mouse DPI' })).toHaveValue('800');
     expect(screen.getByRole('combobox', { name: 'Mouse polling rate' })).toHaveValue('1000');
     expect(screen.getByRole('radio', { name: 'Snappy' })).toBeChecked();
-    expect(screen.getByRole('group', { name: 'Output type' })).toHaveTextContent('Controller (Xbox, PS4)');
+    expect(screen.getByRole('group', { name: 'Output type' })).toHaveTextContent('Controller (Xbox, PS, PC)');
   });
 
   it('downloads a backup of everything saved', async () => {

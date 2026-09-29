@@ -226,4 +226,5 @@ polling rate" doesn't carry over as-is.
   Boost, weapon loadouts, and rumble weapon tracking.
 - Whether Destiny 2 supports Custom sync, and whether it has per-weapon rumble patterns.
 - Destiny 2 on PC: menu labels vs console, output mode and Steam Input guidance, and
-  Bungie's input policy (not researched).
+  Bungie's input policy (not researched here; researched on 2026-09-29, see the
+  `bungie-adapter-policy` note in knowledge/destiny2/game.json and CONCEPT.md §8).

@@ -20,7 +20,8 @@ import {
   type ProgressMap,
 } from '../../state/progress';
 import type { CurrentConfig, InGameSettings, Profile } from '../../state/schema';
-import { planProgress, type BuildPlan, type GuidanceItem, type GuidanceValue } from './build-plan';
+import { leverDefaultCaption, planProgress, type BuildPlan, type GuidanceItem, type GuidanceValue } from './build-plan';
+import { CUSTOM_SYNC_STATEMENT } from '../tune/analysis';
 import { aimStyleName, statusOf, type WeaponLine } from './format';
 
 type ContextProfile = Pick<Profile, 'mouseDpi' | 'pollingRate'>;
@@ -34,6 +35,8 @@ export interface SheetTextInput {
   config: CurrentConfig | undefined;
   profile: ContextProfile;
   termName: (termId: string) => string;
+  /** The Destiny 2 rows this loadout's Config takes from the game (see `customSyncKeys`). */
+  customSync?: ReadonlySet<string>;
 }
 
 function label(statement: Statement): string {
@@ -54,16 +57,20 @@ function noteLines(statement: Statement, indent: string, { caveat = true } = {})
   return caveat && statement.caveat ? [`${indent}Caveat: ${statement.caveat}`] : [];
 }
 
+/** A setting's guidance, all of it: what the sheet prints under the setting. */
+function guidance(item: GuidanceItem | undefined): Statement[] {
+  return item ? [...item.lead, ...item.more] : [];
+}
+
 /** Every statement the sheet prints, in order, so the legend can say once what its labels mean. */
-function allStatements(plan: BuildPlan): Statement[] {
-  const guidance = (item: GuidanceItem | undefined) => (item ? [...item.lead, ...item.more] : []);
+function allStatements(plan: BuildPlan, customSync: ReadonlySet<string>): Statement[] {
   return [
     ...(plan.main ? [plan.main.mapping] : []),
     ...(plan.style ? [plan.style.favours] : []),
-    ...plan.settings.map((s) => s.statement),
+    ...plan.settings.map((s) => (customSync.has(s.key) ? CUSTOM_SYNC_STATEMENT : s.statement)),
     ...guidance(plan.sensitivity),
     ...guidance(plan.smoothing),
-    ...plan.levers.map((l) => l.lever.statement),
+    ...plan.levers.flatMap((l) => [l.lever.statement, ...guidance(l.guidance)]),
     ...plan.mechanics.flatMap(guidance),
   ];
 }
@@ -88,7 +95,7 @@ export function guidanceValueText(value: GuidanceValue): string {
 
 function guidanceLines(item: GuidanceItem, status: string, current: string | null): string[] {
   const head = [`- ${item.term.name}: ${guidanceValueText(item.value)}`, status, ...(current ? [`Yours: ${current}`] : [])];
-  return [head.join(' · '), ...[...item.lead, ...item.more].flatMap((s) => statementLines(s, '  '))];
+  return [head.join(' · '), ...guidance(item).flatMap((s) => statementLines(s, '  '))];
 }
 
 function contextText(line: CheckContextLine): string {
@@ -96,7 +103,7 @@ function contextText(line: CheckContextLine): string {
 }
 
 export function sheetText(input: SheetTextInput): string {
-  const { plan, weapons, progress, inGame, config, profile, termName } = input;
+  const { plan, weapons, progress, inGame, config, profile, termName, customSync = new Set<string>() } = input;
   const { loadout, main, style } = plan;
   const lines: string[] = [];
   const status = (key: string) => STATUS_TEXT[statusOf(progress, key)];
@@ -113,13 +120,20 @@ export function sheetText(input: SheetTextInput): string {
     lines.push(...statementLines(style.favours, '  '));
   }
   lines.push(`Progress: ${progressSummary(planProgress(plan, progress))}`);
-  lines.push(...reasonedLegend(allStatements(plan)));
+  lines.push(...reasonedLegend(allStatements(plan, customSync)));
 
   // Destiny 2 settings
   lines.push('', 'DESTINY 2 SETTINGS');
   const shared = sharedCaveat(plan.settings.map((s) => s.statement));
   if (shared) lines.push(`Caveat for every value here: ${shared}`);
   for (const setting of plan.settings) {
+    if (customSync.has(setting.key)) {
+      lines.push(
+        `- ${setting.name}: Match Config (Custom sync) ${label(CUSTOM_SYNC_STATEMENT)} · ${status(setting.key)}`,
+        ...statementLines(CUSTOM_SYNC_STATEMENT, '  '),
+      );
+      continue;
+    }
     const parts = [`- ${setting.name}: ${setting.value} ${label(setting.statement)}`, status(setting.key)];
     const current = currentRequiredValue(inGame, setting.name, setting.value);
     if (current) parts.push(`Yours: ${current.text}${current.comparison === 'differs' ? ' (differs)' : ''}`);
@@ -150,16 +164,20 @@ export function sheetText(input: SheetTextInput): string {
   if (plan.smoothing) {
     lines.push(...guidanceLines(plan.smoothing, status(plan.smoothing.key), currentAimValue(config, 'smoothing')));
   }
-  for (const { key, lever } of plan.levers) {
+  for (const item of plan.levers) {
+    const { key, lever } = item;
     const current = currentAimValue(config, lever.termId);
+    const caption = leverDefaultCaption(item);
     lines.push(
       [
-        `- ${termName(lever.termId)}: ${LEVER_DIRECTION_LABELS[lever.direction]}`,
+        `- ${termName(lever.termId)}: ${LEVER_DIRECTION_LABELS[lever.direction]}${caption ? ` (${caption})` : ''}`,
         status(key),
         ...(current ? [`Yours: ${current}`] : []),
       ].join(' · '),
     );
     lines.push(...statementLines(lever.statement, '  '));
+    // XIM's own guidance on the setting, which this line carries in place of a line of its own.
+    for (const statement of guidance(item.guidance)) lines.push(...statementLines(statement, '  '));
   }
   for (const item of plan.mechanics) {
     lines.push(...guidanceLines(item, status(item.key), currentAimValue(config, item.term.id)));

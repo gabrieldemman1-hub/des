@@ -1,5 +1,7 @@
-// The base stylesheet first, ahead of the routes that pull in the feature stylesheets: Vite emits
-// CSS in import order, and styles.css must come before the rules that build on it.
+// The fonts and the base stylesheet first, ahead of the routes that pull in the feature
+// stylesheets: Vite emits CSS in import order, and styles.css must come before the rules that
+// build on it.
+import './fonts.css';
 import './styles.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

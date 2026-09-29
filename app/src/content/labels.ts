@@ -8,16 +8,21 @@ import type {
   TermCategory,
 } from '../../../knowledge/index';
 
-/** Confidence labels and their one-line meanings (CONCEPT.md §5 and §8). */
+/**
+ * Confidence labels and their one-line meanings (CONCEPT.md §5 and §8). `publisher` names Bungie,
+ * so a Destiny 2 account-policy note is never shown as an XIM statement.
+ */
 export const CONFIDENCE_INFO: Record<Confidence, { label: string; meaning: string }> = {
   official: { label: 'Official', meaning: 'XIM states it.' },
   expert: { label: 'Expert', meaning: 'XIM Central states it, in MATRIX-era content.' },
   contested: { label: 'Contested', meaning: 'Sources disagree, and both positions are shown.' },
   reasoned: {
     label: 'Reasoned',
-    meaning: 'Worked out from XIM’s definitions, not stated by a source. It gives a direction, never an invented number.',
+    meaning:
+      'Worked out, not stated by a source: from XIM’s definitions or, when nothing is cited, by Dialed alone (such as which aim style a weapon type gets). It never gives an invented number.',
   },
   gap: { label: 'Gap', meaning: 'No sourced MATRIX-era answer yet, and the app says so.' },
+  publisher: { label: 'Bungie', meaning: 'Bungie, Destiny 2’s publisher, states it. Not an XIM statement.' },
 };
 
 /**
@@ -46,6 +51,7 @@ export const SOURCE_TIER_LABELS = {
   'official-by-reference': 'Official (by reference)',
   'official-inferred': 'Official (inferred)',
   expert: 'Community expert',
+  'game-publisher': 'Game publisher (not XIM)',
 } as const;
 
 /**
@@ -57,6 +63,7 @@ export const SOURCE_PROVENANCE_LABELS: Record<keyof typeof SOURCE_TIER_LABELS, s
   'official-by-reference': 'XIM forum · public page',
   'official-inferred': 'XIM forum · OBsIV',
   expert: 'Independent creator',
+  'game-publisher': 'Game publisher · not XIM',
 };
 
 /** Fallback names when aim-styles.json doesn't have the style yet (CONCEPT.md §6). */
@@ -77,7 +84,7 @@ export const PLATFORM_LABELS = { xbox: 'Xbox', pc: 'PC' } as const;
  * What each one needs is shown from the glossary's sourced Output type statements.
  */
 export const OUTPUT_TYPE_LABELS: Record<OutputType, { title: string; sub: string }> = {
-  'xbox-controller': { title: 'Controller (Xbox, PS4)', sub: 'Xbox Config' },
+  'xbox-controller': { title: 'Controller (Xbox, PS, PC)', sub: 'Xbox Config' },
   'pc-xinput': { title: 'XInput controller', sub: 'Controller (PC XInput)' },
   'pc-xbox-controller': { title: 'Xbox controller', sub: 'Controller (Xbox, PS, PC)' },
   'pc-dualsense': { title: 'DualSense controller', sub: 'Controller (Xbox, PS, PC)' },

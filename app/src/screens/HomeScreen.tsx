@@ -1,10 +1,21 @@
-import { useId } from 'react';
+import { useId, type ReactElement } from 'react';
 import { Link } from 'react-router';
-import { ChevronIcon, CrosshairMark } from '../components/icons';
+import {
+  ArrowIcon,
+  BookIcon,
+  ChevronIcon,
+  CrosshairMark,
+  SlidersIcon,
+  StepsIcon,
+  WaveIcon,
+} from '../components/icons';
+import { backLinkState } from '../components/back-link';
 import { InstallCard } from '../components/Install';
-import { sheetStatus, useLoadoutSummary } from '../components/loadout-summary';
+import { mostRecentLoadout, useLoadoutSummary } from '../components/loadout-summary';
 import { Screen } from '../components/Screen';
+import { TickRuler } from '../components/TickRuler';
 import { FLOWS, type FlowId } from '../content/flows';
+import { weaponLines } from '../features/build/format';
 import { buildPath, sheetPath } from '../features/build/use-build-plan';
 import { summarizeChecks } from '../features/troubleshoot/setup-progress';
 import { hasConfigValues } from '../state/current-values';
@@ -22,9 +33,16 @@ interface FlowStatus {
   problem?: boolean;
 }
 
+const FLOW_ICONS: Record<FlowId, () => ReactElement> = {
+  build: StepsIcon,
+  tune: SlidersIcon,
+  troubleshoot: WaveIcon,
+  learn: BookIcon,
+};
+
 /**
  * Where the player is in each flow, from what is saved. A flow with nothing to say has no
- * status: Build's per-loadout progress is in the loadouts strip, and Explain a concept keeps
+ * status: Build's per-loadout progress is on the loadouts above, and Explain a concept keeps
  * no state.
  */
 function useFlowStatuses(): Partial<Record<FlowId, FlowStatus>> {
@@ -61,7 +79,7 @@ function useFlowStatuses(): Partial<Record<FlowId, FlowStatus>> {
   return statuses;
 }
 
-/** First run: the one required step, in order, before the four flows. */
+/** First run: the one required step, in order, before the tools. */
 function StartHere() {
   const titleId = useId();
   return (
@@ -75,7 +93,8 @@ function StartHere() {
           <strong>
             <Link to="/profile">Fill in your profile</Link>
           </strong>{' '}
-          (optional). Platform, mouse DPI and polling rate narrow the setup checks to your hardware.
+          (optional). Platform and output type decide which setup checks apply to you. Your mouse DPI and polling rate are
+          shown on the DPI and polling-rate checks in Build my config.
         </li>
         <li>
           <strong>Build my config.</strong> It ends in your config sheet.
@@ -88,28 +107,68 @@ function StartHere() {
   );
 }
 
-/** One saved loadout: its config sheet (the page a returning player opens most), and the build behind it. */
-function LoadoutRow({ loadout }: { loadout: Loadout }) {
+/** The weapons in slot order, the main one marked with the amber diamond. */
+function Weapons({ loadout }: { loadout: Loadout }) {
+  const knowledge = useKnowledge();
+  const lines = weaponLines(loadout, knowledge);
+  if (lines.length === 0) return null;
+  return (
+    <p className="home-weapons">
+      {lines.map((w, i) => (
+        <span key={w.slot}>
+          {i > 0 && ' · '}
+          {w.isMain ? (
+            <>
+              <span className="tag-main">{w.name}</span>
+              <span className="visually-hidden"> (Main)</span>
+            </>
+          ) : (
+            w.name
+          )}
+        </span>
+      ))}
+    </p>
+  );
+}
+
+/**
+ * The loadout Home leads with: its weapons, its sheet's progress as a ruler, and the next step
+ * (the page's one amber button) beside its config sheet.
+ */
+function HeroLoadout({ loadout }: { loadout: Loadout }) {
   const { sheet } = useLoadoutSummary(loadout);
+  const nameId = useId();
   const buildLabel =
     sheet.done + sheet.problem === 0 ? 'Start build' : sheet.done === sheet.total ? 'Review build' : 'Continue build';
-
   return (
-    <li className="home-loadout">
-      <Link className="home-loadout-link" to={sheetPath(loadout.id)}>
-        <span className="home-loadout-text">
-          <span className="home-loadout-name">{loadout.name}</span>
-          <span className={`flow-card-status${sheet.problem > 0 ? ' is-problem' : ''}`}>{sheetStatus(sheet)}</span>
-        </span>
+    <li className="card home-hero" aria-labelledby={nameId}>
+      <h3 className="home-hero-name" id={nameId}>
+        {loadout.name}
+      </h3>
+      <Weapons loadout={loadout} />
+      <TickRuler count={sheet} prefix="Sheet" />
+      <div className="home-hero-actions">
+        <Link className="button primary" to={buildPath(loadout.id)} aria-label={`${buildLabel} for ${loadout.name}`}>
+          {buildLabel}
+          <ArrowIcon />
+        </Link>
+        <Link className="button secondary" to={sheetPath(loadout.id)} aria-label={`Config sheet for ${loadout.name}`}>
+          Config sheet
+        </Link>
+      </div>
+    </li>
+  );
+}
+
+/** Every other loadout: one row to its config sheet, with the sheet's ruler. */
+function LoadoutRow({ loadout }: { loadout: Loadout }) {
+  const { sheet } = useLoadoutSummary(loadout);
+  return (
+    <li>
+      <Link className="home-loadout" to={sheetPath(loadout.id)}>
+        <span className="home-loadout-name">{loadout.name}</span>
         <ChevronIcon />
-      </Link>
-      <Link
-        className="home-loadout-link is-build"
-        to={buildPath(loadout.id)}
-        aria-label={`${buildLabel} for ${loadout.name}`}
-      >
-        <span className="home-loadout-text">{buildLabel}</span>
-        <ChevronIcon />
+        <TickRuler count={sheet} prefix="Sheet" />
       </Link>
     </li>
   );
@@ -121,6 +180,7 @@ export function HomeScreen() {
   const loadoutsId = useId();
   const statuses = useFlowStatuses();
   const { loadouts } = data;
+  const recent = mostRecentLoadout(data);
 
   return (
     <Screen
@@ -130,44 +190,43 @@ export function HomeScreen() {
           <CrosshairMark size={36} />
         </span>
       }
-      intro={
-        <p className="lede">
-          Evidence-based XIM MATRIX setup for Destiny 2 on Xbox and PC, with the why and the source behind every value.
-        </p>
-      }
+      intro={<p className="lede">Evidence-based XIM MATRIX setup for Destiny 2 on Xbox and PC.</p>}
     >
-      {loadouts.length === 0 ? (
+      {!recent ? (
         <StartHere />
       ) : (
         <>
-          <h2 className="section-title" id={loadoutsId}>
-            Your loadouts
-          </h2>
+          <div className="section-label">
+            <h2 id={loadoutsId}>Your loadouts</h2>
+            <span className="num">{loadouts.length}</span>
+          </div>
           <ul className="home-loadouts" aria-labelledby={loadoutsId}>
-            {loadouts.map((loadout) => (
-              <LoadoutRow key={loadout.id} loadout={loadout} />
-            ))}
+            <HeroLoadout loadout={recent} />
+            {loadouts
+              .filter((l) => l.id !== recent.id)
+              .map((loadout) => (
+                <LoadoutRow key={loadout.id} loadout={loadout} />
+              ))}
           </ul>
         </>
       )}
 
-      <h2 className="section-title" id={flowsId}>
-        What do you want to do?
-      </h2>
-      <ul className="flow-cards" aria-labelledby={flowsId}>
+      <div className="section-label">
+        <h2 id={flowsId}>Tools</h2>
+      </div>
+      <ul className="tool-tiles" aria-labelledby={flowsId}>
         {FLOWS.map((flow) => {
           const status = statuses[flow.id];
+          const FlowIcon = FLOW_ICONS[flow.id];
           return (
             <li key={flow.id}>
-              <Link className="flow-card" to={flow.to}>
-                <span className="flow-card-text">
-                  <span className="flow-card-title">{flow.title}</span>
-                  <span className="flow-card-summary">{flow.summary}</span>
-                  {status && (
-                    <span className={`flow-card-status${status.problem ? ' is-problem' : ''}`}>{status.text}</span>
-                  )}
-                </span>
-                <ChevronIcon />
+              <Link className="tool-tile" to={flow.to}>
+                <FlowIcon />
+                <span className="tool-tile-title">{flow.title}</span>
+                <span className="tool-tile-summary">{flow.summary}</span>
+                {status && (
+                  <span className={`tool-tile-status${status.problem ? ' is-problem' : ''}`}>{status.text}</span>
+                )}
               </Link>
             </li>
           );
@@ -177,8 +236,10 @@ export function HomeScreen() {
       <InstallCard />
 
       <p className="footnote">
-        Every recommendation comes with its reasoning, its source and a confidence label.{' '}
-        <Link to="/sources">See the sources</Link>
+        Every recommendation says how sure it is and why, with its source wherever one exists.{' '}
+        <Link to="/sources" state={backLinkState({ to: '/', label: 'Home' })}>
+          See the sources
+        </Link>
       </p>
     </Screen>
   );

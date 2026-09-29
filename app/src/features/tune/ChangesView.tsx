@@ -5,24 +5,25 @@ import { AimStyleSummary } from '../../components/AimStyleSummary';
 import { ClearAimMarks } from '../../components/ClearAimMarks';
 import { ConfidenceBadge } from '../../components/ConfidenceBadge';
 import { EmptyState } from '../../components/EmptyState';
+import { Readout } from '../../components/Readout';
 import { SharedCaveatNote, StatementView } from '../../components/StatementView';
 import { hoistedCaveat } from '../../components/statements';
 import { StatusChip, StatusMark } from '../../components/StatusToggles';
 import { TermLink } from '../../components/TermLink';
 import { AIMING_SOURCE_LABELS, LEVER_DIRECTION_LABELS, whySummary } from '../../content/labels';
 import { useData } from '../../state/data-context';
-import { leversForProfile } from '../../state/guidance';
+import { aimsWithMouse, leversForProfile } from '../../state/guidance';
 import { useKnowledge } from '../../state/knowledge-context';
 import type { Loadout } from '../../state/schema';
 import { sheetLinkState } from '../build/sheet-navigation';
 import { sheetPath } from '../build/use-build-plan';
 import {
   analyzeConfig,
-  checkRequiredSettings,
   firstChange,
   groupFindings,
   hasEnteredSettings,
   mainWeapon,
+  requiredSettingsFor,
   type Finding,
   type RequiredSettingStatus,
 } from './analysis';
@@ -42,40 +43,77 @@ function names(settings: readonly RequiredSettingStatus[]) {
   return settings.map((s) => s.name).join(', ');
 }
 
+/** "Look Sensitivity and ADS Sensitivity Modifier": a card title for settings that share one statement. */
+function joinNames(settings: readonly RequiredSettingStatus[]) {
+  const all = settings.map((s) => s.name);
+  return all.length > 1 ? `${all.slice(0, -1).join(', ')} and ${all.at(-1)!}` : (all[0] ?? '');
+}
+
 /** "Easing, Lower": how the next change is announced. */
 function describeChange(finding: Finding): string {
   return finding.direction ? `${finding.title}, ${LEVER_DIRECTION_LABELS[finding.direction]}` : finding.title;
 }
 
+/** Yours → XIM's list, as readouts: the value to change stepped back, the target leading. */
 function FindingValues({ finding }: { finding: Finding }) {
   const current = finding.current ?? (finding.status === 'missing' ? 'Not entered yet' : undefined);
-  if (current === undefined && finding.required === undefined) return null;
+  const { required } = finding;
+  if (current === undefined && required === undefined) return null;
   return (
-    <dl className="finding-values">
-      {current !== undefined && (
-        <div>
-          <dt>Yours</dt>
-          <dd>{current}</dd>
-        </div>
+    <div className="readouts finding-values">
+      {current !== undefined && <Readout label="Yours" value={current} muted={required !== undefined} />}
+      {current !== undefined && required !== undefined && (
+        <span className="readouts-arrow" aria-hidden="true">
+          →
+        </span>
       )}
-      {finding.required !== undefined && (
-        <div>
-          <dt>XIM’s list</dt>
-          <dd>{finding.required}</dd>
-        </div>
-      )}
-    </dl>
+      {required !== undefined && <Readout label="XIM’s list" value={required} />}
+    </div>
   );
 }
 
 /**
- * The main statement (its badge is in the card's head; `showCaveat` false when the card shows
- * the caveat above), then the ones that belong with it.
+ * A caveat on one line, with More for the rest: the first change's action stays in view. The
+ * full text is always there for a screen reader; only its height is cut.
  */
-function FindingStatements({ finding, showCaveat = true }: { finding: Finding; showCaveat?: boolean }) {
+function CaveatLine({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  return (
+    <div className={`caveat-line${open ? ' is-open' : ''}`}>
+      <p className="finding-note" id={id}>
+        <strong>Caveat:</strong> {text}
+      </p>
+      <button
+        type="button"
+        className="caveat-toggle"
+        aria-expanded={open}
+        aria-controls={id}
+        aria-label={open ? 'Less of the caveat' : 'More of the caveat'}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {open ? 'Less' : 'More'}
+      </button>
+    </div>
+  );
+}
+
+/**
+ * The main statement (its badge is in the card's head; `showText` and `showCaveat` false when
+ * the card shows them above), then the ones that belong with it.
+ */
+function FindingStatements({
+  finding,
+  showText = true,
+  showCaveat = true,
+}: {
+  finding: Finding;
+  showText?: boolean;
+  showCaveat?: boolean;
+}) {
   return (
     <div className="finding-statements">
-      <StatementView statement={finding.statement} showBadge={false} showCaveat={showCaveat} />
+      <StatementView statement={finding.statement} showBadge={false} showText={showText} showCaveat={showCaveat} />
       {finding.more.map((statement, i) => (
         <StatementView key={i} statement={statement} />
       ))}
@@ -89,11 +127,7 @@ function FindingStatements({ finding, showCaveat = true }: { finding: Finding; s
  */
 function StatementNotes({ statement, hoisted }: { statement: Statement; hoisted?: string }) {
   if (!statement.caveat || statement.caveat === hoisted) return null;
-  return (
-    <p className="finding-note">
-      <strong>Caveat:</strong> {statement.caveat}
-    </p>
-  );
+  return <CaveatLine text={statement.caveat} />;
 }
 
 function TermLinks({ termIds }: { termIds: readonly string[] }) {
@@ -121,7 +155,8 @@ interface FindingCardProps {
 function FindingCard({ finding, first = false, done = false, hoisted, actions }: FindingCardProps) {
   const Tag = first ? 'div' : 'li';
   return (
-    <Tag className={`card finding${first ? ' tune-first' : ''}${done ? ' is-done' : ''}`}>
+    // The first change is the one thing to do now, so it sits in the target-lock brackets.
+    <Tag className={`card finding${first ? ' tune-first lock' : ''}${done ? ' is-done' : ''}`}>
       <div className="finding-head">
         <h3>{finding.title}</h3>
         <span className="finding-tags">
@@ -138,7 +173,14 @@ function FindingCard({ finding, first = false, done = false, hoisted, actions }:
       <FindingValues finding={finding} />
       {finding.smoothing && <p className="hint">{finding.smoothing.text}</p>}
       {first ? (
-        <FindingStatements finding={finding} />
+        <>
+          <p className="finding-text">{finding.statement.text}</p>
+          {finding.statement.caveat && <CaveatLine text={finding.statement.caveat} />}
+          <details className="why">
+            <summary>{whySummary([finding.statement, ...finding.more])}</summary>
+            <FindingStatements finding={finding} showText={false} showCaveat={false} />
+          </details>
+        </>
       ) : (
         <>
           <StatementNotes statement={finding.statement} hoisted={hoisted} />
@@ -195,7 +237,7 @@ function NothingEntered({ settingsPath }: { settingsPath: string }) {
 /** "What to change": the findings for this loadout, the first one up front, then by group. */
 export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; settingsPath: string }) {
   const { data, setProgress } = useData();
-  const { kb } = useKnowledge();
+  const { kb, termById } = useKnowledge();
   const [announcement, setAnnouncement] = useState('');
   const [moved, setMoved] = useState(0);
   const firstHeading = useRef<HTMLHeadingElement>(null);
@@ -216,16 +258,23 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
   const first = firstChange(findings, isDone);
   const groups = groupFindings(findings.filter((f) => f !== first));
 
-  const required = checkRequiredSettings(kb, inGame);
+  const required = requiredSettingsFor(kb, inGame, config);
   const missing = required.filter((s) => s.state === 'missing');
   const matching = required.filter((s) => s.state === 'ok');
   const unknown = required.filter((s) => s.state === 'unknown');
+  // With Custom sync, the settings the Config copies from the game share one card and statement.
+  const customSync = unknown.filter((s) => s.customSync);
+  const [customStatement] = customSync.map((s) => s.statement);
+  const otherUnknown = unknown.filter((s) => !s.customSync);
   // XIM's list comes with one caveat for every value, so the section says it once (the card in
   // "Change this first" sits above the section and keeps its own).
-  const fixCaveat = hoistedCaveat([...groups.fix, ...unknown].map((f) => f.statement));
+  const fixCaveat = hoistedCaveat([...groups.fix, ...otherUnknown].map((f) => f.statement));
 
   const { archetype, style } = mainWeapon(kb, loadout);
-  const hiddenLevers = style ? style.levers.length - leversForProfile(style.levers, data.profile).length : 0;
+  // The cm/360 Sensitivity card is for mouse aim, so without a mouse it is one more hidden setting.
+  const hiddenSensitivity = !aimsWithMouse(data.profile) && termById('sensitivity')?.guidance[0] !== undefined;
+  const hiddenLevers =
+    (style ? style.levers.length - leversForProfile(style.levers, data.profile).length : 0) + (hiddenSensitivity ? 1 : 0);
   const aimsWith = data.profile.aimingSources.map((s) => AIMING_SOURCE_LABELS[s].title.toLowerCase()).join(' and ');
 
   const configDpi = config?.matrix.configDpi ?? null;
@@ -330,7 +379,23 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
           <>
             <p>Dialed can’t compare these, so check them yourself:</p>
             <ul className="finding-list">
-              {unknown.map((setting) => (
+              {customStatement && (
+                <li className="card finding" key="custom-sync">
+                  <div className="finding-head">
+                    <h3>{joinNames(customSync)}</h3>
+                    <span className="finding-tags">
+                      <ConfidenceBadge level={customStatement.confidence} />
+                    </span>
+                  </div>
+                  <p>{customStatement.text}</p>
+                  <StatementNotes statement={customStatement} />
+                  <details className="why">
+                    <summary>{whySummary([customStatement])}</summary>
+                    <StatementView statement={customStatement} showBadge={false} showText={false} showCaveat={false} />
+                  </details>
+                </li>
+              )}
+              {otherUnknown.map((setting) => (
                 <li className="card finding" key={setting.name}>
                   <div className="finding-head">
                     <h3>{setting.name}</h3>
@@ -338,12 +403,9 @@ export function ChangesView({ loadout, settingsPath }: { loadout: Loadout; setti
                       <ConfidenceBadge level={setting.statement.confidence} />
                     </span>
                   </div>
-                  <dl className="finding-values">
-                    <div>
-                      <dt>XIM’s list</dt>
-                      <dd>{setting.required}</dd>
-                    </div>
-                  </dl>
+                  <div className="readouts finding-values">
+                    <Readout label="XIM’s list" value={setting.required} />
+                  </div>
                   <StatementNotes statement={setting.statement} hoisted={fixCaveat} />
                   <details className="why">
                     <summary>Why and source</summary>

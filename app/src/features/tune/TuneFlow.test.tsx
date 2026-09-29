@@ -67,6 +67,12 @@ describe('Tune my config: picking a loadout', () => {
     expect(details).not.toHaveAttribute('open');
     expect(within(details).getByText(/Dialed compares them with the evidence/)).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: 'No loadouts yet' })).toBeInTheDocument();
+    // One Config per loadout is Dialed's plan, not a MATRIX rule.
+    expect(
+      screen.getByText(
+        'Dialed plans one Config in MATRIX Manager per loadout, so it tunes one loadout at a time. Add the loadout you want to tune.',
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Add a loadout' })).toHaveAttribute('href', '/loadouts/new');
   });
 
@@ -85,6 +91,9 @@ describe('Tune my config: picking a loadout', () => {
       }),
     );
     const list = screen.getByRole('list', { name: 'Pick a loadout' });
+    expect(
+      screen.getByText('Dialed plans one Config in MATRIX Manager per loadout. Pick the loadout whose Config you want to tune.'),
+    ).toBeInTheDocument();
     const links = within(list).getAllByRole('link');
     expect(links).toHaveLength(2);
     expect(links[0]).toHaveTextContent('Pulse + shotgun');
@@ -143,10 +152,19 @@ describe('Tune my config: your settings', () => {
     expect(within(first).getByRole('heading', { level: 3, name: 'Look Sensitivity' })).toBeInTheDocument();
     expect(within(first).getByText('Yours').nextSibling).toHaveTextContent('15');
     expect(within(first).getByText('XIM’s list').nextSibling).toHaveTextContent('20');
-    // The knowledge base's statement, shown in full with its caveat and source.
+    // Yours against XIM's list as readouts, the one to change stepped back.
+    expect(within(first).getByText('Yours').nextSibling).toHaveClass('is-muted');
+    // The knowledge base's statement in full, its caveat on one line with More, and its sources.
     const statement = knowledge.game.requiredSettings.find((s) => s.name === 'Look Sensitivity')!.statement;
     expect(within(first).getByText(statement.text)).toBeInTheDocument();
-    expect(within(first).getByText(/Confirm it in XIM MATRIX Manager/)).toBeInTheDocument();
+    const caveat = within(first).getByText(/Confirm it in XIM MATRIX Manager/);
+    expect(caveat.closest('.caveat-line')).not.toHaveClass('is-open');
+    const more = within(first).getByRole('button', { name: 'More of the caveat' });
+    expect(more).toHaveAttribute('aria-expanded', 'false');
+    expect(more).toHaveAttribute('aria-controls', caveat.closest('p')!.id);
+    await user.click(more);
+    expect(within(first).getByRole('button', { name: 'Less of the caveat' })).toHaveAttribute('aria-expanded', 'true');
+    expect(caveat.closest('.caveat-line')).toHaveClass('is-open');
     expect(within(first).getByRole('list', { name: 'Sources' })).toBeInTheDocument();
   });
 
@@ -229,6 +247,19 @@ describe('Tune my config: your settings', () => {
     expect(field('Precision')).toHaveValue('40');
   });
 
+  it('doesn’t cap Precision, Response and Easing at 100, a limit XIM never gives', async () => {
+    const { user, storage } = render('/tune/l1/settings');
+    await user.click(within(screen.getByRole('group', { name: 'Smoothing' })).getByRole('radio', { name: 'Custom Standard' }));
+    const easing = screen.getByRole('textbox', { name: 'Easing' });
+    await user.type(easing, '150');
+    expect(easing).toHaveAttribute('aria-invalid', 'false');
+    expect(stored(storage).configs.l1?.aim.easing).toBe(150);
+    // Only a sanity check, like Smooth, Decay and Synch.
+    await user.type(easing, '0');
+    expect(easing).toHaveAccessibleDescription(/Enter a number from 0 to 1,000\.$/);
+    expect(stored(storage).configs.l1?.aim.easing).toBe(150);
+  });
+
   it('shows Magnitude and Angle only while quantization is on', async () => {
     const { user, storage } = render('/tune/l1/settings');
     const quantization = screen.getByRole('group', { name: 'Quantization' });
@@ -259,7 +290,16 @@ describe('Tune my config: your settings', () => {
     );
     expect(screen.getByRole('group', { name: 'Smoothing' })).toHaveAccessibleDescription(/About Smoothing/);
     expect(screen.getByRole('textbox', { name: 'Y Scale' })).toHaveAccessibleDescription('About Y Scale');
-    expect(screen.getAllByRole('link', { name: 'About Deadzone' })).toHaveLength(2);
+    // Destiny 2's own deadzones aren't the MATRIX's aiming stick deadzone, so they don't link to it.
+    expect(screen.queryByRole('link', { name: 'About Deadzone' })).not.toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'Axial Deadzone' })).not.toHaveAccessibleDescription(/Deadzone/);
+    // Destiny 2's controller settings, not its mouse settings; Mouse Aim values, not Motion Aim's.
+    expect(section('Destiny 2 settings')).toHaveTextContent(
+      'Copy these from Destiny 2’s controller settings (on PC, not its mouse settings, which use some of the same names).',
+    );
+    expect(section('Aim settings')).toHaveTextContent(
+      'From this Config’s aim settings in Manager. For Sensitivity, Smoothing, Aiming Curve, Y Scale and Quantization, enter your Mouse Aim values. Motion Aim (gyro) has its own, so don’t copy those here.',
+    );
   });
 });
 
@@ -295,10 +335,13 @@ describe('Tune my config: what to change', () => {
       'One change at a time',
     ]);
 
-    // The first change isn't hidden behind "Why".
+    // The first change says what to do in full, in the target-lock brackets; its sources are one tap away.
     const first = section('Change this first');
     expect(within(first).getByRole('heading', { level: 3, name: 'Look Sensitivity' })).toBeInTheDocument();
-    expect(within(first).queryByText('Why and source')).not.toBeInTheDocument();
+    expect(first.querySelector('.tune-first')).toHaveClass('lock');
+    const look = knowledge.game.requiredSettings.find((s) => s.name === 'Look Sensitivity')!.statement;
+    expect(within(first).getByText(look.text)).toBeVisible();
+    expect(within(first).getByText('Why and source').closest('details')).not.toHaveAttribute('open');
     expect(within(first).getByRole('link', { name: 'Update your settings' })).toHaveAttribute('href', '/tune/l1/settings');
 
     const fix = section('Fix these Destiny 2 settings');
@@ -385,7 +428,9 @@ describe('Tune my config: what to change', () => {
     expect(note).toHaveTextContent('Your smoothing is Custom Classic. These directions assume Standard smoothing.');
     const precision = within(aim).getByRole('heading', { level: 3, name: 'Precision' }).closest('li')!;
     expect(precision).toHaveTextContent('Your smoothing is Custom Classic. This direction assumes Standard smoothing.');
-    expect(within(precision).queryByRole('button')).not.toBeInTheDocument();
+    // Nothing to mark done: the only button is the caveat's More.
+    expect(within(precision).queryByRole('button', { name: 'Precision: done' })).not.toBeInTheDocument();
+    expect(within(precision).getAllByRole('button').map((b) => b.textContent)).toEqual(['More']);
   });
 
   it('hides gyro-only settings for a mouse-only profile, and says so', () => {
@@ -553,8 +598,11 @@ describe('Tune my config: cards', () => {
     const easing = within(section('Aim settings for snap')).getByRole('heading', { level: 3, name: 'Easing' }).closest('li')!;
     expect(easing.querySelector('.finding-head .badge')).toHaveTextContent('Reasoned');
     expect(easing.querySelector('.finding-head .badge')).toBeVisible();
-    const notes = Array.from(easing.querySelectorAll<HTMLElement>(':scope > .finding-note'));
-    expect(notes.map((n) => n.textContent)).toEqual([`Caveat: ${EASING_CAVEAT}`]);
+    // On one line with More (the full text is there for a screen reader).
+    const notes = Array.from(easing.querySelectorAll<HTMLElement>(':scope > .caveat-line > .finding-note'));
+    expect(notes.map((n) => n.textContent)).toEqual([
+      `Caveat: ${EASING_CAVEAT} Assumes custom Standard smoothing (Easing is a Standard setting). If you use a smoothing preset, XIM suggests trying the other presets first.`,
+    ]);
     for (const note of notes) expect(note).toBeVisible();
     // The full statement stays one tap away, and opens with why it counts as worked out; the
     // caveat above isn't repeated inside.
@@ -591,6 +639,54 @@ describe('Tune my config: cards', () => {
     expect(within(fix).getAllByText(/Caveat:/)).toHaveLength(1);
   });
 
+  it('doesn’t ask a Custom-sync Config to change its sensitivity, and says why', () => {
+    render(
+      '/tune/l1/changes',
+      storageWith({
+        inGame: inGameWith({ ...REQUIRED_IN_GAME, lookSensitivity: 12, axialDeadzone: 5 }),
+        configs: { l1: configWith({ matrix: { syncMethod: 'custom' } }) },
+      }),
+    );
+    // The deadzone is still compared, so it comes first; Look Sensitivity is never a fix.
+    const first = section('Change this first');
+    expect(within(first).getByRole('heading', { level: 3, name: 'Axial Deadzone' })).toBeInTheDocument();
+    const d2 = section('Destiny 2 settings');
+    expect(within(d2).queryByRole('heading', { level: 3, name: 'Look Sensitivity' })).not.toBeInTheDocument();
+    expect(d2).toHaveTextContent('Already the same as XIM’s list: Movement Controls, Button Layout, Radial Deadzone.');
+    expect(d2).not.toHaveTextContent('Not entered yet');
+
+    // Both settings share one card under "check them yourself", with the reasoned statement.
+    expect(d2).toHaveTextContent('Dialed can’t compare these, so check them yourself:');
+    const custom = within(d2).getByRole('heading', { level: 3, name: 'Look Sensitivity and ADS Sensitivity Modifier' }).closest('li')!;
+    expect(custom.querySelector('.finding-head .badge')).toHaveTextContent('Reasoned');
+    expect(custom).toHaveTextContent(
+      "Your Config uses Custom sync, so Dialed doesn't compare Look Sensitivity or ADS Sensitivity Modifier with XIM's list.",
+    );
+    expect(custom).toHaveTextContent(
+      "Caveat: Check which values your Config's Custom Game Settings in Manager asks for.",
+    );
+    expect(within(custom).getByText('Why and source').closest('details')).not.toHaveAttribute('open');
+    expect(within(custom).getByRole('list', { name: 'Sources' })).toBeInTheDocument();
+    // The Custom sync card isn't marked done like an aim change: there's nothing to tick.
+    expect(within(custom).queryByRole('button', { name: /Done/ })).not.toBeInTheDocument();
+  });
+
+  it('says what the DPI should be, and how to read Check DPI, on the DPI card', () => {
+    render(
+      '/tune/l1/changes',
+      storageWith({
+        profile: { ...sampleData().profile, mouseDpi: 1600 },
+        inGame: inGameWith(REQUIRED_IN_GAME),
+        configs: { l1: configWith({ matrix: { configDpi: 800 } }) },
+      }),
+    );
+    const dpi = within(section('Change this first')).getByRole('heading', { level: 3, name: /DPI in your Config differs/ });
+    const card = dpi.closest('.finding')!;
+    expect(card).toHaveTextContent("Set the DPI in your Config to your mouse's DPI.");
+    expect(card).toHaveTextContent("It's normal for that value not to match your DPI exactly, but it should be within range.");
+    expect(card).not.toHaveTextContent('test again');
+  });
+
   it('keeps one set of Destiny 2 settings for every loadout', async () => {
     const second = sampleLoadout({ id: 'l2', name: 'Peek', weapons: { kinetic: 'hand-cannon', energy: null, power: null } });
     const { user, router, storage } = render('/tune/l1/settings', storageWith({ loadouts: [sampleLoadout(), second] }));
@@ -618,7 +714,8 @@ describe('Tune my config: cards', () => {
     }
     expect(term('ads-inheritance').name).toBe('Aim Settings Inheritance');
     expect(screen.getByRole('textbox', { name: `${term('mouse-dpi').name} in your Config` })).toBeInTheDocument();
-    expect(screen.getByRole('textbox', { name: `Hip ${term('sensitivity').name} (cm/360)` })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: `Mouse Aim Hip ${term('sensitivity').name} (cm/360)` })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: `Mouse Aim ADS ${term('sensitivity').name} (cm/360)` })).toBeInTheDocument();
     for (const setting of knowledge.game.requiredSettings) {
       expect(screen.getByRole(/Controls|Layout/.test(setting.name) ? 'group' : 'textbox', { name: setting.name })).toBeInTheDocument();
     }
