@@ -1,0 +1,131 @@
+{
+  "id": "quantization",
+  "order": 4,
+  "name": "Quantization",
+  "summary": "A switch, not a slider: the one setting XIM ties to aim assist.",
+  "ends": {
+    "a": "Aim assist compatibility",
+    "b": "Accurate real-world sensitivity"
+  },
+  "intro": {
+    "text": "Quantization snaps the reticle's speed and direction to set values, so aim assist is disturbed less by tiny aim changes. XIM offers it to improve compatibility with aim assist, on games that support it.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "Quantization is a feature that can be used to improve compatibility with aim assist (on games that support it)."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "When enabled, your reticle velocity will \"snap\" to configured magnitude and angle values. This behavior allows aim assist systems to work with less disruption from micro aim changes."
+      }
+    ]
+  },
+  "start": {
+    "text": "It is off by default. To try it, XIM says to start at Magnitude 25 and Angle 25, and to adjust one value at a time.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-quantization",
+        "quote": "Do not enable input quantization (default is off)."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "To start, set Magnitude to 25 and Angle to 25. Adjust one value at a time to match your preferences."
+      }
+    ]
+  },
+  "levers": [
+    {
+      "settingId": "quantization",
+      "aimingSources": ["mouse", "gyro"],
+      "a": {
+        "direction": "on",
+        "statement": {
+          "text": "Turn Quantization on for compatibility with aim assist, on games that support it.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Quantization is a feature that can be used to improve compatibility with aim assist (on games that support it)."
+            }
+          ]
+        }
+      },
+      "b": {
+        "direction": "off",
+        "statement": {
+          "text": "Turn Quantization off for accurate real-world sensitivity. Off is also what XIM's cm/360 test needs.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+              "quote": "Applying quantization to your mouse or motion aim may negatively affect real world sensitivity accuracy."
+            },
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+              "quote": "You have quantization disabled"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "notes": [
+    {
+      "text": "No source says whether any MATRIX setting gives more or less aim assist in Destiny 2, or whether Destiny 2 is a game that supports quantization. Primer doesn't guess.",
+      "confidence": "gap",
+      "citations": []
+    },
+    {
+      "text": "Magnitude snaps speed, and its effect grows the faster you aim. Angle snaps direction, whatever the speed.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Magnitude Quantization: Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Angle Quantization: Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+        }
+      ]
+    },
+    {
+      "text": "XIM doesn't say which way a higher or lower Magnitude or Angle value moves the effect on aim assist.",
+      "confidence": "gap",
+      "citations": []
+    },
+    {
+      "text": "If a game requires Simulate Analog Behavior, XIM's checklist says not to enable quantization.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-quantization",
+          "quote": "Do not enable input quantization (default is off)."
+        }
+      ]
+    },
+    {
+      "text": "Aim assist itself slows the reticle near enemies. That is why XIM's cm/360 test says to use an area without them.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Start your game in a training area or private match (without enemies that can cause aim assist slowdown)"
+        }
+      ]
+    }
+  ]
+}

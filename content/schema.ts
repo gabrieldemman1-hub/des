@@ -146,6 +146,52 @@ export const AimStyle = z.object({
 });
 export type AimStyle = z.infer<typeof AimStyle>;
 
+/** One way to move a setting toward a dial's end, with the sentence that says so. */
+export const Move = z.object({
+  direction: z.enum(['raise', 'lower', 'on', 'off']),
+  statement: Statement,
+});
+export type Move = z.infer<typeof Move>;
+
+/**
+ * A setting on a dial: what to do with it toward end A and toward end B. `null` means no source
+ * gives a direction that way.
+ */
+export const DialLever = z
+  .object({
+    settingId: Id,
+    /** The aiming sources the setting applies to; absent means all of them. */
+    aimingSources: z.array(AimingSource).optional(),
+    a: Move.nullable(),
+    b: Move.nullable(),
+  })
+  .refine((l) => l.a !== null || l.b !== null, { message: 'a dial lever needs a move toward at least one end' });
+export type DialLever = z.infer<typeof DialLever>;
+
+/**
+ * A dial on the Tuning page: two ends in XIM's words, the settings that move between them, and
+ * where XIM says to start. It explains which way each setting moves; it holds no values and
+ * nothing the reader does with it is kept.
+ */
+export const Dial = z.object({
+  id: Id,
+  name: z.string().min(1),
+  /** Its place on the Tuning page, 1 first. */
+  order: z.number().int().positive(),
+  /** One line under the name. */
+  summary: z.string().min(1),
+  /** The two ends, in XIM's words for the effect. */
+  ends: z.object({ a: z.string().min(1), b: z.string().min(1) }),
+  /** What these settings are and when they apply. */
+  intro: Statement,
+  /** Where XIM says to start, shown between the ends. */
+  start: Statement,
+  levers: z.array(DialLever).min(1),
+  /** What to know before moving anything: limits, gaps, the only numbers XIM gives. */
+  notes: z.array(Statement),
+});
+export type Dial = z.infer<typeof Dial>;
+
 /** A name people use that the guide doesn't list as a setting. */
 export const NameNote = z.object({
   name: z.string().min(1),

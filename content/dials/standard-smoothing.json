@@ -1,0 +1,185 @@
+{
+  "id": "standard-smoothing",
+  "order": 2,
+  "name": "Standard smoothing",
+  "summary": "Four settings that shape the feel from rest, at low speed and at high speed.",
+  "ends": {
+    "a": "Smoother, steadier",
+    "b": "Lighter, quicker"
+  },
+  "intro": {
+    "text": "These are the Standard smoothing system's settings: dynamic smoothing that adapts to your aim speed. They apply when Smoothing is set to Custom and the smoothing button reads STANDARD.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      }
+    ]
+  },
+  "start": {
+    "text": "XIM says to start from a preset: try each to see what feels most natural, because it is preference. Change other values only if you need to.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary."
+      }
+    ]
+  },
+  "levers": [
+    {
+      "settingId": "easing",
+      "aimingSources": ["mouse", "gyro"],
+      "a": {
+        "direction": "raise",
+        "statement": {
+          "text": "Raise Easing for a smoother start from rest. The cost is response time.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values result in smoother transition from rest but lower response time."
+            }
+          ]
+        }
+      },
+      "b": {
+        "direction": "lower",
+        "statement": {
+          "text": "Lower Easing for a quicker response from rest. The start is less smooth.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values result in smoother transition from rest but lower response time."
+            }
+          ],
+          "reasoning": "XIM states the effect of higher values: smoother from rest, slower to respond. Lower values do the opposite on both counts."
+        }
+      }
+    },
+    {
+      "settingId": "precision",
+      "aimingSources": ["mouse", "gyro"],
+      "a": {
+        "direction": "raise",
+        "statement": {
+          "text": "Raise Precision for a smoother result at low aim speeds. The reticle feels heavier.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+            }
+          ]
+        }
+      },
+      "b": {
+        "direction": "lower",
+        "statement": {
+          "text": "Lower Precision for a lighter reticle. Aim at low speeds is less smooth.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+            }
+          ],
+          "reasoning": "XIM states the effect of higher values: smoother at low speed, heavier. Lower values do the opposite on both counts."
+        }
+      }
+    },
+    {
+      "settingId": "response",
+      "aimingSources": ["mouse", "gyro"],
+      "a": {
+        "direction": "lower",
+        "statement": {
+          "text": "Lower Response and the reticle feels less light at faster aim speeds. XIM doesn't call this smoother.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+            }
+          ],
+          "reasoning": "XIM states only the effect of higher values: a lighter reticle at speed. Lower values give the opposite, a less light reticle at speed. The guide uses no other word for it."
+        }
+      },
+      "b": {
+        "direction": "raise",
+        "statement": {
+          "text": "Raise Response for a lighter feeling reticle at faster aim speeds.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "settingId": "stability",
+      "aimingSources": ["gyro"],
+      "a": {
+        "direction": "raise",
+        "statement": {
+          "text": "Raise Stability for extra stability at rest, against hand jitter. Motion aim only.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#standard",
+              "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+            }
+          ]
+        }
+      },
+      "b": null
+    }
+  ],
+  "notes": [
+    {
+      "text": "XIM names no preset and gives no numbers for these four settings. Primer gives none either.",
+      "confidence": "gap",
+      "citations": []
+    },
+    {
+      "text": "If a game requires Simulate Analog Behavior, XIM's checklist says to use a preset, or, with Custom, not to reduce smoothing below the presets.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+          "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+        }
+      ]
+    }
+  ]
+}

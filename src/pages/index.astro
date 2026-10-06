@@ -4,12 +4,12 @@
  * MATRIX guide's own chapters. Search filters the map in place; without JavaScript the whole
  * map shows and the search box stays hidden.
  */
-import { aimStyles, guideMap, names, placementOf, settingById } from '../../content/index';
+import { aimStyles, dials, guideMap, names, placementOf, settingById } from '../../content/index';
 import NotesList from '../components/NotesList.astro';
 import StatementView from '../components/StatementView.astro';
 import Layout from '../layouts/Layout.astro';
 import { Notes } from '../lib/notes';
-import { aimStylePath, settingPath } from '../lib/paths';
+import { aimStylePath, settingPath, tuningPath } from '../lib/paths';
 
 const notes = new Notes().add(...names.map((n) => n.statement));
 const AIM_STYLE_ORDER = ['tracking', 'snap', 'precision-hold'];
@@ -83,6 +83,24 @@ const searchText = (id: string) => {
                 <li data-search={`${style.name} ${style.description}`.toLowerCase()}>
                   <a href={aimStylePath(style.id)}>{style.name}</a>
                   <span class="sum">{style.description}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </section>
+
+      <section class="chapter" aria-labelledby="chapter-tuning">
+        <h2 id="chapter-tuning" class="label chapter-name">Tuning dials</h2>
+        <section class="screen" aria-label="Dials">
+          <ul>
+            {
+              dials.map((dial) => (
+                <li data-search={`${dial.name} ${dial.ends.a} ${dial.ends.b} ${dial.summary}`.toLowerCase()}>
+                  <a href={`${tuningPath()}#dial-${dial.id}`}>{dial.name}</a>
+                  <span class="sum">
+                    {dial.ends.a} ↔ {dial.ends.b}. {dial.summary}
+                  </span>
                 </li>
               ))
             }

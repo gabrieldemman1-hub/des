@@ -3,7 +3,7 @@
  * cross-reference points at a real setting, and the map places each setting exactly once.
  * Returns problems as strings, so a test can list them all at once.
  */
-import type { AimStyle, GuideMap, NameNote, Setting, Source, Statement } from './schema';
+import type { AimStyle, Dial, GuideMap, NameNote, Setting, Source, Statement } from './schema';
 
 export interface Content {
   sources: Source[];
@@ -11,6 +11,7 @@ export interface Content {
   aimStyles: AimStyle[];
   names: NameNote[];
   guideMap: GuideMap;
+  dials: Dial[];
 }
 
 /** Words that belong to the old app, and must not reach Primer's pages. */
@@ -28,7 +29,7 @@ export function statementsOf(setting: Setting): [string, Statement][] {
   return list;
 }
 
-export function checkContent({ sources, settings, aimStyles, names, guideMap }: Content): string[] {
+export function checkContent({ sources, settings, aimStyles, names, guideMap, dials }: Content): string[] {
   const problems: string[] = [];
   const sourceById = new Map(sources.map((s) => [s.id, s]));
   const settingIds = new Set(settings.map((s) => s.id));
@@ -82,6 +83,24 @@ export function checkContent({ sources, settings, aimStyles, names, guideMap }: 
     checkRef(`names[${i}]`, n.settingId);
     checkStatement(`names[${i}] ${n.name}`, n.statement);
   });
+
+  for (const dial of dials) {
+    const at = `dials/${dial.id}`;
+    for (const text of [dial.name, dial.summary, dial.ends.a, dial.ends.b]) {
+      if (OLD_APP.test(text)) problems.push(`${at}: mentions the old app ("${text.match(OLD_APP)?.[0]}")`);
+    }
+    checkStatement(`${at} intro`, dial.intro);
+    checkStatement(`${at} start`, dial.start);
+    dial.notes.forEach((s, i) => checkStatement(`${at} notes[${i}]`, s));
+    const onDial = new Set<string>();
+    dial.levers.forEach((l, i) => {
+      checkRef(`${at} levers[${i}]`, l.settingId);
+      if (onDial.has(l.settingId)) problems.push(`${at} levers[${i}]: ${l.settingId} is on the dial twice`);
+      onDial.add(l.settingId);
+      if (l.a) checkStatement(`${at} levers[${i}].a`, l.a.statement);
+      if (l.b) checkStatement(`${at} levers[${i}].b`, l.b.statement);
+    });
+  }
 
   const placed = guideMap.chapters.flatMap((c) => c.screens.flatMap((s) => s.groups.flatMap((g) => g.settings)));
   for (const id of new Set(placed)) {

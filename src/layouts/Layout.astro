@@ -5,7 +5,7 @@ import '@fontsource/ibm-plex-mono/latin-500.css';
 import '@fontsource-variable/source-serif-4/opsz.css';
 import '@fontsource-variable/source-serif-4/opsz-italic.css';
 import '../styles/global.css';
-import { asset, home, sourcesPath } from '../lib/paths';
+import { asset, home, sourcesPath, tuningPath } from '../lib/paths';
 
 interface Props {
   /** The page's own name; "Primer" is added after it in the browser tab. */
@@ -16,6 +16,7 @@ interface Props {
 const { title, description } = Astro.props;
 const fullTitle = title ? `${title} · Primer` : 'Primer: XIM MATRIX settings, explained';
 const isHome = Astro.url.pathname === home();
+const current = (path: string) => (Astro.url.pathname === path ? 'page' : undefined);
 ---
 
 <!doctype html>
@@ -46,7 +47,8 @@ const isHome = Astro.url.pathname === home();
         )
       }
       <nav aria-label="Primer">
-        <a href={sourcesPath()}>How to read it</a>
+        <a href={tuningPath()} aria-current={current(tuningPath())}>Tuning</a>
+        <a href={sourcesPath()} aria-current={current(sourcesPath())}>How to read it</a>
       </nav>
     </header>
     <main id="main" tabindex="-1">
@@ -105,9 +107,21 @@ const isHome = Astro.url.pathname === home();
     color: var(--ink);
   }
 
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.3rem 1.1rem;
+  }
+
   nav a {
     font: 600 0.95rem/1 var(--f-label);
     letter-spacing: 0.04em;
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--ink-3);
+    text-decoration-color: var(--ink-3);
   }
 
   main {

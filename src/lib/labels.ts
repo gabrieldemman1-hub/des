@@ -18,6 +18,14 @@ export const DIRECTION: Record<'raise' | 'lower' | 'depends', string> = {
   depends: 'It depends',
 };
 
+/** How a dial says to move a setting toward one of its ends. */
+export const MOVE: Record<'raise' | 'lower' | 'on' | 'off', string> = {
+  raise: 'Raise',
+  lower: 'Lower',
+  on: 'Turn on',
+  off: 'Turn off',
+};
+
 export const AIMING_SOURCE: Record<'mouse' | 'gyro' | 'thumbstick', string> = {
   mouse: 'mouse',
   gyro: 'motion (gyro)',

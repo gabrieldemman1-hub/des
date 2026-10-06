@@ -152,3 +152,50 @@ describe('a note’s location', () => {
     expect(locationOf('https://example.com/page')).toBe('');
   });
 });
+
+describe('the tuning page', () => {
+  it('shows each dial with its ends, a table of moves, and both ends readable without a script', async () => {
+    const { dials } = await import('../content/index');
+    const TuningPage = (await import('../src/pages/tuning.astro')).default;
+    const doc = await render(TuningPage, {}, '/des/tuning/');
+    expect([...doc.querySelectorAll('section.dial')].map((s) => s.id)).toEqual(dials.map((d) => `dial-${d.id}`));
+
+    const standard = doc.querySelector('#dial-standard-smoothing')!;
+    expect([...standard.querySelectorAll('thead th')].map(text)).toEqual(['Setting', 'Smoother, steadier', 'Lighter, quicker']);
+    const rows = [...standard.querySelectorAll('tbody tr')].map((r) => [...r.querySelectorAll('th, td')].map(text).join(' '));
+    expect(rows[0]).toBe('Easing mouse and motion (gyro) aim Raise Lower');
+    expect(rows[2]).toMatch(/^Response.*Lower Raise$/);
+    expect(rows[3]).toMatch(/^Stability.*Raise —$/);
+
+    // The slider waits for the script; the readings for both ends and the start are all in the page.
+    expect(standard.querySelector('.control')?.hasAttribute('hidden')).toBe(true);
+    expect([...standard.querySelectorAll('.reading')].map((r) => r.getAttribute('data-end'))).toEqual(['a', 'start', 'b']);
+    expect(text(standard.querySelector('.reading[data-end="a"] .lever-head'))).toBe('Easing: Raise');
+    expect(text(standard.querySelector('.reading[data-end="b"] .lever-head'))).toBe('Easing: Lower');
+
+    // Quantization is a switch: on toward one end, off toward the other, with the gap said plainly.
+    const quant = doc.querySelector('#dial-quantization')!;
+    expect([...quant.querySelectorAll('tbody td')].map(text)).toEqual(['Turn on', 'Turn off']);
+    expect(text(quant)).toMatch(/No source says whether any MATRIX setting gives more or less aim assist/);
+
+    // Every footnote points at a note on the page.
+    const noteIds = new Set([...doc.querySelectorAll('.notes li')].map((li) => li.id));
+    for (const a of doc.querySelectorAll('sup a')) expect(noteIds.has(a.getAttribute('href')!.slice(1))).toBe(true);
+  });
+
+  it('is linked from the map, the masthead and the settings it moves', async () => {
+    const { tuningPath } = await import('../src/lib/paths');
+    const homeDoc = await render(HomePage, {}, '/des/');
+    expect(homeDoc.querySelector(`a[href="${tuningPath()}#dial-quantization"]`)).not.toBeNull();
+    expect(homeDoc.querySelector(`header nav a[href="${tuningPath()}"]`)).not.toBeNull();
+
+    const easing = await render(SettingPage, { setting: settingById('easing') }, '/des/settings/easing/');
+    const on = easing.querySelector('section[aria-labelledby="tuning"]');
+    expect(text(on?.querySelector('h2'))).toBe('On the Tuning page');
+    expect(text(on?.querySelector('li'))).toBe('Standard smoothing: Raise toward “Smoother, steadier”, lower toward “Lighter, quicker”.');
+    expect(on?.querySelector(`a[href="${tuningPath()}#dial-standard-smoothing"]`)).not.toBeNull();
+
+    const polling = await render(SettingPage, { setting: settingById('polling-rate') }, '/des/settings/polling-rate/');
+    expect(polling.querySelector('section[aria-labelledby="tuning"]')).toBeNull();
+  });
+});

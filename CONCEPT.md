@@ -8,7 +8,7 @@ People who use an XIM MATRIX with controller output, mostly to play Destiny 2, a
 
 ## Its one job
 
-Explain the settings. Primer doesn't build a config for you, tune one, keep a profile or save anything about you. It is a reference you read.
+Explain the settings. Primer doesn't build a config for you, tune one, keep a profile or save anything about you. It is a reference you read. The Tuning page keeps to that: its dials show which way each setting moves, in XIM's words, and hold no values.
 
 ## What it covers
 
@@ -56,3 +56,4 @@ Every quote must appear word for word on the page it cites. `npm run verify:cita
 - **2026-10-06: evidence carried over.** Dialed's fact-checked entries for the in-scope settings and the three aim styles became Primer's content. Every citation was re-checked against its live page: 781 of 781 passed. Each setting gained a cited "where it is in Manager" statement (275 new citations, all verified), and wording about Dialed's own features was removed.
 - **2026-10-06: sources.** The XIM MATRIX User Guide, XIM Game Settings (public copy) and the XIM MATRIX Official Hardware Compatibility List are the sources still cited. XIM Central, the Getting Started guide and Bungie's policy page are no longer cited, so they are not listed.
 - **2026-10-06: look.** The field manual look: cool paper and black ink, condensed capitals for names, a serif for reading, cobalt footnote numbers, light first with a dark theme.
+- **2026-10-06: tuning dials.** The owner asked for modes or sliders: balanced responsiveness, less aim assist, max aim assist. The evidence was mapped first. XIM's own words give directions for Standard smoothing (Easing, Precision, Response, Stability), Classic smoothing (Smooth, Synch, Decay), Sensitivity and Quantization, and nothing about getting more or less aim assist; the only expert material on aim assist (XIM Central, 2023 to 2024) is about Overwatch 2 on older firmware, and every XIM Central Destiny 2 video is from the APEX era. Decided: a Tuning page of dials that explain. Each end is XIM's words for the effect, never a mode name; each lever is a direction with its sentence and label, never a number XIM doesn't give; the slider only picks which end to read about and keeps nothing. Aim assist gets XIM's words only, with the gap said plainly. XIM Central stays uncited.

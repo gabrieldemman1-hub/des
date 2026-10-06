@@ -8,6 +8,7 @@ import namesJson from './names.json';
 import sourcesJson from './sources.json';
 import {
   AimStyle,
+  Dial,
   GuideMap,
   NameNote,
   Setting,
@@ -37,10 +38,13 @@ function parseAll<T>(schema: z.ZodType<T>, files: Record<string, unknown>): T[] 
 
 const settingFiles = import.meta.glob('./settings/*.json', { eager: true, import: 'default' });
 const aimStyleFiles = import.meta.glob('./aim-styles/*.json', { eager: true, import: 'default' });
+const dialFiles = import.meta.glob('./dials/*.json', { eager: true, import: 'default' });
 
 export const sources = parse(z.object({ sources: z.array(Source) }), sourcesJson, 'sources.json').sources;
 export const settings = parseAll(Setting, settingFiles);
 export const aimStyles = parseAll(AimStyle, aimStyleFiles);
+/** The Tuning page's dials, in their page order. */
+export const dials = parseAll(Dial, dialFiles).sort((a, b) => a.order - b.order);
 export const names = parse(z.object({ names: z.array(NameNote) }), namesJson, 'names.json').names;
 export const guideMap = parse(GuideMap, mapJson, 'map.json');
 
@@ -50,6 +54,9 @@ const sourcesById = new Map(sources.map((s) => [s.id, s]));
 export const settingById = (id: string) => settingsById.get(id);
 export const sourceById = (id: string) => sourcesById.get(id);
 export const aimStyleById = (id: AimStyleId) => aimStyles.find((s) => s.id === id);
+export const dialById = (id: string) => dials.find((d) => d.id === id);
+/** The dials a setting sits on, in page order. */
+export const dialsFor = (settingId: string) => dials.filter((d) => d.levers.some((l) => l.settingId === settingId));
 
 /** Where a setting sits on the map: its chapter, screen and group label. */
 export interface Placement {

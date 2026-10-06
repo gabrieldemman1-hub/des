@@ -36,6 +36,7 @@ CI runs lint, check, test and build on every push and pull request.
 content/                 the evidence: one JSON file per setting and aim style
   settings/*.json        each setting's statements and citations
   aim-styles/*.json      tracking, snap, precision hold
+  dials/*.json           the Tuning page's dials: two ends in XIM's words, and which way each setting moves
   names.json             names people use that the guide doesn't list as settings
   map.json               the guide's chapters and Manager screens, and what sits on each
   sources.json           the only sources Primer cites
@@ -43,7 +44,7 @@ content/                 the evidence: one JSON file per setting and aim style
   index.ts               loads and validates everything at build time
   integrity.ts           checks that span files
 src/
-  pages/                 the map (index), settings/[id], aim-styles/[id], sources, 404
+  pages/                 the map (index), settings/[id], aim-styles/[id], tuning, sources, 404
   components/            a statement with its footnotes, the notes list, the confidence label
   lib/notes.ts           per-page footnote numbering
   layouts/Layout.astro   the page frame

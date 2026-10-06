@@ -4,13 +4,14 @@
  * reading, the feel, the guidance, what it means for each aim style, what not to confuse it
  * with, and the numbered notes behind every sentence.
  */
-import { placementOf, settingById, settings } from '../../../content/index';
+import { dialsFor, placementOf, settingById, settings } from '../../../content/index';
 import type { Setting } from '../../../content/schema';
 import NotesList from '../../components/NotesList.astro';
 import StatementView from '../../components/StatementView.astro';
 import Layout from '../../layouts/Layout.astro';
+import { MOVE } from '../../lib/labels';
 import { Notes } from '../../lib/notes';
-import { home, settingPath } from '../../lib/paths';
+import { home, settingPath, tuningPath } from '../../lib/paths';
 
 export function getStaticPaths() {
   return settings.map((setting) => ({ params: { id: setting.id }, props: { setting } }));
@@ -22,6 +23,12 @@ interface Props {
 
 const { setting } = Astro.props;
 const placement = placementOf(setting.id)!;
+
+// The Tuning dials this setting sits on, each with its move toward either end.
+const onDials = dialsFor(setting.id).map((dial) => ({
+  dial,
+  lever: dial.levers.find((l) => l.settingId === setting.id)!,
+}));
 
 // Register every statement in reading order, so the footnote numbers run 1, 2, 3 down the page.
 const notes = new Notes().add(
@@ -102,6 +109,38 @@ const STYLE_LEAD = /^(Tracking|Snap|Precision hold)( \([^)]*\))?: /;
           </div>
         </section>
       ))
+    }
+
+    {
+      onDials.length > 0 && (
+        <section aria-labelledby="tuning">
+          <h2 id="tuning" class="label">
+            On the Tuning page
+          </h2>
+          <ul class="dials">
+            {onDials.map(({ dial, lever }) => (
+              <li>
+                <a href={`${tuningPath()}#dial-${dial.id}`}>{dial.name}</a>
+                <span class="visually-hidden">: </span>
+                <span class="dial-moves">
+                  {lever.a && (
+                    <span>
+                      {MOVE[lever.a.direction]} toward “{dial.ends.a}”
+                    </span>
+                  )}
+                  {lever.a && lever.b && ', '}
+                  {lever.b && (
+                    <span>
+                      {lever.a ? MOVE[lever.b.direction].toLowerCase() : MOVE[lever.b.direction]} toward “{dial.ends.b}”
+                    </span>
+                  )}
+                  .
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
     }
 
     {
@@ -252,6 +291,34 @@ const STYLE_LEAD = /^(Tracking|Snap|Precision hold)( \([^)]*\))?: /;
   .confusions dd {
     margin: 0.15rem 0 0;
     color: var(--ink-2);
+  }
+
+  .dials {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .dials li {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .dials li a {
+    font: 700 1.1rem/1.2 var(--f-label);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  .dials li a::after {
+    content: ' ›';
+    color: var(--cobalt);
+  }
+
+  .dial-moves {
+    color: var(--ink-2);
+    font-size: 0.95rem;
   }
 
   .related {
