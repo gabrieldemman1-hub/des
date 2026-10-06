@@ -1,0 +1,142 @@
+/* Primer: a field manual for XIM MATRIX settings.
+   Cool paper and black ink; one cobalt signal for links and footnote numbers. Condensed capitals
+   name things (screens, sections, labels), a serif carries the reading, and a mono face carries
+   the numbers that point at evidence. Light first, with a matching dark theme. */
+
+:root {
+  color-scheme: light;
+  --paper: #f7f8f7;
+  --paper-2: #eceeed;
+  --ink: #121417;
+  --ink-2: #353b45;
+  --ink-3: #575e6b;
+  --rule: #c6cbd1;
+  --rule-strong: #121417;
+  --cobalt: #2442c9;
+  --cobalt-tint: #e3e8fb;
+  --focus: #2442c9;
+
+  /* Confidence: each label is a word as well as a colour. */
+  --c-official: #136c40;
+  --c-expert: #0a5a99;
+  --c-contested: #934000;
+  --c-reasoned: #5f3bb3;
+  --c-gap: #575e6b;
+
+  --f-label: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', system-ui, sans-serif;
+  --f-read: 'Source Serif 4 Variable', 'Source Serif Pro', Georgia, 'Times New Roman', serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+
+  --measure: 36rem;
+  --gutter: 18px;
+  --space: 1.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #111316;
+    --paper-2: #1b1e23;
+    --ink: #eceef1;
+    --ink-2: #c3c8d0;
+    --ink-3: #969eab;
+    --rule: #30353d;
+    --rule-strong: #eceef1;
+    --cobalt: #9fb0ff;
+    --cobalt-tint: #1d2340;
+    --focus: #9fb0ff;
+    --c-official: #62d29c;
+    --c-expert: #7dc3ff;
+    --c-contested: #ffaa70;
+    --c-reasoned: #c6abff;
+    --c-gap: #a6aebb;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 1.0625rem/1.6 var(--f-read);
+  font-optical-sizing: auto;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--f-label);
+  font-weight: 700;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+
+p,
+ul,
+ol,
+dl,
+blockquote,
+figure {
+  margin: 0;
+}
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--cobalt);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--cobalt);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* A small capitals label: screen names, section heads, chapter names. */
+.label {
+  font-family: var(--f-label);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.mono {
+  font-family: var(--f-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (forced-colors: active) {
+  .conf,
+  .search input {
+    border-color: CanvasText;
+  }
+}

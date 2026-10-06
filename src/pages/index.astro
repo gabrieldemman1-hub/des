@@ -1,0 +1,293 @@
+---
+/**
+ * The map: every setting on the Manager screen where you change it, in the order of the XIM
+ * MATRIX guide's own chapters. Search filters the map in place; without JavaScript the whole
+ * map shows and the search box stays hidden.
+ */
+import { aimStyles, guideMap, names, placementOf, settingById } from '../../content/index';
+import NotesList from '../components/NotesList.astro';
+import StatementView from '../components/StatementView.astro';
+import Layout from '../layouts/Layout.astro';
+import { Notes } from '../lib/notes';
+import { aimStylePath, settingPath } from '../lib/paths';
+
+const notes = new Notes().add(...names.map((n) => n.statement));
+const AIM_STYLE_ORDER = ['tracking', 'snap', 'precision-hold'];
+const styles = [...aimStyles].sort((a, b) => AIM_STYLE_ORDER.indexOf(a.id) - AIM_STYLE_ORDER.indexOf(b.id));
+
+/** What search matches a setting on: its name, other names and summary. */
+const searchText = (id: string) => {
+  const s = settingById(id)!;
+  return [s.name, ...s.aliases, s.summary].join(' ').toLowerCase();
+};
+---
+
+<Layout description="Every XIM MATRIX setting, in the order Manager shows it, with the evidence behind every sentence.">
+  <div class="home">
+    <header class="intro">
+      <h1>XIM MATRIX settings, explained</h1>
+      <p class="lede">
+        Every setting in the order Manager shows it: what it does, where to find it, and the source behind each sentence.
+      </p>
+    </header>
+
+    <search class="search" hidden>
+      <label for="q" class="label">Find a setting</label>
+      <input id="q" type="search" autocomplete="off" enterkeyhint="search" placeholder="Easing, deadzone, cm/360…" />
+      <p class="search-status" role="status"></p>
+    </search>
+
+    <div class="map" id="map">
+      {
+        guideMap.chapters.map((chapter) => (
+          <section class="chapter" aria-labelledby={`chapter-${chapter.id}`}>
+            <h2 id={`chapter-${chapter.id}`} class="label chapter-name">
+              {chapter.name}
+            </h2>
+            {chapter.screens.map((screen) => {
+              const number = placementOf(screen.groups[0]!.settings[0]!)!.number;
+              return (
+                <section class="screen" id={`screen-${screen.id}`} aria-labelledby={`title-${screen.id}`}>
+                  <h3 id={`title-${screen.id}`}>
+                    <span class="n mono">{number}</span> {screen.name}
+                  </h3>
+                  {screen.groups.map((group) => (
+                    <div class="group">
+                      {group.label && <p class="label group-name">{group.label}</p>}
+                      <ul>
+                        {group.settings.map((id) => {
+                          const s = settingById(id)!;
+                          return (
+                            <li data-search={searchText(id)}>
+                              <a href={settingPath(id)}>{s.name}</a>
+                              <span class="sum">{s.summary}</span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  ))}
+                </section>
+              );
+            })}
+          </section>
+        ))
+      }
+
+      <section class="chapter" aria-labelledby="chapter-aim-styles">
+        <h2 id="chapter-aim-styles" class="label chapter-name">Weapon aim styles</h2>
+        <section class="screen" aria-label="Aim styles">
+          <ul>
+            {
+              styles.map((style) => (
+                <li data-search={`${style.name} ${style.description}`.toLowerCase()}>
+                  <a href={aimStylePath(style.id)}>{style.name}</a>
+                  <span class="sum">{style.description}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </section>
+    </div>
+
+    <p class="no-match" hidden>No setting matches. Try another word, or clear the search.</p>
+
+    <section class="names" aria-labelledby="names">
+      <h2 id="names" class="label chapter-name">Names you may hear</h2>
+      <p class="hint">These come up in videos and forums, but the guide doesn’t list them as settings.</p>
+      <div class="name-list">
+        {
+          names.map((n) => (
+            <div class="name">
+              <h3>{n.settingId ? <a href={settingPath(n.settingId)}>{n.name}</a> : n.name}</h3>
+              <StatementView statement={n.statement} notes={notes} />
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <NotesList notes={notes} />
+  </div>
+</Layout>
+
+<script>
+  const search = document.querySelector<HTMLElement>('.search');
+  const input = document.querySelector<HTMLInputElement>('#q');
+  const status = document.querySelector<HTMLElement>('.search-status');
+  const noMatch = document.querySelector<HTMLElement>('.no-match');
+  const items = [...document.querySelectorAll<HTMLElement>('#map li[data-search]')];
+
+  if (search && input && status && noMatch) {
+    search.hidden = false;
+    const filter = () => {
+      const words = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      for (const item of items) {
+        const match = words.every((w) => item.dataset.search!.includes(w));
+        item.hidden = !match;
+        if (match) shown++;
+      }
+      // Hide the groups, screens and chapters the search emptied.
+      for (const box of document.querySelectorAll<HTMLElement>('#map .group, #map .screen, #map .chapter')) {
+        box.hidden = !box.querySelector('li:not([hidden])');
+      }
+      noMatch.hidden = shown > 0;
+      status.textContent = words.length === 0 ? '' : `${shown} ${shown === 1 ? 'match' : 'matches'}`;
+    };
+    input.addEventListener('input', filter);
+  }
+</script>
+
+<style>
+  .home {
+    display: grid;
+    gap: 1.8rem;
+  }
+
+  .intro {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 10vw, 3.2rem);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  .lede {
+    font-size: 1.12rem;
+    color: var(--ink-2);
+  }
+
+  .search {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .search[hidden] {
+    display: none;
+  }
+
+  .search input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.5rem 0.75rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+    font: 1.05rem/1.2 var(--f-read);
+  }
+
+  .search-status {
+    min-height: 1.2em;
+    color: var(--ink-3);
+    font: 600 0.9rem/1.2 var(--f-label);
+  }
+
+  .map {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .chapter {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .chapter-name {
+    padding-bottom: 0.35rem;
+    border-bottom: 1.5px solid var(--rule-strong);
+    color: var(--ink);
+  }
+
+  .screen {
+    display: grid;
+    gap: 0.6rem;
+    scroll-margin-top: 1rem;
+  }
+
+  .screen h3 {
+    font-size: 1.45rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .screen .n {
+    color: var(--cobalt);
+    font-size: 0.95rem;
+    letter-spacing: 0;
+    vertical-align: 0.15em;
+  }
+
+  .group {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .group-name {
+    margin-top: 0.3rem;
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+    display: grid;
+  }
+
+  li {
+    display: grid;
+    gap: 0.05rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  li a {
+    font: 700 1.15rem/1.2 var(--f-label);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  li a::after {
+    content: ' ›';
+    color: var(--cobalt);
+  }
+
+  .sum {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  .no-match {
+    color: var(--ink-2);
+  }
+
+  .names {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .hint {
+    color: var(--ink-3);
+    font-size: 0.95rem;
+  }
+
+  .name-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .name h3 {
+    font-size: 1.1rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.2rem;
+  }
+</style>

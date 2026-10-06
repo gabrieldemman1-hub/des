@@ -1,0 +1,51 @@
+---
+import type { Confidence } from '../../content/schema';
+import { CONFIDENCE } from '../lib/labels';
+import { sourcesPath } from '../lib/paths';
+
+interface Props {
+  level: Confidence;
+}
+
+const { level } = Astro.props;
+---
+
+<a class={`conf conf-${level}`} href={`${sourcesPath()}#${level}`} title={CONFIDENCE[level].meaning}
+  ><span class="visually-hidden">Confidence: </span>{CONFIDENCE[level].word}</a
+>
+
+<style>
+  .conf {
+    display: inline-block;
+    margin-left: 0.35em;
+    padding: 0.05em 0.4em 0;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    font: 700 0.72rem/1.4 var(--f-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    vertical-align: 0.12em;
+    white-space: nowrap;
+  }
+
+  .conf:hover {
+    background: var(--cobalt-tint);
+  }
+
+  .conf-official {
+    color: var(--c-official);
+  }
+  .conf-expert {
+    color: var(--c-expert);
+  }
+  .conf-contested {
+    color: var(--c-contested);
+  }
+  .conf-reasoned {
+    color: var(--c-reasoned);
+  }
+  .conf-gap {
+    color: var(--c-gap);
+  }
+</style>
