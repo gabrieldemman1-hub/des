@@ -92,6 +92,8 @@ const caveat = notes.caveatFor(statement);
     font-weight: 500;
     text-decoration: none;
     padding: 0 0.1em;
+    /* A range ("1–4") stays whole; it may not break after its dash. */
+    white-space: nowrap;
   }
 
   .fn:hover {

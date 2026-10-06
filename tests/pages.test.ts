@@ -130,3 +130,12 @@ describe('footnote numbers', () => {
     ]);
   });
 });
+
+describe('the notes list', () => {
+  it('makes its number column as wide as the widest number', async () => {
+    const doc = await render(SettingPage, { setting: settingById('sensitivity') }, '/des/settings/sensitivity/');
+    const count = doc.querySelectorAll('.notes li').length;
+    expect(count).toBeGreaterThanOrEqual(10);
+    expect(doc.querySelector('.notes ol')?.getAttribute('style')).toContain(`--digits: ${String(count).length}`);
+  });
+});

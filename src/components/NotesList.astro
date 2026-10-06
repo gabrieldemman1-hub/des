@@ -7,6 +7,8 @@ interface Props {
 }
 
 const { notes } = Astro.props;
+// The number column fits the widest number on the page ("9" or "41").
+const digits = String(notes.list.length).length;
 ---
 
 {
@@ -15,7 +17,7 @@ const { notes } = Astro.props;
       <h2 id="notes-title" class="label">
         Notes
       </h2>
-      <ol>
+      <ol style={`--digits: ${digits}`}>
         {notes.list.map((note) => (
           <li id={`note-${note.number}`}>
             <span class="n mono" aria-hidden="true">
@@ -54,7 +56,8 @@ const { notes } = Astro.props;
 
   li {
     display: grid;
-    grid-template-columns: 2ch minmax(0, 1fr);
+    /* A Plex Mono digit is 0.6em wide. */
+    grid-template-columns: calc(var(--digits, 2) * 0.6em + 0.1em) minmax(0, 1fr);
     gap: 0.7rem;
     font-size: 0.92rem;
     scroll-margin-top: 1rem;
@@ -66,6 +69,7 @@ const { notes } = Astro.props;
   }
 
   .n {
+    white-space: nowrap;
     color: var(--cobalt);
     font-weight: 500;
     text-align: right;
