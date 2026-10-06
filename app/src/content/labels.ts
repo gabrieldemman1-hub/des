@@ -4,6 +4,10 @@ import type {
   Confidence,
   LeverDirection,
   OutputType,
+  PlayBasis,
+  PlayCallout,
+  PlayLoadoutPlan,
+  PlayMoment,
   Statement,
   TermCategory,
 } from '../../../knowledge/index';
@@ -120,4 +124,44 @@ export const LEVER_DIRECTION_LABELS: Record<LeverDirection, string> = {
   raise: 'Raise',
   lower: 'Lower',
   depends: 'It depends',
+};
+
+/**
+ * Play (Flow E) names what each item rests on instead of a confidence label (CONCEPT.md §5):
+ * nothing there comes from XIM.
+ */
+export const PLAY_BASIS_INFO: Record<PlayBasis, { label: string; meaning: string }> = {
+  fundamental: { label: 'Fundamental', meaning: 'Holds in every competitive shooter.' },
+  destiny: {
+    label: 'Destiny 2',
+    meaning: 'A mechanic or number in the game. A sandbox patch can change it: confirm it in the current sandbox.',
+  },
+  map: {
+    label: 'Map',
+    meaning: 'From community callout maps. Fireteams name things differently: confirm it in a private match.',
+  },
+  dialed: { label: 'Dialed', meaning: 'Dialed’s own reasoning, not stated by a source.' },
+};
+
+/** The moments of a match, as Play titles them, in match order. */
+export const PLAY_MOMENT_LABELS: Record<PlayMoment, { title: string; sub: string }> = {
+  'pre-match': { title: 'Before the match', sub: 'In the lobby, before the first round.' },
+  'round-start': { title: 'Round start', sub: 'The first ten seconds of every round.' },
+  engagement: { title: 'In the fight', sub: 'Before, during and after every challenge.' },
+  'after-death': { title: 'After a death', sub: 'While you wait.' },
+  'between-rounds': { title: 'Between rounds', sub: 'The break before the next one.' },
+  'post-session': { title: 'After the session', sub: 'Five minutes, once you are calm.' },
+};
+
+export const PLAY_CALLOUT_KIND_LABELS: Record<PlayCallout['kind'], string> = {
+  spawn: 'Spawns',
+  centre: 'The middle',
+  interior: 'Interior',
+  exterior: 'Exterior',
+};
+
+export const PLAY_WEAPON_JOB_LABELS: Record<PlayLoadoutPlan['weapons'][number]['job'], string> = {
+  primary: 'Primary',
+  special: 'Special',
+  heavy: 'Heavy',
 };

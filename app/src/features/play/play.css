@@ -1,0 +1,292 @@
+/* Play (Flow E): coaching frameworks. Builds on the shared classes in styles.css (.card, .flow-card,
+   .learn-section, .statement-list, .related-links, .tag, .prose, .legend, …). */
+
+/* ---- Index ------------------------------------------------------------------------- */
+
+/* The "Start here" card: the accent edge marks it as the one to open first. */
+.play-featured {
+  border-color: var(--accent);
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+/* ---- Basis tags and legend ------------------------------------------------------------ */
+
+.play-basis {
+  white-space: nowrap;
+}
+
+.play-note {
+  margin: 0;
+}
+
+.play-note + .play-note {
+  margin-top: 8px;
+}
+
+.play-legend {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.play-legend li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  padding: 4px 0;
+}
+
+.play-legend-meaning {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ---- The rule ------------------------------------------------------------------------ */
+
+/* Readable at arm's length: the one line to remember when there is no time for the steps. */
+.play-rule {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  border-color: var(--accent);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.play-rule-label {
+  color: var(--accent-text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ---- Steps ---------------------------------------------------------------------------- */
+
+.play-steps {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.play-step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.play-step p {
+  margin: 0;
+}
+
+.play-step-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.play-step-number {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+/* The cue: the words said in play, so the biggest text on the card. */
+.play-cue {
+  font-size: 1.15rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.play-why {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+/* ---- Lists in cards ------------------------------------------------------------------- */
+
+.play-list {
+  margin: 0;
+  padding-left: 1.4em;
+}
+
+.play-list li + li {
+  margin-top: 8px;
+}
+
+/* ---- Map card ------------------------------------------------------------------------ */
+
+.play-callout-kind {
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+.play-callouts {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.play-callout dt {
+  font-weight: 700;
+}
+
+.play-callout dd {
+  margin: 2px 0 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* Spot fields: label over value, so long values wrap at phone width. */
+.play-fields {
+  display: grid;
+  gap: 2px 12px;
+  margin: 0;
+}
+
+.play-fields dt {
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.play-fields dd {
+  margin: 0;
+}
+
+@media (min-width: 600px) {
+  .play-fields {
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: baseline;
+  }
+
+  .play-fields dt {
+    margin-top: 0;
+  }
+
+  .play-fields dt,
+  .play-fields dd {
+    padding: 4px 0;
+  }
+}
+
+/* ---- Death tally ---------------------------------------------------------------------- */
+
+.play-tally {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.play-tally-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.play-tally-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.play-tally-text {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.play-tally-text p {
+  margin: 0;
+}
+
+.play-tally-text .hint {
+  margin-top: 4px;
+}
+
+.play-tally-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.05rem;
+  font-weight: 750;
+}
+
+.play-tally-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.play-tally-actions {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.play-tally-actions .button {
+  min-width: 56px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Narrow phones: the buttons sit under the text instead of beside it. */
+@container (max-width: 26rem) {
+  .play-tally-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .play-tally-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+/* ---- Session review -------------------------------------------------------------------- */
+
+.play-focus {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-color: var(--accent);
+}
+
+.play-focus p {
+  margin: 0;
+}
+
+.play-focus-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1.1rem;
+}

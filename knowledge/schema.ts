@@ -298,3 +298,187 @@ export const WeaponsFile = z.object({
 });
 
 export const SourcesFile = z.object({ sources: z.array(Source) });
+
+// ---------------------------------------------------------------------------
+// Play: Crucible coaching (CONCEPT.md §5, Flow E)
+// ---------------------------------------------------------------------------
+
+/**
+ * What a Play item rests on. Nothing in Play comes from XIM, so the §8 confidence labels don't
+ * apply; each item names its basis instead, and the Play screen's legend says what each means.
+ */
+export const PLAY_BASES = ['fundamental', 'destiny', 'map', 'dialed'] as const;
+export const PlayBasis = z.enum(PLAY_BASES);
+export type PlayBasis = z.infer<typeof PlayBasis>;
+
+/** When in a match a framework is run, in the order Play lists them. */
+export const PLAY_MOMENTS = [
+  'pre-match',
+  'round-start',
+  'engagement',
+  'after-death',
+  'between-rounds',
+  'post-session',
+] as const;
+export const PlayMoment = z.enum(PLAY_MOMENTS);
+export type PlayMoment = z.infer<typeof PlayMoment>;
+
+/** A line of coaching with what it rests on. */
+export const PlayNote = z.object({
+  text: z.string().min(1),
+  basis: PlayBasis,
+});
+export type PlayNote = z.infer<typeof PlayNote>;
+
+/** A foundational idea: how a strong player thinks, and what that looks like in a round. */
+export const PlayPrinciple = z.object({
+  id: Id,
+  title: z.string().min(1),
+  /** The idea in one line, in the second person. */
+  oneLiner: z.string().min(1),
+  body: z.array(z.string().min(1)).min(1),
+  /** What it looks like in a round, one observable behaviour per line. */
+  inPlay: z.array(z.string().min(1)).default([]),
+  basis: PlayBasis,
+  /** Frameworks that put the principle into practice. */
+  frameworkIds: z.array(Id).default([]),
+});
+export type PlayPrinciple = z.infer<typeof PlayPrinciple>;
+
+/** One step of a framework: the words to say to yourself, what to do, and why. */
+export const PlayStep = z.object({
+  cue: z.string().min(1),
+  action: z.string().min(1),
+  why: z.string().min(1).optional(),
+});
+export type PlayStep = z.infer<typeof PlayStep>;
+
+/** A decision procedure to run at one moment of a match. */
+export const PlayFramework = z.object({
+  id: Id,
+  title: z.string().min(1),
+  moment: PlayMoment,
+  /** One line for the index card. */
+  summary: z.string().min(1),
+  /** What running it achieves. */
+  goal: z.string().min(1),
+  /** How long it should take, e.g. "10 seconds". */
+  timeBudget: z.string().min(1).optional(),
+  /** The one line to remember when there is no time for the steps. */
+  rule: z.string().min(1),
+  steps: z.array(PlayStep).min(1),
+  /** What usually goes wrong. */
+  mistakes: z.array(z.string().min(1)).default([]),
+  /** Questions to ask yourself while running it. */
+  checks: z.array(z.string().min(1)).default([]),
+  notes: z.array(PlayNote).default([]),
+  basis: PlayBasis,
+  principleIds: z.array(Id).default([]),
+  /** Related frameworks. */
+  frameworkIds: z.array(Id).default([]),
+});
+export type PlayFramework = z.infer<typeof PlayFramework>;
+
+/** A way a round is lost, tagged after a death and counted over a session. */
+export const PlayDeathCause = z.object({
+  id: Id,
+  /** Short, so it fits a button. */
+  label: z.string().min(1).max(32),
+  meaning: z.string().min(1),
+  /** The framework that works on it. */
+  frameworkId: Id,
+});
+export type PlayDeathCause = z.infer<typeof PlayDeathCause>;
+
+/** A range band: where a loadout wins, and the rule for fighting there. */
+export const PlayBand = z.object({
+  id: Id,
+  name: z.string().min(1),
+  range: z.string().min(1),
+  rule: z.string().min(1),
+  basis: PlayBasis,
+});
+
+/** How to play one weapon combination. */
+export const PlayLoadoutPlan = z.object({
+  id: Id,
+  name: z.string().min(1),
+  /** The job this loadout does for the team, in one line. */
+  role: z.string().min(1),
+  weapons: z.array(
+    z.object({
+      /** WeaponArchetype.id (destiny2/weapons.json). */
+      archetypeId: Id,
+      /** How the loadout uses it. */
+      job: z.enum(['primary', 'special', 'heavy']),
+      facts: z.array(PlayNote).min(1),
+    }),
+  ).min(1),
+  bands: z.array(PlayBand).min(1),
+  rules: z.array(PlayNote).default([]),
+  frameworkIds: z.array(Id).default([]),
+});
+export type PlayLoadoutPlan = z.infer<typeof PlayLoadoutPlan>;
+
+export const PlayCallout = z.object({
+  id: Id,
+  name: z.string().min(1),
+  kind: z.enum(['spawn', 'interior', 'exterior', 'centre']),
+  description: z.string().min(1),
+  basis: PlayBasis,
+});
+export type PlayCallout = z.infer<typeof PlayCallout>;
+
+/** A spot to hold: where to stand, which way to peek, what it exposes you to. */
+export const PlaySpot = z.object({
+  id: Id,
+  name: z.string().min(1),
+  calloutId: Id,
+  /** Which spawn side it is for, or null for either. */
+  spawnCalloutId: Id.nullable().default(null),
+  holdFrom: z.string().min(1),
+  peek: z.string().min(1),
+  watches: z.string().min(1),
+  watchedBy: z.string().min(1),
+  why: z.string().min(1),
+  basis: PlayBasis,
+});
+export type PlaySpot = z.infer<typeof PlaySpot>;
+
+export const PlayPhase = z.object({
+  id: Id,
+  title: z.string().min(1),
+  steps: z.array(z.string().min(1)).min(1),
+});
+
+export const PlayMap = z.object({
+  id: Id,
+  name: z.string().min(1),
+  summary: z.string().min(1),
+  /** What the sources say the map plays like. */
+  character: z.array(PlayNote).default([]),
+  callouts: z.array(PlayCallout).min(1),
+  spots: z.array(PlaySpot).default([]),
+  phases: z.array(PlayPhase).default([]),
+  /** What to confirm in a private match before trusting the card. */
+  verify: z.array(z.string().min(1)).default([]),
+  loadoutPlanIds: z.array(Id).default([]),
+});
+export type PlayMap = z.infer<typeof PlayMap>;
+
+export const PlayFile = z.object({
+  game: z.literal('destiny-2'),
+  about: z.object({
+    /** What Play is, for its index screen. */
+    what: z.string().min(1),
+    /** Why the §8 labels don't apply here, and what the basis tags mean instead. */
+    basisNote: z.string().min(1),
+     /** The framework the index puts first (PlayFramework.id). */
+    startWith: Id.optional(),
+  }),
+  principles: z.array(PlayPrinciple),
+  frameworks: z.array(PlayFramework),
+  deathCauses: z.array(PlayDeathCause),
+  loadoutPlans: z.array(PlayLoadoutPlan),
+  maps: z.array(PlayMap),
+});

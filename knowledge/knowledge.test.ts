@@ -75,6 +75,34 @@ function gap(text: string) {
   return { text, confidence: 'gap', citations: [] };
 }
 
+/** A valid Play file with nothing in it. */
+function emptyPlay() {
+  return {
+    game: 'destiny-2',
+    about: { what: 'Coaching.', basisNote: 'Not from XIM.' },
+    principles: [],
+    frameworks: [],
+    deathCauses: [],
+    loadoutPlans: [],
+    maps: [],
+  };
+}
+
+/** One framework per moment, so a fixture can be checked without the real content. */
+function framework(id: string, extra: Record<string, unknown> = {}) {
+  return {
+    id,
+    title: id,
+    moment: 'engagement',
+    summary: 'One line.',
+    goal: 'A goal.',
+    rule: 'A rule.',
+    steps: [{ cue: 'Cue', action: 'Do it.' }],
+    basis: 'dialed',
+    ...extra,
+  };
+}
+
 function validRaw(): RawKnowledgeFiles {
   return {
     'sources.json': {
@@ -132,6 +160,7 @@ function validRaw(): RawKnowledgeFiles {
         },
       ],
     },
+    'destiny2/play.json': emptyPlay(),
     'matrix/aim-styles.json': {
       styles: [
         {
@@ -479,5 +508,105 @@ describe('loader', () => {
     expect(find.aimStyleById('tracking')?.name).toBe('Tracking');
     expect(find.slotName('power')).toBe('Power');
     expect(find.termById('missing')).toBeUndefined();
+  });
+});
+
+describe('Play (Flow E)', () => {
+  it('covers every moment of a match with at least one framework, in the real data', () => {
+    const moments = new Set(knowledge.play.frameworks.map((f) => f.moment));
+    expect([...moments].sort()).toEqual(['after-death', 'between-rounds', 'engagement', 'post-session', 'pre-match', 'round-start']);
+    expect(knowledge.play.deathCauses.length).toBeGreaterThan(0);
+    expect(knowledge.play.loadoutPlans.length).toBeGreaterThan(0);
+    expect(knowledge.play.maps.length).toBeGreaterThan(0);
+  });
+
+  it('accepts a consistent Play file', () => {
+    const raw = withFile('destiny2/play.json', (f: any) => {
+      f.frameworks = [framework('peek', { frameworkIds: ['bail'], principleIds: ['cover'] }), framework('bail')];
+      f.principles = [{ id: 'cover', title: 'Cover', oneLiner: 'Use it.', body: ['Because.'], basis: 'fundamental', frameworkIds: ['peek'] }];
+      f.deathCauses = [{ id: 'overexposed', label: 'Overexposed', meaning: 'Too wide.', frameworkId: 'peek' }];
+      f.loadoutPlans = [
+        {
+          id: 'hc-shotgun',
+          name: 'Hand cannon + shotgun',
+          role: 'Duellist.',
+          weapons: [{ archetypeId: 'pulse-rifle', job: 'primary', facts: [{ text: 'Bursts.', basis: 'destiny' }] }],
+          bands: [{ id: 'close', name: 'Close', range: 'Near.', rule: 'Shotgun.', basis: 'dialed' }],
+          frameworkIds: ['peek'],
+        },
+      ];
+      f.maps = [
+        {
+          id: 'map',
+          name: 'Map',
+          summary: 'A map.',
+          callouts: [
+            { id: 'a', name: 'A', kind: 'spawn', description: 'Spawn.', basis: 'map' },
+            { id: 'mid', name: 'Mid', kind: 'centre', description: 'Middle.', basis: 'map' },
+          ],
+          spots: [
+            { id: 'door', name: 'Door', calloutId: 'mid', spawnCalloutId: 'a', holdFrom: 'Inside.', peek: 'Left.', watches: 'Mid.', watchedBy: 'Outside.', why: 'Cover.', basis: 'dialed' },
+          ],
+          loadoutPlanIds: ['hc-shotgun'],
+        },
+      ];
+    });
+    expect(problemsFor(raw)).toEqual([]);
+  });
+
+  it('flags unknown framework, principle, archetype, callout and loadout plan references', () => {
+    const raw = withFile('destiny2/play.json', (f: any) => {
+      f.frameworks = [framework('peek', { frameworkIds: ['ghost-f', 'peek'], principleIds: ['ghost-p'] })];
+      f.principles = [{ id: 'cover', title: 'Cover', oneLiner: 'Use it.', body: ['Because.'], basis: 'fundamental', frameworkIds: ['ghost-f2'] }];
+      f.deathCauses = [{ id: 'overexposed', label: 'Overexposed', meaning: 'Too wide.', frameworkId: 'ghost-f3' }];
+      f.loadoutPlans = [
+        {
+          id: 'plan',
+          name: 'Plan',
+          role: 'Role.',
+          weapons: [{ archetypeId: 'ghost-weapon', job: 'primary', facts: [{ text: 'x', basis: 'destiny' }] }],
+          bands: [{ id: 'close', name: 'Close', range: 'Near.', rule: 'Shotgun.', basis: 'dialed' }],
+          frameworkIds: ['ghost-f4'],
+        },
+      ];
+      f.maps = [
+        {
+          id: 'map',
+          name: 'Map',
+          summary: 'A map.',
+          callouts: [{ id: 'mid', name: 'Mid', kind: 'centre', description: 'Middle.', basis: 'map' }],
+          spots: [
+            { id: 'door', name: 'Door', calloutId: 'ghost-c', spawnCalloutId: 'mid', holdFrom: 'x', peek: 'x', watches: 'x', watchedBy: 'x', why: 'x', basis: 'dialed' },
+          ],
+          loadoutPlanIds: ['ghost-plan'],
+        },
+      ];
+    });
+    const problems = problemsFor(raw).join('\n');
+    for (const ghost of ['ghost-f', 'ghost-p', 'ghost-f2', 'ghost-f3', 'ghost-weapon', 'ghost-f4', 'ghost-c', 'ghost-plan']) {
+      expect(problems).toContain(`"${ghost}"`);
+    }
+    expect(problems).toContain('links the framework to itself');
+    expect(problems).toContain('names "mid" as a spawn, but its kind is centre');
+  });
+
+  it('flags duplicate ids among frameworks, callouts and spots', () => {
+    const raw = withFile('destiny2/play.json', (f: any) => {
+      f.frameworks = [framework('peek'), framework('peek')];
+      f.maps = [
+        {
+          id: 'map',
+          name: 'Map',
+          summary: 'A map.',
+          callouts: [
+            { id: 'mid', name: 'Mid', kind: 'centre', description: 'Middle.', basis: 'map' },
+            { id: 'mid', name: 'Mid again', kind: 'centre', description: 'Middle.', basis: 'map' },
+          ],
+        },
+      ];
+    });
+    const problems = problemsFor(raw).join('\n');
+    expect(problems).toContain('duplicate play framework id "peek"');
+    expect(problems).toContain('duplicate callout of map id "mid"');
   });
 });

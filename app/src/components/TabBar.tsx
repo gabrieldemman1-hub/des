@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router';
-import { HomeIcon, LearnIcon, LoadoutsIcon, ProfileIcon, SourcesIcon } from './icons';
+import { HomeIcon, LearnIcon, LoadoutsIcon, PlayIcon, ProfileIcon, SourcesIcon } from './icons';
 
 interface Tab {
   to: string;
@@ -17,6 +17,7 @@ const TABS: Tab[] = [
     // The flows open from Home.
     isActive: (p) => p === '/' || ['/flows/', '/build', '/tune', '/troubleshoot'].some((prefix) => p.startsWith(prefix)),
   },
+  { to: '/play', label: 'Play', icon: <PlayIcon />, isActive: (p) => p.startsWith('/play') },
   { to: '/learn', label: 'Learn', icon: <LearnIcon />, isActive: (p) => p.startsWith('/learn') },
   { to: '/loadouts', label: 'Loadouts', icon: <LoadoutsIcon />, isActive: (p) => p.startsWith('/loadouts') },
   { to: '/profile', label: 'Profile', icon: <ProfileIcon />, isActive: (p) => p.startsWith('/profile') },
