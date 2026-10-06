@@ -1,0 +1,128 @@
+{
+  "id": "y-scale",
+  "name": "Y Scale",
+  "aliases": [
+    "vertical sensitivity"
+  ],
+  "summary": "Changes vertical aim sensitivity only, so up-down speed can differ from left-right.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In the mouse aim or motion aim settings, press the \"...\" for additional options, then adjust Y Scale.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Y Scale is \"vertical only sensitivity\". It sits with the Aiming Curve and Quantization under the \"...\" additional options.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It changes how fast the reticle moves up and down. Left-right speed stays as your Sensitivity sets it.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+          "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+        }
+      ]
+    },
+    {
+      "text": "Manager sets Y Scale as a percentage. In the guide's screenshots the field reads 100 % under Mouse Aim and 50 % under Motion Aim.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+          "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization.",
+          "note": "The screenshot under this sentence (Aim-Settings-007.png, Mouse Aim) shows the Y Scale field set to 100, with a % unit. The unit and the value appear only in the screenshot, not in the page text."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization.",
+          "note": "The screenshot under this sentence (Aim-Settings-010.png, Motion Aim) shows the Y Scale field set to 50, with a % unit. The unit and the value appear only in the screenshot, not in the page text."
+        }
+      ]
+    },
+    {
+      "text": "The guide doesn't give Y Scale's range or default. The screenshot values (100 and 50) are examples, not stated defaults. Check what Manager shows before you change it.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "XIM's advice for mouse aim: start with Sensitivity alone, and change other values, such as Y Scale, only if necessary.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+          "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Mostly tracking. Holding on a target through sustained fire means constant vertical correction against recoil. The guide links more vertical sensitivity to recoil control, though through a temporary Smart Action rather than Y Scale.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+          "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Recoil-Control/#vertical-sensitivity-boost",
+          "quote": "If you prefer simply increasing your vertical aim sensitivity temporarily as a form of recoil control, you use can use a vertical only aim sensitivity modifier action."
+        }
+      ],
+      "reasoning": "Y Scale is vertical-only sensitivity. The guide's \"Vertical Sensitivity Boost\" raises vertical sensitivity temporarily \"as a form of recoil control\", so vertical speed matters most where recoil does: sustained fire. No source recommends a Y Scale value for any aim style.",
+      "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Vertical Sensitivity Boost",
+      "settingId": "modify-aim-sensitivity",
+      "note": "A recoil technique in the guide: a Modify Aim Sensitivity action (Y Only) that raises vertical sensitivity only while its binding runs. Y Scale is a permanent Config setting."
+    }
+  ],
+  "related": [
+    "sensitivity",
+    "aiming-curve",
+    "quantization",
+    "modify-aim-sensitivity"
+  ]
+}

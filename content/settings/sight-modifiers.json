@@ -1,0 +1,96 @@
+{
+  "id": "sight-modifiers",
+  "name": "Sight Modifier",
+  "aliases": [
+    "Sight Modifiers",
+    "scope sensitivity"
+  ],
+  "summary": "With Custom sync only: changes aim sensitivity for the scope you're using, without touching your action sequences.",
+  "where": {
+    "text": "Edit your Config (pencil icon). If Game Settings is set to Custom, you may have a Sight Modifier setting, depending on your current aiming sources.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+        "quote": "Game Settings support includes three different synchronization methods: Standard, Custom, and Manual."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#sight-modifiers",
+        "quote": "If you are using Custom Game Settings, you may have a Sight Modifier setting depending on your current aiming sources."
+      }
+    ],
+    "caveat": "The guide's text doesn't say where in the Config the setting appears."
+  },
+  "definition": {
+    "text": "If you use Custom Game Settings, you may have a Sight Modifier setting, depending on your aiming sources. It changes aim sensitivity for the active scope without affecting your action sequences.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#sight-modifiers",
+        "quote": "If you are using Custom Game Settings, you may have a Sight Modifier setting depending on your current aiming sources."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#sight-modifiers",
+        "quote": "This setting allows you to modify aim sensitivity for the current active scope without affecting your Config's action sequences."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Scopes also tie into weapon groups: with Custom sync, a weapon group can carry a scope level. For mouse aim, an active sight's speed matches the Config's ADS sensitivity.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#groups",
+          "quote": "A scope level can also be assigned (available when using Custom Game Settings) when the group is weapon tracking."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#weapon-groups",
+          "quote": "For mouse gamers, when a sight is active, the speed of the sight will match the Config's ADS sensitivity."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Sight Override (Smart Action)",
+      "statement": {
+        "text": "A Smart Action that overrides the sight of enabled weapon groups. The override is not saved. It is not the Sight Modifier setting.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
+            "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Modify Aim Sensitivity",
+      "settingId": "modify-aim-sensitivity",
+      "note": "A Smart Action that changes aim sensitivity. Unlike Sight Modifier, the guide lists no Custom sync requirement for it."
+    }
+  ],
+  "related": [
+    "sync-custom",
+    "groups",
+    "aiming-modes",
+    "modify-aim-sensitivity",
+    "sensitivity"
+  ]
+}

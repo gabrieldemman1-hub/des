@@ -1,0 +1,171 @@
+{
+  "id": "mouse-dpi",
+  "name": "Mouse DPI",
+  "aliases": [
+    "DPI",
+    "Check DPI"
+  ],
+  "summary": "Your mouse's DPI, entered in the Config. It must match the mouse, or your cm/360 will be wrong.",
+  "where": {
+    "text": "Edit your Config (pencil icon) and set your mouse DPI, which mouse aim needs. To measure it: start Manager, press and hold the mouse icon at the top of the dashboard for 3 seconds, then select Check DPI.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-dpi",
+        "quote": "Accurate real world units require your mouse DPI be set correctly in your Config."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "To enable aiming with a mouse, make sure the mouse aiming source is selected and your mouse DPI is set."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+        "quote": "Start Manager"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+        "quote": "Press and hold the mouse icon for 3 seconds"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+        "quote": "Select Check DPI"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#input-devices",
+        "quote": "The set of supported input devices that are currently plugged in is displayed at the top. Click on one of the device icons to get more information about it (such as the polling rate of your mouse)."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Accurate real-world units, like cm/360, need your mouse DPI set correctly in your Config. It must match your mouse.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-dpi",
+        "quote": "Accurate real world units require your mouse DPI be set correctly in your Config. Make sure this value matches your mouse DPI."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "If it is wrong, your mouse aim won't be accurate.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+          "quote": "Your mouse DPI (dots-per-inch) is a very important value that is set in your Config. If it is wrong, your mouse aim won't be accurate."
+        }
+      ]
+    },
+    {
+      "text": "Gaming mice don't always save settings on the device, so the MATRIX has tools to check the true DPI and polling rate.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-dpi",
+          "quote": "Gaming mice can be complex devices where it's not always clear if settings are saved on-device. XIM MATRIX provides tools to check the true DPI and polling rate of your mouse."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Check DPI: put a ruler under the mouse, hold the mouse icon in Manager for 3 seconds, select Check DPI, move the mouse 1 inch horizontally, and read the value.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+          "quote": "Place a ruler below your mouse (a ruler phone app works too)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+          "quote": "Press and hold the mouse icon for 3 seconds"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+          "quote": "Select Check DPI"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+          "quote": "Move your mouse horizontally for 1 inch"
+        }
+      ]
+    },
+    {
+      "text": "It's normal for the reading not to match your DPI exactly, but it should be within range. If it isn't, check that your DPI setting is really saving to the mouse.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-dpi",
+          "quote": "Gaming mice use high resolution sensors, it's normal to not match your DPI exactly, but, it should be within the range. If it's not, verify that your DPI selection is saving correctly to your mouse."
+        }
+      ]
+    },
+    {
+      "text": "If a cm/360 test is way off, the DPI is the first thing XIM says to check.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Make sure your mouse DPI is configured accurately"
+        }
+      ]
+    },
+    {
+      "text": "Only if you use SAB: set the mouse DPI between half and its maximum, and verify it.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#ensure-mouse-dpi",
+          "quote": "Set your mouse DPI between half to its maximum value"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#ensure-mouse-dpi",
+          "quote": "SAB is dependent on your mouse DPI being correct."
+        }
+      ],
+      "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Sensitivity (cm/360)",
+      "settingId": "sensitivity",
+      "note": "Your chosen aim speed. The DPI must be right for that cm/360 to be accurate."
+    },
+    {
+      "name": "Polling Rate",
+      "settingId": "polling-rate",
+      "note": "How often the mouse reports, checked with Check Rate. A separate value from DPI."
+    }
+  ],
+  "related": [
+    "sensitivity",
+    "polling-rate",
+    "simulate-analog-behavior"
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "id": "smart-translation",
+  "name": "Smart Translation",
+  "aliases": [
+    "Smart Translator",
+    "Smart Translators"
+  ],
+  "summary": "XIM's per-game aim system for controller output. It knows how the game's aiming works and handles reticle speed for you.",
+  "where": {
+    "text": "Not a setting: controller-output Configs have Smart Translators, which handle reticle velocity. In Game Settings you synchronize the Smart Translator with your game's aim settings. The Dashboard flags an out-of-date Smart Translator with a warning exclamation icon; recreate the Config to update it.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Velocity-Calibration/#mouse-output-configs",
+        "quote": "Unlike controller output Configs which have Smart Translators that handle all reticle velocity tasks, mouse output Configs do not since they aren't needed."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+        "quote": "XIM MATRIX's Smart Translation input system must be synchronized with your game's aim settings for correctness to ensure optimal precision aim."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+        "quote": "Game Settings support includes three different synchronization methods: Standard, Custom, and Manual."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#notifications",
+        "quote": "Out-of-date Smart Translator: A game's Smart Translator can be updated if the game's aiming system changed. If that happens, you will be notified with a warning exclamation icon. Recreate the Config to update its translation."
+      }
+    ]
+  },
+  "definition": {
+    "text": "XIM's own aim system, made \"to produce the best possible aim on consoles\". Each game's Smart Translator understands that game's aiming system, including how fast the reticle moves.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings",
+        "quote": "XIM's proprietary Smart Translation system was created for this purpose: to produce the best possible aim on consoles."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Velocity-Calibration/#controller-output-configs",
+        "quote": "Like all XIM gaming adapters, XIM MATRIX features Smart Translators that understand everything about a game's aiming system. This includes reticle velocity behavior so Velocity Calibration is not needed. However, there are scenarios where you may want to provide your own calibration."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It is a controller-output feature. Mouse-and-keyboard output Configs don't have Smart Translators, because they don't need them.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#mouse-output-configs",
+          "quote": "Unlike controller output Configs which have Smart Translators that handle all reticle velocity tasks, mouse output Configs do not since they aren't needed."
+        }
+      ]
+    },
+    {
+      "text": "It only works correctly when the game's own aim settings are what it expects. Lining those up is called Game Settings synchronization.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+          "quote": "XIM MATRIX's Smart Translation input system must be synchronized with your game's aim settings for correctness to ensure optimal precision aim."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "To function correctly, Smart Translators require specific in-game settings."
+        }
+      ]
+    },
+    {
+      "text": "Because it handles the game's own stick behavior, an Aiming Curve you make is the curve you get in game. It is not stacked on top of the game's curve.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "Meaning, it's not applying aim curves on top of the game's existing curves (producing incorrect and unintuitive aim behavior like other input devices). Rather, the curves you author will be the aim response you experience in game."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "When a game changes its aiming, XIM can update that game's Smart Translator. Manager then shows a warning icon. Recreate the Config to get the update.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Dashboard/#notifications",
+          "quote": "Out-of-date Smart Translator: A game's Smart Translator can be updated if the game's aiming system changed. If that happens, you will be notified with a warning exclamation icon. Recreate the Config to update its translation."
+        }
+      ]
+    },
+    {
+      "text": "If your cm/360 test is way off, XIM's checklist includes an out-of-date Smart Translator. A red \"cm/360\" label means the Config's translator doesn't support accurate cm/360 yet. XIM asks you to tell its staff.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Your Config's Smart Translator isn't out-of-date"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Your Config supports it (you will see the \"cm/360\" label display in red if it doesn't). (Let XIM staff know and updating the Smart Translator will be prioritized)"
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Smart Actions",
+      "statement": {
+        "text": "XIM's action engine for bindings: sequences of actions, from simple macros to recoil control. A separate feature from the Smart Translator.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/What-Is-XIM-MATRIX/#what-is-xim-matrix",
+            "quote": "Features our proprietary Smart Translator precision aim system and our Smart Actions advanced macro engine."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Editor/#smart-actions-editor",
+            "quote": "Smart Actions are a powerful feature that enables the composition of action sequences to accomplish many different input automation scenarios from simple to complex."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Velocity Calibration",
+      "settingId": "velocity-calibration",
+      "note": "Your own calibration of reticle speed. Controller output normally skips it, because the Smart Translator already knows the game."
+    },
+    {
+      "name": "Firmware",
+      "settingId": "firmware",
+      "note": "The MATRIX's own software, updated with the Firmware Flash Tool. An out-of-date Smart Translator is fixed by recreating the Config, which Manager flags."
+    }
+  ],
+  "related": [
+    "game-settings-sync",
+    "required-game-settings",
+    "velocity-calibration",
+    "output-type",
+    "aiming-curve",
+    "sensitivity",
+    "sync-manual",
+    "config",
+    "firmware"
+  ]
+}

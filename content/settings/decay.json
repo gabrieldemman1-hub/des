@@ -1,0 +1,133 @@
+{
+  "id": "decay",
+  "name": "Decay",
+  "aliases": [],
+  "summary": "Classic mode: how much Smooth relies on past input. Higher means older input counts less.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, set Smoothing to Custom instead of a preset, and make sure the smoothing button reads CLASSIC (press it to change modes). Decay is one of the Classic settings.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "Decay Controls how much the Smooth setting relies on past inputs."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Smooth blends in your earlier movement. Decay sets how much that older movement still counts. Higher Decay means older input counts for less.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+        }
+      ]
+    },
+    {
+      "text": "So higher Decay should make Classic smoothing follow your latest movement more closely. Lower Decay should let more of your past movement carry through.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+        }
+      ],
+      "reasoning": "If older input values have less impact, the smoothed output is driven more by recent input, and the reverse for lower values."
+    },
+    {
+      "text": "The guide doesn't give this setting's range or its default. Check what Manager shows before you change it.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "The guide gives no general recommended value for Decay. Its only value is for copying XIM's older XIM APEX device: \"For equivalent XIM APEX behavior, set to 9.0\". Otherwise it says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "For equivalent XIM APEX behavior, set to 9.0"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ],
+      "caveat": "Primer covers XIM MATRIX only. It doesn't recommend this XIM APEX-matching value."
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "No source ties Classic settings to aim styles. Classic smoothing is static: unlike Standard, it doesn't adapt to your aim speed, so this setting can't be tuned separately for slow and fast aim.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+        }
+      ],
+      "reasoning": "The guide calls Classic \"static smoothing behavior\", in contrast to Standard, which \"adapts to your current aim speed\". We read static as not adapting to speed, so this setting has one value for every aim speed. No source says how much it matters for tracking, snaps or precision holds."
+    }
+  ],
+  "confusions": [],
+  "related": [
+    "smooth",
+    "synch",
+    "smoothing-classic"
+  ]
+}

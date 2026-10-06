@@ -1,0 +1,190 @@
+{
+  "id": "deadzone",
+  "name": "Deadzone",
+  "aliases": [
+    "inner deadzone",
+    "outer deadzone",
+    "axial deadzone"
+  ],
+  "summary": "Sets where thumbstick aim starts and where it reaches full speed, and corrects stick drift.",
+  "where": {
+    "text": "Edit your Config (pencil icon). If you use custom game settings, deadzone customization is right there in your Config's game settings. Otherwise, press the \"...\" under Mappings and select Gamepad Customization.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+        "quote": "If you are using custom game settings, deadzone customization is available right there. Otherwise, it can accessed under Gamepad Customization within Mappings:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#custom",
+        "quote": "Your aiming stick deadzone is customized only though your Config (not via in-game settings):"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Gamepad-Customization/#gamepad-customization",
+        "quote": "To access, press the \"...\" under Mappings and select Gamepad Customization."
+      }
+    ]
+  },
+  "definition": {
+    "text": "There are several ways to customize your aiming deadzone behavior as well as stick drift correction.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+        "quote": "There are several ways to customize your aiming deadzone behavior as well as stick drift correction."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Four parts. Inner deadzone: the zone around center that gives zero reticle speed. Outer deadzone: where maximum reticle speed is reached. Axial deadzone: zero speed around the X and Y axes. Offset values: correct stick drift.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "Inner deadzone for zero reticle velocity starting from the center position"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "Outer deadzone for maximum reticle velocity"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "Axial deadzone for zero reticle velocity around the X and Y axis"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "Offset values to correct stick drift"
+        }
+      ]
+    },
+    {
+      "text": "You can also rotate the stick's \"which way is up\".",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "You can also rotate the stick's directional coordinate system (i.e. \"which way is up\")"
+        }
+      ]
+    },
+    {
+      "text": "It is part of thumbstick aim: it shapes aim from a physical stick.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gamepad-Customization/#deadzone-customization",
+          "quote": "To adjust your aiming thumbstick deadzones, refer to Aim Settings."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "If you are using custom game settings, deadzone customization is available right there. Otherwise, it can accessed under Gamepad Customization within Mappings:"
+        }
+      ]
+    },
+    {
+      "text": "With custom game settings, your aiming stick deadzone is set only in your Config, not in game.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#custom",
+          "quote": "Your aiming stick deadzone is customized only though your Config (not via in-game settings):"
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Your game's own deadzone settings must match XIM's required settings for your game. Velocity Calibration doesn't change that.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "Your game's deadzone settings must match the required settings for your game."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "This method doesn't support modifying all game settings including Deadzone and Aiming Technique. Those must still be set to their required values."
+        }
+      ]
+    },
+    {
+      "text": "By default, inner deadzone is set to the game's native deadzone value.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "By default, inner deadzone will be set to the game's native deadzone value."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "The MATRIX's deadzone settings only matter if you aim with a thumbstick. Their inner deadzone shapes the smallest stick movements, which matter for tracking and precision holds. Their outer deadzone sets where full speed starts, which matters for snaps and big turns. Your game's own deadzone settings are separate: they must match XIM's required settings whatever you aim with.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "Inner deadzone for zero reticle velocity starting from the center position"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "Outer deadzone for maximum reticle velocity"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gamepad-Customization/#deadzone-customization",
+          "quote": "To adjust your aiming thumbstick deadzones, refer to Aim Settings."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "Your game's deadzone settings must match the required settings for your game."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#custom",
+          "quote": "Follow all additional required aim settings including in-game deadzone."
+        }
+      ],
+      "reasoning": "Inner deadzone is defined as \"zero reticle velocity starting from the center position\" (the smallest movements); outer deadzone as \"maximum reticle velocity\" (the fastest). The MATRIX's deadzones are thumbstick aim settings (\"To adjust your aiming thumbstick deadzones, refer to Aim Settings.\"), while the game's own deadzone settings \"must match the required settings for your game\"."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "In-game deadzone settings",
+      "settingId": "required-game-settings",
+      "note": "The game's own deadzone values. They must match XIM's required settings. Stick deadzone tuning happens in the MATRIX instead."
+    }
+  ],
+  "related": [
+    "thumbstick-aim",
+    "custom-stick-behavior",
+    "required-game-settings",
+    "sync-custom"
+  ]
+}

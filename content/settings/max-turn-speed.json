@@ -1,0 +1,159 @@
+{
+  "id": "max-turn-speed",
+  "name": "Maximum Turn Speed",
+  "aliases": [
+    "max turn speed",
+    "turn speed limit"
+  ],
+  "summary": "The fastest a controller game lets you turn. Nothing can go past it. The MATRIX flashes red when you hit it.",
+  "where": {
+    "text": "Not a setting: it is a limit built into the game. Your XIM MATRIX notifies you when you hit it by flashing red. To disable the aim speed and mode light notifications, edit your Config (pencil icon), then press the \"...\" in its identity section.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+        "quote": "All controller console shooters are limited by a maximum turn speed that the game cannot exceed."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+        "quote": "This is because no matter what, you cannot exceed the turn speed restrictions built into the game."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+        "quote": "your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#identity",
+        "quote": "When editing a Config, the first thing you will see is the Config's identity section."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#additional-options",
+        "quote": "Press the \"...\" to view additional configuration options available. These include:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#additional-options",
+        "quote": "Disabling light aim speed and mode light notifications"
+      }
+    ]
+  },
+  "definition": {
+    "text": "Every controller console shooter has a maximum turn speed the game cannot exceed. The limit also changes with aiming angle.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+        "quote": "All controller console shooters are limited by a maximum turn speed that the game cannot exceed. This maximum turn speed limit actually differs depending on aiming angle."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "With controller output, the MATRIX quickly flashes red when you hit the limit, so you can adjust.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+          "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+        }
+      ]
+    },
+    {
+      "text": "Velocity Mapping decides how your top speed maps onto this limit. After changing it, you may see the red flash more often: you can't exceed the game's limit either way.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+          "quote": "When customizing Velocity Mapping, your XIM MATRIX may notify that you've exceeded maximum turn speed more often. This is because no matter what, you cannot exceed the turn speed restrictions built into the game."
+        }
+      ]
+    },
+    {
+      "text": "With Custom sync, your in-game settings change the maximum turn speed.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#custom",
+          "quote": "Custom in-game settings affects the maximum turn speed of the game."
+        }
+      ]
+    },
+    {
+      "text": "Thumbstick aim sensitivity can be set as a percentage of the maximum turn speed.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+          "quote": "Depending on the type of Config, thumbstick sensitivity may be set through your in-game aim ettings, or, specified as a percentage (%) of maximum turn speed split between X and Y."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "If fast turns cap out and you see the red flash, you have hit the game's own limit. It is not a MATRIX fault; adjust your aim accordingly.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+          "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+          "quote": "When customizing Velocity Mapping, your XIM MATRIX may notify that you've exceeded maximum turn speed more often. This is because no matter what, you cannot exceed the turn speed restrictions built into the game."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Matters most for fast movements, such as snaps and quick turns. It caps speed, not distance: any movement slower than the game's limit is never capped, and the limit differs by aiming angle.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+          "quote": "All controller console shooters are limited by a maximum turn speed that the game cannot exceed. This maximum turn speed limit actually differs depending on aiming angle."
+        }
+      ],
+      "reasoning": "XIM defines it as a maximum turn speed the game cannot exceed, and says the limit differs by aiming angle. A speed cap affects only movements fast enough to reach it, whatever their size. No source gives Destiny 2's limit, so the app cannot say how close tracking comes to it."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Limit (Velocity Mapping)",
+      "settingId": "velocity-mapping",
+      "note": "A cap you set yourself that can't be exceeded. The game's maximum turn speed is built into the game; with Custom sync, your in-game settings affect it."
+    },
+    {
+      "name": "Sensitivity",
+      "settingId": "sensitivity",
+      "note": "Your chosen speed in cm/360. It can't push you past the game's limit."
+    }
+  ],
+  "related": [
+    "velocity-mapping",
+    "light-notifications",
+    "sync-custom",
+    "sensitivity",
+    "thumbstick-aim"
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "id": "quantization-angle",
+  "name": "Angle Quantization",
+  "aliases": [
+    "Angle"
+  ],
+  "summary": "Snaps the direction your reticle moves to set angles, at any speed.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, press the \"...\" for additional options, then press the Quantization button. Angle Quantization is one of the quantize settings there.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "To access quantize settings, press the Quantization button:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "Angle Quantization: Snaps your reticle to predefined angles."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Snaps your reticle to predefined angles. The effect is independent of aiming speed.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It snaps the direction your reticle moves to fixed angles. Unlike Magnitude, it works the same at every speed.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+        }
+      ]
+    },
+    {
+      "text": "The guide doesn't say whether a higher Angle value means bigger or smaller steps.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "XIM's starting point is 25, alongside Magnitude at 25. Adjust one value at a time.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "To start, set Magnitude to 25 and Angle to 25. Adjust one value at a time to match your preferences."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Every aim style, because its effect doesn't depend on aiming speed: slow movements are snapped the same as fast ones. That includes slow tracking and precision holds, which Magnitude Quantization affects less.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+        }
+      ],
+      "reasoning": "Angle: \"The effect is independent of aiming speed.\" Magnitude: \"The effect increases the faster you aim.\" No source compares Angle Quantization's effect across aim styles."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Aim Angle (Smart Action)",
+      "settingId": "aim-angle-action",
+      "note": "An action that moves the reticle at a set angle, used with Aim Magnitude, for example for recoil control."
+    },
+    {
+      "name": "Aim Angle Variance",
+      "settingId": "behavior-variance",
+      "note": "A Behavior Simulation setting that offsets Aim Angle actions slightly."
+    }
+  ],
+  "related": [
+    "quantization",
+    "quantization-magnitude",
+    "aim-angle-action",
+    "behavior-variance"
+  ]
+}

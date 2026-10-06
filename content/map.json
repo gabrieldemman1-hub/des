@@ -1,0 +1,241 @@
+{
+  "chapters": [
+    {
+      "id": "configuring",
+      "name": "Configuring",
+      "screens": [
+        {
+          "id": "dashboard",
+          "name": "Dashboard",
+          "guideUrl": "https://guide.xim.tech/Dashboard/",
+          "groups": [
+            {
+              "settings": [
+                "config",
+                "required-game-settings",
+                "polling-rate",
+                "output-type"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "identity",
+          "name": "Identity",
+          "guideUrl": "https://guide.xim.tech/Identity/",
+          "groups": [
+            {
+              "settings": [
+                "light-notifications"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "game-settings",
+          "name": "Game Settings",
+          "guideUrl": "https://guide.xim.tech/Game-Settings/",
+          "groups": [
+            {
+              "settings": [
+                "smart-translation",
+                "game-settings-sync",
+                "sync-standard",
+                "sync-custom",
+                "sync-manual"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "aim-settings",
+          "name": "Aim Settings",
+          "guideUrl": "https://guide.xim.tech/Aim-Settings/",
+          "groups": [
+            {
+              "label": "Aiming sources",
+              "settings": [
+                "mouse-dpi",
+                "motion-aim",
+                "thumbstick-aim",
+                "custom-stick-behavior",
+                "velocity-mapping"
+              ]
+            },
+            {
+              "label": "Hip and ADS",
+              "settings": [
+                "aiming-modes",
+                "sight-modifiers",
+                "ads-inheritance",
+                "ads-activation-delay"
+              ]
+            },
+            {
+              "label": "Sensitivity",
+              "settings": [
+                "sensitivity",
+                "y-scale"
+              ]
+            },
+            {
+              "label": "Smoothing",
+              "settings": [
+                "smoothing",
+                "smoothing-standard",
+                "precision",
+                "response",
+                "easing",
+                "stability",
+                "smoothing-classic",
+                "smooth",
+                "decay",
+                "synch"
+              ]
+            },
+            {
+              "label": "More options",
+              "settings": [
+                "aiming-curve",
+                "quantization",
+                "quantization-magnitude",
+                "quantization-angle"
+              ]
+            },
+            {
+              "label": "Limits",
+              "settings": [
+                "max-turn-speed"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "bindings",
+          "name": "Bindings",
+          "guideUrl": "https://guide.xim.tech/Bindings/",
+          "groups": [
+            {
+              "settings": [
+                "modify-aim-sensitivity",
+                "aim-magnitude-action",
+                "aim-angle-action",
+                "groups",
+                "rumble-triggers"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "simulate-analog-behavior",
+          "name": "Simulate Analog Behavior",
+          "guideUrl": "https://guide.xim.tech/Simulate-Analog-Behavior/",
+          "groups": [
+            {
+              "settings": [
+                "simulate-analog-behavior",
+                "behavior-variance"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "game-roles",
+          "name": "Game Roles",
+          "guideUrl": "https://guide.xim.tech/Game-Roles/",
+          "groups": [
+            {
+              "settings": [
+                "game-roles"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gamepad-customization",
+          "name": "Gamepad Customization",
+          "guideUrl": "https://guide.xim.tech/Gamepad-Customization/",
+          "groups": [
+            {
+              "settings": [
+                "deadzone"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "velocity-calibration",
+          "name": "Velocity Calibration",
+          "guideUrl": "https://guide.xim.tech/Velocity-Calibration/",
+          "groups": [
+            {
+              "settings": [
+                "velocity-calibration"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "manage",
+      "name": "Manage",
+      "screens": [
+        {
+          "id": "loading-configs",
+          "name": "Loading Configs",
+          "guideUrl": "https://guide.xim.tech/Loading-Configs/",
+          "groups": [
+            {
+              "settings": [
+                "load-config"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "global-settings",
+          "name": "Global Settings",
+          "guideUrl": "https://guide.xim.tech/Global-Settings/",
+          "groups": [
+            {
+              "settings": [
+                "navigate-mode"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "version-info",
+          "name": "Version Info",
+          "guideUrl": "https://guide.xim.tech/Version-Info/",
+          "groups": [
+            {
+              "settings": [
+                "firmware"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "name": "Troubleshooting",
+      "screens": [
+        {
+          "id": "warning-lights",
+          "name": "Warning Lights",
+          "guideUrl": "https://guide.xim.tech/Warning-Lights/",
+          "groups": [
+            {
+              "settings": [
+                "warning-lights"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

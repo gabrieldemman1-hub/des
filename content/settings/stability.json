@@ -1,0 +1,174 @@
+{
+  "id": "stability",
+  "name": "Stability",
+  "aliases": [],
+  "summary": "Standard smoothing for holding still. Motion (gyro) aim only.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Motion Aim, set Smoothing to Custom instead of a preset, and make sure the smoothing button reads STANDARD (press it to change modes). Stability is one of the Standard settings, for motion aim only.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Stability Specifies aim behavior at rest Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Specifies aim behavior at rest. Increase to provide extra stability at rest due to hand jitter and instability (motion aim only).",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Specifies aim behavior at rest"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It only applies to motion (gyro) aim, not to mouse aim.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+        }
+      ]
+    },
+    {
+      "text": "It works while the reticle is at rest, steadying it against hand shake.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior at rest"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+        }
+      ]
+    },
+    {
+      "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [
+    {
+      "text": "Raising it gives extra stability at rest when your hands shake.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+        }
+      ]
+    }
+  ],
+  "guidance": [
+    {
+      "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    },
+    {
+      "text": "Another way XIM gives to steady motion aim: Quick Pull with hair triggers. You don't press the trigger fully, so firing moves the gamepad less.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gamepad-Customization/#hair-triggers",
+          "quote": "Quick Pull with hair triggers also provides additional stability when firing using motion gyro aim. It reduces the physical force of the trigger by not requiring full press and release which can cause your gamepad to move."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Precision hold (motion aim only): a lever for holding still. Waiting on a spot for one careful shot is aim at rest.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior at rest"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+        }
+      ],
+      "reasoning": "Stability \"Specifies aim behavior at rest\" and adds \"extra stability at rest\"."
+    },
+    {
+      "text": "Tracking and snap: matter less, because the reticle is moving.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior at rest"
+        }
+      ],
+      "reasoning": "Stability is defined only for aim at rest."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Easing",
+      "settingId": "easing",
+      "note": "Easing is about the start of movement from rest. Stability is about holding still."
+    }
+  ],
+  "related": [
+    "smoothing-standard",
+    "motion-aim",
+    "easing",
+    "precision",
+    "smoothing"
+  ]
+}

@@ -1,0 +1,292 @@
+{
+  "id": "rumble-triggers",
+  "name": "Rumble Triggers",
+  "aliases": [
+    "Rumble Trigger Workshop",
+    "Rumble Pattern Trigger"
+  ],
+  "summary": "Runs a binding when the game plays a rumble pattern you taught the MATRIX, for example enabling a weapon's group when you fire it. Controller output only.",
+  "where": {
+    "text": "Edit your Config (pencil icon), add a binding with the + button at the end of the bindings list, and choose the Rumble Pattern Trigger input. To reopen the workshop for an existing trigger, edit its binding, press the wrench icon and select Rumble Trigger.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Bindings/#adding-a-binding",
+        "quote": "To add a binding, press the '+' button at the end of the bindings list."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Rumble-Triggers/#start-the-workshop",
+        "quote": "Edit your Config"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Rumble-Triggers/#start-the-workshop",
+        "quote": "Add a new binding"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Rumble-Triggers/#start-the-workshop",
+        "quote": "Choose the Rumble Pattern Trigger input"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Rumble-Triggers/#editing-triggers",
+        "quote": "To reload the workshop to edit an existing rumble trigger:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Rumble-Triggers/#editing-triggers",
+        "quote": "Edit the rumble trigger binding"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Rumble-Triggers/#editing-triggers",
+        "quote": "Press the wrench icon"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Rumble-Triggers/#editing-triggers",
+        "quote": "Select Rumble Trigger"
+      }
+    ]
+  },
+  "definition": {
+    "text": "The MATRIX learns rumble patterns from your game and uses them to run bindings automatically. A Rumble Trigger is a binding input, like a mouse button: when the learned pattern happens, its binding runs.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Rumble-Triggers/#rumble-triggers",
+        "quote": "The XIM MATRIX Rumble Trigger Workshop is used to learn and leverage unique rumble patterns that occur in your game to automatically run bindings."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Rumble-Triggers/#rumble-triggers",
+        "quote": "Rumble Triggers are a type of binding input (much like Left Mouse Button or Space Key). When the previously learned rumble pattern is \"triggered\", the associated binding is run."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It only works when the MATRIX outputs as a controller.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#rumble-triggers",
+          "quote": "Recoil Triggers are only supported when your XIM MATRIX outputs as a controller."
+        }
+      ]
+    },
+    {
+      "text": "The common use: enable a weapon's recoil control group just by firing it.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#rumble-triggers",
+          "quote": "A common use case for this is the automatic enablement of recoil control groups for a weapon just by firing it."
+        }
+      ],
+      "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
+    },
+    {
+      "text": "It can replace manual weapon tracking if the game has a unique pattern per weapon. If not, some automatic syncing is usually still possible.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+          "quote": "This manual tracking process can outright be replaced by rumble triggers if the game has unique patterns per weapon. If not, some degree of automatic synchronization is normally achievable given the rumble patterns available."
+        }
+      ]
+    },
+    {
+      "text": "On Xbox and PC, the pattern combines impulse trigger and grip rumble.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#playstation-5-vs-xbox",
+          "quote": "Xbox rumble consists of impulse triggers and grip rumble. These rumbles are combined to make up the pattern (same for PC, but for PS4 only grip is available):"
+        }
+      ]
+    },
+    {
+      "text": "It runs bindings, so it can switch binding groups. Like groups, it cannot change smoothing, aiming curve or quantization, as far as the guide documents.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#rumble-triggers",
+          "quote": "Rumble Triggers are a type of binding input (much like Left Mouse Button or Space Key). When the previously learned rumble pattern is \"triggered\", the associated binding is run."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-aim-sensitivity",
+          "quote": "Change aim sensitivity. Use in scenarios to increase aiming sensitivity for vehicles, turrets, and parachutes."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
+          "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+          "quote": "Enable gyro motion aim. Only enabled while action is active."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+          "quote": "Toggles gyro motion aim on/off."
+        }
+      ],
+      "reasoning": "A rumble trigger only starts a binding. Bindings run Smart Actions. Modify Aim Sensitivity and Sight Override (scopes, with Custom sync) change sensitivity only. The Motion Activation actions (Engage, Pause and Toggle Motion Aim) only turn gyro motion aim on or off. No documented Smart Action sets Smoothing, Aiming Curve or Quantization within one Config.",
+      "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Rumble must be on in the game's settings. Changing the game's rumble intensity changes the results.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#enable-game-rumble",
+          "quote": "Ensure your game's settings have rumble enabled."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#enable-game-rumble",
+          "quote": "Some games allow for different intensities of rumble which will affect results when changed."
+        }
+      ]
+    },
+    {
+      "text": "Learn patterns in a private game or training area with no enemies.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#start-your-game",
+          "quote": "Start your game and enter a private game or training area that is free of enemies."
+        }
+      ]
+    },
+    {
+      "text": "To learn a weapon's pattern: make sure no rumble is active, press Learn, fire the weapon, then press Accept.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+          "quote": "Ensure no rumble is active"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+          "quote": "Press Learn"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+          "quote": "Fire the weapon"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+          "quote": "Press Accept"
+        }
+      ]
+    },
+    {
+      "text": "Patterns are only detected (and learned) when they change, so you may see \"PATTERN INACTIVE\" even while rumble is happening in game.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#weapon-tracking",
+          "quote": "Rumble patterns are only detected (and learned) when they change. This means you may see \"PATTERN INACTIVE\" even though rumble is actively occurring in-game."
+        }
+      ]
+    },
+    {
+      "text": "Press Learn repeatedly to check that a pattern is consistent and unique to each weapon.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#advanced-triggering",
+          "quote": "Use Learn repeatedly to look for pattern consistency and unique fingerprints between weapons."
+        }
+      ]
+    },
+    {
+      "text": "If the game uses the same pattern for every weapon, you can still use a rumble trigger to keep your weapon groups in sync, by linking it to a cycle group reset action.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#same-pattern-for-all-weapons",
+          "quote": "There will be cases where the game you are playing uses the same pattern for all weapons. If this is the case, you can still leverage rumble triggers by using it ensure your current selected loadout is synchronized by connecting your rumble trigger to a cycle group reset action."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "They can make weapon-specific bindings follow your weapon automatically. They don't solve tracking vs snap tuning inside one Config: no documented action they could run changes smoothing.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Rumble-Triggers/#rumble-triggers",
+          "quote": "A common use case for this is the automatic enablement of recoil control groups for a weapon just by firing it."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-aim-sensitivity",
+          "quote": "Change aim sensitivity. Use in scenarios to increase aiming sensitivity for vehicles, turrets, and parachutes."
+        }
+      ],
+      "reasoning": "A rumble trigger runs a binding, which can enable groups. No documented action changes smoothing within one Config.",
+      "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Trigger Roles",
+      "settingId": "game-roles",
+      "note": "Set how far a trigger must be pulled for the game to fire or enter ADS. Unrelated to rumble."
+    },
+    {
+      "name": "Rumble (Config option)",
+      "statement": {
+        "text": "A Config option that turns rumble on for a gamepad you use, on Xbox and PS4 only. It doesn't run bindings.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#additional-options",
+            "quote": "Select if you want rumble enabled if you are using a gamepad (only available for Xbox and PS4)"
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "groups",
+    "config",
+    "load-config",
+    "output-type"
+  ]
+}

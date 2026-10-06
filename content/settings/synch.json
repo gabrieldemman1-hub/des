@@ -1,0 +1,133 @@
+{
+  "id": "synch",
+  "name": "Synch",
+  "aliases": [
+    "Synchronize"
+  ],
+  "summary": "Classic mode: extra smoothing that combines with Smooth.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, set Smoothing to Custom instead of a preset, and make sure the smoothing button reads CLASSIC (press it to change modes). Synch is one of the Classic settings.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "Synch Known previously as Synchronize"
+      }
+    ]
+  },
+  "definition": {
+    "text": "Known previously as Synchronize. Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "Known previously as Synchronize"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Raising Synch increases its effect. Together with Smooth, it adds more smoothing on top.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+        }
+      ]
+    },
+    {
+      "text": "The guide doesn't give this setting's range or its default in Manager. Check what Manager shows before you change it.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "The guide doesn't recommend a Synch value for general use. The only values it gives are for matching XIM's older XIM APEX device: \"For equivalent XIM APEX values, use: 8=Default, 16=Common, 32=Slow, or 0=Off\". \"Default\" there is the XIM APEX setting's name, not Manager's default. Otherwise the guide says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "For equivalent XIM APEX values, use: 8=Default, 16=Common, 32=Slow, or 0=Off"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "No source ties Classic settings to aim styles. Classic smoothing is static: unlike Standard, it doesn't adapt to your aim speed, so this setting can't be tuned separately for slow and fast aim.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+        }
+      ],
+      "reasoning": "The guide calls Classic \"static smoothing behavior\", in contrast to Standard, which \"adapts to your current aim speed\". We read static as not adapting to speed, so this setting has one value for every aim speed. No source says how much it matters for tracking, snaps or precision holds."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Game Settings synchronization",
+      "settingId": "game-settings-sync",
+      "note": "Matching the MATRIX to your game's in-game settings (Standard, Custom or Manual). Unrelated to Synch smoothing."
+    }
+  ],
+  "related": [
+    "smooth",
+    "decay",
+    "smoothing-classic"
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "id": "modify-aim-sensitivity",
+  "name": "Modify Aim Sensitivity",
+  "aliases": [
+    "Aim Sensitivity Modifier",
+    "Vertical Sensitivity Boost"
+  ],
+  "summary": "A Smart Action that changes aim sensitivity, for example when a game lowers it in vehicles or on parachutes. It changes sensitivity only.",
+  "where": {
+    "text": "Edit your Config (pencil icon) and open a binding, or add one with the + button at the end of the bindings list. Select the Smart Actions Editor button at the bottom, then add Modify Aim Sensitivity from the Sensitivity Modifiers category. Use its slider to pick Normal, Y Only or X Only.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Bindings/#simple-bindings",
+        "quote": "To change a binding, just click on it."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Bindings/#adding-a-binding",
+        "quote": "To add a binding, press the '+' button at the end of the bindings list."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Editor/#loading-editor",
+        "quote": "Select the Smart Actions Editor button at the bottom"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Editor/#editor-features",
+        "quote": "Available actions you can use in your sequence."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Action-Categories/#action-categories",
+        "quote": "Smart Actions come in categories of functionality."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Action-Categories/#sensitivity-modifiers",
+        "quote": "Actions that provide aim and stick sensitivity modification."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-aim-sensitivity",
+        "quote": "Use the slider to select different axes."
+      }
+    ]
+  },
+  "definition": {
+    "text": "A Smart Action that changes aim sensitivity. XIM's example use: raising sensitivity for vehicles, turrets and parachutes.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-aim-sensitivity",
+        "quote": "Change aim sensitivity. Use in scenarios to increase aiming sensitivity for vehicles, turrets, and parachutes."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It can change both axes (Normal), the vertical axis only (Y Only) or the horizontal axis only (X Only).",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#normal_4",
+          "quote": "Modify aim sensitivity of both the X and Y axis."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#y-only",
+          "quote": "Modify aim sensitivity of only the Y axis."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#x-only",
+          "quote": "Modify aim sensitivity of only the X axis."
+        }
+      ]
+    },
+    {
+      "text": "XIM's uses: when a game drops look sensitivity (vehicles, turrets, parachutes), and a vertical-only boost as a simple form of recoil control.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Vehicles-Parachutes/#vehicles-and-parachutes",
+          "quote": "Games can drop look sensitivity when entering vehicles, using a turret, or parachute. There are multiple ways to handle this."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Vehicles-Parachutes/#aim-sensitivity-modifier",
+          "quote": "Use the modify aim sensitivity action to increase your look speed."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Recoil-Control/#vertical-sensitivity-boost",
+          "quote": "If you prefer simply increasing your vertical aim sensitivity temporarily as a form of recoil control, you use can use a vertical only aim sensitivity modifier action."
+        }
+      ],
+      "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
+    },
+    {
+      "text": "It changes sensitivity only. It does not change smoothing, aiming curve or quantization.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-aim-sensitivity",
+          "quote": "Change aim sensitivity. Use in scenarios to increase aiming sensitivity for vehicles, turrets, and parachutes."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Action-Categories/#sensitivity-modifiers",
+          "quote": "Actions that provide aim and stick sensitivity modification. Use aim sensitivity modification when aim sensitivity drops in game (such as when entering vehicles or using parachutes). Use stick sensitivity modification in scenarios such as lowering player movement speed (walk)."
+        }
+      ],
+      "reasoning": "Both the action and its category are defined only in terms of sensitivity. No documented action changes the other aim settings within one Config.",
+      "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "XIM says to use it when aim sensitivity drops in game, such as in vehicles or on parachutes.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Action-Categories/#sensitivity-modifiers",
+          "quote": "Actions that provide aim and stick sensitivity modification. Use aim sensitivity modification when aim sensitivity drops in game (such as when entering vehicles or using parachutes). Use stick sensitivity modification in scenarios such as lowering player movement speed (walk)."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "It can change your speed for a situation, but not your smoothing. So it can't switch between smoothing tuned for tracking and smoothing tuned for snap aim.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-aim-sensitivity",
+          "quote": "Change aim sensitivity. Use in scenarios to increase aiming sensitivity for vehicles, turrets, and parachutes."
+        }
+      ],
+      "reasoning": "The action is defined as a sensitivity change. The levers Primer describes for tracking and snap aim are smoothing values, such as Precision, not sensitivity.",
+      "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Sensitivity",
+      "settingId": "sensitivity",
+      "note": "Your Config's base speed in cm/360. This action changes aim sensitivity from a binding, for example temporarily."
+    },
+    {
+      "name": "Y Scale",
+      "settingId": "y-scale",
+      "note": "A fixed vertical sensitivity setting in your aim settings. The Y Only action changes vertical sensitivity from a binding, for example temporarily as a form of recoil control."
+    },
+    {
+      "name": "Modify Right Stick Sensitivity",
+      "statement": {
+        "text": "A different Smart Action that reduces the right thumbstick's sensitivity. Modify Aim Sensitivity changes your aim sensitivity.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-right-stick-sensitivity",
+            "quote": "Reduce right thumbstick sensitivity."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Sight Modifier",
+      "settingId": "sight-modifiers",
+      "note": "A Custom-sync setting for the active scope. Not a Smart Action."
+    }
+  ],
+  "related": [
+    "sensitivity",
+    "y-scale",
+    "groups",
+    "sight-modifiers",
+    "aim-magnitude-action"
+  ]
+}

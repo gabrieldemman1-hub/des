@@ -1,0 +1,151 @@
+{
+  "id": "ads-inheritance",
+  "name": "Aim Settings Inheritance",
+  "aliases": [
+    "Inherit All",
+    "Sensitivity Only",
+    "Inherit Nothing",
+    "Hip/ADS inheritance",
+    "inheritance"
+  ],
+  "summary": "Decides which ADS settings copy Hip: all of them (the default), all except sensitivity, or none.",
+  "where": {
+    "text": "Edit your Config (pencil icon) and choose which ADS settings inherit from Hip: Inherit All (the default), Sensitivity Only or Inherit Nothing.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "If you prefer to use your hip settings while aiming down sight, you can enable settings inheritance. Available options are:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "Sensitivity Only: Inherit all ADS settings from Hip except sensitivity"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "Inherit Nothing: Inherit no ADS settings from Hip"
+      }
+    ],
+    "caveat": "The guide's text doesn't say where in the Config these options are."
+  },
+  "definition": {
+    "text": "Lets ADS use your Hip settings. The options are Inherit All, Sensitivity Only and Inherit Nothing.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "If you prefer to use your hip settings while aiming down sight, you can enable settings inheritance. Available options are:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "Sensitivity Only: Inherit all ADS settings from Hip except sensitivity"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "Inherit Nothing: Inherit no ADS settings from Hip"
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Inherit All (the default): ADS uses all of Hip's settings, sensitivity included.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+        }
+      ]
+    },
+    {
+      "text": "Sensitivity Only: ADS gets its own sensitivity. Every other ADS setting still comes from Hip.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Sensitivity Only: Inherit all ADS settings from Hip except sensitivity"
+        }
+      ]
+    },
+    {
+      "text": "Inherit Nothing: ADS has its own settings, fully separate from Hip.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Inherit Nothing: Inherit no ADS settings from Hip"
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "The default is Inherit All.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Inherit Nothing is the only option that lets ADS have different smoothing from Hip. That helps only if your aim styles split by Hip vs ADS, not by weapon.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Sensitivity Only: Inherit all ADS settings from Hip except sensitivity"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Inherit Nothing: Inherit no ADS settings from Hip"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+          "quote": "If your game supports an Aim Down Sight mode, then, you'll be able to set both Hip and Aim Down Sight aiming independently. Otherwise, you'll have a single set of aim settings."
+        }
+      ],
+      "reasoning": "Sensitivity Only keeps every ADS setting except sensitivity tied to Hip, so smoothing follows Hip. Only Inherit Nothing frees it. Hip and ADS are aiming modes, and nothing in them tracks which weapon you hold."
+    }
+  ],
+  "confusions": [],
+  "related": [
+    "aiming-modes",
+    "ads-activation-delay",
+    "sensitivity",
+    "smoothing",
+    "game-roles"
+  ]
+}

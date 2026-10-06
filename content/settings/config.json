@@ -1,0 +1,207 @@
+{
+  "id": "config",
+  "name": "Config",
+  "aliases": [
+    "Configs",
+    "configuration",
+    "Custom Config"
+  ],
+  "summary": "One complete setup on the MATRIX for one game: output, bindings and aim settings.",
+  "where": {
+    "text": "Not a setting: a Config holds your settings. The dashboard shows the current Config in the middle. Press the pencil icon to edit it. Press the vertical \"...\" to load other Configs, create a new one, or delete and reorder them.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#identity",
+        "quote": "Your current Config's identity is displayed in the middle of the dashboard."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Press the vertical \"...\" to open the menu of additional options which includes:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Loading other Configs"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Creating a new Config"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Managing (deleting or reordering) Configs"
+      }
+    ]
+  },
+  "definition": {
+    "text": "A Config is built for a game and platform, with the inputs and outputs you choose. It holds your aim settings and your mappings (bindings). A few settings are global instead of per-Config.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Gaming-On-Xbox/#custom-configs",
+        "quote": "Select the game you are playing and the platform:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Gaming-On-Xbox/#custom-configs",
+        "quote": "Next, choose your inputs and outputs. For an Xbox Config, the output must be Controller (Xbox, PS4)."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#pasting-configs",
+        "quote": "You will be asked how much of the Config you'd like to use: all of it, only aim settings, only mappings."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Global-Settings/#global-settings",
+        "quote": "XIM MATRIX has several settings that are global (not per-Config)."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "The dashboard shows the current Config's name, game, platform and color. The MATRIX light breathes in that color.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Dashboard/#identity",
+          "quote": "The Config's name, game box art, game platform, and color you chose for it are displayed. The color is also displayed on your XIM MATRIX with a \"breathing\" light pattern."
+        }
+      ]
+    },
+    {
+      "text": "Older XIM devices had sub-Configs (Configs within a Config). On the MATRIX, Smart Actions and groups replace most of that. You can still jump to another Config and back with the Config loading actions.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+          "quote": "Prior XIM devices had the concept of sub-Configs which can be thought of Configs within your Config."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+          "quote": "While a majority of the benefit of sub-Configs have been replaced by Smart Actions and groups, it can still be useful to quickly jump to a Config and back (\"chaining\") if there are significant changes in gameplay that occur that justify it."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+          "quote": "Use the config loading actions for this."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Use the Config made for the game you are playing.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "You use the Config that matches the game you are playing"
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Smoothing, aiming curve and quantization live in the Config's aim settings, and no documented action changes them within one Config. So different smoothing for some of your weapons needs a separate Config.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+          "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+          "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-aim-sensitivity",
+          "quote": "Change aim sensitivity. Use in scenarios to increase aiming sensitivity for vehicles, turrets, and parachutes."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Action-Categories/#config-switching",
+          "quote": "Actions used to provide additional flexibility in switching Configs. Use in scenarios such as chaining Configs together for different modes in a single game (i.e. on-foot vs. vehicle)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
+          "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+          "quote": "Enable gyro motion aim. Only enabled while action is active."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+          "quote": "Toggles gyro motion aim on/off."
+        }
+      ],
+      "reasoning": "Mouse Aim holds Sensitivity and Smoothing, with Aiming Curve, Y Scale and Quantization under its \"...\". Modify Aim Sensitivity and Sight Override (scopes, with Custom sync) change sensitivity only. The Motion Activation actions (Engage, Pause and Toggle Motion Aim) only turn gyro motion aim on or off. No documented Smart Action sets Smoothing, Aiming Curve or Quantization within one Config. Config Switching actions exist for changes like on-foot vs vehicle.",
+      "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Navigate Mode",
+      "settingId": "navigate-mode",
+      "note": "Works like a special Config for menus and other non-game tasks. It is not one of your game Configs."
+    },
+    {
+      "name": "Groups",
+      "settingId": "groups",
+      "note": "Switch sets of bindings inside one Config. They do not switch Configs."
+    },
+    {
+      "name": "Global Settings",
+      "statement": {
+        "text": "XIM MATRIX settings that are global (not per-Config), so they apply whatever Config is loaded, plus settings for the Manager app itself. Open them from the vertical \"...\" menu and select Global Settings.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Global-Settings/#global-settings",
+            "quote": "XIM MATRIX has several settings that are global (not per-Config). In addition, there are settings specific to the XIM MATRIX Manager application."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Global-Settings/#global-settings",
+            "quote": "To access these settings, press the vertical \"...\" and select Global Settings."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "load-config",
+    "groups",
+    "navigate-mode",
+    "game-settings-sync",
+    "output-type",
+    "smart-translation",
+    "rumble-triggers",
+    "warning-lights",
+    "firmware"
+  ]
+}

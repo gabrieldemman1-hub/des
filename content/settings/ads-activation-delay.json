@@ -1,0 +1,153 @@
+{
+  "id": "ads-activation-delay",
+  "name": "ADS Activation Delay",
+  "aliases": [
+    "ADS delay"
+  ],
+  "summary": "Makes the MATRIX wait before switching between Hip and ADS aim, to match games that zoom in over time. Its Smooth ADS Transition option blends the reticle's movement over that delay.",
+  "where": {
+    "text": "Edit your Config (pencil icon) and press the \"...\" under Activation. There you can set the delay and choose Smooth ADS Transition. This is not a binding's Activation button, which sets when that binding runs.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+        "quote": "To access these settings, press the \"...\" under Activation."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+        "quote": "You can add a delay so that XIM MATRIX will wait to activate or deactivate ADS aim mode when you aim down sight to match your game's behavior."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+        "quote": "You can also choose to Smooth ADS Transition"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Activation/#activation",
+        "quote": "A binding's activation setting is used to enable or disable the binding based on the current aiming mode"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Activation/#activation-states",
+        "quote": "Press on the activation button to choose a different aim activation state."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Some games move from Hip to ADS (and back) over time rather than instantly. This delay makes the MATRIX wait before switching its ADS aim mode on or off, to match the game.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+        "quote": "When transitioning from Hip to ADS aim (and vice versa), some games transition over time (rather than immediately)."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+        "quote": "You can add a delay so that XIM MATRIX will wait to activate or deactivate ADS aim mode when you aim down sight to match your game's behavior."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Known games with transition times, like Call of Duty, get a delay automatically when their Configs are created.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+          "quote": "Known games that have transition times by default (like Call of Duty) are automatically given a delay when their Configs are created."
+        }
+      ]
+    },
+    {
+      "text": "Smooth ADS Transition blends the reticle's movement into ADS aim over that delay.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+          "quote": "You can also choose to Smooth ADS Transition to better blend the reticle's movement as it transitions to ADS aim over the specified period of time."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "If the game lets you set its ADS transition to immediate, do that and remove any delay the Config added.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+          "quote": "Modern shooters can have the ability to customize ADS transition times. If you can, change it to immediate and remove any delay automatically added in their Configs."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Matters most when you aim in and shoot right away, as in snap and peek shots. If the MATRIX switches to ADS settings earlier or later than the game zooms, those first moments use the wrong settings.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+          "quote": "You can add a delay so that XIM MATRIX will wait to activate or deactivate ADS aim mode when you aim down sight to match your game's behavior."
+        }
+      ],
+      "reasoning": "The delay exists to line up the MATRIX's ADS switch with the game's transition. A mismatch only affects that transition window, which is exactly when a quick aim-in shot happens. No source ties it to aim styles."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Activation (bindings)",
+      "statement": {
+        "text": "A binding's Activation setting decides when that binding runs: always (Active), only in Hip, only in ADS, or never (Inactive). ADS Activation Delay is not found there. It is one of your Config's aim settings: press the \"...\" under Activation.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Activation/#activation-states",
+            "quote": "Active: Binding is always active (regardless of aim mode)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Activation/#activation-states",
+            "quote": "Hip-only: Binding is enabled only when hip aiming"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Activation/#activation-states",
+            "quote": "ADS-only: Binding is enabled only when aiming down sight"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Activation/#activation-states",
+            "quote": "Inactive: Binding is disabled"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#ads-activation-delay",
+            "quote": "To access these settings, press the \"...\" under Activation."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "aiming-modes",
+    "ads-inheritance",
+    "game-roles"
+  ]
+}

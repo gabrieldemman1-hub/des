@@ -1,0 +1,161 @@
+{
+  "id": "sync-standard",
+  "name": "Standard",
+  "aliases": [
+    "Standard sync",
+    "Standard game settings synchronization"
+  ],
+  "summary": "Set the game's sensitivity to maximum, apply XIM's required settings, and leave everything else at default. Your real aim is then set in the Config.",
+  "where": {
+    "text": "Edit your Config (pencil icon), go to its Game Settings section and choose Standard. Every game the MATRIX supports has it.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Groups/#weapon-groups",
+        "quote": "When a weapon group is enabled, the user will be able to change the current sight to match theirs from the game settings section:",
+        "note": "Where the guide calls Game Settings a section of the Config."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+        "quote": "Game Settings support includes three different synchronization methods: Standard, Custom, and Manual."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#standard",
+        "quote": "Every game that XIM MATRIX supports has the standard game settings synchronization option."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Every game XIM MATRIX supports has this option. In the game: set sensitivity to maximum, follow all the extra required aim settings, and leave every other aim setting at default. Your aiming behavior is then set through your Config.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#standard",
+        "quote": "Every game that XIM MATRIX supports has the standard game settings synchronization option."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#standard",
+        "quote": "Sensitivity is set to maximum"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#standard",
+        "quote": "Follows all additional required aim settings"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#standard",
+        "quote": "Has all other aim settings set to default"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#standard",
+        "quote": "Your aiming behavior is then set through your Config."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "The game's own sensitivity stops being your aim speed. Your real speed is set in the Config: for mouse aim, as Sensitivity in cm/360.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+          "quote": "When a new Xbox Config is added to your XIM MATRIX, you may be reminded that you must set your game's in-game sensitivity to maximum (aim sensitivity is then customized in your Config)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#required-game-settings",
+          "quote": "When a new PC XInput Config is added to your XIM MATRIX, you may be reminded that you must set your game's in-game sensitivity to maximum (aim sensitivity is then customized in your Config)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+          "quote": "Mouse sensitivity is set in centimeters-per-360 (cm/360)"
+        }
+      ]
+    },
+    {
+      "text": "XIM's forum list of game settings says the same for every game: maximum in-game sensitivity, and all other values at default unless the list says otherwise.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-game-settings",
+          "url": "https://community.xim.tech/pub/xim-game-settings",
+          "quote": "XIM’s Smart Translation technology requires that your game be set up to its maximum in-game sensitivity and all other values as default unless otherwise stated for accurate aim response."
+        }
+      ],
+      "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "It is the default for every new Config where you aim with a mouse or gyro.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#standard",
+          "quote": "This is the default option for all new mouse and gyro Configs."
+        }
+      ]
+    },
+    {
+      "text": "\"Default\" matters. When checking cm/360, XIM says the required settings must be correct and all others must be default, naming FOV as an example.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Your in-game required settings are correct and all others are default (such as FOV)"
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Standard (smoothing)",
+      "settingId": "smoothing-standard",
+      "note": "The smoothing mode that adapts to your aim speed. Unrelated to Standard sync."
+    },
+    {
+      "name": "Standard (Velocity Mapping)",
+      "settingId": "velocity-mapping",
+      "note": "The default Velocity Mapping. Unrelated to Standard sync."
+    },
+    {
+      "name": "Standard (update rate)",
+      "statement": {
+        "text": "The Config's update rate: how fast the MATRIX updates your console or PC. The guide's SAB checklist says to keep it at Standard, the default. Unrelated to Standard sync.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#standard-update-rate-only",
+            "quote": "When configuring the output connection mode of your Config, you can choose how fast you want your XIM MATRIX to update your console. Keep this value at \"Standard\" (which is default)."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "game-settings-sync",
+    "required-game-settings",
+    "sync-custom",
+    "sync-manual",
+    "sensitivity"
+  ]
+}

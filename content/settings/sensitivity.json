@@ -1,0 +1,380 @@
+{
+  "id": "sensitivity",
+  "name": "Sensitivity",
+  "aliases": [
+    "cm/360",
+    "mouse sensitivity"
+  ],
+  "summary": "How far you move the mouse for one full turn in game, in centimeters. Lower is faster.",
+  "where": {
+    "text": "Edit your Config (pencil icon). With the mouse aiming source selected, set Sensitivity in the mouse aim settings. If your game has an Aim Down Sight mode, ADS uses Hip's Sensitivity unless you change inheritance to Sensitivity Only or Inherit Nothing. Motion aim has its own Sensitivity.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "To enable aiming with a mouse, make sure the mouse aiming source is selected and your mouse DPI is set. Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+        "quote": "If your game supports an Aim Down Sight mode, then, you'll be able to set both Hip and Aim Down Sight aiming independently."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "Sensitivity Only: Inherit all ADS settings from Hip except sensitivity"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+        "quote": "Inherit Nothing: Inherit no ADS settings from Hip"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Mouse sensitivity is in cm/360 or \"distance (in centimeters) to perform a full turn\". That means, lower values produce faster aiming speeds.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+        "quote": "Mouse sensitivity is in cm/360 or \"distance (in centimeters) to perform a full turn\". That means, lower values produce faster aiming speeds."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+        "quote": "Mouse sensitivity is set in centimeters-per-360 (cm/360)"
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "The number is a real distance. At 35 cm/360, moving the mouse 35 cm turns you all the way around in game.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "For example, if your sensitivity is set at 35 cm/360, it means you will turn all the way around in game if you move your mouse 35 centimeters."
+        }
+      ]
+    },
+    {
+      "text": "That only holds if the layers underneath are right. On controller output, your game settings must be set up correctly. The mouse DPI in your Config must also match your mouse.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+          "quote": "Accurate real world velocity requires your game settings be configured correctly if outputting as controller, or, your velocity be calibrated correctly if outputting as mouse."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-dpi",
+          "quote": "Accurate real world units require your mouse DPI be set correctly in your Config. Make sure this value matches your mouse DPI."
+        }
+      ]
+    },
+    {
+      "text": "With Standard sync, you set the game's own sensitivity as XIM requires (normally its maximum). Your real aim speed is then set here, in the Config.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+          "quote": "When a new Xbox Config is added to your XIM MATRIX, you may be reminded that you must set your game's in-game sensitivity to maximum (aim sensitivity is then customized in your Config)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#required-game-settings",
+          "quote": "When a new PC XInput Config is added to your XIM MATRIX, you may be reminded that you must set your game's in-game sensitivity to maximum (aim sensitivity is then customized in your Config)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#standard",
+          "quote": "Your aiming behavior is then set through your Config."
+        }
+      ]
+    },
+    {
+      "text": "If your game has an ADS mode, Hip and ADS each have their own aim settings. By default ADS inherits everything from Hip. Choose \"Sensitivity Only\" to keep Hip's other settings but give ADS its own sensitivity.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+          "quote": "If your game supports an Aim Down Sight mode, then, you'll be able to set both Hip and Aim Down Sight aiming independently. Otherwise, you'll have a single set of aim settings."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Sensitivity Only: Inherit all ADS settings from Hip except sensitivity"
+        }
+      ]
+    },
+    {
+      "text": "cm/360 is defined for the default linear curve: XIM says an accurate cm/360 means your mouse behavior physically matches your sensitivity setting when you use a linear (default) aim response curve, where speed in produces the same speed out. XIM warns that quantization may make it less accurate. It also lists a custom curve and quantization among the things to check if your cm/360 test is way off. When you check your sensitivity, use a linear curve and turn quantization off.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Applying quantization to your mouse or motion aim may negatively affect real world sensitivity accuracy."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "You are testing with a linear aiming curve (not a custom one)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "You have quantization disabled"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "In the linear case, speed in produces the same exact speed out."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "If your results are way off (they don't need to be exact), please validate the following and try again:"
+        }
+      ]
+    },
+    {
+      "text": "Motion (gyro) aim has its own sensitivity, measured in times-degrees-per-second instead of cm/360.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+          "quote": "Motion (gyro) sensitivity is set in times-degrees-per-second"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+          "quote": "Mouse sensitivity is set in centimeters-per-360 (cm/360)"
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Start with Sensitivity alone. Change other values only if you need to. XIM says there is no \"right\" set of values: it's preference.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+          "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+        }
+      ]
+    },
+    {
+      "text": "To check that your cm/360 is accurate, XIM's test is: set 40 cm/360, go to a training area or private match with no enemies (aim assist can slow the reticle), then move the mouse horizontally 10 cm at a moderate speed. You should turn a quarter turn (90 degrees). Results don't need to be exact. Test with a linear curve (not a custom one) and quantization off. On Xbox with an Elite 2 controller, turn off its stick curve. If you're way off, XIM's checklist also includes your mouse DPI and your in-game settings: required ones correct, all others at default (such as FOV). A red \"cm/360\" label means your Config doesn't support accurate cm/360.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Set your mouse sensitivity to 40 cm/360"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Start your game in a training area or private match (without enemies that can cause aim assist slowdown)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Move your mouse at a moderate speed horizontally 10 centimeters (which is a quarter turn, 90-degrees)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "You are testing with a linear aiming curve (not a custom one)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "You have quantization disabled"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "If using an Elite 2 on Xbox, make sure you don't have a controller stick curve enabled"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "If your results are way off (they don't need to be exact), please validate the following and try again:"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Make sure your mouse DPI is configured accurately"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Your in-game required settings are correct and all others are default (such as FOV)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Your Config supports it (you will see the \"cm/360\" label display in red if it doesn't)."
+        }
+      ]
+    },
+    {
+      "text": "An accurate cm/360 isn't strictly needed to enjoy the MATRIX. XIM says it is required if you want consistent sensitivity between your Configs, to effectively share and use Configs from others, to use the Recoil Modeling Workshop, or to use Simulate Analog Behavior (SAB).",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Although an accurate cm/360 isn't strictly necessary to be able to use and enjoy you XIM MATRIX, it is required if you want:"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Consistent sensitivity between your Configs"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "To effectively share and use Configs from others"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "To use Recoil Modeling Workshop"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "To use Simulate Analog Behavior"
+        }
+      ]
+    },
+    {
+      "text": "Only if you use Simulate Analog Behavior (SAB): don't go faster than 20 cm/360. Remember that higher cm/360 values are slower.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#ensure-mouse-sensitivity",
+          "quote": "Make sure your mouse sensitivity isn't faster than 20 cm/360."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#ensure-mouse-sensitivity",
+          "quote": "Remember that higher cm/360 values are slower."
+        }
+      ],
+      "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "All aim styles, in different directions. A lower cm/360 turns you further per centimeter, which helps big turns and snaps. A higher cm/360 gives more mouse travel per degree, which helps the small, careful corrections of tracking and precision holds. Where you land is personal.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+          "quote": "Mouse sensitivity is in cm/360 or \"distance (in centimeters) to perform a full turn\". That means, lower values produce faster aiming speeds."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+          "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#controller-output",
+          "quote": "All controller console shooters are limited by a maximum turn speed that the game cannot exceed."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+          "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Disabling light aim speed and mode light notifications"
+        }
+      ],
+      "reasoning": "cm/360 is the mouse distance for a full turn, and lower values are faster (official definition). More distance per degree means a small hand movement moves the reticle less; less distance means a big turn needs less hand movement. No source ties a sensitivity value to an aim style, and XIM says there is no \"right\" set of values. On controller output this only holds below the game's maximum turn speed: XIM says every controller console shooter has a limit the game cannot exceed, so a lower cm/360 cannot make a fast snap go past it.",
+      "caveat": "On controller output, the game's maximum turn speed still caps how fast you can turn, whatever your cm/360. A lower cm/360 can't take you past it. Your XIM MATRIX quickly flashes red when you hit that limit (unless you've turned off its light notifications in the Config's \"...\" options)."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "In-game look sensitivity",
+      "settingId": "required-game-settings",
+      "note": "The game's own sensitivity setting. With Standard sync it stays at the value XIM requires; you tune your aim speed with this MATRIX Sensitivity instead."
+    },
+    {
+      "name": "Thumbstick sensitivity",
+      "settingId": "thumbstick-aim",
+      "note": "Aim speed for a physical stick. Depending on the Config type, it is set in-game or as a percentage of the game's maximum turn speed, not in cm/360."
+    },
+    {
+      "name": "Modify Aim Sensitivity",
+      "settingId": "modify-aim-sensitivity",
+      "note": "A Smart Action that changes sensitivity only while its binding runs (for example in vehicles). It doesn't change this base value."
+    },
+    {
+      "name": "Sight Modifiers",
+      "settingId": "sight-modifiers",
+      "note": "Changes aim sensitivity for the active scope. If you use Custom Game Settings, you may have this setting, depending on your aiming sources."
+    }
+  ],
+  "related": [
+    "y-scale",
+    "mouse-dpi",
+    "aiming-modes",
+    "ads-inheritance",
+    "sync-standard",
+    "thumbstick-aim",
+    "motion-aim",
+    "modify-aim-sensitivity",
+    "sight-modifiers",
+    "aiming-curve",
+    "quantization",
+    "smart-translation",
+    "velocity-calibration",
+    "max-turn-speed"
+  ]
+}

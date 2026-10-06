@@ -1,0 +1,195 @@
+{
+  "id": "quantization",
+  "name": "Quantization",
+  "aliases": [
+    "input quantization",
+    "aim quantization"
+  ],
+  "summary": "Snaps your reticle's speed and direction to set steps, so tiny movements disturb aim assist less.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, press the \"...\" for additional options, then press the Quantization button.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "To access quantize settings, press the Quantization button:"
+      }
+    ]
+  },
+  "definition": {
+    "text": "Quantization is a feature that can be used to improve compatibility with aim assist (on games that support it).",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "Quantization is a feature that can be used to improve compatibility with aim assist (on games that support it)."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "When it's on, your reticle's speed and direction \"snap\" to set values. Tiny aim changes then disturb aim assist less.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "When enabled, your reticle velocity will \"snap\" to configured magnitude and angle values. This behavior allows aim assist systems to work with less disruption from micro aim changes."
+        }
+      ]
+    },
+    {
+      "text": "It has two parts. Magnitude snaps speed, and its effect grows the faster you aim. Angle snaps direction, the same at any speed.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "It is off by default.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-quantization",
+          "quote": "Do not enable input quantization (default is off)."
+        }
+      ]
+    },
+    {
+      "text": "XIM's starting point: Magnitude 25 and Angle 25. Then adjust one value at a time.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "To start, set Magnitude to 25 and Angle to 25. Adjust one value at a time to match your preferences."
+        }
+      ]
+    },
+    {
+      "text": "Warning: on mouse or motion aim it may hurt real-world sensitivity accuracy. Switch it off before you check that your sensitivity is accurate.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Applying quantization to your mouse or motion aim may negatively affect real world sensitivity accuracy."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "You have quantization disabled"
+        }
+      ]
+    },
+    {
+      "text": "Only if you use Simulate Analog Behavior (SAB): don't enable it.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-quantization",
+          "quote": "Do not enable input quantization (default is off)."
+        }
+      ],
+      "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Mostly tracking with aim assist. Quantization exists to help aim assist work with fewer disruptions from micro aim changes, and holding on a target is full of micro aim changes.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Quantization is a feature that can be used to improve compatibility with aim assist (on games that support it)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "When enabled, your reticle velocity will \"snap\" to configured magnitude and angle values. This behavior allows aim assist systems to work with less disruption from micro aim changes."
+        }
+      ],
+      "reasoning": "Its official purpose is aim-assist compatibility, by reducing disruption from micro aim changes. Tracking is a long run of small corrections. No source ties quantization to aim styles."
+    },
+    {
+      "text": "Fast snaps feel Magnitude most, since its effect grows with speed. Angle affects every movement, slow or fast.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined angles. The effect is independent of aiming speed."
+        }
+      ],
+      "reasoning": "Magnitude: \"The effect increases the faster you aim.\" Angle: \"The effect is independent of aiming speed.\""
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Aim Magnitude and Aim Angle (Smart Actions)",
+      "settingId": "aim-magnitude-action",
+      "note": "Actions that move the reticle at a set speed and angle, for example for recoil control or auto-turn. Not quantization."
+    },
+    {
+      "name": "Aim Magnitude Variance and Aim Angle Variance",
+      "settingId": "behavior-variance",
+      "note": "Behavior Simulation settings that add slight offsets to those Smart Actions. Not quantization."
+    },
+    {
+      "name": "Steady Aim",
+      "statement": {
+        "text": "The official XIM MATRIX guide lists no setting called Steady Aim. A XIM Central MATRIX-era video title uses the name for quantization, but we couldn't review that video, so Primer can't say whether the two work the same way. For the MATRIX setting, see Quantization.",
+        "confidence": "gap",
+        "citations": []
+      }
+    }
+  ],
+  "related": [
+    "quantization-magnitude",
+    "quantization-angle",
+    "sensitivity",
+    "aim-magnitude-action",
+    "aim-angle-action",
+    "behavior-variance",
+    "y-scale",
+    "aiming-curve",
+    "simulate-analog-behavior"
+  ]
+}

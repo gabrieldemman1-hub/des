@@ -1,0 +1,169 @@
+{
+  "id": "light-notifications",
+  "name": "Light notifications",
+  "aliases": [
+    "Notify ADS Activation",
+    "Notify Maximum Turn Speed",
+    "aim speed and mode light notifications",
+    "ADS light",
+    "red flash"
+  ],
+  "summary": "Quick flashes on the MATRIX while you play: green entering ADS, yellow back to Hip, red at the game's maximum turn speed.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In its identity section, press the \"...\" for additional options, which include disabling light aim speed and mode light notifications.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#identity",
+        "quote": "When editing a Config, the first thing you will see is the Config's identity section."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#additional-options",
+        "quote": "Press the \"...\" to view additional configuration options available. These include:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#additional-options",
+        "quote": "Disabling light aim speed and mode light notifications"
+      }
+    ]
+  },
+  "definition": {
+    "text": "The MATRIX light tells you when you switch between Hip and ADS, so you know your game roles are set up correctly. On controller output, it also flashes red when you hit the game's maximum turn speed.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+        "quote": "Your XIM MATRIX will notify you whenever you switch between Hip and Aim Down Sight (if your game is configured for both modes). This is done so that you can know that your Config's game roles are set up correctly."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+        "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "A quick green flash means you entered ADS. A quick yellow flash means you are back to Hip.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+          "quote": "When you enter Aim Down Sight, your XIM MATRIX will quickly flash green."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+          "quote": "When you return to Hip, your XIM MATRIX will quickly flash yellow."
+        }
+      ]
+    },
+    {
+      "text": "A quick red flash means you hit the game's maximum turn speed.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+          "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "You can switch these notifications off in the Config's additional options.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Press the \"...\" to view additional configuration options available. These include:"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Disabling light aim speed and mode light notifications"
+        }
+      ]
+    },
+    {
+      "text": "Keep them on while you set up and tune. They let you confirm the MATRIX sees your ADS (Manager's dashboard also shows which aiming mode is active), and spot turns hitting the game's limit.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+          "quote": "Your XIM MATRIX will notify you whenever you switch between Hip and Aim Down Sight (if your game is configured for both modes). This is done so that you can know that your Config's game roles are set up correctly."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-maximum-turn-speed",
+          "quote": "If you are gaming with controller output, then, you need to be aware of the game's maximum turn speed limit. All console shooters have different limits and your XIM MATRIX will notify you when you hit that limit by quickly flashing red so you can adjust accordingly."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Disabling light aim speed and mode light notifications"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Dashboard/#current-input-and-aiming-mode",
+          "quote": "Beneath the box art is the current input (button or key being pressed) and the aiming mode that is active (Hip or Aiming Down Sight)."
+        }
+      ],
+      "reasoning": "XIM says the ADS flash lets you know your game roles are set up correctly, and the red flash lets you adjust when you hit the limit. Both only help if the notifications are on."
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Warning Lights",
+      "settingId": "warning-lights",
+      "note": "Repeated or unusual light sequences that signal a fault, like rapid purple blinking. A quick yellow flash is Hip; repeated yellow blinking is a lost authentication controller. A quick red flash means you hit the game's maximum turn speed; repeated red and yellow blinking is a power fault."
+    },
+    {
+      "name": "Breathing light",
+      "statement": {
+        "text": "The slow breathing light shows the loaded Config's color, and white while Navigate Mode is on. In Global Settings you can turn off the breathing animation and adjust the light's brightness.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#identity",
+            "quote": "The Config's name, game box art, game platform, and color you chose for it are displayed. The color is also displayed on your XIM MATRIX with a \"breathing\" light pattern."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Navigate-Mode/#enabling-navigate-mode",
+            "quote": "Manager will let you know when you are in Navigate Mode and XIM MATRIX's light will be displaying a white breathing sequence."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Global-Settings/#help-tips-and-light-control",
+            "quote": "You can also disable your XIM MATRIX light breathing animations and adjust the light's brightness."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "warning-lights",
+    "max-turn-speed",
+    "game-roles",
+    "aiming-modes",
+    "velocity-mapping",
+    "navigate-mode"
+  ]
+}

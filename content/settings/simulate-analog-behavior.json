@@ -1,0 +1,249 @@
+{
+  "id": "simulate-analog-behavior",
+  "name": "Simulate Analog Behavior",
+  "aliases": [
+    "SAB"
+  ],
+  "summary": "Makes the sticks and triggers the MATRIX sends look more analog, simulating natural human behavior patterns. XIM's guide says to use it for games with additional input requirements; some entries in XIM's game settings list say SAB is required.",
+  "where": {
+    "text": "Edit your Config (pencil icon). Under Mappings, press the \"...\" and select Behavior Simulation, then expand it to set Aiming Stick, Movement Stick and Triggers. Use the left and right scroller buttons to reach each SAB setting. For finer control of Aiming Stick (Advanced SAB), press the vertical \"...\". Only available for Configs that output as a controller.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#simulate-analog-behavior",
+        "quote": "To access, press the \"...\" under Mappings and select Behavior Simulation."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#turn-sab-on",
+        "quote": "To access, expand Behavior Simulation and:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#turn-sab-on",
+        "quote": "Set Aiming Stick to 50%"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#turn-sab-on",
+        "quote": "Set Movement Stick to 50%"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#turn-sab-on",
+        "quote": "Set Triggers to 50%"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#turn-sab-on",
+        "quote": "To access each SAB setting, use the left and right scroller buttons."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#advanced-sab",
+        "quote": "For Aiming Stick, the single value can be adjusted, or, for more fine control press the vertical \"...\" and adjust the following values individually:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#simulate-analog-behavior",
+        "quote": "Simulate Analog Behavior is only available for Configs that output as controller."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Simulate Analog Behavior (SAB) simulates natural human behavior patterns. It makes the sticks and triggers sent to your console or PC look more analog.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#simulate-analog-behavior",
+        "quote": "Simulate Analog Behavior (also called \"SAB\") is used to simulate natural human behavior patterns. It will make the sticks and triggers being sent to your console or PC appear more analog."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It is only available for Configs that output as a controller.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#simulate-analog-behavior",
+          "quote": "Simulate Analog Behavior is only available for Configs that output as controller."
+        }
+      ]
+    },
+    {
+      "text": "It exists for games with extra input requirements. SAB plus XIM's checklist lets you play within those rules. XIM says the goal is to comply with a game's requirements, not to get around them.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#when-to-use",
+          "quote": "Some games include additional input requirements that define how a controller can physically interact with the game. Using SAB and following this checklist of hardware and additional Config requirements will allow you to play within the game's rules."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#when-to-use",
+          "quote": "It is not a goal of XIM to bypass or otherwise circumvent the input requirements of a game. Rather, its purpose is to provide features to allow you be compliant and play within the constraints of the game using the input devices of your choice."
+        }
+      ]
+    },
+    {
+      "text": "It is off by default (0%). When it is needed, XIM says to set Aiming Stick, Movement Stick and Triggers all to 50% or more.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#turn-sab-on",
+          "quote": "By default, these values are 0%."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Turn SAB on with Aiming Stick, Movement Stick, and Triggers all set to 50% or greater"
+        }
+      ]
+    },
+    {
+      "text": "The checklist changes a lot. Among other things: no maximum in-game sensitivity, mouse no faster than 20 cm/360, smoothing on, and no aiming curves, quantization or velocity mapping.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Do not use maximum in-game sensitivity"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Ensure your mouse sensitivity is not faster than 20 cm/360"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Make sure you have input smoothing enabled"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Do not use aiming curves"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Do not use input quantization"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Do not use velocity mapping"
+        }
+      ]
+    },
+    {
+      "text": "Advanced SAB splits the Aiming Stick value into Inertia (stick path stabilization), Micro (behavior at very low aim speeds) and Limit (how fast the stick can move). XIM says not to go below 50% on any of them.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#advanced-sab",
+          "quote": "Controls stick trajectory stabilization"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#advanced-sab",
+          "quote": "Tunes stick behavior at very low aiming speeds"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#advanced-sab",
+          "quote": "Restricts how fast the stick can move"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#advanced-sab",
+          "quote": "Do not go below 50% on any value."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "XIM's per-game list of game settings says which games need SAB: those entries have an 'Input Requirements' line. SAB is off by default.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-game-settings",
+          "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
+          "quote": "Input Requirements: This game has additional input requirements that must be observed in order to play. With a XIM MATRIX, it is required that Simulate Analog Behavior (SAB) be enabled.",
+          "note": "From the Apex Legends (ALC) entry, one of the entries that require SAB."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#turn-sab-on",
+          "quote": "By default, these values are 0%."
+        }
+      ],
+      "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
+    },
+    {
+      "text": "If a game does need SAB, every checklist item must be right. XIM asks you not to report compliance issues unless you followed every item exactly.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "It's important that every item on the list is correct."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Do not report any compliance issues with the game you are playing unless every item on this list followed exactly."
+        }
+      ]
+    },
+    {
+      "text": "Turning off Behavior Variance on a binding also turns off SAB for that binding.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#disabling-simulate-analog-behavior",
+          "quote": "When disabling Variance for a binding, this will also disable Simulate Analog Behavior for that binding as well."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Behavior Variance",
+      "settingId": "behavior-variance",
+      "note": "Sits in the same Behavior Simulation menu, but varies Smart Action waits and aim actions. SAB shapes the stick and trigger output."
+    },
+    {
+      "name": "Limit (Velocity Mapping)",
+      "settingId": "velocity-mapping",
+      "note": "Advanced SAB's Limit restricts how fast the stick can move. The Limit velocity mapping is a different setting."
+    }
+  ],
+  "related": [
+    "behavior-variance",
+    "required-game-settings",
+    "output-type",
+    "velocity-calibration",
+    "smoothing",
+    "aiming-curve",
+    "quantization",
+    "velocity-mapping",
+    "mouse-dpi"
+  ]
+}

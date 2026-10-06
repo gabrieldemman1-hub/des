@@ -1,0 +1,138 @@
+{
+  "id": "sync-manual",
+  "name": "Manual",
+  "aliases": [
+    "Manual sync",
+    "Manual Velocity Calibration",
+    "manual reticle velocity calibration"
+  ],
+  "summary": "An advanced method: calibrate the MATRIX to your own in-game settings. XIM discourages it for controller output.",
+  "where": {
+    "text": "Edit your Config (pencil icon), go to its Game Settings section and choose Manual. To calibrate on controller output, scroll down in the Config, press the \"...\" and select Reticle Velocity Calibration.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Groups/#weapon-groups",
+        "quote": "When a weapon group is enabled, the user will be able to change the current sight to match theirs from the game settings section:",
+        "note": "Where the guide calls Game Settings a section of the Config."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+        "quote": "Game Settings support includes three different synchronization methods: Standard, Custom, and Manual."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#manual",
+        "quote": "Learn more about Manual Velocity Calibration."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Velocity-Calibration/#preparing-calibration",
+        "quote": "Edit your Config by pressing the pencil icon. Scroll down and select the \"...\" and then Reticle Velocity Calibration.",
+        "note": "From the guide's steps for controller output Configs."
+      }
+    ]
+  },
+  "definition": {
+    "text": "An advanced option that lets you calibrate the MATRIX to your own set of in-game aim settings.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#manual",
+        "quote": "The manual synchronization method is an advanced option that lets you calibrate to your particular set of in-game aim settings."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It uses Velocity Calibration: in game you do a full horizontal turn (X) and aim from straight down up to straight up (Y), for hip fire and, if the game has it, for ADS. This lets you augment the Smart Translator's behavior so you can use different in-game values.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#manual",
+          "quote": "Learn more about Manual Velocity Calibration."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#performing-x-calibration",
+          "quote": "Use your mouse or controller to perform a full turn and return back to your starting point."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#preparing-calibration",
+          "quote": "There are four different types of velocity calibration: Hip X, Hip Y, ADS X, ADS Y. If your game doesn't have an ADS mode, then, it'll only be X and Y."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#performing-y-calibration",
+          "quote": "Vertical (Y) calibration is the same process as horizontal (X) calibration except you will start with your reticle pointing straight down (at your \"feet\") and end pointing straight up (at the \"ceiling\")."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "Performing your own velocity calibration will allow you to augment the Smart Translator's behavior so you can use different in-game values."
+        }
+      ]
+    },
+    {
+      "text": "It can't change everything. Deadzone and Aiming Technique must still be set to their required values.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "This method doesn't support modifying all game settings including Deadzone and Aiming Technique. Those must still be set to their required values."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "For controller output, XIM discourages it: it may not produce accurate results.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#manual",
+          "quote": "Manual reticle velocity calibration for Configs that output as controller may not produce accurate results and is thus discouraged from being used."
+        }
+      ]
+    },
+    {
+      "text": "Calibration may fail if your in-game values are very different from the required ones.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "Velocity calibration may unsuccessful if you use values that are significantly different than those that are required."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Velocity Calibration for mouse output",
+      "settingId": "velocity-calibration",
+      "note": "The same calibration tool, but required for mouse-and-keyboard output Configs. Manual sync is its use on controller output."
+    }
+  ],
+  "related": [
+    "game-settings-sync",
+    "velocity-calibration",
+    "sync-standard",
+    "sync-custom",
+    "smart-translation"
+  ]
+}

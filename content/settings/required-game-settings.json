@@ -1,0 +1,204 @@
+{
+  "id": "required-game-settings",
+  "name": "Required Game Settings",
+  "aliases": [
+    "required in-game settings",
+    "required aim settings",
+    "Game Settings list"
+  ],
+  "summary": "The exact in-game values XIM needs for your game. Set them, and leave everything else at default.",
+  "where": {
+    "text": "Not a setting: these are values you set in your game. To review the required in-game settings for your game, press the gear icon on Manager's main screen, the Dashboard.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+        "quote": "If you need to check required in-game settings at a later time, press the gear icon on Manager's main screen."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#identity",
+        "quote": "Use the gear icon to review the required in-game settings for the game."
+      }
+    ]
+  },
+  "definition": {
+    "text": "When you add a Config, you may be reminded to set the game's sensitivity to maximum. There may also be game-specific settings you must follow. The rest should stay at default.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+        "quote": "When a new Xbox Config is added to your XIM MATRIX, you may be reminded that you must set your game's in-game sensitivity to maximum (aim sensitivity is then customized in your Config)."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+        "quote": "In all cases, there may be additional game-specific setting requirements you will need to follow. The rest of the settings should be remain at default."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "XIM keeps a list per game. Its public copy says every game needs maximum in-game sensitivity and default values, unless the list says otherwise. Some games need extra settings.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-game-settings",
+          "url": "https://community.xim.tech/pub/xim-game-settings",
+          "quote": "XIM’s Smart Translation technology requires that your game be set up to its maximum in-game sensitivity and all other values as default unless otherwise stated for accurate aim response."
+        },
+        {
+          "source": "xim-game-settings",
+          "url": "https://community.xim.tech/pub/xim-game-settings",
+          "quote": "The following games require additional in-game settings (failure to do so will result sub-optimal aiming performance):"
+        }
+      ],
+      "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
+    },
+    {
+      "text": "Maximum sensitivity is what Standard sync asks for, and every game has Standard. XIM's guide also describes cases where your in-game sensitivity is not at maximum. With Custom sync (only in games that support it), you choose your own in-game aim settings, such as Hip and ADS sensitivity, and copy them into your Config. Manual sync calibrates to your own in-game settings, but XIM discourages it for controller output. If you turn on Simulate Analog Behavior (SAB), XIM says to lower in-game sensitivity so it is not at or near maximum, and all other settings must still match the required list.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#standard",
+          "quote": "Every game that XIM MATRIX supports has the standard game settings synchronization option."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#standard",
+          "quote": "Sensitivity is set to maximum"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#custom",
+          "quote": "Custom is a powerful synchronization option that let's you choose your game's aim settings including:"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#custom",
+          "quote": "Hip and ADS sensitivity"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#custom",
+          "quote": "To use, copy your game's aim settings into your Config:"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#manual",
+          "quote": "The manual synchronization method is an advanced option that lets you calibrate to your particular set of in-game aim settings."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#manual",
+          "quote": "Manual reticle velocity calibration for Configs that output as controller may not produce accurate results and is thus discouraged from being used."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+          "quote": "Or, if you are a controller gamer (and the game has support for it), aim is customized in your game and settings are copied to your Config."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#lower-in-game-sensitivity",
+          "quote": "When using SAB, you will need to turn your game's aim sensitivity down so it's not at or near maximum."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#required-in-game-settings",
+          "quote": "Other than lowering your in-game sensitivity, ensure all other game settings match those listed on the official required game settings list."
+        }
+      ]
+    },
+    {
+      "text": "The game's deadzone settings must match the required ones.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#adjusting-deadzone",
+          "quote": "Your game's deadzone settings must match the required settings for your game."
+        }
+      ]
+    },
+    {
+      "text": "Some games have extra input requirements, such as needing Simulate Analog Behavior (SAB). The list says so in those games' entries.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-game-settings",
+          "url": "https://community.xim.tech/pub/xim-game-settings#X1101",
+          "quote": "Input Requirements: This game has additional input requirements that must be observed in order to play. With a XIM MATRIX, it is required that Simulate Analog Behavior (SAB) be enabled.",
+          "note": "How the page marks games that need SAB, here in the Apex Legends (ALC) entry."
+        }
+      ],
+      "caveat": "This comes from a public copy of XIM's forum list of game settings. It may differ from the current login-walled list, so confirm in Manager (gear icon on the main screen)."
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Get them wrong and your aim suffers. Configs shared by others won't work properly either.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+          "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#required-game-settings",
+          "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
+        }
+      ]
+    },
+    {
+      "text": "Check them any time with the gear icon on Manager's main screen.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+          "quote": "If you need to check required in-game settings at a later time, press the gear icon on Manager's main screen."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Dashboard/#identity",
+          "quote": "Use the gear icon to review the required in-game settings for the game."
+        }
+      ],
+      "caveat": "The public copy of XIM's forum list of game settings may differ from the current list. Treat Manager's list as the one to match."
+    },
+    {
+      "text": "When checking cm/360, XIM says the required settings must be correct and all others must be default, such as FOV.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "Your in-game required settings are correct and all others are default (such as FOV)"
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Custom in-game settings",
+      "settingId": "sync-custom",
+      "note": "With Custom sync you choose some in-game values yourself. The other required settings still apply."
+    }
+  ],
+  "related": [
+    "game-settings-sync",
+    "sync-standard",
+    "sync-custom",
+    "smart-translation",
+    "deadzone",
+    "simulate-analog-behavior"
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "id": "smoothing-classic",
+  "name": "Classic",
+  "aliases": [
+    "Classic smoothing",
+    "Classic mode"
+  ],
+  "summary": "The fixed smoothing mode, based on XIM's older XIM APEX device. Tuned with Smooth, Decay and Synch.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, set Smoothing to Custom instead of a preset, then press the smoothing button to switch between STANDARD and CLASSIC.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      }
+    ]
+  },
+  "definition": {
+    "text": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+      }
+    ],
+    "caveat": "Primer covers XIM MATRIX only and gives no Destiny 2 values for Classic. The only Classic values the guide gives are for matching XIM APEX behavior (below)."
+  },
+  "plainWords": [
+    {
+      "text": "Classic applies the same smoothing whatever your aim speed. Standard, by contrast, adapts to it.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+        }
+      ],
+      "reasoning": "The guide calls Classic \"static\" and Standard \"dynamic\" smoothing that \"adapts to your current aim speed\". We read static as not adapting to speed."
+    },
+    {
+      "text": "It has three settings: Smooth (how strong the smoothing is), Decay (how much past input counts) and Synch (extra smoothing that combines with Smooth).",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Higher values increase impact and is further customized using the Decay setting."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+        }
+      ]
+    },
+    {
+      "text": "For behavior equivalent to the older XIM APEX, the guide says Smooth values match XIM APEX behavior, Decay should be set to 9.0, and Synch should use 8=Default, 16=Common, 32=Slow, or 0=Off.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Values match XIM APEX behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "For equivalent XIM APEX behavior, set to 9.0"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "For equivalent XIM APEX values, use: 8=Default, 16=Common, 32=Slow, or 0=Off"
+        }
+      ],
+      "caveat": "Default, Common, Slow and Off are the XIM APEX values being matched. The guide doesn't give the MATRIX default for Synch. These values are for matching XIM APEX behavior, not Destiny 2 recommendations."
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Try the presets first. XIM says smoothing is strictly preference.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Classic can't favour one aim style: it smooths slow tracking and fast snaps the same way. Primer's aim-style directions for smoothing assume Standard. With Classic you get the definitions, not the directions.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+        }
+      ],
+      "reasoning": "Classic provides \"static smoothing behavior\", unlike Standard's smoothing that \"adapts to your current aim speed\"."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "XIM APEX smoothing",
+      "statement": {
+        "text": "Classic is based on the smoothing of XIM's previous device, the XIM APEX, upgraded for the MATRIX.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#classic",
+            "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+          }
+        ],
+        "caveat": "Primer covers XIM MATRIX only and gives no advice written for the XIM APEX itself. The MATRIX guide's settings for matching XIM APEX behavior are listed under Classic."
+      }
+    }
+  ],
+  "related": [
+    "smoothing",
+    "smooth",
+    "decay",
+    "synch",
+    "smoothing-standard"
+  ]
+}

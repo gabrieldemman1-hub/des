@@ -1,0 +1,211 @@
+{
+  "id": "firmware",
+  "name": "Firmware",
+  "aliases": [
+    "XIM MATRIX firmware",
+    "Firmware Flash Tool",
+    "firmware flash"
+  ],
+  "summary": "The MATRIX's own software. It updates often, and you flash it from a PC or Mac over USB.",
+  "where": {
+    "text": "Not a setting. To see your firmware version, press the vertical \"...\" on the Dashboard and select About. To update it, use the XIM MATRIX Firmware Flash Tool on a Windows 10/11 x64 PC or a Mac with macOS 13 or higher, connected over USB.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Press the vertical \"...\" to open the menu of additional options which includes:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Seeing current firmware and manager version"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Version-Info/#version-info",
+        "quote": "XIM MATRIX is updated frequently, it's important to know what versions of Manager and firmware you are running. To access versioning, press the vertical \"...\" and select About. Your version numbers are listed here."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Updating-Firmware/#flash-tool-download",
+        "quote": "Here we have links for both XIM MATRIX Manager (which is used to configure your MATRIX), and the XIM MATRIX Firmware Flash Tool. You will want to click on the firmware tool link."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
+        "quote": "Running the XIM MATRIX flash upgrade tools requires the following OS versions: Windows 10/11 x64 or macOS 13 or higher."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
+        "quote": "You will need access to a PC running Windows or a Mac. Your XIM MATRIX is upgraded over USB."
+      }
+    ]
+  },
+  "definition": {
+    "text": "The MATRIX is updated often with new features and fixes. Even a new MATRIX may have out-of-date firmware.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Updating-Firmware/#updating-firmware",
+        "quote": "Your XIM MATRIX is frequently being updated with new features and fixes. Even a new XIM MATRIX may have firmware that is out of date."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "You update it over USB, using the XIM MATRIX Firmware Flash Tool, from a PC running Windows 10/11 x64 or a Mac running macOS 13 or higher.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
+          "quote": "You will need access to a PC running Windows or a Mac. Your XIM MATRIX is upgraded over USB."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
+          "quote": "Running the XIM MATRIX flash upgrade tools requires the following OS versions: Windows 10/11 x64 or macOS 13 or higher."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Updating-Firmware/#flash-tool-download",
+          "quote": "Here we have links for both XIM MATRIX Manager (which is used to configure your MATRIX), and the XIM MATRIX Firmware Flash Tool. You will want to click on the firmware tool link."
+        }
+      ]
+    },
+    {
+      "text": "Hold the MATRIX button while plugging it in: it shows blue in programming mode, yellow while updating, then the rainbow startup when done.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Updating-Firmware/#connect-to-your-computer",
+          "quote": "While continuing to hold the button, plug in your XIM MATRIX into your PC or Mac."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Updating-Firmware/#connect-to-your-computer",
+          "quote": "Your XIM MATRIX will now display blue meaning it's in firmware programming mode."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Updating-Firmware/#flash-your-xim-matrix",
+          "quote": "As your XIM MATRIX is updating, it will display yellow. The flash tool will display update progress as well."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Updating-Firmware/#flash-your-xim-matrix",
+          "quote": "Upon completion your XIM MATRIX will restart and complete the flash process. Finally it will display the normal rainbow startup sequence. Your XIM MATRIX is now updated."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Update before troubleshooting if an update is available.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Xbox/#troubleshooting-xbox",
+          "quote": "Your XIM MATRIX is frequently being updated with new features and fixes. It is recommended that you upgrade if there is an update available before continuing troubleshooting."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-PC/#troubleshooting-pc",
+          "quote": "Your XIM MATRIX is frequently being updated with new features and fixes. It is recommended that you upgrade if there is an update available before continuing troubleshooting."
+        }
+      ]
+    },
+    {
+      "text": "XIM asks you to run its latest firmware, which has all the most recent fixes. At times an upgrade is required to keep using the MATRIX.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-hardware-compatibility",
+          "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+          "quote": "Please make sure you are running our latest firmware which will have all our most recent fixes."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Updating-Firmware/#computer-system-requirements",
+          "quote": "You will be required at times to upgrade your XIM MATRIX in order to ensure its uninterrupted use."
+        }
+      ]
+    },
+    {
+      "text": "Back up your MATRIX before updating.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Updating-Firmware/#back-up-your-xim-matrix",
+          "quote": "It is always recommended to back up your XIM MATRIX before updating it."
+        }
+      ]
+    },
+    {
+      "text": "Take care when restoring: XIM warns that restoring a backup of your Configs using an older firmware can corrupt them. Corrupted Configs can't be recovered. You would need to factory reset your MATRIX with the flash tool and rebuild them.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#config-corruption",
+          "quote": "Your Configs can be corrupted if your XIM MATRIX loses power while it is writing itself, or, if you restore a backup of your Configs using an older firmware."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#config-corruption",
+          "quote": "Unfortunately you won't be able to recover your Configs in this case. You will need to factory reset your XIM MATRIX using the flash tool and rebuild them."
+        }
+      ]
+    },
+    {
+      "text": "Xbox: don't update your Xbox controller's firmware through the MATRIX. Update it while it is connected directly to the Xbox.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Xbox/#3-xbox-controller-update",
+          "quote": "Do not update your Xbox controller's firmware through your XIM MATRIX. Only upgrade your Xbox controller while it's directly connected to your Xbox."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Smart Translator updates",
+      "settingId": "smart-translation",
+      "note": "A game's aim translation. Manager flags an out-of-date one, and you recreate the Config to update it."
+    },
+    {
+      "name": "Games database",
+      "statement": {
+        "text": "The game support Manager downloads: a down-arrow icon appears when an update is available, and Global Settings can force a download. Separate from flashing firmware.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Dashboard/#notifications",
+            "quote": "New Games Database Available: When updated game support is available for your XIM MATRIX, you will see a down arrow icon appear. Press it to download the database."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Global-Settings/#force-games-download",
+            "quote": "Manager notifies you of game updates. However, if you want to force a games database download, you can do that here."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "smart-translation",
+    "warning-lights",
+    "config"
+  ]
+}

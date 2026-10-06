@@ -1,0 +1,145 @@
+{
+  "id": "aim-magnitude-action",
+  "name": "Aim Magnitude",
+  "aliases": [
+    "Aim Magnitude action",
+    "Aim Magnitude Smart Action"
+  ],
+  "summary": "A Smart Action that moves the reticle at a set speed, in degrees per second. Used with Aim Angle, for example for recoil control.",
+  "where": {
+    "text": "Edit your Config (pencil icon) and open a binding, or add one with the + button at the end of the bindings list. Select the Smart Actions Editor button at the bottom, then add Aim Magnitude from the Aim Control category.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Bindings/#simple-bindings",
+        "quote": "To change a binding, just click on it."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Bindings/#adding-a-binding",
+        "quote": "To add a binding, press the '+' button at the end of the bindings list."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Editor/#loading-editor",
+        "quote": "Select the Smart Actions Editor button at the bottom"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Editor/#editor-features",
+        "quote": "Available actions you can use in your sequence."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Action-Categories/#action-categories",
+        "quote": "Smart Actions come in categories of functionality."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Action-Categories/#aim-control",
+        "quote": "Actions used to augment reticle velocity that seamlessly combines with the gamer's aim."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Moves the reticle at a set speed and blends with your own aim. Used for things like recoil control or auto-turn, together with Aim Angle.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Reference/#aim-magnitude",
+        "quote": "Move reticle at specified speed. Seamlessly integrates with user aim. Use in scenarios such as recoil control or auto-turn. (Use with Aim Angle.)"
+      }
+    ],
+    "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
+  },
+  "plainWords": [
+    {
+      "text": "Its speed is set in degrees per second (°/s).",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+          "quote": "Aim Magnitude Smart Action is set in degrees-per-second (°/s)"
+        }
+      ]
+    },
+    {
+      "text": "For the reticle, use Aim Magnitude rather than Right Stick Magnitude, which doesn't blend with aim.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-magnitude",
+          "quote": "This action does not integrate with aim. Use Aim Magnitude for reticle modification."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "For recoil control, set its value to match your weapon. XIM's basic recoil control doesn't try to match the recoil pattern exactly.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Recoil-Control/#recoil-control",
+          "quote": "Customize your aim magnitude action value to best match your weapon."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Recoil-Control/#recoil-control",
+          "quote": "This is basic recoil control and isn't intended to match the recoil pattern exactly. For a complete solution, see Recoil Modeling."
+        }
+      ],
+      "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Magnitude Quantization",
+      "settingId": "quantization-magnitude",
+      "note": "Snaps your reticle speed to set steps. An aim setting, not an action."
+    },
+    {
+      "name": "Aim Magnitude Variance",
+      "settingId": "behavior-variance",
+      "note": "Offsets this action's speed slightly above or below the value you set."
+    },
+    {
+      "name": "Right Stick Magnitude",
+      "statement": {
+        "text": "A Smart Action that sets the right stick's deflection directly, for example for radial menus. It doesn't blend with your aim.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-magnitude",
+            "quote": "Set right thumbstick deflection at specified value. Use in scenarios such as automatic radial menu selection. (Use with Right Stick Angle.)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-magnitude",
+            "quote": "This action does not integrate with aim. Use Aim Magnitude for reticle modification."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "aim-angle-action",
+    "behavior-variance",
+    "quantization-magnitude",
+    "modify-aim-sensitivity",
+    "quantization"
+  ]
+}

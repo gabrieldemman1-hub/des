@@ -1,0 +1,256 @@
+{
+  "id": "motion-aim",
+  "name": "Motion Aim",
+  "aliases": [
+    "gyro aim",
+    "Gamepad Gyro"
+  ],
+  "summary": "Aiming by moving a gyro gamepad, with its own Sensitivity, Smoothing and activation modes.",
+  "where": {
+    "text": "Edit your Config (pencil icon). Under Aiming Sources, make sure the motion aim source is selected. If a gyro gamepad is connected but you don't see motion aim settings in Manager, press a button on the gamepad to activate it.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-sources",
+        "quote": "When a Config is created, aiming sources will automatically be enabled based on your Config choice. Like all Config settings, you can change them as needed."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+        "quote": "To access, press the \"...\" under Aiming Sources"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "To enable aiming with gyro (motion aim), make sure the motion aim source is selected."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "If you have a gyro gamepad connected but you don't see motion aim settings in Manager, press a button on the gamepad to activate it."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Motion Aim is an excellent way to get the aim precision and speed of mouse combined with benefits of true analog player movement.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion Aim is an excellent way to get the aim precision and speed of mouse combined with benefits of true analog player movement."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-sources",
+        "quote": "Gamepad Gyro"
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "To use it, select the motion aim source. If a gyro gamepad is connected but you don't see motion settings, press a button on the gamepad.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "To enable aiming with gyro (motion aim), make sure the motion aim source is selected."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "If you have a gyro gamepad connected but you don't see motion aim settings in Manager, press a button on the gamepad to activate it."
+        }
+      ]
+    },
+    {
+      "text": "XIM lists these controllers for gyro aim: PlayStation DualSense and DualShock 4, Switch Pro, and Joy-Con. Xbox controllers are not on the list. They must be genuine: XIM says third-party PlayStation and Nintendo controllers are unsupported. You can use them on any console the MATRIX supports or on PC.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Hardware-Compatibility/#usb-device-ports-1-and-2",
+          "quote": "In addition, the following can be used for gyro aim as well:"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Hardware-Compatibility/#usb-device-ports-1-and-2",
+          "quote": "PlayStation DualSense and DualShock 4 controllers"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Hardware-Compatibility/#usb-device-ports-1-and-2",
+          "quote": "Switch Pro and Joycon controllers"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Hardware-Compatibility/#usb-device-ports-1-and-2",
+          "quote": "Genuine Xbox, PlayStation, and Nintendo controllers required (third party PlayStation and Nintendo controller unsupported)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Hardware-Compatibility/#usb-device-ports-1-and-2",
+          "quote": "You can plug a variety of input devices into them and use these devices to game on any console XIM MATRIX supports or PC."
+        }
+      ]
+    },
+    {
+      "text": "It can be active only in ADS, in ADS or while firing, always (except in Navigate Mode), or when your Smart Actions say so (Custom Engage or Custom Toggle). It can also be disabled.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Aiming Down Sight: Motion aim is only active while aiming down sight"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Aim and Fire: Motion aim is active while ADS or firing"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Always On: Motion aim is always on (except when Navigate Mode is active)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Custom Engage: Specify when motion aim is active using Smart Actions"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Custom Toggle: Toggle when motion aim is active using Smart Actions"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Disabled: Motion is off."
+        }
+      ]
+    },
+    {
+      "text": "Its settings are Sensitivity (in times-degrees-per-second) and Smoothing, plus the same extra options as mouse aim: Aiming Curve, Y Scale and Quantization.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+          "quote": "Motion (gyro) sensitivity is set in times-degrees-per-second"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+        }
+      ]
+    },
+    {
+      "text": "Stability, in Standard smoothing, applies to motion aim only.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "New to motion aim? Ease into it. Use motion for fine aim and the thumbstick for coarse aim. Start with a very low sensitivity and lean on the stick at first.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "If you are new to motion aim, ease into it. Use motion for fine aim and thumbstick for coarse. Start with very low sensitivity and rely more on thumbstick aim initially."
+        }
+      ]
+    },
+    {
+      "text": "Quick Pull with hair triggers adds stability when firing with motion aim, because you don't press and release the trigger fully.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gamepad-Customization/#hair-triggers",
+          "quote": "Quick Pull with hair triggers also provides additional stability when firing using motion gyro aim. It reduces the physical force of the trigger by not requiring full press and release which can cause your gamepad to move."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Tracking and precision holds, while you are new to motion aim. XIM's tip for players new to motion aim is to use motion for fine aim and the stick for coarse aim, and fine aim is what those styles need. While you ease in, leave snaps and big turns to the stick.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "If you are new to motion aim, ease into it. Use motion for fine aim and thumbstick for coarse. Start with very low sensitivity and rely more on thumbstick aim initially."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "Motion Aim is an excellent way to get the aim precision and speed of mouse combined with benefits of true analog player movement."
+        }
+      ],
+      "reasoning": "XIM's tip for players new to motion aim: \"Use motion for fine aim and thumbstick for coarse.\" Tracking and precision holds are mostly fine aim; snaps and big turns are coarse.",
+      "caveat": "This follows a tip for players new to motion aim. XIM's User Guide gives no split between motion and stick for after that, and it describes motion aim as a way to get \"the aim precision and speed of mouse\"."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Engage, Pause and Toggle Motion Aim",
+      "statement": {
+        "text": "Smart Actions for motion aim, not motion aim settings. Engage and Pause work only while the action is active. Toggle switches motion aim on or off, only works with the Custom Toggle activation mode, and only appears when the binding uses a runs-once condition.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+            "quote": "Enable gyro motion aim. Only enabled while action is active. Use to customize motion enablement beyond the built in motion activation methods. Requires a supported gyro controller."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#pause-motion-aim",
+            "quote": "Pause gyro motion aim. Only pauses while action is active. Requires a supported gyro controller."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+            "quote": "Toggles gyro motion aim on/off. Only works with the custom motion toggle activation method. Requires a supported gyro controller."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+            "quote": "Requires a runs-once condition selected to access"
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "stability",
+    "sensitivity",
+    "smoothing",
+    "thumbstick-aim",
+    "navigate-mode"
+  ]
+}

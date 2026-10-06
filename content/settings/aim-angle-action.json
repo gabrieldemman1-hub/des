@@ -1,0 +1,126 @@
+{
+  "id": "aim-angle-action",
+  "name": "Aim Angle",
+  "aliases": [
+    "Aim Angle action",
+    "Aim Angle Smart Action"
+  ],
+  "summary": "A Smart Action that sets the direction the reticle moves. Used with Aim Magnitude, which sets the speed.",
+  "where": {
+    "text": "Edit your Config (pencil icon) and open a binding, or add one with the + button at the end of the bindings list. Select the Smart Actions Editor button at the bottom, then add Aim Angle from the Aim Control category.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Bindings/#simple-bindings",
+        "quote": "To change a binding, just click on it."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Bindings/#adding-a-binding",
+        "quote": "To add a binding, press the '+' button at the end of the bindings list."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Editor/#loading-editor",
+        "quote": "Select the Smart Actions Editor button at the bottom"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Editor/#editor-features",
+        "quote": "Available actions you can use in your sequence."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Action-Categories/#action-categories",
+        "quote": "Smart Actions come in categories of functionality."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Action-Categories/#aim-control",
+        "quote": "Actions used to augment reticle velocity that seamlessly combines with the gamer's aim."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Moves the reticle at a set angle and blends with your own aim. Used for things like recoil control or auto-turn, together with Aim Magnitude.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Reference/#aim-angle",
+        "quote": "Move reticle at specified angle. Seamlessly integrates with user aim. Use in scenarios such as recoil control or auto-turn. (Use with Aim Magnitude.)"
+      }
+    ],
+    "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
+  },
+  "plainWords": [
+    {
+      "text": "Aim Control actions add to your own aim rather than replacing it.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Action-Categories/#aim-control",
+          "quote": "Actions used to augment reticle velocity that seamlessly combines with the gamer's aim. Used in a variety of scenarios including recoil control."
+        }
+      ]
+    },
+    {
+      "text": "For the reticle, use Aim Angle rather than Right Stick Angle, which doesn't blend with aim.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-angle",
+          "quote": "This action does not integrate with aim. Use Aim Angle for reticle modification."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Angle Quantization",
+      "settingId": "quantization-angle",
+      "note": "Snaps the direction your reticle moves to set angles. An aim setting, not an action."
+    },
+    {
+      "name": "Aim Angle Variance",
+      "settingId": "behavior-variance",
+      "note": "Offsets this action's angle slightly above or below the value you set."
+    },
+    {
+      "name": "Right Stick Angle",
+      "statement": {
+        "text": "A Smart Action that sets the right stick's angle directly, for example for radial menus. It doesn't blend with your aim.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-angle",
+            "quote": "Set right thumbstick angle at specified value. Use in scenarios such as automatic radial menu selection. (Use with Right Stick Magnitude.)"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Smart-Actions-Reference/#right-stick-angle",
+            "quote": "This action does not integrate with aim. Use Aim Angle for reticle modification."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "aim-magnitude-action",
+    "behavior-variance",
+    "quantization-angle",
+    "quantization"
+  ]
+}
