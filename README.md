@@ -21,8 +21,8 @@ Open the address it prints. The site lives under `/des/`, as it does on GitHub P
 |---|---|
 | `npm run dev` | Local server with live reload |
 | `npm run build` | Builds the site into `dist/`, including the offline service worker |
-| `npm run preview` | Serves the built site |
-| `npm test` | Content schema and integrity checks, and page rendering tests (Vitest) |
+| `npm run preview` | Serves the built site; the service worker runs here too, so you can test it offline |
+| `npm test` | Content schema and integrity checks, page rendering tests, and colour contrast (Vitest) |
 | `npm run check` | Type-checks the Astro pages and TypeScript |
 | `npm run lint` | ESLint |
 | `npm run verify:citations` | Fetches every cited page and checks every quote is on it (needs network) |
@@ -50,7 +50,7 @@ src/
   styles/global.css      the field manual's tokens and base styles
   sw-template.js         the offline service worker (filled in at build time)
 scripts/                 verify-citations, icon generation
-tests/                   page rendering tests
+tests/                   page rendering tests; WCAG AA contrast for every colour token
 ```
 
 ## Publishing
