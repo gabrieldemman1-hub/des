@@ -15,6 +15,13 @@ in place. It is live at https://gabrieldemman1-hub.github.io/des/ and installs t
 screen; every merge to `main` publishes it (see Publishing to GitHub Pages). A professional UI
 design review and the fixes it led to are recorded in [docs/reviews/](docs/reviews/).
 
+**Play** (added 2026-10-06) is a fifth section, with its own tab: Crucible coaching frameworks to
+run while you play (before the match, round start, in the fight, after a death, between rounds,
+after the session), the mindset behind them, a loadout plan for a 120 hand cannon with a slug
+shotgun, a Javelin-4 map card, and a death tally for the session. It is coaching, not XIM
+guidance, so it names what each item rests on instead of a confidence label; see CONCEPT.md
+Flow E and [docs/research/2026-10-06-play-pvp-coaching.md](docs/research/2026-10-06-play-pvp-coaching.md).
+
 ## Run it on your computer
 
 You need **Node.js 22.22.2 or newer on 22.x, 24.15+ or 26+** (the test runner's jsdom 30

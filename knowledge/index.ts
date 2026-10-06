@@ -10,6 +10,7 @@
 import type { z } from 'zod';
 import sourcesJson from './sources.json';
 import gameJson from './destiny2/game.json';
+import playJson from './destiny2/play.json';
 import weaponsJson from './destiny2/weapons.json';
 import aimStylesJson from './matrix/aim-styles.json';
 import expertNotesJson from './matrix/expert-notes.json';
@@ -23,11 +24,24 @@ import {
   ExpertNotesFile,
   FoundationFile,
   GlossaryFile,
+  PlayFile,
   SourcesFile,
   SymptomsFile,
   WeaponsFile,
 } from './schema';
-import type { AimStyleId, GlossaryTerm, Source, Statement, WeaponArchetype, WeaponSlot } from './schema';
+import type {
+  AimStyleId,
+  GlossaryTerm,
+  PlayDeathCause,
+  PlayFramework,
+  PlayLoadoutPlan,
+  PlayMap,
+  PlayPrinciple,
+  Source,
+  Statement,
+  WeaponArchetype,
+  WeaponSlot,
+} from './schema';
 
 export type {
   AimingSource,
@@ -37,13 +51,24 @@ export type {
   GlossaryTerm,
   OutputType,
   Platform,
+  PlayBasis,
+  PlayCallout,
+  PlayDeathCause,
+  PlayFramework,
+  PlayLoadoutPlan,
+  PlayMap,
+  PlayMoment,
+  PlayNote,
+  PlayPrinciple,
+  PlaySpot,
+  PlayStep,
   PreferenceInput,
   Source,
   Statement,
   WeaponArchetype,
   WeaponSlot,
 } from './schema';
-export { AIMING_SOURCES, CONFIDENCE_LEVELS, OUTPUT_TYPES, OUTPUT_TYPES_BY_PLATFORM } from './schema';
+export { AIMING_SOURCES, CONFIDENCE_LEVELS, OUTPUT_TYPES, OUTPUT_TYPES_BY_PLATFORM, PLAY_BASES, PLAY_MOMENTS } from './schema';
 
 export type SourcesData = z.infer<typeof SourcesFile>;
 export type GlossaryData = z.infer<typeof GlossaryFile>;
@@ -64,12 +89,14 @@ export type Destiny2Game = z.infer<typeof Destiny2GameFile>;
 export type Preference = Destiny2Game['preferences'][number];
 export type WeaponsData = z.infer<typeof WeaponsFile>;
 export type SlotInfo = WeaponsData['slots'][number];
+export type PlayData = z.infer<typeof PlayFile>;
 
 /** Every data file, keyed by its path relative to `knowledge/`, with its schema. */
 export const KNOWLEDGE_SCHEMAS = {
   'sources.json': SourcesFile,
   'destiny2/game.json': Destiny2GameFile,
   'destiny2/weapons.json': WeaponsFile,
+  'destiny2/play.json': PlayFile,
   'matrix/aim-styles.json': AimStylesFile,
   'matrix/expert-notes.json': ExpertNotesFile,
   'matrix/foundation.json': FoundationFile,
@@ -87,6 +114,7 @@ export const rawKnowledgeFiles: RawKnowledgeFiles = {
   'sources.json': sourcesJson,
   'destiny2/game.json': gameJson,
   'destiny2/weapons.json': weaponsJson,
+  'destiny2/play.json': playJson,
   'matrix/aim-styles.json': aimStylesJson,
   'matrix/expert-notes.json': expertNotesJson,
   'matrix/foundation.json': foundationJson,
@@ -108,11 +136,23 @@ const MISSING_GUARDRAIL: Statement = {
   citations: [],
 };
 
+/** Play with nothing in it: the screen says the coaching material hasn't loaded. */
+const EMPTY_PLAY: PlayData = {
+  game: 'destiny-2',
+  about: { what: '', basisNote: '' },
+  principles: [],
+  frameworks: [],
+  deathCauses: [],
+  loadoutPlans: [],
+  maps: [],
+};
+
 /** What a file becomes when it fails validation: valid, and empty. */
 const EMPTY_FILES: ParsedKnowledgeFiles = {
   'sources.json': { sources: [] },
   'destiny2/game.json': { game: 'destiny-2', name: 'Destiny 2', requiredSettings: [], notes: [], preferences: [] },
   'destiny2/weapons.json': { slots: DEFAULT_SLOTS, archetypes: [] },
+  'destiny2/play.json': EMPTY_PLAY,
   'matrix/aim-styles.json': { styles: [] },
   'matrix/expert-notes.json': { notes: [] },
   'matrix/foundation.json': { checks: [], settings: [] },
@@ -160,6 +200,8 @@ export interface KnowledgeBase {
   expertNotes: ExpertNote[];
   game: Destiny2Game;
   weapons: { slots: SlotInfo[]; archetypes: WeaponArchetype[] };
+  /** Flow E, Play: Crucible coaching frameworks, principles, loadout plans and map cards. */
+  play: PlayData;
 }
 
 export function mergeKnowledge(files: ParsedKnowledgeFiles): KnowledgeBase {
@@ -180,6 +222,7 @@ export function mergeKnowledge(files: ParsedKnowledgeFiles): KnowledgeBase {
     expertNotes: files['matrix/expert-notes.json'].notes,
     game: files['destiny2/game.json'],
     weapons: { slots: weapons.slots.length > 0 ? weapons.slots : DEFAULT_SLOTS, archetypes: weapons.archetypes },
+    play: files['destiny2/play.json'],
   };
 }
 
@@ -190,6 +233,11 @@ export interface KnowledgeLookups {
   sourceById: (id: string) => Source | undefined;
   aimStyleById: (id: AimStyleId) => AimStyle | undefined;
   slotName: (id: WeaponSlot) => string;
+  playPrincipleById: (id: string) => PlayPrinciple | undefined;
+  playFrameworkById: (id: string) => PlayFramework | undefined;
+  playDeathCauseById: (id: string) => PlayDeathCause | undefined;
+  playLoadoutPlanById: (id: string) => PlayLoadoutPlan | undefined;
+  playMapById: (id: string) => PlayMap | undefined;
 }
 
 function indexBy<T extends { id: string }>(items: readonly T[]): Map<string, T> {
@@ -206,6 +254,11 @@ export function createLookups(kb: KnowledgeBase): KnowledgeLookups {
   const sources = indexBy(kb.sources);
   const styles = indexBy(kb.aimStyles);
   const slots = indexBy(kb.weapons.slots);
+  const principles = indexBy(kb.play.principles);
+  const frameworks = indexBy(kb.play.frameworks);
+  const deathCauses = indexBy(kb.play.deathCauses);
+  const loadoutPlans = indexBy(kb.play.loadoutPlans);
+  const maps = indexBy(kb.play.maps);
   return {
     termById: (id) => terms.get(id),
     symptomById: (id) => symptoms.get(id),
@@ -213,6 +266,11 @@ export function createLookups(kb: KnowledgeBase): KnowledgeLookups {
     sourceById: (id) => sources.get(id),
     aimStyleById: (id) => styles.get(id),
     slotName: (id) => slots.get(id)?.name ?? id,
+    playPrincipleById: (id) => principles.get(id),
+    playFrameworkById: (id) => frameworks.get(id),
+    playDeathCauseById: (id) => deathCauses.get(id),
+    playLoadoutPlanById: (id) => loadoutPlans.get(id),
+    playMapById: (id) => maps.get(id),
   };
 }
 
@@ -232,3 +290,8 @@ export const archetypeById = lookups.archetypeById;
 export const sourceById = lookups.sourceById;
 export const aimStyleById = lookups.aimStyleById;
 export const slotName = lookups.slotName;
+export const playPrincipleById = lookups.playPrincipleById;
+export const playFrameworkById = lookups.playFrameworkById;
+export const playDeathCauseById = lookups.playDeathCauseById;
+export const playLoadoutPlanById = lookups.playLoadoutPlanById;
+export const playMapById = lookups.playMapById;

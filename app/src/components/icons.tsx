@@ -84,3 +84,13 @@ export function LearnIcon() {
     </Icon>
   );
 }
+
+/** Play: a map pin with a crosshair dot, for the coaching section. */
+export function PlayIcon() {
+  return (
+    <Icon>
+      <path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </Icon>
+  );
+}

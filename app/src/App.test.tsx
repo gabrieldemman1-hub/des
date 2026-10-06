@@ -16,7 +16,7 @@ describe('app shell', () => {
     const { user } = renderApp();
     const nav = screen.getByRole('navigation', { name: 'Main' });
     const tabs = within(nav).getAllByRole('link');
-    expect(tabs.map((t) => t.textContent)).toEqual(['Home', 'Learn', 'Loadouts', 'Profile', 'Sources']);
+    expect(tabs.map((t) => t.textContent)).toEqual(['Home', 'Play', 'Learn', 'Loadouts', 'Profile', 'Sources']);
     expect(within(nav).getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
 
     await user.click(within(nav).getByRole('link', { name: 'Sources' }));

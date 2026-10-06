@@ -1,0 +1,1165 @@
+{
+  "game": "destiny-2",
+  "about": {
+    "what": "Play is Dialed’s coaching section for the Crucible: frameworks to run while you play, and the mindset behind them. It is about decisions, not settings. Each framework is a short procedure for one moment of a match, written to be read between rounds on a phone.",
+    "basisNote": "Nothing here comes from XIM, so the Official, Expert and Reasoned labels don’t apply. Each item says what it rests on instead. Fundamental: holds in every competitive shooter. Destiny 2: a mechanic or number in the game, which a sandbox patch can change, so confirm it in the current sandbox. Map: a map detail from community callout maps, which fireteams name differently, so confirm it in a private match. Dialed: Dialed’s own reasoning, not stated by a source. Where a number would be a guess, Play tells you how to measure it yourself instead.",
+    "startWith": "control-loop"
+  },
+  "principles": [
+    {
+      "id": "advantage-before-aim",
+      "title": "Advantage before aim",
+      "oneLiner": "Take fights you have already won.",
+      "body": [
+        "Aim decides even fights. Positioning decides whether a fight is even. A strong player’s record is mostly made of fights that were tilted before the first shot: more cover, better range, a teammate close enough to trade, full health against someone already chipped.",
+        "Treat your aim as the tie-breaker, not the plan. If a fight only goes your way when you hit every shot, it is a coin flip, and coin flips lose Trials cards. The plan is to arrange the fight so that an ordinary performance wins it."
+      ],
+      "inPlay": [
+        "Before you peek, you can name the advantage you have.",
+        "If you can’t name one, you reposition, bait, or wait instead of challenging.",
+        "You lose a duel and your first question is “what was uneven?”, not “why did I miss?”."
+      ],
+      "basis": "fundamental",
+      "frameworkIds": [
+        "advantage-check",
+        "control-loop"
+      ]
+    },
+    {
+      "id": "information-first",
+      "title": "Information first",
+      "oneLiner": "The first ten seconds buy information, not kills.",
+      "body": [
+        "Every round starts blind. The team that learns where the other team is first chooses the first fight, and the first fight decides most rounds in 3v3. Radar pings, footsteps, a lane that goes quiet, a teammate’s callout and where this team went last round are all information.",
+        "A kill in the first ten seconds is a bonus. Knowing where all three of them are is the goal. Until the team knows, nobody crosses the open middle."
+      ],
+      "inPlay": [
+        "Your first move of the round is to a spot that shows you a lane, not a spot that puts you in one.",
+        "You call what you see in three words or fewer: “two Rocket, one Glass”.",
+        "You notice when a lane is quiet and treat the silence as information: they went the other way."
+      ],
+      "basis": "fundamental",
+      "frameworkIds": [
+        "round-start"
+      ]
+    },
+    {
+      "id": "angles-not-places",
+      "title": "Angles, not places",
+      "oneLiner": "A spot is only worth the angles it gives you and denies them.",
+      "body": [
+        "Map control is not standing somewhere. It is holding the sightlines the other team needs to cross and refusing them the sightlines that look at you. A key spot is one that watches a lane they must use, with cover that lets you break the line in one step.",
+        "When you pick a spot, name the lane it watches and the lanes that watch you. If the second list is longer than the first, it is not a spot, it is a trap. The centre of most maps is a trap for exactly this reason: everything looks at it."
+      ],
+      "inPlay": [
+        "You hold the edge of a room looking into the open, not the open looking into a room.",
+        "You know which direction a sniper would have to be in to see you, and you have put a wall there.",
+        "You give up a spot the moment a flank opens a second angle on it."
+      ],
+      "basis": "fundamental",
+      "frameworkIds": [
+        "control-loop",
+        "peek-loop"
+      ]
+    },
+    {
+      "id": "minimum-exposure",
+      "title": "Minimum exposure",
+      "oneLiner": "Show the least body for the least time.",
+      "body": [
+        "Every moment you are visible is a moment they can shoot. Peek from cover, fire, get back behind it. A hand cannon rewards this more than any other primary: its damage comes in three big hits, not a stream, so there is nothing to gain from standing in the open between shots.",
+        "Exposure has two parts: how much of you shows and for how long. Width is set by how far you step out; time is set by how quickly you step back. Most players get the first part right and the second wrong, and die after the exchange rather than during it.",
+        "A left-hand peek means cover on your left: you step right to expose and left to get back. Keep it the same way every time at a spot, so the step back is a reflex rather than a decision."
+      ],
+      "inPlay": [
+        "Your reticle is already at head height where they will appear before you step out.",
+        "You fire one or two shots per look, then you are gone.",
+        "You reload behind cover, never while visible."
+      ],
+      "basis": "fundamental",
+      "frameworkIds": [
+        "peek-loop"
+      ]
+    },
+    {
+      "id": "trade-or-dont",
+      "title": "Trade, or don’t fight",
+      "oneLiner": "In 3v3, dying alone is the only unforgivable death.",
+      "body": [
+        "A 2v3 is a lost round most of the time. A death a teammate can answer within a second is a trade, and a trade keeps the round even. A death nobody can answer is a gift: they are now up a player and have your special ammo spot to themselves.",
+        "Stay close enough that your death is a trade, and far enough that one grenade or one super doesn’t take two of you. In practice that is one room apart with a shared line of sight, not shoulder to shoulder."
+      ],
+      "inPlay": [
+        "Before you challenge, you know which teammate can see the fight.",
+        "You don’t chase a kill into a room your team can’t see into.",
+        "When a teammate goes down, your first move is toward the trade, not away from it."
+      ],
+      "basis": "fundamental",
+      "frameworkIds": [
+        "advantage-check",
+        "when-down"
+      ]
+    },
+    {
+      "id": "disengaging-is-winning",
+      "title": "Disengaging is winning",
+      "oneLiner": "Backing out of a bad fight is a win.",
+      "body": [
+        "Chip damage is never wasted: a chipped enemy is a kill for the next peek, by you or a teammate. Strong players break line of sight the moment a fight turns, instead of trying to win it from behind. Every fight you leave alive is a fight you can take again on your terms.",
+        "The urge to stay is the urge to be right about the first peek. Let it go. The scoreboard records deaths, not near misses."
+      ],
+      "inPlay": [
+        "You lose the first exchange and you are behind a wall before you have finished thinking about it.",
+        "You let your shield come back before you look again.",
+        "You call the chip: “one weak Rocket”."
+      ],
+      "basis": "fundamental",
+      "frameworkIds": [
+        "bail-rule"
+      ]
+    },
+    {
+      "id": "patience-and-the-clock",
+      "title": "Patience and the clock",
+      "oneLiner": "The clock is on the side of the team in the better position.",
+      "body": [
+        "In round-based modes the timer punishes the team that has to move. If you hold the better angles, they have to come to you, through your sightlines, before time runs out or a zone forces the issue. Pushing when you are already ahead throws that away and hands them the peek.",
+        "Patience is not passivity. You keep looking, keep calling, keep chipping. You just don’t cross open ground to make something happen when the round is already going your way."
+      ],
+      "inPlay": [
+        "When your team is up a player, you slow down rather than speed up.",
+        "You know roughly how much time is left in the round without looking.",
+        "You let them make the first mistake."
+      ],
+      "basis": "fundamental",
+      "frameworkIds": [
+        "when-ahead"
+      ]
+    },
+    {
+      "id": "controllables",
+      "title": "Control what you control",
+      "oneLiner": "Decide the controllables; accept the rest.",
+      "body": [
+        "You control your loadout, your position, when you expose yourself and for how long, and where you are relative to your teammates. You do not control lag, their aim, or whether their abilities are ready. A good round is one where you got the controllables right, whatever the scoreboard says.",
+        "This is what makes improvement measurable. Tag each death by which controllable you got wrong, and the tags tell you what to practise. A death you can’t tag was variance, and variance is not a lesson."
+      ],
+      "inPlay": [
+        "After a death you name a cause in two words, then move on.",
+        "You don’t change your plan because of one lucky or unlucky round.",
+        "Your session review counts causes, not kills."
+      ],
+      "basis": "fundamental",
+      "frameworkIds": [
+        "after-death",
+        "post-session"
+      ]
+    },
+    {
+      "id": "same-round-twice",
+      "title": "Play the same round twice",
+      "oneLiner": "Consistency beats highlights.",
+      "body": [
+        "Strong players play the same round over and over: the same opening spot, the same peek, the same bail rule. It looks boring. It wins, because the other team can’t find a mistake to punish, and because every round becomes another rep of the same skill.",
+        "Change one thing at a time, between rounds, on purpose. If the other team adapts, you adapt back, but the default is the plan you walked in with."
+      ],
+      "inPlay": [
+        "You could describe your first ten seconds of every round on this map in one sentence.",
+        "You change your spot because of what they did, not because you are bored.",
+        "You run the same frameworks whether you are 4–0 up or 0–4 down."
+      ],
+      "basis": "fundamental",
+      "frameworkIds": [
+        "pre-match",
+        "between-rounds"
+      ]
+    }
+  ],
+  "frameworks": [
+    {
+      "id": "control-loop",
+      "title": "Control, peek, challenge",
+      "moment": "engagement",
+      "summary": "The loop the whole section hangs on: get to the key spot, hold a one-sided peek, and only challenge with the advantage.",
+      "goal": "Establish map control by reaching the key spots first, hold a peek that shows the minimum of your body, and challenge only when the fight is already tilted your way.",
+      "rule": "Control first, peek second, challenge last, and only with the advantage.",
+      "steps": [
+        {
+          "cue": "Get to the spot",
+          "action": "Move with your team, by the covered route, to the key spot for your spawn side (see the map card). Arrive before they do.",
+          "why": "Map control means being there first. A spot you have to fight for is not control, it is a fight."
+        },
+        {
+          "cue": "Set the peek",
+          "action": "Put cover on the side you have chosen for this spot. For a left-hand peek, the cover is at your left: you step right to look and left to hide. Pre-aim at head height where they will appear, and know the one strafe that hides you again.",
+          "why": "A peek you set up before they arrive is a peek you win. One that you improvise when they appear is a duel."
+        },
+        {
+          "cue": "Peek for information",
+          "action": "Step out only as far as you need to see the lane. If nobody is there within about a second, step back. Change your timing before the next look.",
+          "why": "Rhythmic peeks get pre-fired. Short, irregular looks give you the lane and give them nothing."
+        },
+        {
+          "cue": "Run the advantage check",
+          "action": "Numbers, cover, range, health, timing. Three of five to peek-shoot; four to push; fewer, and you hold, bait or rotate.",
+          "why": "This is the gate. Everything before it builds the advantage; nothing after it should happen without one."
+        },
+        {
+          "cue": "Challenge or reset",
+          "action": "With the advantage: fire from the peek, step in, re-peek. Without it: hold the spot, bait a shot, or rotate with the team. Never trade shots standing in the open.",
+          "why": "Challenging is the last step, not the first. Most lost rounds skip straight to it."
+        }
+      ],
+      "mistakes": [
+        "Walking to the spot through the open lane instead of the covered route, and dying on the way to “map control”.",
+        "Peeking wide to see more. You also show more.",
+        "Staying out after the first exchange to finish them.",
+        "Calling it map control when the spot watches a lane nobody needs to cross."
+      ],
+      "checks": [
+        "Can I name the lane this spot watches, and the lanes that watch me?",
+        "Is my way back behind cover one strafe?",
+        "Which advantage do I have right now, in one word?"
+      ],
+      "notes": [
+        {
+          "text": "Whether a left-hand or right-hand peek shows less of your body in Destiny 2 depends on where the game puts its first-person camera, and Dialed couldn’t verify a published figure for that. What a fixed peek side certainly gives you is a rehearsed step back, which is where most exposure time is lost. Test both sides yourself: in a private match, have a friend stand down the lane and tell you which side shows less of you at your usual spots.",
+          "basis": "dialed"
+        }
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "advantage-before-aim",
+        "angles-not-places",
+        "minimum-exposure"
+      ],
+      "frameworkIds": [
+        "advantage-check",
+        "peek-loop",
+        "round-start"
+      ]
+    },
+    {
+      "id": "pre-match",
+      "title": "The sixty-second pre-match",
+      "moment": "pre-match",
+      "summary": "Loadout ranges, the map plan, one focus for the match, and the words your team will use.",
+      "goal": "Walk into the first round with a plan you could say in two sentences, so the first ten seconds are a rehearsal, not an improvisation.",
+      "timeBudget": "60 seconds, in the lobby or on the loading screen",
+      "rule": "One plan, one focus, one set of words.",
+      "steps": [
+        {
+          "cue": "Ranges",
+          "action": "Say your loadout’s three range bands out loud: where the special wins, where the primary wins, where you don’t fight. If you can’t, open the loadout plan.",
+          "why": "Most wrong fights are taken in the wrong band. Naming the bands before the match makes the wrong ones feel wrong."
+        },
+        {
+          "cue": "Map plan",
+          "action": "For each spawn side: the key spot you go to first, the route, and which lane it watches. If the map has a card, read the round-start phase.",
+          "why": "A spawn you have already planned for costs you nothing at the start of the round. An unplanned one costs the ten seconds that decide it."
+        },
+        {
+          "cue": "One focus",
+          "action": "Pick one thing to do better this match, from your last session review: for example “step back after every second shot” or “call before I peek”. Only one.",
+          "why": "You can hold one new habit under pressure. Two becomes none."
+        },
+        {
+          "cue": "Words",
+          "action": "Agree the three or four callouts you will actually use with your fireteam, and the short forms: “two Rocket”, “one weak”, “bail”.",
+          "why": "Callouts only work when everyone means the same thing by them. Settle it before the first round, not during it."
+        },
+        {
+          "cue": "Reset",
+          "action": "One slow breath. The last match is over. This one starts 0–0.",
+          "why": "Tilt from the last match is the most expensive thing you can carry into this one."
+        }
+      ],
+      "mistakes": [
+        "Changing your loadout on the loading screen and walking in without knowing its bands.",
+        "Picking a focus that is really three things.",
+        "Assuming your team’s callouts match yours."
+      ],
+      "checks": [
+        "Could I say the plan for both spawns in two sentences?",
+        "What is my one focus?"
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "same-round-twice"
+      ],
+      "frameworkIds": [
+        "range-bands",
+        "round-start",
+        "post-session"
+      ]
+    },
+    {
+      "id": "round-start",
+      "title": "Spawn, spot, scan",
+      "moment": "round-start",
+      "summary": "The first ten seconds: read your spawn, move covered to the key spot, and find out where they are before anyone crosses the middle.",
+      "goal": "Reach your key spot with your team and know where the other team went before anyone commits to a fight.",
+      "timeBudget": "The first 10 seconds of the round",
+      "rule": "Nobody crosses the middle until the team knows where all three of them are.",
+      "steps": [
+        {
+          "cue": "Read the spawn",
+          "action": "Which side did you get? Your key spot, your route and your first peek all come from it. Say it: “we’re Fuel side”.",
+          "why": "Two spawns, two plans. Knowing which one you are in is the first decision of the round, and the easiest to get right."
+        },
+        {
+          "cue": "Move covered",
+          "action": "Take the covered route to the spot, with your team in sight. Special weapon out if the route passes a corner inside its band.",
+          "why": "Rounds are lost in transit more often than at the spot. The open route is faster and gets you shot."
+        },
+        {
+          "cue": "Scan",
+          "action": "At the spot, look down the lane it watches. Check the radar. Where did the first ping or footstep come from? Which lane is quiet?",
+          "why": "Silence is information too. A lane with no one in it tells you where they are as surely as a ping."
+        },
+        {
+          "cue": "Call it",
+          "action": "One short callout: how many, where. “Two Rocket, one Glass.” If you see nothing, say that: “nothing my side”.",
+          "why": "Three players scanning three lanes and calling is how a team sees the whole map at once."
+        },
+        {
+          "cue": "Decide",
+          "action": "Got there first? Hold and run the control loop. They got there first? Don’t contest it head-on; take the next spot back and make them come through your lane.",
+          "why": "A spot they already hold is their advantage. Fighting for it gives them the first peek."
+        }
+      ],
+      "mistakes": [
+        "Sprinting straight to the middle because it is where the action is.",
+        "Three players going three directions with no shared line of sight.",
+        "Not calling because you saw nothing. Nothing is a call."
+      ],
+      "checks": [
+        "Do I know which spawn I am in and which spot that means?",
+        "Does the team know where all three of them are yet?"
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "information-first",
+        "trade-or-dont"
+      ],
+      "frameworkIds": [
+        "control-loop",
+        "pre-match"
+      ]
+    },
+    {
+      "id": "advantage-check",
+      "title": "The advantage check",
+      "moment": "engagement",
+      "summary": "Five questions in two seconds, before every challenge: numbers, cover, range, health, timing.",
+      "goal": "Only take the fights that are already tilted your way, and know exactly why you are taking them.",
+      "timeBudget": "Two seconds, before every challenge",
+      "rule": "Three of five to peek-shoot. Four of five to push. Fewer: hold, bait or rotate.",
+      "steps": [
+        {
+          "cue": "Numbers",
+          "action": "Am I equal or up? Count only teammates who can see the fight right now. A teammate reloading in the next room doesn’t count.",
+          "why": "Numbers are the biggest single advantage in 3v3. A 2v1 wins almost regardless of aim."
+        },
+        {
+          "cue": "Cover",
+          "action": "Is my way back behind cover one strafe? Is theirs? If I have cover and they are in the open, that is an advantage. If it is the other way round, that is theirs.",
+          "why": "Cover is what lets you lose the first exchange and live. Fighting from the open means every exchange is all-in."
+        },
+        {
+          "cue": "Range",
+          "action": "Am I in my band or theirs? A hand cannon at scout range or a shotgun outside its one-shot range is their advantage, however good the angle looks.",
+          "why": "Range decides which weapon wins the duel before anyone aims."
+        },
+        {
+          "cue": "Health",
+          "action": "Shields full? Grenade or melee ready? Theirs? If a teammate has just chipped them, that counts for you.",
+          "why": "A chipped enemy dies to fewer hits. That is a free advantage someone already paid for."
+        },
+        {
+          "cue": "Timing",
+          "action": "Are they already shooting someone else, reloading, swapping weapons, or mid-air? Is their attention somewhere else?",
+          "why": "A player looking the other way is the easiest kill in the game. A player looking at your corner is the hardest."
+        }
+      ],
+      "mistakes": [
+        "Counting your aim as an advantage. It is the tie-breaker, not a column.",
+        "Counting a teammate who can’t see the fight.",
+        "Taking the fight anyway at two of five, because you have been holding for a while and feel you should do something."
+      ],
+      "checks": [
+        "How many of the five do I have, right now?",
+        "Which one is missing, and can I get it by waiting five seconds?"
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "advantage-before-aim",
+        "trade-or-dont"
+      ],
+      "frameworkIds": [
+        "control-loop",
+        "bail-rule",
+        "range-bands"
+      ]
+    },
+    {
+      "id": "peek-loop",
+      "title": "Set, peek, shoot, reset",
+      "moment": "engagement",
+      "summary": "How to hold a one-sided peek: pre-aim, step out only as far as needed, one or two shots, back behind cover, change the timing.",
+      "goal": "Win exchanges from cover with the least of your body visible for the least time.",
+      "rule": "One or two shots per look, then cover. Never finish a fight from the open.",
+      "steps": [
+        {
+          "cue": "Set",
+          "action": "Cover on your chosen side (left-hand peek: cover at your left). Reticle at head height where they will appear. Feet already pointing the way back. If you will be crouched, pre-aim at crouched head height.",
+          "why": "The shot is won before the peek. Moving the reticle after they appear is the part you lose."
+        },
+        {
+          "cue": "Peek",
+          "action": "Strafe out only until the lane is in view. The gun comes out with you; don’t lead with your body and then raise the gun.",
+          "why": "Every extra step of width is more of you to hit, and nothing more of them to see."
+        },
+        {
+          "cue": "Shoot",
+          "action": "Fire the moment the reticle is on target. One or two shots, not the whole magazine.",
+          "why": "A hand cannon’s shots are big and slow. Two from cover beats three in the open."
+        },
+        {
+          "cue": "Reset",
+          "action": "Strafe back. Reload only if you are fully behind cover. Then change something: your timing, your height, or a step along the wall.",
+          "why": "A peek that comes back from the same place at the same time gets pre-fired. A peek that changes doesn’t."
+        },
+        {
+          "cue": "Decide",
+          "action": "They are chipped and you are full: re-peek, or push if the advantage check says four of five. You took damage: wait for the shield, let a teammate take the next look.",
+          "why": "The peek loop feeds the advantage check. Each look changes the numbers."
+        }
+      ],
+      "mistakes": [
+        "Leading with your body and bringing the gun up afterwards.",
+        "Peeking at the same rhythm every time.",
+        "Reloading while still visible.",
+        "Staying out for a third shot because the second one hit."
+      ],
+      "checks": [
+        "Where is my reticle before I step out?",
+        "Which strafe takes me back, and have I already decided it?",
+        "What will I change before the next look?"
+      ],
+      "notes": [
+        {
+          "text": "On which side to peek from: a fixed side gives you a rehearsed step back, and that is the part that saves your life. Whether one side also shows less of your body is a camera question Dialed couldn’t settle from a source, so test it in a private match (see the control loop).",
+          "basis": "dialed"
+        }
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "minimum-exposure",
+        "angles-not-places"
+      ],
+      "frameworkIds": [
+        "control-loop",
+        "advantage-check",
+        "bail-rule"
+      ]
+    },
+    {
+      "id": "range-bands",
+      "title": "Fight in your band",
+      "moment": "engagement",
+      "summary": "Three range bands for every loadout: where the special wins, where the primary wins, where you don’t fight.",
+      "goal": "Never start a fight at a range your loadout loses.",
+      "rule": "If you can’t name the band, don’t shoot.",
+      "steps": [
+        {
+          "cue": "Band one: special",
+          "action": "Inside your special weapon’s kill range. Special out around every corner in this band. The primary is the follow-up for a body shot, not the opener.",
+          "why": "In band one, a one-shot weapon beats any primary. Opening with the primary here gives the fight away."
+        },
+        {
+          "cue": "Band two: primary",
+          "action": "Where your primary kills cleanly and theirs may not. Primary out, peek loop on, special ready for anyone who closes.",
+          "why": "This is the band your loadout was built for. Most of your kills should come here."
+        },
+        {
+          "cue": "Band three: theirs",
+          "action": "Longer than your primary kills cleanly. Don’t shoot. Break the line and move to a spot that pulls the fight into band two.",
+          "why": "A hand cannon chipping a scout rifle at its range is feeding them a kill. Leaving costs nothing."
+        },
+        {
+          "cue": "Carry rule",
+          "action": "Hold whichever weapon matches the next corner, not the last fight. Approaching a corner inside band one: special out. Holding a lane in band two: primary out.",
+          "why": "Weapon swaps take time you don’t have when someone appears. Swap before the corner, not at it."
+        }
+      ],
+      "mistakes": [
+        "Starting a primary duel inside your special’s range.",
+        "Chipping at band three because they are visible.",
+        "Rounding a close corner with the primary out."
+      ],
+      "checks": [
+        "Which band is this fight in?",
+        "Does the weapon in my hands match the next corner?"
+      ],
+      "notes": [
+        {
+          "text": "Where each band starts is a number for your weapons in the current sandbox. Measure it rather than guessing: in a private match, pace off the special’s one-shot range from the corner you hold, and note where your primary stops killing in its best shot count.",
+          "basis": "destiny"
+        }
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "advantage-before-aim"
+      ],
+      "frameworkIds": [
+        "advantage-check",
+        "control-loop"
+      ]
+    },
+    {
+      "id": "bail-rule",
+      "title": "The bail rule",
+      "moment": "engagement",
+      "summary": "The triggers that end a fight now, and what to do in the two seconds after.",
+      "goal": "Leave fights that have turned before they kill you, keep the chip damage, and come back on your terms.",
+      "rule": "Lose the first exchange, leave the fight.",
+      "steps": [
+        {
+          "cue": "Triggers",
+          "action": "Any one of these ends the fight now: you lose the first exchange; you take a headshot and they haven’t; a second enemy appears; your shield breaks; an ability is thrown at you.",
+          "why": "Each trigger means the fight is no longer tilted your way. The advantage check has failed mid-fight."
+        },
+        {
+          "cue": "Break the line",
+          "action": "Strafe or slide behind cover without turning your back. Don’t fire a parting shot from the open.",
+          "why": "Turning to run shows your back for longer than a strafe shows your side. The parting shot is the one that gets you killed."
+        },
+        {
+          "cue": "Call the chip",
+          "action": "“One weak Rocket.” Your damage is now your team’s kill.",
+          "why": "Chip damage only pays off if someone knows it is there."
+        },
+        {
+          "cue": "Recover",
+          "action": "Let the shield come back. Move a step along the cover so you don’t reappear where you vanished.",
+          "why": "They are pre-aiming where you were. Don’t be there."
+        },
+        {
+          "cue": "Re-enter",
+          "action": "Run the advantage check again from the new position. Re-peek only if it passes.",
+          "why": "Bailing isn’t retreating from the round. It is resetting the fight to one you can win."
+        }
+      ],
+      "mistakes": [
+        "Staying to “finish them” after losing the first exchange.",
+        "Turning your back to sprint away.",
+        "Coming back out from the same place."
+      ],
+      "checks": [
+        "Which trigger just fired?",
+        "Did I call the chip?"
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "disengaging-is-winning",
+        "minimum-exposure"
+      ],
+      "frameworkIds": [
+        "advantage-check",
+        "peek-loop"
+      ]
+    },
+    {
+      "id": "when-ahead",
+      "title": "Up a player: slow down",
+      "moment": "engagement",
+      "summary": "What to do with a numbers advantage: set two angles on their routes, let the clock work, punish the push.",
+      "goal": "Turn a player advantage into a round, without handing it back.",
+      "rule": "Up a player, you slow down. They have to come to you.",
+      "steps": [
+        {
+          "cue": "Stop",
+          "action": "Hold where you are for a beat. The round is yours to lose now.",
+          "why": "The most common way to lose a 3v2 is to sprint into it."
+        },
+        {
+          "cue": "Count and call",
+          "action": "Where are the remaining enemies, and are they together? Call it.",
+          "why": "Two left together is one fight. Two left apart is two easy ones."
+        },
+        {
+          "cue": "Two angles",
+          "action": "Put your players on two different angles covering the routes they must take, with a shared line of sight so any death is a trade.",
+          "why": "They can’t peek two angles at once. Whichever they choose, the other shoots them."
+        },
+        {
+          "cue": "Let the clock run",
+          "action": "Keep looking, keep calling, keep chipping with safe peeks. Don’t cross open ground.",
+          "why": "Time pressure is on them. Every second they don’t push is a second closer to your round."
+        },
+        {
+          "cue": "If they hide",
+          "action": "When the timer or a zone forces it, push together through one entrance, special weapons out, never one at a time.",
+          "why": "A staggered push turns a 3v2 into three 1v1s, in their favour."
+        }
+      ],
+      "mistakes": [
+        "Chasing the kill into a room you can’t see into.",
+        "Pushing one at a time.",
+        "Standing in the open to “pressure” them."
+      ],
+      "checks": [
+        "Are the remaining enemies together or apart?",
+        "Can my teammates see me?"
+      ],
+      "notes": [
+        {
+          "text": "Round length, what ends a round, and whether a late capture zone appears are mode rules that change between seasons. Check the current rules for the mode you are in before planning around the timer.",
+          "basis": "destiny"
+        }
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "patience-and-the-clock",
+        "trade-or-dont"
+      ],
+      "frameworkIds": [
+        "when-down",
+        "advantage-check"
+      ]
+    },
+    {
+      "id": "when-down",
+      "title": "Down a player: one angle, together",
+      "moment": "engagement",
+      "summary": "What to do a player down: group on one entrance so every death is a trade, bait with peeks, and make them come to you.",
+      "goal": "Give the round a real chance when the numbers are against you, instead of feeding the last two players one at a time.",
+      "rule": "Down a player, the two of you hold one angle, together.",
+      "steps": [
+        {
+          "cue": "Group",
+          "action": "Move to your teammate, by the covered route. Don’t take a fight on the way.",
+          "why": "A 2v3 is winnable. Two 1v3s are not."
+        },
+        {
+          "cue": "One entrance",
+          "action": "Pick a spot with one main way in and hold it from two angles that both see the entrance. A death here is always a trade.",
+          "why": "Trades are what bring a 2v3 back to a 1v2, and a 1v2 at your spot is winnable."
+        },
+        {
+          "cue": "Bait",
+          "action": "Short peeks to show them where you are, so they come to you. Don’t get greedy: the peek is bait, not a challenge.",
+          "why": "They are ahead and don’t need to push. Give them a reason."
+        },
+        {
+          "cue": "Punish",
+          "action": "When one comes through first, both of you shoot that one. Then reset for the next.",
+          "why": "Two guns on one target kills before they can react. That is the only even fight you can make here."
+        },
+        {
+          "cue": "If the clock is against you",
+          "action": "If the mode will hand them the round on time or a zone, pick the most isolated enemy and take that one fight together, with the special weapons.",
+          "why": "Waiting only works when waiting doesn’t lose. When it does, choose the best bad fight rather than taking the one they choose."
+        }
+      ],
+      "mistakes": [
+        "Splitting to “flank” with two players.",
+        "Peeking to fight rather than to bait.",
+        "Taking a fight on the way to your teammate."
+      ],
+      "checks": [
+        "Can my teammate and I both see the entrance?",
+        "Is the clock on our side or theirs right now?"
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "trade-or-dont",
+        "patience-and-the-clock"
+      ],
+      "frameworkIds": [
+        "when-ahead",
+        "bail-rule"
+      ]
+    },
+    {
+      "id": "after-death",
+      "title": "Tag the death",
+      "moment": "after-death",
+      "summary": "Ten seconds after dying: name the cause in two words, tally it, and let it go.",
+      "goal": "Turn every death into one piece of data and zero tilt.",
+      "timeBudget": "10 seconds, while you wait",
+      "rule": "Two words, one tap, then it’s gone.",
+      "steps": [
+        {
+          "cue": "Name it",
+          "action": "Say the cause in two words: no advantage, wrong band, alone, overexposed, or lost the duel. If none fits, it was variance.",
+          "why": "A death with a name is a lesson. A death without one is just a feeling."
+        },
+        {
+          "cue": "Tally it",
+          "action": "Tap the cause below. The session review counts them.",
+          "why": "One death tells you nothing. Twenty tallies tell you what to practise."
+        },
+        {
+          "cue": "Watch",
+          "action": "While you wait, watch what your teammates can see. Call what they can’t.",
+          "why": "A dead player with eyes is still worth something to the round."
+        },
+        {
+          "cue": "Let it go",
+          "action": "One breath. The next round starts 0–0 for you, whatever the score says.",
+          "why": "Analysis after the tag is tilt wearing a disguise."
+        }
+      ],
+      "mistakes": [
+        "Replaying the death in your head for the whole respawn.",
+        "Blaming lag or a teammate: those aren’t tags, because you can’t practise them.",
+        "Tagging every death “lost the duel” because it is the least painful one."
+      ],
+      "checks": [
+        "Which of the five was it?",
+        "Did I tap it?"
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "controllables"
+      ],
+      "frameworkIds": [
+        "post-session",
+        "between-rounds"
+      ]
+    },
+    {
+      "id": "between-rounds",
+      "title": "Read, adjust, reload",
+      "moment": "between-rounds",
+      "summary": "The gap between rounds: what did they do, what do you change, and is your special ready?",
+      "goal": "Carry one piece of information and one adjustment into the next round, and nothing else.",
+      "timeBudget": "The break between rounds",
+      "rule": "Change one thing, on purpose, because of what they did.",
+      "steps": [
+        {
+          "cue": "Read them",
+          "action": "Where did they go at the start? Did they split or stack? Who is the aggressive one? Say it in a sentence.",
+          "why": "Teams repeat themselves. The round you just lost is the best scouting you will get."
+        },
+        {
+          "cue": "Adjust once",
+          "action": "Change one thing: the first spot, who watches which lane, or when you peek. Keep everything else.",
+          "why": "Change one thing and you learn what it did. Change three and you learn nothing."
+        },
+        {
+          "cue": "Check ammo",
+          "action": "Special ammo count. If you are out, the next round is a primary round and your bands shift: plan for it.",
+          "why": "Walking into a corner with an empty special is the most avoidable death in the game."
+        },
+        {
+          "cue": "Reset",
+          "action": "Score doesn’t matter to the next round. Spawn, spot, scan, same as always.",
+          "why": "Every round is the same ten-second problem. Treat it that way."
+        }
+      ],
+      "mistakes": [
+        "Changing the whole plan after one lost round.",
+        "Not noticing you have no special until the corner.",
+        "Spending the gap on the scoreboard instead of on them."
+      ],
+      "checks": [
+        "What did they do last round, in one sentence?",
+        "What is the one change?"
+      ],
+      "notes": [
+        {
+          "text": "How special and heavy ammo arrive, and whether unused ammo carries over between rounds, are mode rules that change between seasons. Learn the current rule for the mode you are in; the framework is the same whatever it is.",
+          "basis": "destiny"
+        }
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "same-round-twice",
+        "information-first"
+      ],
+      "frameworkIds": [
+        "round-start",
+        "after-death"
+      ]
+    },
+    {
+      "id": "post-session",
+      "title": "Count the tags",
+      "moment": "post-session",
+      "summary": "Five minutes after playing: count the death tags, pick the next focus, and write one line.",
+      "goal": "Leave each session with one thing to work on next time, chosen by evidence rather than by the last round’s feeling.",
+      "timeBudget": "5 minutes after the session",
+      "rule": "The most frequent tag is the next focus.",
+      "steps": [
+        {
+          "cue": "Count",
+          "action": "Open the session review. Which cause has the most tallies?",
+          "why": "The count removes the story. The last death feels biggest; the biggest tag is biggest."
+        },
+        {
+          "cue": "Pick the focus",
+          "action": "The top tag’s framework is the next session’s focus. Read it once now, when you are calm.",
+          "why": "A focus chosen now, from data, survives contact with the next match. One chosen mid-match doesn’t."
+        },
+        {
+          "cue": "One clip",
+          "action": "If you record, rewatch one death with the top tag. Find the exact moment the controllable went wrong.",
+          "why": "One death seen clearly teaches more than ten remembered vaguely."
+        },
+        {
+          "cue": "One line",
+          "action": "Write one sentence: the top tag, and what you will do differently. Then start a new session in the review.",
+          "why": "Writing it is what makes it a decision rather than a thought."
+        }
+      ],
+      "mistakes": [
+        "Reviewing while tilted.",
+        "Picking the focus by the death that hurt most.",
+        "Carrying three focuses into the next session."
+      ],
+      "checks": [
+        "What was the top tag?",
+        "What is the one line?"
+      ],
+      "notes": [
+        {
+          "text": "If “lost the duel” dominates after a few sessions of taking fights with the advantage, the aim itself is the work. That is what the rest of Dialed is for: Build, Tune and Troubleshoot work on the settings behind it.",
+          "basis": "dialed"
+        }
+      ],
+      "basis": "dialed",
+      "principleIds": [
+        "controllables",
+        "same-round-twice"
+      ],
+      "frameworkIds": [
+        "after-death",
+        "pre-match"
+      ]
+    }
+  ],
+  "deathCauses": [
+    {
+      "id": "no-advantage",
+      "label": "No advantage",
+      "meaning": "I challenged with fewer than three of the five: numbers, cover, range, health, timing.",
+      "frameworkId": "advantage-check"
+    },
+    {
+      "id": "wrong-band",
+      "label": "Wrong band",
+      "meaning": "I fought at a range my loadout loses, or had the wrong weapon out for the corner.",
+      "frameworkId": "range-bands"
+    },
+    {
+      "id": "alone",
+      "label": "Alone",
+      "meaning": "No teammate could see the fight, so my death wasn’t a trade.",
+      "frameworkId": "when-down"
+    },
+    {
+      "id": "overexposed",
+      "label": "Overexposed",
+      "meaning": "I peeked too wide, stayed out too long, reloaded in the open, or didn’t bail when a trigger fired.",
+      "frameworkId": "peek-loop"
+    },
+    {
+      "id": "lost-duel",
+      "label": "Lost the duel",
+      "meaning": "The fight was even or tilted my way and I lost it on aim.",
+      "frameworkId": "peek-loop"
+    }
+  ],
+  "loadoutPlans": [
+    {
+      "id": "120-slug",
+      "name": "120 hand cannon + slug shotgun",
+      "role": "A mid-range duellist with a one-shot answer for anyone who closes. You hold band two from cover and own band one at the corners.",
+      "weapons": [
+        {
+          "archetypeId": "hand-cannon",
+          "job": "primary",
+          "facts": [
+            {
+              "text": "A 120 RPM hand cannon kills in three shots when at least two of them are headshots, in about a second. Three body shots don’t kill a full-health Guardian, and a fourth shot makes it a fight most primaries win.",
+              "basis": "destiny"
+            },
+            {
+              "text": "Its shots are big and slow, so every miss costs a third of a kill. It rewards fighting from cover, where a miss can be followed by a step back rather than a stand-up duel.",
+              "basis": "dialed"
+            },
+            {
+              "text": "Damage falls off with range. The range where your three-shot kill stops being reliable is the top of band two: find it in a private match rather than assuming it.",
+              "basis": "destiny"
+            }
+          ]
+        },
+        {
+          "archetypeId": "shotgun",
+          "job": "special",
+          "facts": [
+            {
+              "text": "A slug shotgun fires one projectile, not a spread. A headshot inside its range is a kill; a body shot is heavy damage but not a kill. There is no pellet spread to save a miss.",
+              "basis": "destiny"
+            },
+            {
+              "text": "Its one-shot range is longer than a pellet shotgun’s, which is the point: it lets you hold a corner from a step further back, where a pellet shotgun user has to close on you first.",
+              "basis": "destiny"
+            },
+            {
+              "text": "A slug body shot followed by one hand cannon shot, or hand cannon chip followed by a slug body shot, are two-step kills. Learn which combinations kill in the current sandbox by testing them in a private match.",
+              "basis": "destiny"
+            }
+          ]
+        }
+      ],
+      "bands": [
+        {
+          "id": "slug-band",
+          "name": "Band one: slug",
+          "range": "Inside your slug’s one-shot headshot range. Pace it from the corners you hold; it is shorter than it feels.",
+          "rule": "Slug out around every corner in this band. Aim at head height before the corner. The hand cannon is the follow-up for a body shot, never the opener.",
+          "basis": "dialed"
+        },
+        {
+          "id": "hand-cannon-band",
+          "name": "Band two: hand cannon",
+          "range": "From the edge of slug range to where the three-shot kill stops being reliable. The mid lanes and the room-to-room sightlines.",
+          "rule": "Hand cannon out, peek loop on, slug ready for anyone who closes. This is where your kills come from.",
+          "basis": "dialed"
+        },
+        {
+          "id": "their-band",
+          "name": "Band three: theirs",
+          "range": "Longer than your hand cannon kills cleanly. Long outside lanes and anything a scout rifle, pulse rifle or sniper would choose.",
+          "rule": "Don’t shoot. Break the line and move to a spot that pulls the fight into band two.",
+          "basis": "dialed"
+        }
+      ],
+      "rules": [
+        {
+          "text": "Never start a hand cannon duel inside slug range. That corner is the slug’s.",
+          "basis": "dialed"
+        },
+        {
+          "text": "Chip with the hand cannon, finish with the slug; or slug the body, then one tap. Know both before the match.",
+          "basis": "dialed"
+        },
+        {
+          "text": "With no special ammo, band one disappears. Play band two only and keep an extra step back from every corner.",
+          "basis": "dialed"
+        },
+        {
+          "text": "A slug miss at the corner is a bail trigger: you are now holding an empty weapon in a shotgun fight.",
+          "basis": "dialed"
+        }
+      ],
+      "frameworkIds": [
+        "range-bands",
+        "peek-loop",
+        "control-loop"
+      ]
+    }
+  ],
+  "maps": [
+    {
+      "id": "javelin-4",
+      "name": "Javelin-4",
+      "summary": "A Warsat launch facility on Io: an open outside ring of long sightlines wrapped around an interior of rooms and corridors, with the Rocket in the middle. For a 120 and a slug, the interior doorways are home and the outside ring is band three.",
+      "character": [
+        {
+          "text": "Community map guides describe Rocket as the focal point where most fights happen, Generators as a large interior zone with solid cover and sightlines toward Rocket and Outer Ring, Glass as a small area with flank routes and sniper angles toward Fuel, and Station as the room that is a death trap if you don’t know how to defend it.",
+          "basis": "map"
+        },
+        {
+          "text": "Guides disagree on the map’s character: one calls it a map of open areas and long-range fights, another a small map that favours shotguns and close fights. Both are right about different parts of it. The outside is long; the inside is close.",
+          "basis": "map"
+        },
+        {
+          "text": "Which two callouts the 3v3 spawns use is reported differently by different guides (Fuel and Pad, or Fuel and Generators). Confirm it in your first round and in a private match.",
+          "basis": "map"
+        }
+      ],
+      "callouts": [
+        {
+          "id": "fuel",
+          "name": "Fuel",
+          "kind": "spawn",
+          "description": "An interior spawn side with good cover.",
+          "basis": "map"
+        },
+        {
+          "id": "pad",
+          "name": "Pad",
+          "kind": "spawn",
+          "description": "An exterior spawn side, also called Helipad.",
+          "basis": "map"
+        },
+        {
+          "id": "rocket",
+          "name": "Rocket",
+          "kind": "centre",
+          "description": "The middle of the map and the focal point of most fights. Everything looks at it.",
+          "basis": "map"
+        },
+        {
+          "id": "generators",
+          "name": "Generators",
+          "kind": "interior",
+          "description": "A large interior zone with solid cover and sightlines toward Rocket and Outer Ring.",
+          "basis": "map"
+        },
+        {
+          "id": "station",
+          "name": "Station",
+          "kind": "interior",
+          "description": "The room that holds the B point in Control. A death trap if you don’t know how to defend it.",
+          "basis": "map"
+        },
+        {
+          "id": "inner-ring",
+          "name": "Inner Ring",
+          "kind": "interior",
+          "description": "Interior corridor around the middle.",
+          "basis": "map"
+        },
+        {
+          "id": "stairs",
+          "name": "Stairs",
+          "kind": "interior",
+          "description": "Interior connector between levels.",
+          "basis": "map"
+        },
+        {
+          "id": "outer-ring",
+          "name": "Outer Ring",
+          "kind": "exterior",
+          "description": "The long outside lane. Sniper and pulse territory.",
+          "basis": "map"
+        },
+        {
+          "id": "deck",
+          "name": "Deck",
+          "kind": "exterior",
+          "description": "Open exterior area on the outside.",
+          "basis": "map"
+        },
+        {
+          "id": "center",
+          "name": "Center",
+          "kind": "exterior",
+          "description": "Open exterior ground near the middle.",
+          "basis": "map"
+        },
+        {
+          "id": "rockwall",
+          "name": "Rockwall",
+          "kind": "exterior",
+          "description": "Exterior edge with rock cover.",
+          "basis": "map"
+        },
+        {
+          "id": "pipes",
+          "name": "Pipes",
+          "kind": "exterior",
+          "description": "Exterior area with pipe cover.",
+          "basis": "map"
+        },
+        {
+          "id": "glass",
+          "name": "Glass",
+          "kind": "exterior",
+          "description": "Small, but a key flank route, with sniper angles toward Fuel.",
+          "basis": "map"
+        }
+      ],
+      "spots": [
+        {
+          "id": "generators-doorway",
+          "name": "Generators doorway, looking at Rocket",
+          "calloutId": "generators",
+          "spawnCalloutId": null,
+          "holdFrom": "Inside Generators, at the door frame that looks toward Rocket. Cover is the frame itself.",
+          "peek": "Left-hand peek: the frame on your left, step right to see Rocket, step left to hide. If the geometry only allows the other side here, keep it fixed anyway.",
+          "watches": "Rocket and the approach from the far side of the middle. Anyone crossing to your side comes through this lane.",
+          "watchedBy": "The Outer Ring side of Generators. A sniper or pulse there sees you from band three while you look at band two.",
+          "why": "It turns the map’s focal point into your band two while you stand in cover. The only thing that beats it is a flank through the outside, so a teammate watches the Outer Ring side.",
+          "basis": "dialed"
+        },
+        {
+          "id": "fuel-interior-corner",
+          "name": "Fuel interior corner",
+          "calloutId": "fuel",
+          "spawnCalloutId": "fuel",
+          "holdFrom": "A corner inside Fuel with one way in from the middle and the Glass flank in earshot.",
+          "peek": "Fixed side, pre-aimed at head height on the entrance. One strafe back into the room.",
+          "watches": "The entrance from the middle. Slug out if the entrance is inside band one.",
+          "watchedBy": "Glass. The sources name Glass as the sniper angle toward Fuel, so whoever holds this corner must not be visible from Glass.",
+          "why": "Fuel is an interior spawn with good cover, which makes it the natural fallback when the round goes wrong, and the natural spot to hold when you are up a player.",
+          "basis": "dialed"
+        },
+        {
+          "id": "rocket-edge",
+          "name": "The edge of Rocket, only to cross or finish",
+          "calloutId": "rocket",
+          "spawnCalloutId": null,
+          "holdFrom": "Don’t hold it. Use the edge of the middle only to cross, with the team, or to push a chipped enemy with the slug.",
+          "peek": "None. If you are peeking at Rocket you should be in a doorway, not at Rocket.",
+          "watches": "Everything, which is the problem.",
+          "watchedBy": "Everything. The sources call it the focal point of the map; every outside lane and every interior doorway sees it.",
+          "why": "The centre fails the angles test: more lanes watch it than it watches. It is where fights happen, not where they are won.",
+          "basis": "dialed"
+        }
+      ],
+      "phases": [
+        {
+          "id": "round-start",
+          "title": "Round start",
+          "steps": [
+            "Read the spawn. Fuel side: take the covered route to the Generators doorway (or the Fuel interior corner if Generators is contested) with the team. Pad side: cross the exterior quickly, by cover, and get into the nearest interior doorway that looks at Rocket; don’t fight from the outside.",
+            "One player’s scan is the Glass flank. If nobody is watching Glass, the whole interior can be shot from behind.",
+            "Call how many went outside versus inside. A team that goes outside is choosing band three; let them, and hold the interior lanes they will have to come through."
+          ]
+        },
+        {
+          "id": "mid-round",
+          "title": "Mid-round",
+          "steps": [
+            "Hold the doorway with the peek loop. Slug out if anyone is heard inside band one; hand cannon for the Rocket lane.",
+            "If the other team sets up outside with long weapons and refuses to come in, don’t cross Center or Deck to go and get them. Rotate through the interior to a doorway that puts them in band two.",
+            "If a flank opens through Glass or Stairs, the doorway is now watched from two sides: give it up and fall back to the Fuel interior corner together."
+          ]
+        },
+        {
+          "id": "when-ahead",
+          "title": "Up a player",
+          "steps": [
+            "Two angles on the interior routes they must use: one on the Rocket lane, one on the Glass or Stairs flank, with a shared line of sight.",
+            "Let the clock work. Don’t cross the outside to find them."
+          ]
+        },
+        {
+          "id": "when-down",
+          "title": "Down a player",
+          "steps": [
+            "Fall back into Fuel together and hold one entrance from two angles.",
+            "Bait with short peeks into the middle. Punish the first one through the door with both guns."
+          ]
+        }
+      ],
+      "verify": [
+        "Walk both 3v3 spawns in a private match and note which callouts each one reaches first, and which of them the guides disagree about.",
+        "From each interior doorway that looks at Rocket, step out until you can see the far side, then back. That is your peek width at that spot.",
+        "Pace off your slug’s one-shot range from each corner you plan to hold, and mark where band one ends.",
+        "Stand at each spot and have a friend walk Glass and Outer Ring: find exactly where you become visible from band three.",
+        "Agree the callouts with your fireteam. The names here come from community callout maps and may not be the ones your team uses."
+      ],
+      "loadoutPlanIds": [
+        "120-slug"
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import type { RouteObject } from 'react-router';
 import { Layout } from './components/Layout';
 import { BuildFlow } from './features/build/BuildFlow';
 import { ConfigSheetScreen } from './features/build/ConfigSheetScreen';
+import { PlayFlow } from './features/play/PlayFlow';
 import { TroubleshootFlow } from './features/troubleshoot/TroubleshootFlow';
 import { TuneFlow } from './features/tune/TuneFlow';
 import { AimStyleScreen } from './screens/AimStyleScreen';
@@ -24,6 +25,7 @@ export const routes: RouteObject[] = [
       { path: 'build/*', element: <BuildFlow /> },
       { path: 'tune/*', element: <TuneFlow /> },
       { path: 'troubleshoot/*', element: <TroubleshootFlow /> },
+      { path: 'play/*', element: <PlayFlow /> },
       { path: 'learn', element: <LearnScreen /> },
       { path: 'learn/styles/:styleId', element: <AimStyleScreen /> },
       { path: 'learn/:termId', element: <TermScreen /> },

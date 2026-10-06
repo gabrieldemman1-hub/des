@@ -241,6 +241,62 @@ export function findIntegrityProblems(files: ParsedKnowledgeFiles): IntegrityPro
     });
   }
 
+  // --- Play (CONCEPT.md §5, Flow E) ------------------------------------------------------
+  const play = files['destiny2/play.json'];
+  const PLAY = 'destiny2/play.json' as const;
+  unique('play principle', withFile(PLAY, play.principles));
+  unique('play framework', withFile(PLAY, play.frameworks));
+  unique('death cause', withFile(PLAY, play.deathCauses));
+  unique('loadout plan', withFile(PLAY, play.loadoutPlans));
+  unique('play map', withFile(PLAY, play.maps));
+  const principleIds = new Set(play.principles.map((p) => p.id));
+  const frameworkIds = new Set(play.frameworks.map((f) => f.id));
+  const loadoutPlanIds = new Set(play.loadoutPlans.map((p) => p.id));
+  const archetypeIds = new Set(files['destiny2/weapons.json'].archetypes.map((a) => a.id));
+  const needFramework = (entryId: string, field: string, id: string) => {
+    if (!frameworkIds.has(id)) report(PLAY, entryId, `${field} refers to unknown play framework "${id}"`);
+  };
+  for (const principle of play.principles) {
+    for (const id of principle.frameworkIds) needFramework(principle.id, 'frameworkIds', id);
+  }
+  for (const framework of play.frameworks) {
+    for (const id of framework.principleIds) {
+      if (!principleIds.has(id)) report(PLAY, framework.id, `principleIds refers to unknown play principle "${id}"`);
+    }
+    for (const id of framework.frameworkIds) {
+      if (id === framework.id) report(PLAY, framework.id, 'frameworkIds links the framework to itself');
+      else needFramework(framework.id, 'frameworkIds', id);
+    }
+  }
+  for (const cause of play.deathCauses) needFramework(cause.id, 'frameworkId', cause.frameworkId);
+  if (play.about.startWith !== undefined) needFramework('(about)', 'about.startWith', play.about.startWith);
+  for (const plan of play.loadoutPlans) {
+    for (const weapon of plan.weapons) {
+      if (!archetypeIds.has(weapon.archetypeId)) {
+        report(PLAY, plan.id, `weapons.archetypeId "${weapon.archetypeId}" is not in destiny2/weapons.json`);
+      }
+    }
+    unique(`band of ${plan.id}`, withFile(PLAY, plan.bands));
+    for (const id of plan.frameworkIds) needFramework(plan.id, 'frameworkIds', id);
+  }
+  for (const map of play.maps) {
+    unique(`callout of ${map.id}`, withFile(PLAY, map.callouts));
+    unique(`spot of ${map.id}`, withFile(PLAY, map.spots));
+    unique(`phase of ${map.id}`, withFile(PLAY, map.phases));
+    const calloutIds = new Set(map.callouts.map((c) => c.id));
+    for (const spot of map.spots) {
+      if (!calloutIds.has(spot.calloutId)) report(PLAY, map.id, `spot "${spot.id}" refers to unknown callout "${spot.calloutId}"`);
+      if (spot.spawnCalloutId !== null) {
+        const spawn = map.callouts.find((c) => c.id === spot.spawnCalloutId);
+        if (!spawn) report(PLAY, map.id, `spot "${spot.id}" refers to unknown spawn callout "${spot.spawnCalloutId}"`);
+        else if (spawn.kind !== 'spawn') report(PLAY, map.id, `spot "${spot.id}" names "${spawn.id}" as a spawn, but its kind is ${spawn.kind}`);
+      }
+    }
+    for (const id of map.loadoutPlanIds) {
+      if (!loadoutPlanIds.has(id)) report(PLAY, map.id, `loadoutPlanIds refers to unknown loadout plan "${id}"`);
+    }
+  }
+
   return problems;
 }
 

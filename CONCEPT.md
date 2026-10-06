@@ -151,6 +151,37 @@ of values across every layer, each annotated with rationale + source, ready to b
 entered into MATRIX Manager and the game. Flow D feeds the other three: its
 explanations *are* the rationale text shown next to each value.
 
+
+### Flow E: Play ("what do I do in the round?") — added 2026-10-06
+Coaching for the Crucible: decisions, not settings. It has two layers:
+
+- **Frameworks**: a short procedure for each moment of a match, written to be read on a phone
+  between rounds. Before the match (loadout bands, map plan, one focus, callouts); round start
+  (spawn, spot, scan); in the fight (the control loop, the advantage check, the peek loop,
+  range bands, the bail rule, up a player, down a player); after a death (tag the cause);
+  between rounds (read, adjust, reload); after the session (count the tags).
+- **Mindset**: the principles the frameworks come from (advantage before aim, information
+  first, angles not places, minimum exposure, trade or don't fight, disengaging is winning,
+  patience and the clock, control what you control, play the same round twice).
+
+Around them: **loadout plans** (how to play a weapon combination, as three range bands and the
+rules that follow; the first is a 120 RPM hand cannon with a slug shotgun), **map cards**
+(callouts, the spots to hold with what each watches and is watched by, the plan by phase, and
+what to confirm in a private match; the first is Javelin-4), and a **death tally** for the
+session: one tap per death by cause, and the biggest count picks the next focus.
+
+The whole section hangs on the user's own goal, which is the first framework: establish map
+control by getting to the key spots, hold a left-hand peek so the minimum of your body is
+exposed, and challenge only when you have the advantage.
+
+**Evidence.** Nothing in Play comes from XIM, so the §8 labels don't apply there (decision
+below). Each item names its basis instead: *fundamental* (holds in every competitive shooter),
+*Destiny 2* (a game mechanic or number, which a sandbox patch can change), *map* (community
+callout maps, which fireteams name differently), or *Dialed* (Dialed's own reasoning). Play
+never invents a number: where a value depends on the current sandbox, it says how to measure it
+in a private match. Research notes:
+[`docs/research/2026-10-06-play-pvp-coaching.md`](docs/research/2026-10-06-play-pvp-coaching.md).
+
 ## 6. Scope of guidance — the four layers
 
 The app treats a "configuration" as a stack, and always presents it in this order
@@ -262,6 +293,10 @@ anytime (stored locally in the browser; no account needed):
 ## 8. Evidence & citation model
 
 This is the app's identity, so it's a hard rule, not a style choice.
+
+It applies to everything Dialed says about XIM MATRIX settings (Flows A–D). Flow E, Play, is
+coaching about how to play, which no whitelisted source covers; it names its basis per item
+instead (see Flow E and the decision log, 2026-10-06).
 
 **Allowed sources (whitelist).** Additions require a logged decision.
 
@@ -400,3 +435,7 @@ Choices made during concept alignment (2026-09-22):
 | Multiple weapons | Separate Configs per loadout, loaded when you switch loadouts |
 | Concept explainer | Yes — Flow D glossary, inline on every setting name; in the MVP (proposed in v0.3, no objection) |
 | Hosting (2026-09-23) | GitHub Pages from a public repository, published on every merge to `main`; installed to the home screen as a Progressive Web App |
+| Play (2026-10-06) | A fifth flow, Flow E: Crucible coaching frameworks and mindset, as a detailed Play section with its own tab (user decision) |
+| Play evidence (2026-10-06) | Play is outside the §8 whitelist: no XIM source covers how to play. Items carry a basis tag (fundamental, Destiny 2, map, Dialed) instead of a confidence label, and never an invented number |
+| Play assumptions (2026-10-06) | 3v3 round-based play (Trials, Competitive) assumed from the user's loadout and goal; Javelin-4 and 120 + slug first; to be confirmed with the user |
+| Death tally (2026-10-06) | Session scratch data under its own storage key, outside the backup |
