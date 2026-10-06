@@ -139,3 +139,16 @@ describe('the notes list', () => {
     expect(doc.querySelector('.notes ol')?.getAttribute('style')).toContain(`--digits: ${String(count).length}`);
   });
 });
+
+describe('a note’s location', () => {
+  it('names the guide page and heading the way the guide spells them', async () => {
+    const { locationOf } = await import('../src/lib/notes');
+    expect(locationOf('https://guide.xim.tech/Aim-Settings/#standard')).toBe('Aim Settings › Standard');
+    expect(locationOf('https://guide.xim.tech/Aim-Settings/#mouse-dpi')).toBe('Aim Settings › Mouse DPI');
+    expect(locationOf('https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy')).toBe(
+      'Troubleshooting Mice › Validating cm/360 Accuracy',
+    );
+    expect(locationOf('https://guide.xim.tech/Smart-Actions-Reference/#normal_4')).toBe('Smart Actions Reference › Normal');
+    expect(locationOf('https://example.com/page')).toBe('');
+  });
+});

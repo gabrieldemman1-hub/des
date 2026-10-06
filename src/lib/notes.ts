@@ -17,12 +17,25 @@ export interface Note {
 
 const key = (c: Citation) => `${c.source}\u0000${c.url}\u0000${c.quote}`;
 
-/** "Aim-Settings" → "Aim Settings"; "smart-translation" → "Smart Translation". */
+/** Words the guide's headings spell their own way. */
+const SPELLING: Record<string, string> = {
+  ads: 'ADS',
+  cm360: 'cm/360',
+  dpi: 'DPI',
+  mkc: 'MKC',
+  pc: 'PC',
+  playstation: 'PlayStation',
+  sab: 'SAB',
+  usb: 'USB',
+  vs: 'vs',
+};
+
+/** "Aim-Settings" → "Aim Settings"; "ensure-mouse-dpi" → "Ensure Mouse DPI". */
 function words(slug: string): string {
   return decodeURIComponent(slug)
     .split(/[-_]+/)
     .filter(Boolean)
-    .map((w) => (w.length <= 3 && w === w.toUpperCase() ? w : w[0]!.toUpperCase() + w.slice(1)))
+    .map((w) => SPELLING[w.toLowerCase()] ?? (w.length <= 3 && w === w.toUpperCase() ? w : w[0]!.toUpperCase() + w.slice(1)))
     .join(' ');
 }
 
@@ -32,7 +45,8 @@ export function locationOf(url: string): string {
   if (u.hostname !== 'guide.xim.tech') return '';
   const page = u.pathname.split('/').filter(Boolean).at(-1);
   const parts = [page ? words(page) : 'Home'];
-  if (u.hash.length > 1) parts.push(words(u.hash.slice(1)));
+  // The guide numbers a repeated heading's anchor ("#normal_4" is a heading that reads "Normal").
+  if (u.hash.length > 1) parts.push(words(u.hash.slice(1).replace(/_\d+$/, '')));
   return parts.join(' › ');
 }
 
