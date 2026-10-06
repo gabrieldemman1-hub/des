@@ -112,3 +112,21 @@ describe('how to read it', () => {
     expect(doc.querySelectorAll('.sources li').length).toBeGreaterThan(0);
   });
 });
+
+describe('footnote numbers', () => {
+  it('print a run as a range, and a pair as two numbers', async () => {
+    const { runs } = await import('../src/lib/notes');
+    expect(runs([1, 2, 3, 4, 7])).toEqual([
+      [1, 4],
+      [7, 7],
+    ]);
+    expect(runs([5, 6])).toEqual([
+      [5, 5],
+      [6, 6],
+    ]);
+    expect(runs([9, 3, 4, 5])).toEqual([
+      [3, 5],
+      [9, 9],
+    ]);
+  });
+});

@@ -61,7 +61,9 @@ const isHome = Astro.url.pathname === home();
     </footer>
     <script>
       // Offline reading: the service worker keeps every page of the guide on the phone.
-      if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      // (Also on this computer, to test a production build with `npm run preview`.)
+      const secure = location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname);
+      if ('serviceWorker' in navigator && secure) {
         navigator.serviceWorker.register(`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}sw.js`).catch(() => {});
       }
     </script>

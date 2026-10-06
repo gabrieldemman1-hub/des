@@ -84,3 +84,14 @@ export class Notes {
     return [...new Set(numbers)];
   }
 }
+
+/** Footnote numbers as runs, so 1, 2, 3, 4, 7 prints as 1–4, 7. A run of two stays two numbers. */
+export function runs(numbers: readonly number[]): [first: number, last: number][] {
+  const out: [number, number][] = [];
+  for (const n of [...numbers].sort((a, b) => a - b)) {
+    const last = out.at(-1);
+    if (last && n === last[1] + 1) last[1] = n;
+    else out.push([n, n]);
+  }
+  return out.flatMap(([a, b]) => (b === a + 1 ? [[a, a] as [number, number], [b, b] as [number, number]] : [[a, b] as [number, number]]));
+}

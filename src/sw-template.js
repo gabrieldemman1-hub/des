@@ -40,7 +40,7 @@ self.addEventListener('fetch', (event) => {
       } catch {
         if (request.mode === 'navigate') {
           const missing = await cache.match(`${BASE}404.html`);
-          if (missing) return missing;
+          if (missing) return new Response(missing.body, { status: 404, headers: missing.headers });
         }
         return Response.error();
       }

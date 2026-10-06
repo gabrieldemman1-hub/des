@@ -70,12 +70,22 @@ body {
   color: var(--ink);
   font: 1.0625rem/1.6 var(--f-read);
   font-optical-sizing: auto;
+  /* At large text sizes a long word may have to break rather than widen the page. */
+  overflow-wrap: break-word;
+}
+
+/* Grid and flex children shrink to their column instead of growing to their longest word. */
+main :where(*) {
+  min-width: 0;
 }
 
 h1,
 h2,
 h3 {
   margin: 0;
+  /* Long single-word names (SENSITIVITY at 200% text) hyphenate rather than run off the screen. */
+  overflow-wrap: break-word;
+  hyphens: auto;
   font-family: var(--f-label);
   font-weight: 700;
   line-height: 1.05;

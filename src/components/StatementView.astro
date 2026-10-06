@@ -4,7 +4,7 @@
  * label; then, when it has them, how Primer reads it (Reasoned) and the caveat.
  */
 import type { Statement } from '../../content/schema';
-import type { Notes } from '../lib/notes';
+import { runs, type Notes } from '../lib/notes';
 import Conf from './Conf.astro';
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { statement, notes, lead, text = statement.text } = Astro.props;
-const numbers = notes.numbersFor(statement);
+const numbers = runs(notes.numbersFor(statement));
 const caveat = notes.caveatFor(statement);
 ---
 
@@ -28,11 +28,15 @@ const caveat = notes.caveatFor(statement);
     {
       numbers.length > 0 && (
         <sup class="fns">
-          {numbers.map((n, i) => (
+          {numbers.map(([first, last], i) => (
             <>
               {i > 0 && <span aria-hidden="true">,</span>}
-              <a class="fn mono" href={`#note-${n}`} aria-label={`Source ${n}`}>
-                {n}
+              <a
+                class="fn mono"
+                href={`#note-${first}`}
+                aria-label={first === last ? `Source ${first}` : `Sources ${first} to ${last}`}
+              >
+                {first === last ? first : `${first}–${last}`}
               </a>
             </>
           ))}
