@@ -1,0 +1,179 @@
+---
+/** How to read Primer: what each confidence label means, and the only sources it uses. */
+import { CONFIDENCE_LEVELS } from '../../content/schema';
+import { sources } from '../../content/index';
+import Layout from '../layouts/Layout.astro';
+import { CONFIDENCE } from '../lib/labels';
+
+const TIER: Record<string, string> = {
+  official: 'XIM’s own',
+  'official-by-reference': 'Linked from XIM’s guide',
+  'official-inferred': 'XIM’s, not linked from the guide',
+  expert: 'Expert',
+};
+---
+
+<Layout title="How to read it" description="What Primer's confidence labels mean, and the sources it uses.">
+  <article class="page">
+    <header class="head">
+      <h1>How to read it</h1>
+      <p class="lede">
+        Every sentence in Primer carries a label for how sure it is, and small blue numbers that lead to the exact words
+        it rests on. Tap a number to read the quote; tap the quote’s link to see it on the source.
+      </p>
+    </header>
+
+    <section aria-labelledby="labels">
+      <h2 id="labels" class="label">The five labels</h2>
+      <dl class="levels">
+        {
+          CONFIDENCE_LEVELS.map((level) => (
+            <div id={level}>
+              <dt class={`word c-${level}`}>{CONFIDENCE[level].word}</dt>
+              <dd>{CONFIDENCE[level].meaning}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="note">
+        A caveat under a sentence (marked ✱) is something to know before you rely on it. “How Primer reads it” shows the
+        reasoning behind a Reasoned sentence.
+      </p>
+    </section>
+
+    <section aria-labelledby="sources">
+      <h2 id="sources" class="label">The sources</h2>
+      <p class="note">Primer uses these and nothing else. Adding one needs a recorded decision.</p>
+      <ul class="sources">
+        {
+          sources.map((s) => (
+            <li>
+              <p class="label">{TIER[s.tier] ?? s.tier}</p>
+              <p class="title">
+                <a href={s.url} rel="noopener">
+                  {s.title}
+                </a>
+              </p>
+              <p class="meta">
+                {s.publisher} · checked {s.accessed}
+              </p>
+              {s.notes && <p class="notes">{s.notes}</p>}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.8rem;
+  }
+
+  section {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  section > h2 {
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 10vw, 3.4rem);
+    text-transform: uppercase;
+  }
+
+  .lede {
+    font-size: 1.1rem;
+    color: var(--ink-2);
+  }
+
+  .levels {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .levels > div {
+    display: grid;
+    gap: 0.15rem;
+    scroll-margin-top: 1rem;
+  }
+
+  .levels > div:target {
+    background: var(--cobalt-tint);
+    box-shadow: 0 0 0 0.5rem var(--cobalt-tint);
+  }
+
+  .word {
+    justify-self: start;
+    padding: 0.05em 0.45em 0;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    font: 700 0.85rem/1.4 var(--f-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .c-official {
+    color: var(--c-official);
+  }
+  .c-expert {
+    color: var(--c-expert);
+  }
+  .c-contested {
+    color: var(--c-contested);
+  }
+  .c-reasoned {
+    color: var(--c-reasoned);
+  }
+  .c-gap {
+    color: var(--c-gap);
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  .note {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  .sources {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .sources li {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .title {
+    font: 700 1.2rem/1.2 var(--f-label);
+    letter-spacing: 0.02em;
+  }
+
+  .meta {
+    color: var(--ink-3);
+    font-size: 0.9rem;
+  }
+
+  .notes {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+</style>

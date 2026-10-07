@@ -1,0 +1,158 @@
+{
+  "id": "snap",
+  "name": "Snap",
+  "description": "Acquiring a target you see for a split second: snap on, fire, re-peek. For example hand cannons, snipers, shotguns and sidearms.",
+  "favours": {
+    "text": "A fast, direct start from a standstill. A snap begins at rest, so the setting that shapes aim from rest matters most. The fast part of the move belongs to Response. These directions assume custom Standard smoothing (your own values, not a preset): it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic smoothing is static (it doesn't adapt to your aim speed), so Classic users get the definitions but not these directions.",
+    "confidence": "reasoned",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Specifies aim behavior from rest"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Controls fast aim behavior"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior."
+      }
+    ],
+    "reasoning": "A snap starts with the reticle at rest, and Easing \"specifies aim behavior from rest\". The quick move after that is fast aim, which Response \"controls\". Standard \"adapts to your current aim speed\", which is what lets a setting target one speed range without changing the others. Classic \"provides static smoothing behavior\", so the speed-based directions don't carry over. XIM's guide doesn't tie any setting to an aim style. XIM Central's 2023 tutorials for other games do in places. For Overwatch 2, XIM Central says a custom smoothing setup and an aiming curve help with flicks, both tied to that game's aim assist. For Rainbow Six Siege, XIM Central says the Light smoothing preset helps with micro aiming. Neither tutorial is about Destiny 2, so these directions rest on XIM's definitions."
+  },
+  "levers": [
+    {
+      "settingId": "easing",
+      "direction": "lower",
+      "aimingSources": [
+        "mouse",
+        "gyro"
+      ],
+      "statement": {
+        "text": "Lower Easing for a faster start from rest. That suits snapping onto someone who appears for a split second. The cost is a less smooth start. Raising it does the opposite.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Specifies aim behavior from rest"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Higher values result in smoother transition from rest but lower response time."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+          }
+        ],
+        "reasoning": "Easing \"specifies aim behavior from rest\", and a snap starts from rest. Higher values give a \"smoother transition from rest but lower response time\". We read that as a slower start, so lowering Easing should give a quicker one. Easing is a Standard smoothing setting.",
+        "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it. Assumes custom Standard smoothing (Easing is a Standard setting). If you use a smoothing preset, XIM suggests trying the other presets first."
+      }
+    },
+    {
+      "settingId": "response",
+      "direction": "depends",
+      "aimingSources": [
+        "mouse",
+        "gyro"
+      ],
+      "statement": {
+        "text": "Response shapes the fast move after the start. If that move feels heavy, raise Response. If it feels too light, lower it.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Controls fast aim behavior"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+          }
+        ],
+        "reasoning": "After the start from rest, a snap is fast aim, which Response \"controls\". Higher values produce \"a lighter feeling reticle at faster aim speeds\". Which way you need depends on your feel.",
+        "caveat": "Assumes custom Standard smoothing (Response is a Standard setting). If you use a smoothing preset, XIM suggests trying the other presets first."
+      }
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Hand Cannon",
+      "mapping": {
+        "text": "Hand cannons are snap weapons: you peek, get the reticle onto the target fast, fire a hard-hitting shot, and re-peek.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "Most hand cannons fire slow, heavy single shots, and landing precision hits matters. Hand cannons are typically used to peek from cover and hit a target that is visible only briefly. The skill is fast, direct acquisition from a standstill, which is the snap aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons. Not every hand cannon fires single shots: for example, Heavy Burst hand cannons fire a two-round burst, Spread Shot hand cannons fire a short-range spread of pellets, Crimson fires a 3-round burst, and The Last Word fires full auto. The snap mapping is reasoned from the single-shot kind."
+      }
+    },
+    {
+      "name": "Sidearm",
+      "mapping": {
+        "text": "Sidearms are snap weapons: close-range fights start suddenly, and getting the reticle onto the target first decides them.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A sidearm is a close-range weapon, often used when a target appears around a corner. The fight is short, and the first thing that matters is getting on target from a standstill. That is the snap aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons. Loose fit: fast-firing sidearms also need some tracking once you are on target."
+      }
+    },
+    {
+      "name": "Shotgun",
+      "mapping": {
+        "text": "Shotguns are snap weapons: at close range you get the reticle onto the target fast and fire one or two shots.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A shotgun kills in very few shots at close range, and the fight is usually over in a moment. What decides it is getting on target quickly from a standstill, not holding on target over time. That is the snap aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "name": "Sniper Rifle",
+      "mapping": {
+        "text": "Sniper rifles are snap weapons: a target shows for a moment, you flick to the head and fire.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A sniper rifle fires one shot per trigger pull and rewards precision hits, often on a target that crosses a lane or peeks for a split second. The skill is getting the reticle onto the head fast and firing before the target is gone. That is the snap aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons. Holding an angle and waiting for a target is closer to precision hold. The quick flick onto a target that appears is why snipers are grouped with snap weapons here."
+      }
+    },
+    {
+      "name": "Glaive",
+      "mapping": {
+        "text": "Glaives are closest to snap weapons: you fight at close to mid range, getting the reticle onto the target quickly for a shot or a swing.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A glaive fires single, slow projectiles and can also be swung in melee. It is used mostly at close to mid range, one shot at a time. Getting onto the target quickly matters more than holding on it, which fits snap best of the three styles.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons. Loose fit: glaive shots travel slowly, so you also lead moving targets, and melee swings are not really an aim style at all."
+      }
+    }
+  ]
+}

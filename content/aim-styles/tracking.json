@@ -1,0 +1,132 @@
+{
+  "id": "tracking",
+  "name": "Tracking",
+  "description": "Holding the reticle on a target through sustained fire. For example pulse rifles, auto rifles and SMGs.",
+  "favours": {
+    "text": "Steady, consistent small corrections. Tracking is a long run of slow, fine movements, so the settings that shape fine aim at low speed matter most. These directions assume custom Standard smoothing (your own values, not a preset): it adapts to your current aim speed, so slow and fast aim can be tuned apart. Classic smoothing is static (it doesn't adapt to your aim speed), so Classic users get the definitions but not these directions.",
+    "confidence": "reasoned",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Controls fine aim behavior"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior."
+      }
+    ],
+    "reasoning": "Holding on a moving target means many small, slow corrections. Precision \"controls fine aim behavior\" and acts \"at low aim speeds\". Standard \"adapts to your current aim speed\", which is what lets a setting target one speed range without changing the others. Classic \"provides static smoothing behavior\", so the speed-based directions don't carry over. XIM's guide doesn't tie any setting to an aim style. XIM Central's 2023 tutorials for other games do in places. For Overwatch 2, XIM Central says a custom smoothing setup and an aiming curve help with flicks, both tied to that game's aim assist. For Rainbow Six Siege, XIM Central says the Light smoothing preset helps with micro aiming. Neither tutorial is about Destiny 2, so these directions rest on XIM's definitions."
+  },
+  "levers": [
+    {
+      "settingId": "precision",
+      "direction": "raise",
+      "aimingSources": [
+        "mouse",
+        "gyro"
+      ],
+      "statement": {
+        "text": "Raise Precision for a steadier hold. It smooths your low-speed corrections, at the cost of the heavier reticle XIM's definition names. If small corrections start to feel sluggish, ease it back.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Controls fine aim behavior"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#standard",
+            "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+            "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+          }
+        ],
+        "reasoning": "Tracking is mostly slow, fine movement, which Precision controls (\"fine aim behavior\"). Higher values give \"a smoother result at low aim speeds\", which should steady the hold. The same sentence names the cost: it \"increases the heaviness of the reticle\".",
+        "caveat": "Assumes custom Standard smoothing (Precision is a Standard setting; Classic uses Smooth, Decay and Synch instead). If you use a smoothing preset, XIM suggests trying the other presets first."
+      }
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Auto Rifle",
+      "mapping": {
+        "text": "Auto rifles are tracking weapons: you hold the trigger and keep the reticle on the target for the whole spray.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "An auto rifle fires nonstop while you hold the trigger, and a kill takes many hits. The skill is keeping the reticle on a moving target through sustained fire. That is the tracking aim style.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "name": "Pulse Rifle",
+      "mapping": {
+        "text": "Pulse rifles are tracking weapons: a kill takes several bursts in a row, and you keep the reticle on the target through all of them.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A pulse rifle fires in short bursts, and one burst rarely kills. Between and during bursts you keep making small corrections to stay on a moving target. That calls for steady, continuous control (tracking) rather than one fast flick.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "name": "Submachine Gun",
+      "mapping": {
+        "text": "Submachine guns are tracking weapons: you spray at close range and stay on a target that is moving fast across your screen.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A submachine gun fires very quickly at close range, most of them fully automatically (a few fire in short bursts). Up close, a strafing target crosses the screen fast, so you must keep correcting to stay on it for as long as you fire. That is tracking.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "name": "Fusion Rifle",
+      "mapping": {
+        "text": "Fusion rifles are tracking weapons: you hold the reticle on the target while the shot charges and while the bolts fire.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A fusion rifle charges before it fires, then releases a burst of bolts. The target keeps moving during the charge, so you must stay on it the whole time. That calls for steady, continuous correction, which is tracking.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "name": "Trace Rifle",
+      "mapping": {
+        "text": "Trace rifles are tracking weapons: the beam only does damage while it touches the target, so you hold on it.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A trace rifle fires a continuous beam instead of separate bullets. Damage depends on keeping the beam on a moving target. That is the purest form of tracking.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    },
+    {
+      "name": "Machine Gun",
+      "mapping": {
+        "text": "Machine guns are tracking weapons: you hold the trigger and keep the reticle on the target through a long stream of fire.",
+        "confidence": "reasoned",
+        "citations": [],
+        "reasoning": "A machine gun fires fully automatically from a large magazine. The skill is holding on moving targets, or moving between them, through sustained fire. That is tracking.",
+        "caveat": "Based on how this weapon type fires, not on a source: no whitelisted source covers Destiny 2 weapons."
+      }
+    }
+  ]
+}

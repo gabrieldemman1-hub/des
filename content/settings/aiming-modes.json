@@ -1,0 +1,167 @@
+{
+  "id": "aiming-modes",
+  "name": "Aiming Modes",
+  "aliases": [
+    "Hip and ADS",
+    "Hip",
+    "Aim Down Sight",
+    "ADS"
+  ],
+  "summary": "Hip and Aim Down Sight (ADS) can each have their own aim settings, if the game has an ADS mode.",
+  "where": {
+    "text": "Not a setting: if your game has an Aim Down Sight mode, you set Hip and Aim Down Sight aiming separately when you edit your Config (pencil icon). Otherwise there is one set of aim settings. Game roles decide whether the game has an ADS mode. The dashboard shows the active mode beneath the box art.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+        "quote": "If your game supports an Aim Down Sight mode, then, you'll be able to set both Hip and Aim Down Sight aiming independently. Otherwise, you'll have a single set of aim settings."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+        "quote": "Game roles are used to determine if your game has an Aim Down Sight mode."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#current-input-and-aiming-mode",
+        "quote": "Beneath the box art is the current input (button or key being pressed) and the aiming mode that is active (Hip or Aiming Down Sight)."
+      }
+    ]
+  },
+  "definition": {
+    "text": "If your game has an Aim Down Sight mode, you can set Hip and Aim Down Sight aiming separately. Otherwise there is one set of aim settings.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+        "quote": "If your game supports an Aim Down Sight mode, then, you'll be able to set both Hip and Aim Down Sight aiming independently. Otherwise, you'll have a single set of aim settings."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "The MATRIX knows when you are in ADS from your Config's game roles.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+          "quote": "Game roles are used to determine if your game has an Aim Down Sight mode."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Roles/#game-roles",
+          "quote": "Your XIM MATRIX needs to know when your game is firing and when it's in aiming down sight (ADS) mode in order to function correctly."
+        }
+      ]
+    },
+    {
+      "text": "By default, ADS inherits all its settings from Hip.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+        }
+      ]
+    },
+    {
+      "text": "The dashboard shows which mode is active right now.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Dashboard/#current-input-and-aiming-mode",
+          "quote": "Beneath the box art is the current input (button or key being pressed) and the aiming mode that is active (Hip or Aiming Down Sight)."
+        }
+      ]
+    },
+    {
+      "text": "Bindings can also be limited to one mode with their Activation setting: Hip-only or ADS-only.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Activation/#activation-states",
+          "quote": "Hip-only: Binding is enabled only when hip aiming"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Activation/#activation-states",
+          "quote": "ADS-only: Binding is enabled only when aiming down sight"
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Check that the MATRIX sees your ADS: it quickly flashes green when you enter ADS and yellow when you return to Hip. The flashes only appear if your game is configured for both modes, and not at all if the light notifications have been disabled in the Config's additional options.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+          "quote": "When you enter Aim Down Sight, your XIM MATRIX will quickly flash green."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+          "quote": "When you return to Hip, your XIM MATRIX will quickly flash yellow."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+          "quote": "Your XIM MATRIX will notify you whenever you switch between Hip and Aim Down Sight (if your game is configured for both modes). This is done so that you can know that your Config's game roles are set up correctly."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Press the \"...\" to view additional configuration options available. These include:"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Disabling light aim speed and mode light notifications"
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Hip and ADS split how you aim, not what you aim with. If you aim down sights with both a pulse rifle and a hand cannon, both use your ADS settings.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+          "quote": "If your game supports an Aim Down Sight mode, then, you'll be able to set both Hip and Aim Down Sight aiming independently. Otherwise, you'll have a single set of aim settings."
+        }
+      ],
+      "reasoning": "The official split is by aiming mode (Hip or Aim Down Sight). Nothing in it knows which weapon you hold, so two weapons fired in the same mode share one set of settings."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "In-game ADS sensitivity settings",
+      "settingId": "required-game-settings",
+      "note": "The game's own ADS options. Set them to the required values; with Standard sync, ADS speed is tuned in the Config."
+    }
+  ],
+  "related": [
+    "ads-inheritance",
+    "ads-activation-delay",
+    "game-roles",
+    "sight-modifiers",
+    "light-notifications",
+    "sensitivity"
+  ]
+}

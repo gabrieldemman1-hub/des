@@ -1,0 +1,127 @@
+---
+/**
+ * One statement as the manual prints it: the sentence, its footnote numbers and its confidence
+ * label; then, when it has them, how Primer reads it (Reasoned) and the caveat.
+ */
+import type { Statement } from '../../content/schema';
+import { runs, type Notes } from '../lib/notes';
+import Conf from './Conf.astro';
+
+interface Props {
+  statement: Statement;
+  notes: Notes;
+  /** Text before the sentence, in small capitals: an aim style, a weapon, a name. */
+  lead?: string;
+  /** The sentence to print when the lead has been taken off the front of the statement's text. */
+  text?: string;
+}
+
+const { statement, notes, lead, text = statement.text } = Astro.props;
+const numbers = runs(notes.numbersFor(statement));
+const caveat = notes.caveatFor(statement);
+---
+
+<div class="st">
+  <p class="st-text">
+    {lead && <span class="st-lead">{lead}</span>}
+    {text}
+    {
+      numbers.length > 0 && (
+        <sup class="fns">
+          {numbers.map(([first, last], i) => (
+            <>
+              {i > 0 && <span aria-hidden="true">,</span>}
+              <a
+                class="fn mono"
+                href={`#note-${first}`}
+                aria-label={first === last ? `Source ${first}` : `Sources ${first} to ${last}`}
+              >
+                {first === last ? first : `${first}–${last}`}
+              </a>
+            </>
+          ))}
+        </sup>
+      )
+    }
+    <Conf level={statement.confidence} />
+  </p>
+  {
+    statement.reasoning && (
+      <p class="st-aside">
+        <span class="label">How Primer reads it</span> {statement.reasoning}
+      </p>
+    )
+  }
+  {
+    caveat?.full && (
+      <p class="st-aside st-caveat" id={caveat.id}>
+        <span class="label">Caveat</span> {statement.caveat}
+      </p>
+    )
+  }
+  {
+    caveat && !caveat.full && (
+      <p class="st-aside st-caveat">
+        <span class="label">Caveat</span> <a href={`#${caveat.id}`}>The same caveat as above</a>
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .st {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .st-lead {
+    margin-right: 0.4em;
+    font: 700 0.95rem/1 var(--f-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .fns {
+    margin-left: 0.1em;
+    font-size: 0.68em;
+    line-height: 0;
+  }
+
+  .fn {
+    color: var(--cobalt);
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0 0.1em;
+    /* A range ("1–4") stays whole; it may not break after its dash. */
+    white-space: nowrap;
+  }
+
+  .fn:hover {
+    text-decoration: underline;
+  }
+
+  .st-aside {
+    padding-left: 0.8rem;
+    border-left: 1px solid var(--rule);
+    color: var(--ink-2);
+    font-size: 0.94rem;
+  }
+
+  .st-aside .label {
+    margin-right: 0.35em;
+    font-size: 0.74rem;
+  }
+
+  .st-caveat {
+    scroll-margin-top: 1rem;
+  }
+
+  .st-caveat:target {
+    background: var(--cobalt-tint);
+  }
+
+  .st-caveat .label::before {
+    content: '✱ ';
+    color: var(--cobalt);
+  }
+</style>

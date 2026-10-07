@@ -1,0 +1,359 @@
+---
+/**
+ * One setting, as the manual prints it: where it sits in Manager, XIM's definition, the plain
+ * reading, the feel, the guidance, what it means for each aim style, what not to confuse it
+ * with, and the numbered notes behind every sentence.
+ */
+import { dialsFor, placementOf, settingById, settings } from '../../../content/index';
+import type { Setting } from '../../../content/schema';
+import NotesList from '../../components/NotesList.astro';
+import StatementView from '../../components/StatementView.astro';
+import Layout from '../../layouts/Layout.astro';
+import { MOVE } from '../../lib/labels';
+import { Notes } from '../../lib/notes';
+import { home, settingPath, tuningPath } from '../../lib/paths';
+
+export function getStaticPaths() {
+  return settings.map((setting) => ({ params: { id: setting.id }, props: { setting } }));
+}
+
+interface Props {
+  setting: Setting;
+}
+
+const { setting } = Astro.props;
+const placement = placementOf(setting.id)!;
+
+// The Tuning dials this setting sits on, each with its move toward either end.
+const onDials = dialsFor(setting.id).map((dial) => ({
+  dial,
+  lever: dial.levers.find((l) => l.settingId === setting.id)!,
+}));
+
+// Register every statement in reading order, so the footnote numbers run 1, 2, 3 down the page.
+const notes = new Notes().add(
+  setting.where,
+  setting.definition,
+  ...setting.plainWords,
+  ...setting.feel,
+  ...setting.guidance,
+  ...setting.aimStyles,
+  ...setting.confusions.map((c) => c.statement),
+);
+
+// The settings next to this one on its Manager screen, for reading on in the guide's order.
+const onScreen = placement.screen.groups.flatMap((g) => g.settings);
+const index = onScreen.indexOf(setting.id);
+const previous = index > 0 ? settingById(onScreen[index - 1]!) : undefined;
+const next = index < onScreen.length - 1 ? settingById(onScreen[index + 1]!) : undefined;
+
+const sections = [
+  { id: 'plain', title: 'In plain words', statements: setting.plainWords },
+  { id: 'feel', title: 'How it feels', statements: setting.feel },
+  { id: 'guidance', title: 'What to set', statements: setting.guidance },
+  { id: 'aim-styles', title: 'By aim style', statements: setting.aimStyles },
+].filter((s) => s.statements.length > 0);
+
+/** "Snap: the main lever. …" → lead "Snap", text "the main lever. …", so the style reads first. */
+const STYLE_LEAD = /^(Tracking|Snap|Precision hold)( \([^)]*\))?: /;
+---
+
+<Layout title={setting.name} description={`${setting.name}: ${setting.summary}`}>
+  <article class="setting">
+    <header class="head">
+      <p class="path label">
+        <a href={`${home()}#screen-${placement.screen.id}`}
+          ><span class="mono">{placement.number}</span> {placement.screen.name}</a
+        >
+        {placement.group && <span> › {placement.group}</span>}
+      </p>
+      <h1>{setting.name}</h1>
+      <p class="summary">{setting.summary}</p>
+      {setting.aliases.length > 0 && <p class="aliases">Also called {setting.aliases.join(', ')}</p>}
+    </header>
+
+    <section aria-labelledby="where">
+      <h2 id="where" class="label">Where it is in Manager</h2>
+      <StatementView statement={setting.where} notes={notes} />
+    </section>
+
+    {
+      setting.definition && (
+        <section aria-labelledby="definition" class="definition">
+          <h2 id="definition" class="label">XIM’s definition</h2>
+          <StatementView statement={setting.definition} notes={notes} />
+        </section>
+      )
+    }
+
+    {
+      sections.map((section) => (
+        <section aria-labelledby={section.id}>
+          <h2 id={section.id} class="label">
+            {section.title}
+          </h2>
+          <div class="statements">
+            {section.statements.map((statement) => {
+              const lead = section.id === 'aim-styles' ? statement.text.match(STYLE_LEAD) : null;
+              return lead ? (
+                <StatementView
+                  statement={statement}
+                  text={statement.text.slice(lead[0].length)}
+                  notes={notes}
+                  lead={`${lead[1]}${lead[2] ?? ''}`}
+                />
+              ) : (
+                <StatementView statement={statement} notes={notes} />
+              );
+            })}
+          </div>
+        </section>
+      ))
+    }
+
+    {
+      onDials.length > 0 && (
+        <section aria-labelledby="tuning">
+          <h2 id="tuning" class="label">
+            On the Tuning page
+          </h2>
+          <ul class="dials">
+            {onDials.map(({ dial, lever }) => (
+              <li>
+                <a href={`${tuningPath()}#dial-${dial.id}`}>{dial.name}</a>
+                <span class="visually-hidden">: </span>
+                <span class="dial-moves">
+                  {lever.a && (
+                    <span>
+                      {MOVE[lever.a.direction]} toward “{dial.ends.a}”
+                    </span>
+                  )}
+                  {lever.a && lever.b && ', '}
+                  {lever.b && (
+                    <span>
+                      {lever.a ? MOVE[lever.b.direction].toLowerCase() : MOVE[lever.b.direction]} toward “{dial.ends.b}”
+                    </span>
+                  )}
+                  .
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      setting.confusions.length > 0 && (
+        <section aria-labelledby="confusions">
+          <h2 id="confusions" class="label">
+            Not to be confused with
+          </h2>
+          <dl class="confusions">
+            {setting.confusions.map((c) => {
+              const other = c.settingId ? settingById(c.settingId) : undefined;
+              return (
+                <div>
+                  <dt>{other ? <a href={settingPath(other.id)}>{c.name}</a> : c.name}</dt>
+                  <dd>
+                    {c.note && <p>{c.note}</p>}
+                    {c.statement && <StatementView statement={c.statement} notes={notes} />}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
+        </section>
+      )
+    }
+
+    {
+      setting.related.length > 0 && (
+        <section aria-labelledby="related">
+          <h2 id="related" class="label">
+            Read next
+          </h2>
+          <ul class="related">
+            {setting.related.map((id) => {
+              const other = settingById(id)!;
+              return (
+                <li>
+                  <a href={settingPath(other.id)}>{other.name}</a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )
+    }
+
+    <NotesList notes={notes} />
+
+    {
+      (previous || next) && (
+        <nav class="pager" aria-label={`On ${placement.screen.name}`}>
+          {previous ? (
+            <a href={settingPath(previous.id)} rel="prev">
+              <span class="label">Previous</span>
+              {previous.name}
+            </a>
+          ) : (
+            <span />
+          )}
+          {next && (
+            <a class="next" href={settingPath(next.id)} rel="next">
+              <span class="label">Next</span>
+              {next.name}
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</Layout>
+
+<style>
+  .setting {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.6rem;
+  }
+
+  section {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  section > h2 {
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+  }
+
+  .path a {
+    color: var(--ink-3);
+    text-decoration: none;
+  }
+
+  .path a:hover {
+    color: var(--cobalt);
+  }
+
+  .path .mono {
+    color: var(--cobalt);
+    font-size: 0.8rem;
+    letter-spacing: 0;
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 11vw, 3.6rem);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+
+  .summary {
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--ink-2);
+  }
+
+  .aliases {
+    color: var(--ink-3);
+    font-size: 0.92rem;
+  }
+
+  .definition :global(.st-text) {
+    padding-left: 0.9rem;
+    border-left: 2px solid var(--cobalt);
+  }
+
+  .statements {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .confusions {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .confusions dt {
+    font: 700 1.05rem/1.2 var(--f-label);
+    letter-spacing: 0.03em;
+  }
+
+  .confusions dd {
+    margin: 0.15rem 0 0;
+    color: var(--ink-2);
+  }
+
+  .dials {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .dials li {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .dials li a {
+    font: 700 1.1rem/1.2 var(--f-label);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  .dials li a::after {
+    content: ' ›';
+    color: var(--cobalt);
+  }
+
+  .dial-moves {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  .related {
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    font: 600 1.05rem/1.4 var(--f-label);
+    letter-spacing: 0.02em;
+  }
+
+  .related a {
+    display: inline-block;
+    padding: 0.35rem 0;
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1.5px solid var(--rule-strong);
+  }
+
+  .pager a {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.3rem 0;
+    font: 700 1.15rem/1.15 var(--f-label);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  .pager .next {
+    text-align: right;
+  }
+</style>

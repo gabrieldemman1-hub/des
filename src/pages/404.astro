@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { home } from '../lib/paths';
+---
+
+<Layout title="Page not found" description="This page isn't in Primer.">
+  <div class="missing">
+    <h1>Not in the manual</h1>
+    <p>This page isn’t in Primer. The setting may have a different name here.</p>
+    <p><a href={home()}>Go to the map of settings</a></p>
+  </div>
+</Layout>
+
+<style>
+  .missing {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 9vw, 3rem);
+    text-transform: uppercase;
+  }
+</style>

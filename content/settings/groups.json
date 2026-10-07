@@ -1,0 +1,273 @@
+{
+  "id": "groups",
+  "name": "Groups",
+  "aliases": [
+    "Group Membership",
+    "binding groups",
+    "weapon groups",
+    "Group Cycling",
+    "Cycle Sets"
+  ],
+  "summary": "Sets of bindings you switch on and off with actions, for example to track which weapon you hold. They switch bindings; with Custom sync, in games with configurable scope levels, a weapon group can also carry a scope level. The guide documents no way for them to change smoothing, aiming curve or quantization.",
+  "where": {
+    "text": "Edit your Config (pencil icon), open a binding and select the Smart Actions Editor button at the bottom. Press the group button to assign the binding to a group, and add group actions from the Group Bindings category. To name groups, under Mappings press the \"...\" and select Group Customization. The settings box next to each group name holds Startup Enable and Input Exclusive.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Bindings/#simple-bindings",
+        "quote": "To change a binding, just click on it."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Editor/#loading-editor",
+        "quote": "Select the Smart Actions Editor button at the bottom"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Smart-Actions-Editor/#editor-features",
+        "quote": "Assign binding to a group to control when active based on game state."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Groups/#group-membership",
+        "quote": "Press on the group button to choose a different group to assign the binding."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Action-Categories/#group-bindings",
+        "quote": "Actions that provide flexibility in enabling and disabling binding groups."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Groups/#naming-groups",
+        "quote": "To access, under Mappings, press the \"...\" and select Group Customization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Groups/#startup-groups",
+        "quote": "Select the settings box next to the group name and choose Startup Enable."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Groups/#disabling-ungrouped-bindings",
+        "quote": "To activate this feature, select settings box next to the group name and choose Input Exclusive."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Group Membership lets you enable and disable sets of bindings using actions.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Groups/#groups",
+        "quote": "Group Membership is a powerful tool that allows you to selectively enable and disable sets of bindings using actions."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "A binding in a group stays off until its group is enabled. Bindings with no group are not affected, unless you set a group to Input Exclusive (select the settings box next to the group name). Then, while that group is enabled, ungrouped bindings that share its inputs are turned off.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#group-membership",
+          "quote": "Once in a group, the binding will be disabled until the group its in is enabled."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#disabling-ungrouped-bindings",
+          "quote": "Ungrouped bindings are independent and unaffected by groups."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#disabling-ungrouped-bindings",
+          "quote": "However, for additional flexibility, you can configure your groups to automatically disable ungrouped bindings if they share the same inputs."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#disabling-ungrouped-bindings",
+          "quote": "To activate this feature, select settings box next to the group name and choose Input Exclusive."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#disabling-ungrouped-bindings",
+          "quote": "Your ungrouped bindings that share the same inputs will disable only while the vehicle group is enabled."
+        }
+      ]
+    },
+    {
+      "text": "The typical use is weapon tracking: the bindings for each weapon, such as its recoil control, sit in that weapon's group.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#groups",
+          "quote": "This feature can open a variety of scenarios such as weapon tracking where subsets of bindings are enabled to match the behavior of the current weapon in use."
+        }
+      ],
+      "caveat": "In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
+    },
+    {
+      "text": "Ways to switch: enable and disable actions, an exclusive enable (crown icon) that turns all other groups off, or group cycling. XIM's weapon-tracking example: press 1 or 2 once to pick which pair of weapons you carry, and the weapon-swap key cycles to the matching group.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#exclusive-group-enablement",
+          "quote": "Switch the Enable Group action to the version with the crown icon. When run, the target group is enabled and all other groups are disabled."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#enabling-groups",
+          "quote": "And, at any time, you are holding your PISTOL + SMG (your first loadout), or your PISTOL + LMG (your second loadout)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Weapon-Loadouts/#weapon-loadouts",
+          "quote": "The gamer presses 1 or 2 to select their loadout once"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Weapon-Loadouts/#weapon-loadouts",
+          "quote": "They switch weapons with TAB which also automatically cycles to the next weapon group to match"
+        }
+      ]
+    },
+    {
+      "text": "You can choose which groups are on when the Config loads.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#startup-groups",
+          "quote": "When your Config is loaded, you can choose which groups are enabled automatically."
+        }
+      ]
+    },
+    {
+      "text": "What groups can change: which bindings run, plus a scope level on weapon groups with Custom sync. What they cannot change, as far as the guide documents: smoothing, aiming curve or quantization.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#groups",
+          "quote": "Group Membership is a powerful tool that allows you to selectively enable and disable sets of bindings using actions."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#groups",
+          "quote": "A scope level can also be assigned (available when using Custom Game Settings) when the group is weapon tracking."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-aim-sensitivity",
+          "quote": "Change aim sensitivity. Use in scenarios to increase aiming sensitivity for vehicles, turrets, and parachutes."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
+          "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+          "quote": "Enable gyro motion aim. Only enabled while action is active."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+          "quote": "Toggles gyro motion aim on/off."
+        }
+      ],
+      "reasoning": "The guide defines groups as sets of bindings. Modify Aim Sensitivity and Sight Override (scopes, with Custom sync) change sensitivity only. The Motion Activation actions (Engage, Pause and Toggle Motion Aim) only turn gyro motion aim on or off. No documented Smart Action sets Smoothing, Aiming Curve or Quantization within one Config.",
+      "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done."
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "If you switch between several sets of weapons, XIM suggests a Cycle Reset action to get back in sync with your current weapon, since you only need to remember one key.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#group-cycling",
+          "quote": "If you have multiple loadouts, use a Cycle Reset action to resynchronize with your current weapon since it only requires you to remember a single key."
+        }
+      ]
+    },
+    {
+      "text": "Group Cycling only appears when the binding uses a runs-once condition.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#group-cycling",
+          "quote": "Some actions, like Group Cycling, won't be available unless you are using a runs-once condition."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Groups can make weapon-specific bindings, like each weapon's recoil control, follow your weapon. The guide documents no way for them to retune smoothing between tracking and snap aim, so different smoothing means a separate Config.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#groups",
+          "quote": "Group Membership is a powerful tool that allows you to selectively enable and disable sets of bindings using actions."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#groups",
+          "quote": "This feature can open a variety of scenarios such as weapon tracking where subsets of bindings are enabled to match the behavior of the current weapon in use."
+        }
+      ],
+      "reasoning": "Groups switch bindings. Smoothing is an aim setting, and no documented action changes it within one Config.",
+      "caveat": "Undocumented, not proven impossible: the guide describes no action that does this, but it never says it cannot be done. In Destiny 2, Bungie's account policy says using keyboard/mouse adapters to \"reduce recoil\" \"would be a violation\", which can lead to escalating actions, including bans. See the Destiny 2 note on Bungie's policy."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Loading another Config",
+      "settingId": "load-config",
+      "note": "Loads that Config's own settings, aim settings included. Global Settings stay the same. Groups switch which bindings run; with Custom sync, in games with configurable weapon scope levels, a weapon group can also be assigned a scope level."
+    },
+    {
+      "name": "Input Modifiers",
+      "statement": {
+        "text": "Button combinations that activate other bindings, only while they are held. They reuse buttons; they are not groups.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Input-Modifiers/#input-modifiers",
+            "quote": "Input Modifiers are a convenient way to expand the set of usable buttons of your input devices by allowing the creation of button combinations to activate bindings."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Input-Modifiers/#assign-a-modifier",
+            "quote": "Bindings with modifiers are only active when they are held. They are meant to be active temporarily to quickly perform a function."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "rumble-triggers",
+    "load-config",
+    "config",
+    "modify-aim-sensitivity",
+    "sight-modifiers",
+    "sync-custom"
+  ]
+}

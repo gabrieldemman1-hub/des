@@ -1,0 +1,166 @@
+{
+  "id": "smoothing-standard",
+  "name": "Standard",
+  "aliases": [
+    "Standard smoothing",
+    "Standard mode"
+  ],
+  "summary": "The smoothing mode that adapts to your aim speed. Tuned with Precision, Response and Easing, plus Stability for motion aim only.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, set Smoothing to Custom instead of a preset, then press the smoothing button to switch between STANDARD and CLASSIC.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      }
+    ]
+  },
+  "definition": {
+    "text": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It splits your aim by speed. Precision handles slow, fine aim. Response handles fast aim. Easing handles the start from rest. Stability handles holding still, for motion aim only.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fine aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fast aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior from rest"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior at rest"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Try the presets first. XIM says smoothing is strictly preference.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Primer's aim-style directions for smoothing assume Standard. Because it adapts to aim speed, it can treat slow tracking and fast snaps differently within one Config. Classic applies the same smoothing at every speed.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fine aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fast aim behavior"
+        }
+      ],
+      "reasoning": "Standard \"adapts to your current aim speed\" and has separate settings for fine and fast aim. Classic \"provides static smoothing behavior\". Only a speed-adaptive mode can favour slow and fast aim differently at the same time."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Standard (Game Settings sync)",
+      "settingId": "sync-standard",
+      "note": "A sync method: in-game sensitivity at maximum, required settings applied, everything else default. Unrelated to smoothing."
+    },
+    {
+      "name": "Standard (Velocity Mapping)",
+      "settingId": "velocity-mapping",
+      "note": "The default Velocity Mapping: your top speed maps to the game's maximum for each aiming angle. Unrelated to smoothing."
+    },
+    {
+      "name": "Standard (update rate)",
+      "statement": {
+        "text": "The Config's update rate: how fast the MATRIX updates your console or PC. The guide's SAB checklist says to keep it at Standard, the default. Unrelated to Standard smoothing.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#standard-update-rate-only",
+            "quote": "When configuring the output connection mode of your Config, you can choose how fast you want your XIM MATRIX to update your console. Keep this value at \"Standard\" (which is default)."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "smoothing",
+    "precision",
+    "response",
+    "easing",
+    "stability",
+    "smoothing-classic"
+  ]
+}

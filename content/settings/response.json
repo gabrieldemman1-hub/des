@@ -1,0 +1,190 @@
+{
+  "id": "response",
+  "name": "Response",
+  "aliases": [],
+  "summary": "Standard smoothing for fast aim. Higher makes the reticle feel lighter at speed.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, set Smoothing to Custom instead of a preset, and make sure the smoothing button reads STANDARD (press it to change modes). Response is one of the Standard settings.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Response Controls fast aim behavior"
+      }
+    ]
+  },
+  "definition": {
+    "text": "Controls fast aim behavior. Higher values produces a lighter feeling reticle at faster aim speeds.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Controls fast aim behavior"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It acts on fast movements: big turns and quick moves onto a target. Raising it makes the reticle feel lighter during those movements.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fast aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+        }
+      ]
+    },
+    {
+      "text": "Lowering it should make fast movements feel heavier.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+        }
+      ],
+      "reasoning": "The guide only describes raising it (\"a lighter feeling reticle at faster aim speeds\"). Lowering it is the reverse."
+    },
+    {
+      "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [
+    {
+      "text": "Higher Response gives a lighter-feeling reticle at faster aim speeds.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+        }
+      ]
+    }
+  ],
+  "guidance": [
+    {
+      "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Snap: a secondary lever, for the fast part of a snap or flick. The main snap lever is Easing, which shapes the start from rest. If fast moves feel too heavy, raise Response; if they feel too light, lower it.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fast aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values produces a lighter feeling reticle at faster aim speeds."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior from rest"
+        }
+      ],
+      "reasoning": "Snaps are fast movements, and Response \"Controls fast aim behavior\", with higher values giving \"a lighter feeling reticle at faster aim speeds\". A snap starts from rest, and Easing \"Specifies aim behavior from rest\", so Primer treats Easing as the main snap lever and Response as the second."
+    },
+    {
+      "text": "Tracking: matters when the target moves fast or you turn quickly while firing. Slow holds depend more on Precision.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fast aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fine aim behavior"
+        }
+      ],
+      "reasoning": "Response acts at fast aim speeds; Precision acts at low aim speeds."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Response rate (Check Rate)",
+      "settingId": "polling-rate",
+      "note": "A Manager tool that counts how often your mouse actually reports movement, to check its polling rate. It is not a smoothing setting."
+    },
+    {
+      "name": "Aim response curve",
+      "settingId": "aiming-curve",
+      "note": "The guide calls an aiming curve your \"aim response\". That is the Aiming Curve, not this setting."
+    },
+    {
+      "name": "\"Response time\" in Easing",
+      "settingId": "easing",
+      "note": "Easing's definition mentions \"response time\" for the start from rest. That describes Easing, not the Response setting."
+    }
+  ],
+  "related": [
+    "smoothing-standard",
+    "precision",
+    "easing",
+    "smoothing",
+    "velocity-mapping",
+    "polling-rate"
+  ]
+}

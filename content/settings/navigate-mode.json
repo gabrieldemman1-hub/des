@@ -1,0 +1,178 @@
+{
+  "id": "navigate-mode",
+  "name": "Navigate Mode",
+  "aliases": [
+    "Auto Navigate Mode",
+    "Gamepad Auto Activate",
+    "Navigate Only Hotkey Mode"
+  ],
+  "summary": "A special mode for menus and other non-game tasks, toggled with a button combo. By default, Config hotkeys only work in it.",
+  "where": {
+    "text": "A global setting, not part of a Config. On the dashboard, press the vertical \"...\" and select Global Settings, then choose Customize Navigate Mode. You turn the mode itself on and off with a button combo.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Global-Settings/#global-settings",
+        "quote": "XIM MATRIX has several settings that are global (not per-Config)."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Press the vertical \"...\" to open the menu of additional options which includes:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Modifying global settings"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Global-Settings/#global-settings",
+        "quote": "To access these settings, press the vertical \"...\" and select Global Settings."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Global-Settings/#customize-navigate-mode",
+        "quote": "Navigate Mode has its own dedicated topic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Navigate-Mode/#configuring-navigate-mode",
+        "quote": "Navigate Mode is fully configurable by entering Global Settings and choosing Customize Navigate Mode."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Navigate-Mode/#enabling-navigate-mode",
+        "quote": "By default, Navigate Mode is toggled using a button combo."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Think of it as a special type of Config just for non-game tasks, like navigating menus when your game Config has remapped your buttons.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Navigate-Mode/#navigate-mode",
+        "quote": "You can think of Navigate Mode as a special type of Config designed just for non-game tasks."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Navigate-Mode/#navigate-mode",
+        "quote": "Your inputs may be so heavily remapped for the game you are playing (including with Smart Action sequences), that it may be very difficult (or even impossible) to produce the buttons you need to do tasks outside of the game -- like navigating menus."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "The default toggle is View + Menu on an Xbox gamepad, Touchpad-Press + Options on a DualSense or DualShock 4, or [ + ] on a keyboard. While it is on, the MATRIX light breathes white.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#enabling-navigate-mode",
+          "quote": "View + Menu for Xbox gamepads"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#enabling-navigate-mode",
+          "quote": "Touchpad-Press + Options for DualSense and DualShock 4 gamepads"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#enabling-navigate-mode",
+          "quote": "[ + ] for keyboards"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#enabling-navigate-mode",
+          "quote": "Manager will let you know when you are in Navigate Mode and XIM MATRIX's light will be displaying a white breathing sequence."
+        }
+      ]
+    },
+    {
+      "text": "On controller output, you choose simple controller bindings for it. Connected gamepads pass straight through.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#controller-mappings",
+          "quote": "If your XIM MATRIX is currently presenting as a controller, you can choose the set of simple bindings to map your devices to controller. Connected gamepads are automatically passthrough mapped."
+        }
+      ]
+    },
+    {
+      "text": "Auto Navigate Mode: with the Gamepad Auto Activate setting, you can make Navigate Mode turn on automatically when the gamepad in Port 3 is in use. It turns off automatically when you use any other connected input device.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#auto-navigate-mode",
+          "quote": "You can configure Navigate Mode to automatically activate if a Gamepad in Port 3 is in use by using the Gamepad Auto Activate setting."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#auto-navigate-mode",
+          "quote": "Navigate Mode will deactivate automatically when any other connected input device is used."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "By default, Config hotkeys only work while Navigate Mode is on. The Navigate Only Hotkey Mode setting controls this.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Hotkeys, by default, are only available if Navigate Mode is active. To change, configure Navigate Mode."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#loading-configs",
+          "quote": "In addition, you can choose to only allow Config loading via hotkey if Navigate Mode is enabled by using the Navigate Only Hotkey Mode setting."
+        }
+      ]
+    },
+    {
+      "text": "While in Navigate Mode, you can load the next and previous Configs with specific buttons.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#loading-configs",
+          "quote": "You can also load next and previous Configs using specific buttons while in Navigate mode. Those buttons can be changed (or removed) as well."
+        }
+      ]
+    },
+    {
+      "text": "With Mouse, Keyboard, Controller output on PC, toggle Navigate Mode to pass your mouse and keyboard through to the desktop.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#mouse-keyboard-controller",
+          "quote": "Select this method so you can still use your connected mouse and keyboard on your desktop. Toggle Navigate Mode to pass them through."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Config",
+      "settingId": "config",
+      "note": "Your game setups. Navigate Mode behaves like a Config but is only for non-game tasks."
+    }
+  ],
+  "related": [
+    "load-config",
+    "config",
+    "output-type",
+    "light-notifications",
+    "motion-aim"
+  ]
+}

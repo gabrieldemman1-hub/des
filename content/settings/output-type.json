@@ -1,0 +1,245 @@
+{
+  "id": "output-type",
+  "name": "Output type",
+  "aliases": [
+    "output",
+    "controller output",
+    "XInput Controller",
+    "Xbox Controller output",
+    "Mouse, Keyboard, Controller",
+    "MKC"
+  ],
+  "summary": "What the MATRIX presents itself as to your console or PC: a controller, or a mouse and keyboard. Primer covers controller output only.",
+  "where": {
+    "text": "Chosen when you create a Config: press the vertical \"...\" on the top right, select New Config, press Custom, select your game and platform, then choose your inputs and outputs. The Dashboard shows the current output and connection status beneath the input devices.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Gaming-On-Xbox/#creating-an-xbox-config",
+        "quote": "Load XIM MATRIX Manager and create a new Config by pressing the vertical \"...\" on the top right and selecting New Config"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Gaming-On-Xbox/#custom-configs",
+        "quote": "To build a custom Config, press Custom. Select the game you are playing and the platform"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Gaming-On-Xbox/#custom-configs",
+        "quote": "Next, choose your inputs and outputs."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#output-and-connection-status",
+        "quote": "The current output and connection status are displayed beneath the input devices section. Here you will see how your XIM MATRIX is presenting itself (such as USB or Network, and controller or mouse and keyboard)."
+      }
+    ]
+  },
+  "definition": {
+    "text": "XIM MATRIX can present to your console or PC as a controller, or as a mouse and keyboard, or both.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Inputs-Outputs/#outputs",
+        "quote": "XIM MATRIX can present to your console or PC as controller or mouse and keyboard (or both)."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Controller output means the game uses its controller aim. Mouse-and-keyboard output means the game uses native mouse aim. Mouse-and-keyboard output is outside Primer's scope.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#gaming-on-pc-controller-output",
+          "quote": "Use controller output when you want your game to use controller aim. If you want your game's aiming method to be native mouse, use mouse and keyboard instead."
+        }
+      ]
+    },
+    {
+      "text": "Xbox: choose the Controller (Xbox, PS, PC) output. The guide's Xbox page text still calls it Controller (Xbox, PS4), but the Manager screenshot directly under that sentence, and the guide's PC and PlayStation 5 pages, show Controller (Xbox, PS, PC). A genuine Xbox Series, One or Elite controller in USB Port 3 handles authentication. XIM also supports officially licensed wired third-party Xbox controllers for authentication, but its Hardware Compatibility List says only most are supported and to check its support forum before buying. A third-party controller must be the only wired Xbox controller connected to the MATRIX, in Port 3.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#custom-configs",
+          "quote": "Next, choose your inputs and outputs. For an Xbox Config, the output must be Controller (Xbox, PS4)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#controller",
+          "quote": "Xbox Controller Output, select Controller (Xbox, PS, PC)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PlayStation-5/#usb-connection-alternative",
+          "quote": "When creating your Config, choose the Controller (Xbox, PS, PC) output type"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#authentication-controller",
+          "quote": "You'll need to connect a genuine Xbox Series, One, or Elite controller to USB Port 3 (●●●) of your XIM MATRIX. This is your authentication controller required to run on your console."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Xbox/#3rd-party-controller-problems",
+          "quote": "XIM MATRIX supports officially licensed 3rd party wired Xbox controllers. You can use these controllers for authentication as well."
+        },
+        {
+          "source": "xim-hardware-compatibility",
+          "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+          "quote": "NOTE: Most wired officially licensed 3rd party Xbox controllers supported (check with our support forum to confirm before purchase)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Xbox/#3rd-party-controller-problems",
+          "quote": "If you are using a licensed 3rd party Xbox controller on your Xbox, please ensure it's the only wired Xbox controller connected to your XIM MATRIX. It should be connected to port 3."
+        }
+      ]
+    },
+    {
+      "text": "PC: XIM's PC controller-output page says the MATRIX can present as a standard XInput controller, an Xbox controller or a DualSense controller. Xbox and DualSense output each need that controller in Port 3 for authentication. XIM's outputs table also lists DualShock 4 controller output for PC, which requires a DualShock 4 v2 controller for authentication. There is also the Mouse, Keyboard, Controller option.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#gaming-on-pc-controller-output",
+          "quote": "Standard XInput controller"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#gaming-on-pc-controller-output",
+          "quote": "Xbox controller (Xbox authentication controller required)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#gaming-on-pc-controller-output",
+          "quote": "DualSense controller (DualSense authentication controller required)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#custom-configs",
+          "quote": "Next, choose your inputs and outputs. For an XInput PC Config, you have two choices: Controller (PC), or Mouse, Keyboard, Controller."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#connect-devices",
+          "quote": "To output as an Xbox controller, you must have an Xbox controller plugged into Port 3 (●●●). Likewise, for DualSense output, you must have a DualSense plugged into Port 3 (●●●)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Inputs-Outputs/#outputs",
+          "quote": "Requires a DualShock 4 v2 controller for authentication",
+          "note": "The outputs table row for DualShock 4 Controller output, listed for PS4 and PC over USB."
+        }
+      ]
+    },
+    {
+      "text": "Mouse, Keyboard, Controller (PC only): the MATRIX presents as a controller, mouse and keyboard at once. Aim is still controller aim. It lets you keep using your mouse and keyboard on the desktop through Navigate Mode. Authentication controllers are not supported with it.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#mouse-keyboard-controller",
+          "quote": "When you choose this method, your XIM MATRIX will present as an XInput controller, mouse, and keyboard. Bindings are still set up for controller aiming."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#mouse-keyboard-controller",
+          "quote": "Authentication controllers are not supported with this method."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#mouse-keyboard-controller",
+          "quote": "Select this method so you can still use your connected mouse and keyboard on your desktop. Toggle Navigate Mode to pass them through."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Inputs-Outputs/#outputs",
+          "quote": "The Mouse, Keyboard, Controller output can only be used on PC."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "PC with controller output: XIM warns that virtual controller tools, such as Steam Input or DS4Windows, may conflict. It lists this under connection problems.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-PC/#matrix-connection-problems",
+          "quote": "If your XIM MATRIX is outputting as a controller, make sure you don't have any virtual controller emulation tools (such as Steam Input or DS4Windows) installed that may conflict."
+        }
+      ]
+    },
+    {
+      "text": "Only if you use SAB: don't use the Mouse, Keyboard, Controller output type.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-mkc-output",
+          "quote": "When connecting your XIM MATRIX to your PC, do not use the Mouse, Keyboard, Controller (MKC) output type. Rather use one of the other supported output types for PC."
+        }
+      ],
+      "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Inputs",
+      "statement": {
+        "text": "The devices you connect to the MATRIX, such as a mouse and keyboard, a gamepad or a gyro gamepad. Gamepads can be plugged in or, if they support Bluetooth, paired wirelessly. The output type is what the MATRIX presents as to your console or PC.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Inputs-Outputs/#inputs-and-outputs",
+            "quote": "XIM MATRIX supports any combination of supported input devices."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Inputs-Outputs/#inputs",
+            "quote": "Standard PC gamer mouse and keyboard combination"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Inputs-Outputs/#inputs",
+            "quote": "Console gamer input with gyro (motion) aim"
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Hardware-Compatibility/#wireless-devices",
+            "quote": "XIM MATRIX supports use of controllers wirelessly too as long as those controllers support Bluetooth."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Inputs-Outputs/#outputs",
+            "quote": "XIM MATRIX can present to your console or PC as controller or mouse and keyboard (or both)."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Velocity Mapping (Controller Output / Mouse Output)",
+      "settingId": "velocity-mapping",
+      "note": "Its options differ by output type, but it is an aim setting, not the output type."
+    }
+  ],
+  "related": [
+    "smart-translation",
+    "game-settings-sync",
+    "velocity-calibration",
+    "simulate-analog-behavior",
+    "navigate-mode",
+    "rumble-triggers",
+    "config",
+    "warning-lights"
+  ]
+}

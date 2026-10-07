@@ -1,0 +1,178 @@
+{
+  "id": "game-settings-sync",
+  "name": "Game Settings",
+  "aliases": [
+    "Game Settings synchronization",
+    "sync method",
+    "in-game settings sync"
+  ],
+  "summary": "How you line up the game's own aim settings with your Config. There are three methods: Standard, Custom and Manual.",
+  "where": {
+    "text": "Edit your Config (pencil icon) and go to its Game Settings section. It offers three synchronization methods: Standard, Custom and Manual.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Groups/#weapon-groups",
+        "quote": "When a weapon group is enabled, the user will be able to change the current sight to match theirs from the game settings section:",
+        "note": "Where the guide calls Game Settings a section of the Config."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+        "quote": "Game Settings support includes three different synchronization methods: Standard, Custom, and Manual."
+      }
+    ]
+  },
+  "definition": {
+    "text": "XIM's Smart Translation must be synchronized with your game's aim settings to aim correctly. There are three ways to do it: Standard, Custom and Manual.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+        "quote": "XIM MATRIX's Smart Translation input system must be synchronized with your game's aim settings for correctness to ensure optimal precision aim."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+        "quote": "Game Settings support includes three different synchronization methods: Standard, Custom, and Manual."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It applies only to Configs that output as a controller.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+          "quote": "These settings apply only to Configs that output as controller."
+        }
+      ]
+    },
+    {
+      "text": "Standard: the game's sensitivity goes to maximum and your aim is set in the Config. Custom: you pick some in-game aim settings and copy them into the Config. Manual: an advanced option where you calibrate to your own in-game settings.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#standard",
+          "quote": "Sensitivity is set to maximum"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#standard",
+          "quote": "Your aiming behavior is then set through your Config."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#custom",
+          "quote": "To use, copy your game's aim settings into your Config:"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#manual",
+          "quote": "The manual synchronization method is an advanced option that lets you calibrate to your particular set of in-game aim settings."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Getting the game's settings wrong hurts your aim. It also means Configs shared by others won't work properly for you.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+          "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-PC-Output-C/#required-game-settings",
+          "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
+        }
+      ]
+    },
+    {
+      "text": "Which methods a Config can use depends on the game. Every game the MATRIX supports has Standard. Custom is only there for games that support it. XIM discourages Manual for Configs that output as controller, because it may not produce accurate results.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#standard",
+          "quote": "Every game that XIM MATRIX supports has the standard game settings synchronization option."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#custom",
+          "quote": "This is the default option for controller Configs when custom is available for the game."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+          "quote": "Or, if you are a controller gamer (and the game has support for it), aim is customized in your game and settings are copied to your Config."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#manual",
+          "quote": "Manual reticle velocity calibration for Configs that output as controller may not produce accurate results and is thus discouraged from being used."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Not aim-style specific: it sets the footing every aim style relies on, whatever weapon you use. If the game's settings are out of sync, XIM says your aim suffers and real-world speeds, such as your cm/360 sensitivity, are no longer accurate.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#game-settings",
+          "quote": "XIM MATRIX's Smart Translation input system must be synchronized with your game's aim settings for correctness to ensure optimal precision aim."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Gaming-On-Xbox/#required-game-settings",
+          "quote": "Failure to configure your game's required settings correctly will result in negative aiming performance and the inability to effectively share and use Configs from others."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+          "quote": "Accurate real world velocity requires your game settings be configured correctly if outputting as controller, or, your velocity be calibrated correctly if outputting as mouse."
+        }
+      ],
+      "reasoning": "XIM says Smart Translation must be synchronized with the game's aim settings for correct, precise aim, that wrong settings hurt aiming, and that accurate real-world speeds such as cm/360 need correct game settings when outputting as controller. None of this depends on the weapon or the kind of aim. No source ties sync to aim styles."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Synch (Classic smoothing)",
+      "settingId": "synch",
+      "note": "A Classic smoothing value, previously called Synchronize. It has nothing to do with syncing game settings."
+    },
+    {
+      "name": "Standard (smoothing)",
+      "settingId": "smoothing-standard",
+      "note": "A smoothing mode. Unrelated to Standard sync."
+    }
+  ],
+  "related": [
+    "sync-standard",
+    "sync-custom",
+    "sync-manual",
+    "required-game-settings",
+    "smart-translation",
+    "velocity-calibration",
+    "output-type",
+    "config"
+  ]
+}

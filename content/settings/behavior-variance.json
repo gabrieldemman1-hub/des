@@ -1,0 +1,231 @@
+{
+  "id": "behavior-variance",
+  "name": "Behavior Variance",
+  "aliases": [
+    "Wait Variance",
+    "Aim Magnitude Variance",
+    "Aim Angle Variance",
+    "variance"
+  ],
+  "summary": "Adds small, human-like variation to Smart Action waits and aim actions. On by default for every binding.",
+  "where": {
+    "text": "Edit your Config (pencil icon). Under Mappings, press the \"...\" and select Behavior Simulation to set the variance values. To turn variance off for a single binding, edit your Config and press the watch icon. It turns red when off.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Behavior-Variance/#configuring-variance",
+        "quote": "To configure variance, under Mappings press the \"...\" and select Behavior Simulation."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Behavior-Variance/#disabling-variance",
+        "quote": "To disable variance per-binding, edit your Config and press the watch icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Behavior-Variance/#disabling-variance",
+        "quote": "The icon will turn red when it's off."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Behavior variance simulates natural human behavior patterns for specific Smart Actions.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Behavior-Variance/#behavior-variance",
+        "quote": "Behavior variance is used to add simulate natural human behavior patterns for specific smart actions."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Wait Variance is a percentage above or below each Wait. XIM's example: 20% on a 150 ms wait gives a wait between 120 ms and 180 ms.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#wait-variance",
+          "quote": "Wait Variance is a percentage of variance above or below the specified value."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#wait-variance",
+          "quote": "For example, 20% for a 150ms wait time means, when run, the wait will be between 120ms and 180ms."
+        }
+      ]
+    },
+    {
+      "text": "Aim Magnitude Variance is a percentage above or below the action's speed. Aim Angle Variance is an offset above or below the action's angle.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#aim-magnitude-variance",
+          "quote": "Aim Magnitude Variance is a percentage of variance above or below the specified value."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#aim-angle-variance",
+          "quote": "The Aim Angle Variance value is a variance offset above or below the specified value."
+        }
+      ]
+    },
+    {
+      "text": "It affects Smart Actions (waits, and Aim Magnitude and Aim Angle actions), not your own mouse aim.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#behavior-variance",
+          "quote": "Behavior variance is used to add simulate natural human behavior patterns for specific smart actions."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#behavior-variance",
+          "quote": "Or, a recoil control sequence's Aim Magnitude and Angle actions will be slightly offset from the values you specified:"
+        }
+      ],
+      "reasoning": "The guide defines it for \"specific smart actions\" and its settings are Wait, Aim Magnitude and Aim Angle variance. None of them names mouse, thumbstick or gyro aim."
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "It is on by default and set per binding. Press the watch icon while editing a binding to turn it off; the icon turns red.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#behavior-variance",
+          "quote": "Variance is controlled per-binding and is enabled by default."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#disabling-variance",
+          "quote": "To disable variance per-binding, edit your Config and press the watch icon."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#disabling-variance",
+          "quote": "The icon will turn red when it's off."
+        }
+      ]
+    },
+    {
+      "text": "By default, Wait Variance is 20%, so each Wait can run anywhere from 20% shorter to 20% longer than the value you set (XIM's example: a 150 ms Wait runs between 120 ms and 180 ms). Aim Angle Variance defaults to 2.5° and Aim Magnitude Variance to 2.5.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#wait-variance-on",
+          "quote": "By default, this value is 20%."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#wait-variance",
+          "quote": "For example, 20% for a 150ms wait time means, when run, the wait will be between 120ms and 180ms."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#aim-variance-on",
+          "quote": "By default, these values are 2.5°/s and 2.5° respectively."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#aim-magnitude-variance",
+          "quote": "Aim Magnitude Variance is a percentage of variance above or below the specified value."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#aim-magnitude-variance",
+          "quote": "For example, 2.5% for a 10°/s magnitude action means, when run, the value will be between 10.25°/s and 9.75°/s."
+        }
+      ],
+      "caveat": "XIM's two pages disagree on the unit for Aim Magnitude Variance. The Simulate Analog Behavior page gives its default as 2.5°/s. The Behavior Variance page calls it a percentage, and its example uses 2.5% on a 10°/s action (10.25°/s to 9.75°/s)."
+    },
+    {
+      "text": "Setting a variance value to 0 turns that type of variance off for all bindings.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#aim-angle-variance",
+          "quote": "For all variance settings, setting to 0 will disable it for all bindings."
+        }
+      ]
+    },
+    {
+      "text": "Turning off Wait Variance makes timing perfect, but less human.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#disabling-variance",
+          "quote": "While disabling wait variance will make your sequence timing perfect, it also means it will behave less human."
+        }
+      ]
+    },
+    {
+      "text": "Turning off variance on a binding also turns off Simulate Analog Behavior for that binding.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Behavior-Variance/#disabling-simulate-analog-behavior",
+          "quote": "When disabling Variance for a binding, this will also disable Simulate Analog Behavior for that binding as well."
+        }
+      ]
+    },
+    {
+      "text": "Only if you use SAB: keep Wait Variance and Aim Variance on, and don't disable variance on bindings.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Wait Variance in on"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Aim Variance is on"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#checklist",
+          "quote": "Do not disable variance on bindings"
+        }
+      ],
+      "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Simulate Analog Behavior",
+      "settingId": "simulate-analog-behavior",
+      "note": "In the same Behavior Simulation menu, but shapes the stick and trigger output instead of Smart Action values."
+    },
+    {
+      "name": "Magnitude and Angle Quantization",
+      "settingId": "quantization",
+      "note": "\"Magnitude\" and \"Angle\" here mean Smart Action values. Quantization snaps your own aim."
+    }
+  ],
+  "related": [
+    "simulate-analog-behavior",
+    "aim-magnitude-action",
+    "aim-angle-action",
+    "quantization",
+    "quantization-magnitude",
+    "quantization-angle"
+  ]
+}

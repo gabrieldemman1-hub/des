@@ -1,0 +1,93 @@
+---
+/** The page's footnotes: each quote, word for word, with the page it comes from. */
+import type { Notes } from '../lib/notes';
+
+interface Props {
+  notes: Notes;
+}
+
+const { notes } = Astro.props;
+// The number column fits the widest number on the page ("9" or "41").
+const digits = String(notes.list.length).length;
+---
+
+{
+  notes.list.length > 0 && (
+    <section class="notes" aria-labelledby="notes-title">
+      <h2 id="notes-title" class="label">
+        Notes
+      </h2>
+      <ol style={`--digits: ${digits}`}>
+        {notes.list.map((note) => (
+          <li id={`note-${note.number}`}>
+            <span class="n mono" aria-hidden="true">
+              {note.number}
+            </span>
+            <div>
+              <blockquote>“{note.citation.quote}”</blockquote>
+              <p class="from">
+                <a href={note.citation.url} rel="noopener">
+                  {note.sourceTitle}
+                  {note.location && <span>, {note.location}</span>}
+                </a>
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
+<style>
+  .notes {
+    display: grid;
+    gap: 0.8rem;
+    padding-top: 0.9rem;
+    border-top: 1.5px solid var(--rule-strong);
+  }
+
+  ol {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  li {
+    display: grid;
+    /* A Plex Mono digit is 0.6em wide. */
+    grid-template-columns: calc(var(--digits, 2) * 0.6em + 0.1em) minmax(0, 1fr);
+    gap: 0.7rem;
+    font-size: 0.92rem;
+    scroll-margin-top: 1rem;
+  }
+
+  li:target {
+    background: var(--cobalt-tint);
+    box-shadow: 0 0 0 0.4rem var(--cobalt-tint);
+  }
+
+  .n {
+    white-space: nowrap;
+    color: var(--cobalt);
+    font-weight: 500;
+    text-align: right;
+  }
+
+  blockquote {
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+
+  .from {
+    margin-top: 0.2rem;
+    font: 600 0.85rem/1.35 var(--f-label);
+    letter-spacing: 0.04em;
+    color: var(--ink-3);
+  }
+
+  .from a {
+    color: var(--ink-3);
+  }
+</style>

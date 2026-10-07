@@ -1,0 +1,63 @@
+{
+  "names": [
+    {
+      "name": "Steady Aim",
+      "settingId": "quantization",
+      "statement": {
+        "text": "The official XIM MATRIX guide lists no setting called Steady Aim. A XIM Central MATRIX-era video title uses the name for quantization, but we couldn't review that video, so Primer can't say whether the two work the same way. For the MATRIX setting, see Quantization.",
+        "confidence": "gap",
+        "citations": []
+      }
+    },
+    {
+      "name": "Boost",
+      "settingId": "modify-aim-sensitivity",
+      "statement": {
+        "text": "The official XIM MATRIX guide lists no setting called Boost. XIM Central has a MATRIX-era video about a \"Boost Feature\", but we couldn't review it, so Primer says nothing about it yet. For the guide's \"Vertical Sensitivity Boost\", see Modify Aim Sensitivity.",
+        "confidence": "gap",
+        "citations": []
+      }
+    },
+    {
+      "name": "Sub-Configs",
+      "settingId": "load-config",
+      "statement": {
+        "text": "An idea from earlier XIM devices: Configs within a Config. On the MATRIX, Smart Actions and groups replace most of it, and the Config loading actions can jump to another Config and back. See Load Config.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+            "quote": "Prior XIM devices had the concept of sub-Configs which can be thought of Configs within your Config."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+            "quote": "While a majority of the benefit of sub-Configs have been replaced by Smart Actions and groups, it can still be useful to quickly jump to a Config and back (\"chaining\") if there are significant changes in gameplay that occur that justify it."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+            "quote": "Use the config loading actions for this."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Recoil Triggers",
+      "settingId": "rumble-triggers",
+      "statement": {
+        "text": "The guide uses this name once, on its Rumble Triggers page. It appears to mean Rumble Triggers; the guide has no separate setting by that name.",
+        "confidence": "reasoned",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Rumble-Triggers/#rumble-triggers",
+            "quote": "Recoil Triggers are only supported when your XIM MATRIX outputs as a controller."
+          }
+        ],
+        "reasoning": "The sentence is a note in the Rumble Triggers introduction, right after the guide explains what Rumble Triggers are. No other page of the guide uses the name."
+      }
+    }
+  ]
+}

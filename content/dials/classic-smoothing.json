@@ -1,0 +1,165 @@
+{
+  "id": "classic-smoothing",
+  "order": 3,
+  "name": "Classic smoothing",
+  "summary": "XIM's older, static smoothing: three settings that set how much of it you get.",
+  "ends": {
+    "a": "More smoothing effect",
+    "b": "Less smoothing effect"
+  },
+  "intro": {
+    "text": "The Classic system is based on the XIM APEX and gives static smoothing, which does not adapt to aim speed. It applies when the smoothing button reads CLASSIC.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      }
+    ]
+  },
+  "start": {
+    "text": "XIM says to start from a preset. Coming from a XIM APEX, XIM gives the values that match it: Synch 8 for Default, 16 for Common, 32 for Slow, 0 for Off, and Decay 9.0.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "For equivalent XIM APEX values, use: 8=Default, 16=Common, 32=Slow, or 0=Off"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "For equivalent XIM APEX behavior, set to 9.0"
+      }
+    ],
+    "caveat": "Those numbers match the APEX's behaviour. XIM doesn't present them as recommendations."
+  },
+  "levers": [
+    {
+      "settingId": "smooth",
+      "a": {
+        "direction": "raise",
+        "statement": {
+          "text": "Raise Smooth for more smoothing impact. Decay then shapes it.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Higher values increase impact and is further customized using the Decay setting."
+            }
+          ]
+        }
+      },
+      "b": {
+        "direction": "lower",
+        "statement": {
+          "text": "Lower Smooth for less smoothing impact.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Higher values increase impact and is further customized using the Decay setting."
+            }
+          ],
+          "reasoning": "XIM states that higher values increase the impact. Lower values give less of it."
+        }
+      }
+    },
+    {
+      "settingId": "synch",
+      "a": {
+        "direction": "raise",
+        "statement": {
+          "text": "Raise Synch for more impact. With Smooth, it amplifies the smoothing effect further.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+            }
+          ]
+        }
+      },
+      "b": {
+        "direction": "lower",
+        "statement": {
+          "text": "Lower Synch for less impact.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+            }
+          ],
+          "reasoning": "XIM states that higher values increase the impact. Lower values give less of it."
+        }
+      }
+    },
+    {
+      "settingId": "decay",
+      "a": {
+        "direction": "lower",
+        "statement": {
+          "text": "Lower Decay so older input keeps counting for longer, which gives Smooth more to work with.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+            }
+          ],
+          "reasoning": "XIM says Decay sets how much Smooth relies on past input, and that higher values decrease the impact of older input. Lower values keep more of it. XIM gives no feel direction for Decay."
+        }
+      },
+      "b": {
+        "direction": "raise",
+        "statement": {
+          "text": "Raise Decay so older input fades faster, which gives Smooth less to work with.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#classic",
+              "quote": "Controls how much the Smooth setting relies on past inputs. Higher values decrease the impact of older input values."
+            }
+          ],
+          "reasoning": "XIM says higher values decrease the impact of older input values, and that Smooth relies on past input. XIM gives no feel direction for Decay."
+        }
+      }
+    }
+  ],
+  "notes": [
+    {
+      "text": "XIM doesn't say what Classic smoothing costs in response time, so Primer can't say that less of it feels quicker.",
+      "confidence": "gap",
+      "citations": []
+    },
+    {
+      "text": "If a game requires Simulate Analog Behavior, XIM's checklist says to use a preset, or, with Custom, not to reduce smoothing below the presets.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+          "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+        }
+      ]
+    }
+  ]
+}

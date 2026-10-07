@@ -1,0 +1,283 @@
+{
+  "id": "load-config",
+  "name": "Load Config",
+  "aliases": [
+    "Loading Configs",
+    "Load Config Number",
+    "Load Next Config",
+    "Load Previous Config",
+    "Config hotkey",
+    "Config switching"
+  ],
+  "summary": "Switching to another Config, which brings in that Config's own settings, aim settings and mappings included. Global Settings are not per-Config, so they stay the same. Load from Manager, by hotkey, or with a Smart Action.",
+  "where": {
+    "text": "On the dashboard, press the vertical \"...\" and select Load Config, then choose one from the list. Other ways: a hotkey (edit the Config and press the \"...\" in its identity section), the next and previous buttons in Navigate Mode, or a Config Switching Smart Action in a binding.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Press the vertical \"...\" to open the menu of additional options which includes:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#additional-configuration",
+        "quote": "Loading other Configs"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Loading-Configs/#loading-configs",
+        "quote": "Press the vertical \"...\" and select Load Config."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Loading-Configs/#choosing-a-config-to-load",
+        "quote": "To load a Config, simply choose one from the list."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#identity",
+        "quote": "When editing a Config, the first thing you will see is the Config's identity section."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#additional-options",
+        "quote": "Press the \"...\" to view additional configuration options available. These include:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Identity/#additional-options",
+        "quote": "Setting a hotkey to automatically load this Config when pressed"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Navigate-Mode/#loading-configs",
+        "quote": "You can also load next and previous Configs using specific buttons while in Navigate mode."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Action-Categories/#config-switching",
+        "quote": "Actions used to provide additional flexibility in switching Configs."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Bindings/#bindings",
+        "quote": "Outputs are expressed using one or more Smart Actions (referred to as just \"actions\" as well)."
+      }
+    ]
+  },
+  "definition": {
+    "text": "You can load a Config through a hotkey, by Config cycling, or from Manager (vertical \"...\" then Load Config).",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Loading-Configs/#loading-configs",
+        "quote": "In addition to loading configs through a hotkey or Config cycling, you can also load from Manager."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Loading-Configs/#loading-configs",
+        "quote": "Press the vertical \"...\" and select Load Config."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Hotkey: each Config can have a hotkey that loads it. By default, hotkeys only work while Navigate Mode is active.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Setting a hotkey to automatically load this Config when pressed"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Hotkeys, by default, are only available if Navigate Mode is active. To change, configure Navigate Mode."
+        }
+      ]
+    },
+    {
+      "text": "Smart Actions: Load Config Number (by list order), Load Next Config and Load Previous Config. Next and Previous cycle through Configs with one button, outside Navigate Mode. XIM's example is chaining Configs for different modes in one game, like on foot vs in a vehicle.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#load-config-number",
+          "quote": "Loads a Config based on order number. Use in scenarios such as chaining Configs together for different modes in a single game (i.e. on-foot vs. vehicle)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#load-next-config",
+          "quote": "Load the next Config. Use to cycle through Configs with a single button outside of Navigate Mode."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#load-previous-config",
+          "quote": "Loads the previous Config. Use to cycle through Configs with a single button outside of Navigate Mode."
+        }
+      ]
+    },
+    {
+      "text": "Navigate Mode also has buttons to load the next and previous Configs.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#loading-configs",
+          "quote": "You can also load next and previous Configs using specific buttons while in Navigate mode. Those buttons can be changed (or removed) as well."
+        }
+      ]
+    },
+    {
+      "text": "Hold or toggle switching: a binding in Config 1 loads Config 2, and a binding in Config 2 switches back.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+          "quote": "Your primary config (Config 1) is going to switch to your secondary (Config 2) via holding or toggling a button."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Sub-Configs/#hold-config-switch",
+          "quote": "Binding in Config 2, switch back to Config 1 when button is released:"
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Loading by hotkey or with a Config Switching Smart Action is slower while Manager is connected, and it won't happen while you are editing a Config. Close Manager for instant switching.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Loading-Configs/#choosing-a-config-to-load",
+          "quote": "Loading configs through hotkey will be slower if Manager is connected. You cannot use a hotkey load if you are currently editing a Config."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+          "quote": "Use the config loading actions for this."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+          "quote": "Switching will be slow if Manager is connected and switching will not occur if your editing your Config. Close Manager for instant switching."
+        }
+      ]
+    },
+    {
+      "text": "To use Config hotkeys outside Navigate Mode, change the Navigate Only Hotkey Mode setting in Customize Navigate Mode.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Hotkeys, by default, are only available if Navigate Mode is active. To change, configure Navigate Mode."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Navigate-Mode/#loading-configs",
+          "quote": "In addition, you can choose to only allow Config loading via hotkey if Navigate Mode is enabled by using the Navigate Only Hotkey Mode setting."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "No Smart Action in XIM's reference changes smoothing, aiming curve or quantization; they are part of a Config's aim settings. So different smoothing for different weapons needs a separate Config, which you load (by hotkey, Smart Action or from Manager) instead of re-editing one Config.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Action-Categories/#config-switching",
+          "quote": "Actions used to provide additional flexibility in switching Configs. Use in scenarios such as chaining Configs together for different modes in a single game (i.e. on-foot vs. vehicle)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#load-config-number",
+          "quote": "Loads a Config based on order number. Use in scenarios such as chaining Configs together for different modes in a single game (i.e. on-foot vs. vehicle)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-aim-sensitivity",
+          "quote": "Change aim sensitivity. Use in scenarios to increase aiming sensitivity for vehicles, turrets, and parachutes."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#modify-right-stick-sensitivity",
+          "quote": "Reduce right thumbstick sensitivity."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#sight-override",
+          "quote": "Overrides the sight of enabled weapon groups (override is not saved)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#engage-motion-aim",
+          "quote": "Enable gyro motion aim. Only enabled while action is active."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Smart-Actions-Reference/#toggle-motion-aim",
+          "quote": "Toggles gyro motion aim on/off."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Sub-Configs/#sub-configs",
+          "quote": "While a majority of the benefit of sub-Configs have been replaced by Smart Actions and groups, it can still be useful to quickly jump to a Config and back (\"chaining\") if there are significant changes in gameplay that occur that justify it."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Weapon-Loadouts/#weapon-loadouts",
+          "quote": "Uses group assignment and cycle group actions for weapon loadout tracking."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Groups/#groups",
+          "quote": "Group Membership is a powerful tool that allows you to selectively enable and disable sets of bindings using actions."
+        }
+      ],
+      "reasoning": "XIM suggests the Config loading actions for chaining Configs for different modes in one game, such as on foot vs vehicle. In the Smart Actions Reference, the actions that affect aim are these. Modify Aim Sensitivity and Modify Right Stick Sensitivity change sensitivity. Sight Override changes the sight of enabled weapon groups. Aim Magnitude, Aim Angle and Aim Turn Assist move the reticle. Engage, Pause and Toggle Motion Aim enable, pause or toggle gyro motion aim. None of them changes smoothing, aiming curve or quantization.",
+      "caveat": "This is not how XIM documents weapon tracking. Its weapon-tracking example uses group assignment and cycle group actions, and groups enable and disable sets of bindings. XIM says most of the benefit of sub-Configs has been replaced by Smart Actions and groups. It also says jumping to another Config and back can still be useful 'if there are significant changes in gameplay that occur that justify it.' The guide never says these settings can't be changed inside one Config."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Groups",
+      "settingId": "groups",
+      "note": "Switch which bindings run inside one Config. Aim settings stay the same."
+    },
+    {
+      "name": "Pasting Configs",
+      "statement": {
+        "text": "Pastes a Config code over all or part of the current Config: all of it, only the aim settings or only the mappings. It edits a Config; it does not load a different one.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#pasting-configs",
+            "quote": "Normally when you receive a Config such as from Config Cloud, you simply use New Config to create it. However, there may be time where you'd like to paste over all of part of your current Config."
+          },
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Identity/#pasting-configs",
+            "quote": "You will be asked how much of the Config you'd like to use: all of it, only aim settings, only mappings."
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "config",
+    "navigate-mode",
+    "groups",
+    "rumble-triggers"
+  ]
+}

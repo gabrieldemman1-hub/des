@@ -1,0 +1,150 @@
+{
+  "id": "smooth",
+  "name": "Smooth",
+  "aliases": [],
+  "summary": "Classic mode's main smoothing amount. Higher smooths more.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, set Smoothing to Custom instead of a preset, and make sure the smoothing button reads CLASSIC (press it to change modes). Smooth is one of the Classic settings.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "Smooth Known previously as Smoothing"
+      }
+    ]
+  },
+  "definition": {
+    "text": "Known previously as Smoothing. Higher values increase impact and is further customized using the Decay setting.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "Known previously as Smoothing"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#classic",
+        "quote": "Higher values increase impact and is further customized using the Decay setting."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Raising Smooth increases the smoothing effect. Decay then shapes how it works.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Higher values increase impact and is further customized using the Decay setting."
+        }
+      ]
+    },
+    {
+      "text": "Synch can be combined with Smooth to amplify the smoothing further.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Higher values increase impact and can be combined with Smooth to further amplify the smoothing effect."
+        }
+      ]
+    },
+    {
+      "text": "The guide adds that Smooth's values match XIM APEX behavior.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "Values match XIM APEX behavior"
+        }
+      ],
+      "caveat": "This is for matching XIM APEX behavior, not a Destiny 2 recommendation."
+    },
+    {
+      "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "No source ties Classic settings to aim styles. Classic smoothing is static: unlike Standard, it doesn't adapt to your aim speed, so this setting can't be tuned separately for slow and fast aim.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+        }
+      ],
+      "reasoning": "The guide calls Classic \"static smoothing behavior\", in contrast to Standard, which \"adapts to your current aim speed\". We read static as not adapting to speed, so this setting has one value for every aim speed. No source says how much it matters for tracking, snaps or precision holds."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Smoothing",
+      "settingId": "smoothing",
+      "note": "Smoothing is the whole system, with its presets and two modes. Smooth is one setting inside Classic mode."
+    }
+  ],
+  "related": [
+    "smoothing-classic",
+    "decay",
+    "synch",
+    "smoothing"
+  ]
+}

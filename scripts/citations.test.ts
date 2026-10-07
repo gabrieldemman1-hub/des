@@ -22,9 +22,9 @@ describe('verify-citations helpers', () => {
       ],
       requiredSettings: [{ name: 'Look Sensitivity', statement: { citations: [{ url: 'https://x.test/', quote: 'Q3' }] } }],
     };
-    expect(collectCitations('knowledge/x.json', json)).toEqual([
+    expect(collectCitations('content/x.json', json)).toEqual([
       {
-        file: 'knowledge/x.json',
+        file: 'content/x.json',
         entryId: 'precision',
         path: 'terms[0].definition.citations[0]',
         source: 'xim-guide',
@@ -32,7 +32,7 @@ describe('verify-citations helpers', () => {
         quote: 'Q1',
       },
       {
-        file: 'knowledge/x.json',
+        file: 'content/x.json',
         entryId: 'precision',
         path: 'terms[0].feel[0].citations[0]',
         source: 'xim-guide',
@@ -40,7 +40,7 @@ describe('verify-citations helpers', () => {
         quote: 'Q2',
       },
       {
-        file: 'knowledge/x.json',
+        file: 'content/x.json',
         entryId: 'Look Sensitivity',
         path: 'requiredSettings[0].statement.citations[0]',
         source: '',

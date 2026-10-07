@@ -1,0 +1,161 @@
+{
+  "id": "game-roles",
+  "name": "Game Roles",
+  "aliases": [
+    "Trigger Roles",
+    "fire role",
+    "ADS role"
+  ],
+  "summary": "Tells the MATRIX which buttons fire and aim down sight in your game, so it knows when you're in ADS.",
+  "where": {
+    "text": "Edit your Config (pencil icon), press the \"...\" and select Game Roles. Select a role to choose a different button. For a trigger used to fire or ADS, set how far it must be pulled with the slider.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Roles/#game-roles",
+        "quote": "To access, press the \"...\" and select Game Roles."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Roles/#assigning-roles",
+        "quote": "To change, select one and choose a different button that activates the mode in your game."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Roles/#trigger-roles",
+        "quote": "You can specify how far the trigger must be pulled for the game to fire or enter ADS."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Roles/#trigger-roles",
+        "quote": "Manager will show you the current trigger values being sent to your game so you can observe when these mode changes happen and match it using the slider."
+      }
+    ]
+  },
+  "definition": {
+    "text": "The MATRIX needs to know when your game is firing and when it is in ADS. Your Config's game roles name the buttons that activate those modes.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Roles/#game-roles",
+        "quote": "Your XIM MATRIX needs to know when your game is firing and when it's in aiming down sight (ADS) mode in order to function correctly."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Game-Roles/#game-roles",
+        "quote": "Your Config's game roles specify which buttons are sent to your console or PC to active these modes."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "They are set for you when the Config is created. If your game uses a different button, pick that one instead.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Roles/#assigning-roles",
+          "quote": "The roles will be set by default for you when your Config is created."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Roles/#assigning-roles",
+          "quote": "To change, select one and choose a different button that activates the mode in your game."
+        }
+      ]
+    },
+    {
+      "text": "Trigger roles: you set how far the trigger must be pulled before the game fires or enters ADS. Manager shows the live trigger values to help you match it.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Roles/#trigger-roles",
+          "quote": "You can specify how far the trigger must be pulled for the game to fire or enter ADS."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Roles/#trigger-roles",
+          "quote": "Manager will show you the current trigger values being sent to your game so you can observe when these mode changes happen and match it using the slider."
+        }
+      ]
+    },
+    {
+      "text": "Game roles are also how the MATRIX decides whether your game has separate Hip and ADS settings.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-modes",
+          "quote": "Game roles are used to determine if your game has an Aim Down Sight mode."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "If you are unsure about trigger values, keep them at 1%.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Roles/#trigger-roles",
+          "quote": "If you are unsure, simply keep the values at 1%."
+        }
+      ]
+    },
+    {
+      "text": "Check them with the ADS light. XIM flashes green on entering ADS and yellow on returning to Hip so you can tell your game roles are set up correctly. The flashes don't appear if the light notifications have been disabled in the Config's additional options.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+          "quote": "Your XIM MATRIX will notify you whenever you switch between Hip and Aim Down Sight (if your game is configured for both modes). This is done so that you can know that your Config's game roles are set up correctly."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+          "quote": "When you enter Aim Down Sight, your XIM MATRIX will quickly flash green."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#notify-ads-activation",
+          "quote": "When you return to Hip, your XIM MATRIX will quickly flash yellow."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Press the \"...\" to view additional configuration options available. These include:"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Identity/#additional-options",
+          "quote": "Disabling light aim speed and mode light notifications"
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Rumble Triggers",
+      "settingId": "rumble-triggers",
+      "note": "Bindings that run when the game plays a learned rumble pattern. Unrelated to trigger roles."
+    }
+  ],
+  "related": [
+    "aiming-modes",
+    "ads-inheritance",
+    "ads-activation-delay",
+    "light-notifications"
+  ]
+}

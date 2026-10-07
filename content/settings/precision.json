@@ -1,0 +1,196 @@
+{
+  "id": "precision",
+  "name": "Precision",
+  "aliases": [],
+  "summary": "Standard smoothing for slow, fine aim. Higher is smoother but heavier.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, set Smoothing to Custom instead of a preset, and make sure the smoothing button reads STANDARD (press it to change modes). Precision is one of the Standard settings.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Precision Controls fine aim behavior"
+      }
+    ]
+  },
+  "definition": {
+    "text": "Controls fine aim behavior. Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Controls fine aim behavior"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It acts on slow movements: the small corrections you make while lining up or holding on a target. Raising it smooths those movements more.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fine aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+        }
+      ]
+    },
+    {
+      "text": "Lowering it should do the opposite: small adjustments feel lighter but get less smoothing.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+        }
+      ],
+      "reasoning": "The guide only describes raising it (smoother, heavier). Lowering it is the reverse of that stated trade-off."
+    },
+    {
+      "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [
+    {
+      "text": "Higher Precision makes the reticle feel heavier at low speed, in return for a smoother result.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+        }
+      ]
+    }
+  ],
+  "guidance": [
+    {
+      "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Tracking: the main lever. Raising Precision steadies your hold through sustained fire, at the cost of a heavier reticle. If small corrections feel sluggish, lower it.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fine aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+        }
+      ],
+      "reasoning": "Tracking is mostly slow, fine movement, which is what Precision controls (\"fine aim behavior\", \"smoother result at low aim speeds\"). The heaviness trade-off comes from the same definition."
+    },
+    {
+      "text": "Precision hold: matters too. Lining up one careful shot is slow, fine movement. More Precision gives a steadier line-up but a heavier feel.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fine aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+        }
+      ],
+      "reasoning": "Precision acts at low aim speeds, and a deliberate line-up happens at low speed."
+    },
+    {
+      "text": "Snap: matters less. A snap starts from rest, which Easing shapes, and the move itself is fast aim, which Response controls. Precision still shapes the small correction at the end of a snap.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fine aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fast aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior from rest"
+        }
+      ],
+      "reasoning": "Precision controls \"fine aim behavior\" and acts \"at low aim speeds\". A snap starts from rest (Easing \"Specifies aim behavior from rest\") and then moves fast (Response \"Controls fast aim behavior\"). The small correction at the end of a snap is slow, fine aim, which is where Precision acts."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Micro (Advanced SAB)",
+      "settingId": "simulate-analog-behavior",
+      "note": "An Advanced SAB value that \"Tunes stick behavior at very low aiming speeds\". It belongs to Simulate Analog Behavior, not to smoothing."
+    }
+  ],
+  "related": [
+    "smoothing-standard",
+    "response",
+    "easing",
+    "stability",
+    "smoothing"
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "id": "thumbstick-aim",
+  "name": "Thumbstick Aim",
+  "aliases": [
+    "Gamepad Thumbstick",
+    "stick aim"
+  ],
+  "summary": "Aiming with a physical gamepad stick through the MATRIX, on its own or alongside mouse and gyro.",
+  "where": {
+    "text": "Edit your Config (pencil icon). Under Aiming Sources, make sure the thumbstick aiming source is selected.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-sources",
+        "quote": "When a Config is created, aiming sources will automatically be enabled based on your Config choice. Like all Config settings, you can change them as needed."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+        "quote": "To access, press the \"...\" under Aiming Sources"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+        "quote": "To enable aiming with the thumbstick, make sure the thumbstick aiming source is selected."
+      }
+    ]
+  },
+  "definition": {
+    "text": "One of XIM MATRIX's aiming sources (\"Gamepad Thumbstick\"). All aiming sources you choose are seamlessly combined together to drive the reticle.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-sources",
+        "quote": "Gamepad Thumbstick"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-sources",
+        "quote": "All aiming sources you choose are seamlessly combined together to drive the reticle."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "To use it, select the thumbstick aiming source.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+          "quote": "To enable aiming with the thumbstick, make sure the thumbstick aiming source is selected."
+        }
+      ]
+    },
+    {
+      "text": "Depending on the Config type, stick sensitivity is set either in your in-game settings or as a percentage of the game's maximum turn speed, split into X and Y. Tap the lock icon to set X and Y separately.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+          "quote": "Depending on the type of Config, thumbstick sensitivity may be set through your in-game aim ettings, or, specified as a percentage (%) of maximum turn speed split between X and Y."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+          "quote": "Select the lock icon to unlink X and Y and set separately."
+        }
+      ]
+    },
+    {
+      "text": "By default it uses the game's own stick aim mechanics (Native). Custom Stick Behavior swaps in your own curve.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+          "quote": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "If you use Velocity Calibration to keep your own in-game sensitivity, XIM recommends setting Thumbstick Aim Sensitivity to 100/100 (%), because sensitivity then comes from the game. For controller output, XIM discourages this Manual calibration.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "It's recommended that your XIM Thumbstick Aim Sensitivity be set to 100/100 (%) when using Velocity Calibration since you will now be customizing sensitivity using in-game settings."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#manual",
+          "quote": "Manual reticle velocity calibration for Configs that output as controller may not produce accurate results and is thus discouraged from being used."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Every aim style if the stick is your only aiming source, because then it drives all of your aim, tracking and precision holds included. Sources you combine drive the reticle together. XIM's tip for players new to motion aim is to use the stick for coarse aim and gyro for fine aim, so while you ease into gyro, the stick takes the big, coarse moves: snaps and big turns. On Configs that set it as a percentage, stick sensitivity is a share of the game's maximum turn speed, so it sets your fastest stick turn.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-sources",
+          "quote": "All aiming sources you choose are seamlessly combined together to drive the reticle."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+          "quote": "Depending on the type of Config, thumbstick sensitivity may be set through your in-game aim ettings, or, specified as a percentage (%) of maximum turn speed split between X and Y."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+          "quote": "If you are new to motion aim, ease into it. Use motion for fine aim and thumbstick for coarse. Start with very low sensitivity and rely more on thumbstick aim initially."
+        }
+      ],
+      "reasoning": "XIM: \"All aiming sources you choose are seamlessly combined together to drive the reticle.\" A stick used as the only source therefore drives all of your aim. XIM's tip for players new to motion aim: \"Use motion for fine aim and thumbstick for coarse.\" Snaps and big turns are the coarse moves. On some Config types, thumbstick sensitivity is \"specified as a percentage (%) of maximum turn speed\", so it sets the top stick speed."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Sensitivity (mouse)",
+      "settingId": "sensitivity",
+      "note": "Mouse sensitivity is set in cm/360. Stick sensitivity is set in-game or as a percentage of maximum turn speed, depending on the Config type."
+    }
+  ],
+  "related": [
+    "deadzone",
+    "custom-stick-behavior",
+    "velocity-mapping",
+    "sensitivity",
+    "motion-aim",
+    "max-turn-speed"
+  ]
+}

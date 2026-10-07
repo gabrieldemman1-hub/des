@@ -1,0 +1,258 @@
+{
+  "id": "smoothing",
+  "name": "Smoothing",
+  "aliases": [
+    "input smoothing",
+    "aim smoothing"
+  ],
+  "summary": "Filters out noise from your hardware and your hand. Pick a preset, or tune Standard or Classic mode.",
+  "where": {
+    "text": "Edit your Config (pencil icon). Smoothing is in Mouse Aim and in Motion Aim, along with Sensitivity, and each has its own presets. To tune it yourself, set Smoothing to Custom, then press the smoothing button to switch between STANDARD and CLASSIC.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Both mouse and motion have different presets designed for those aiming methods."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Gaming input hardware and natural hand jitter can cause an noisy input environment. Smoothing solves this by providing additional stability and control to your aim.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Gaming input hardware and natural hand jitter can cause an noisy input environment. Smoothing solves this by providing additional stability and control to your aim."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "XIM MATRIX includes an advanced aim smoothing system that enables the gamer to tune their aim response to their preference."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "There are two modes. Standard adapts to how fast you are aiming. Classic applies fixed (static) smoothing. Press the smoothing button (it reads STANDARD or CLASSIC) to switch.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+        }
+      ]
+    },
+    {
+      "text": "Mouse aim and motion aim each have their own smoothing presets.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    },
+    {
+      "text": "Hip and ADS can only have different smoothing with the \"Inherit Nothing\" option. \"Inherit All\" (the default) and \"Sensitivity Only\" both copy Hip's smoothing to ADS.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Inherit All: Inherit all ADS settings from Hip (this is the default)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Sensitivity Only: Inherit all ADS settings from Hip except sensitivity"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aim-settings-inheritance",
+          "quote": "Inherit Nothing: Inherit no ADS settings from Hip"
+        }
+      ],
+      "reasoning": "Inherit All copies all ADS settings from Hip; Sensitivity Only copies all of them except sensitivity; Inherit Nothing copies none. Smoothing is one of those other settings, so only Inherit Nothing leaves ADS smoothing free."
+    },
+    {
+      "text": "The guide doesn't give a full list of the smoothing presets or say what values they use. Check what your Manager offers.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [
+    {
+      "text": "What it's for: aim that looks noisy or shaky because of your hardware or natural hand jitter. Smoothing adds stability and control.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Gaming input hardware and natural hand jitter can cause an noisy input environment. Smoothing solves this by providing additional stability and control to your aim."
+        }
+      ]
+    }
+  ],
+  "guidance": [
+    {
+      "text": "Start with the presets. Try each one and keep what feels most natural. XIM says it's strictly preference.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    },
+    {
+      "text": "Only if you use Simulate Analog Behavior (SAB): keep smoothing on. Use a preset, or if you use custom values, don't go below the presets' smoothing intensity.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+          "quote": "Make sure your mouse or motion aim smoothing is not disabled."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+          "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+        }
+      ],
+      "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "All aim styles, through different settings. In Standard mode, Precision smooths slow, fine aim, which is most of tracking and the line-up of a precision hold. Easing shapes the start from rest that begins a snap, and Response shapes fast aim. With motion aim, Stability steadies the reticle at rest, for example while you wait on a spot for one careful shot. Classic smoothing is static: unlike Standard, it doesn't adapt to your aim speed.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Gaming input hardware and natural hand jitter can cause an noisy input environment. Smoothing solves this by providing additional stability and control to your aim."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fine aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values provide a smoother result at low aim speeds and increases the heaviness of the reticle."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Controls fast aim behavior"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior from rest"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior at rest"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Increase to provide extra stability at rest due to hand jitter and instability (motion aim only)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "The Standard system provides dynamic smoothing behavior that adapts to your current aim speed."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#classic",
+          "quote": "The Classic system is based on our past generation XIM APEX device which provides static smoothing behavior. It has been upgraded to provide additional customization and flexibility."
+        }
+      ],
+      "reasoning": "Smoothing's official purpose is countering hardware and hand jitter. Standard splits it by aim speed: Precision 'Controls fine aim behavior' with 'a smoother result at low aim speeds', Response 'Controls fast aim behavior', Easing 'Specifies aim behavior from rest', and Stability adds 'extra stability at rest' for motion aim only. Tracking and a precision line-up are mostly slow aim; a snap starts from rest and then moves fast. Classic 'provides static smoothing behavior', unlike Standard, which 'adapts to your current aim speed'. The official guide doesn't tie smoothing to aim styles."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Smooth",
+      "settingId": "smooth",
+      "note": "A single Classic-mode setting. The guide says it was \"Known previously as Smoothing\"."
+    },
+    {
+      "name": "Smooth ADS Transition",
+      "settingId": "ads-activation-delay",
+      "note": "An ADS Activation Delay option that blends the reticle's movement while switching to ADS. It is not aim smoothing."
+    }
+  ],
+  "related": [
+    "smoothing-standard",
+    "smoothing-classic",
+    "precision",
+    "response",
+    "easing",
+    "stability",
+    "ads-inheritance",
+    "simulate-analog-behavior",
+    "smooth",
+    "motion-aim"
+  ]
+}

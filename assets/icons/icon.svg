@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Primer</title>
+  <!-- A manual's "P" with a footnote marker: every sentence leads to its source. -->
+  <rect width="512" height="512" rx="112" fill="#121417"/>
+  <path fill="#f7f8f7" fill-rule="evenodd" d="M150 112H286C346 112 384 150 384 204C384 258 346 296 286 296H220V400H150ZM220 172V236H280C302 236 316 223 316 204C316 185 302 172 280 172Z"/>
+  <path fill="#9fb0ff" d="M404 104H436V214H404V140L384 152V122Z"/>
+</svg>

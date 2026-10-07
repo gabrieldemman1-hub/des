@@ -1,0 +1,196 @@
+{
+  "id": "easing",
+  "name": "Easing",
+  "aliases": [],
+  "summary": "Standard smoothing for the moment you start moving from a standstill.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, set Smoothing to Custom instead of a preset, and make sure the smoothing button reads STANDARD (press it to change modes). Easing is one of the Standard settings.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Here you can set Sensitivity (remember that lower values are faster) and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Motion aim settings consists of Sensitivity and Smoothing."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "You can also customize the smoothing system and choose between two smoothing modes: Standard and Classic."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#input-smoothing-on",
+        "quote": "It's recommended you use one of the smoothing presets. If you are using \"custom\", ensure you do not reduce smoothing intensity below that of the presets."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+        "quote": "Press the the smoothing button (i.e. \"STANDARD\" or \"CLASSIC\") to change modes."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Easing Specifies aim behavior from rest"
+      }
+    ]
+  },
+  "definition": {
+    "text": "Specifies aim behavior from rest. Higher values result in smoother transition from rest but lower response time.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Specifies aim behavior from rest"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#standard",
+        "quote": "Higher values result in smoother transition from rest but lower response time."
+      }
+    ],
+    "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+  },
+  "plainWords": [
+    {
+      "text": "It sets how your aim behaves as it starts moving from rest.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior from rest"
+        }
+      ]
+    },
+    {
+      "text": "Higher Easing should make that start smoother but less responsive. Lower Easing should give a quicker, less smoothed start.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values result in smoother transition from rest but lower response time."
+        }
+      ],
+      "reasoning": "The definition pairs \"smoother transition from rest\" with \"but lower response time\". The \"but\" marks a cost, so we read \"lower response time\" as less responsive.",
+      "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+    },
+    {
+      "text": "The guide doesn't give this setting's range or default. Check what Manager shows before you change it.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [
+    {
+      "text": "Higher Easing gives a smoother transition from rest.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values result in smoother transition from rest but lower response time."
+        }
+      ],
+      "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+    }
+  ],
+  "guidance": [
+    {
+      "text": "The guide gives no recommended value for this setting. It says smoothing is \"strictly based on preference\" and suggests trying the presets first.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#smoothing",
+          "quote": "Both mouse and motion have different presets designed for those aiming methods. Start by trying each out to see what feels most natural to you. It's strictly based on preference."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Snap: the main lever. Peeks and snaps start from a standstill. Lower Easing should give a faster start, at the cost of a less smooth one. Higher Easing should give a smoother but slower start.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior from rest"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values result in smoother transition from rest but lower response time."
+        }
+      ],
+      "reasoning": "Easing \"Specifies aim behavior from rest\", and a snap begins at rest. The direction comes from our reading of \"smoother transition from rest but lower response time\".",
+      "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+    },
+    {
+      "text": "Precision hold: can matter. A careful line-up often starts from a standstill, and higher Easing should make that start smoother.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior from rest"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Higher values result in smoother transition from rest but lower response time."
+        }
+      ],
+      "reasoning": "Easing acts on the start from rest, and higher values give a \"smoother transition from rest\".",
+      "caveat": "The official wording is ambiguous: we read 'lower response time' as less responsive because of the 'but'. Confirm in-game before relying on it."
+    },
+    {
+      "text": "Tracking: matters less. While you track, the reticle is rarely at rest, so Easing only acts as the track begins.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#standard",
+          "quote": "Specifies aim behavior from rest"
+        }
+      ],
+      "reasoning": "Easing is defined only for aim \"from rest\"."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Stability",
+      "settingId": "stability",
+      "note": "Stability is about aim at rest (holding still, motion aim only). Easing is about the start of movement from rest."
+    },
+    {
+      "name": "Response",
+      "settingId": "response",
+      "note": "The \"response time\" in Easing's definition is not the Response setting, which controls fast aim."
+    },
+    {
+      "name": "Smooth ADS Transition",
+      "settingId": "ads-activation-delay",
+      "note": "Blends the switch from Hip to ADS aim. It is an ADS option, not Easing's \"transition from rest\"."
+    }
+  ],
+  "related": [
+    "smoothing-standard",
+    "precision",
+    "response",
+    "stability",
+    "smoothing"
+  ]
+}

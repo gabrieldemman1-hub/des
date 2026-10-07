@@ -1,0 +1,114 @@
+{
+  "id": "quantization-magnitude",
+  "name": "Magnitude Quantization",
+  "aliases": [
+    "Magnitude"
+  ],
+  "summary": "Snaps reticle speed to set steps. The effect grows the faster you aim.",
+  "where": {
+    "text": "Edit your Config (pencil icon). In Mouse Aim or Motion Aim, press the \"...\" for additional options, then press the Quantization button. Magnitude Quantization is one of the quantize settings there.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "To access quantize settings, press the Quantization button:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "Magnitude Quantization: Snaps your reticle to predefined speeds."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Snaps your reticle to predefined speeds. The effect increases the faster you aim.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+        "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "It snaps your reticle speed to fixed levels. Slow movements are affected less, fast ones more.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+        }
+      ]
+    },
+    {
+      "text": "The guide doesn't say whether a higher Magnitude value means bigger or smaller steps.",
+      "confidence": "gap",
+      "citations": []
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "XIM's starting point is 25, alongside Angle at 25. Adjust one value at a time.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "To start, set Magnitude to 25 and Angle to 25. Adjust one value at a time to match your preferences."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Snaps and fast turns feel it most; slow tracking and precision holds feel it least.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#quantization",
+          "quote": "Snaps your reticle to predefined speeds. The effect increases the faster you aim."
+        }
+      ],
+      "reasoning": "\"The effect increases the faster you aim.\""
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Aim Magnitude (Smart Action)",
+      "settingId": "aim-magnitude-action",
+      "note": "An action that moves the reticle at a set speed in degrees per second, for example for recoil control."
+    },
+    {
+      "name": "Aim Magnitude Variance",
+      "settingId": "behavior-variance",
+      "note": "A Behavior Simulation setting that varies Aim Magnitude actions slightly."
+    }
+  ],
+  "related": [
+    "quantization",
+    "quantization-angle",
+    "aim-magnitude-action",
+    "behavior-variance"
+  ]
+}

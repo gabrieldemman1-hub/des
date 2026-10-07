@@ -1,0 +1,175 @@
+{
+  "id": "warning-lights",
+  "name": "Warning Lights",
+  "aliases": [
+    "Timing Error",
+    "purple blinking",
+    "Power Fault",
+    "Config Corruption"
+  ],
+  "summary": "Unusual light sequences that signal a problem, such as rapid purple blinking for timing errors.",
+  "where": {
+    "text": "Not a setting: warning lights show on the XIM MATRIX's own light, which tells you its current state of operation. They are the light sequences you may not have seen before.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Warning-Lights/#warning-lights",
+        "quote": "Your XIM MATRIX's light is used to let you know about it's current state of operation which is covered throughout the rest of this guide."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Warning-Lights/#warning-lights",
+        "quote": "But sometimes you may run into light sequences that you've never seen before. This is what they mean:"
+      }
+    ]
+  },
+  "definition": {
+    "text": "The MATRIX light shows its current state. Warning Lights are the light sequences you may not have seen before, and what they mean.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Warning-Lights/#warning-lights",
+        "quote": "But sometimes you may run into light sequences that you've never seen before. This is what they mean:"
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Rapid purple blinking at random times: timing errors that may hurt performance. XIM reports timing that is off by even a millisecond.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#timing-error",
+          "quote": "Rapid purple blinking: If your XIM MATRIX is blinking like this at seemingly random times, it means there are timing errors detected that may result in non-optimal performance."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#timing-error",
+          "quote": "If timing is off (even by just a millisecond) you will be informed."
+        }
+      ]
+    },
+    {
+      "text": "Repeated yellow blinking: the MATRIX lost contact with your authentication controller. Check its USB connection and restart the MATRIX.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#authentication-controller-disconnect",
+          "quote": "Repeated yellow blinking: Your XIM MATRIX has lost communication with your authentication controller."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#authentication-controller-disconnect",
+          "quote": "Check the USB connection to your controller (especially if it happened when picking up your authentication controller). Correct any problems and restart your XIM MATRIX."
+        }
+      ]
+    },
+    {
+      "text": "Repeated red and yellow blinking: a power fault. A device drew too much power, so the MATRIX shut down its ports. Fully charge rechargeable devices first; peripherals with lots of LEDs can cause it too.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#power-fault",
+          "quote": "Repeated red and yellow blinking: A power fault has been detected."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#power-fault",
+          "quote": "Make sure all rechargeable devices connected are already fully charged before using with your XIM MATRIX. Peripherals with a lot of LEDs (such a keyboards) can be an issue as well."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#power-fault",
+          "quote": "This means too much power is being drawn by one (or more) of your connected USB devices and your XIM MATRIX shut down its ports to prevent damage to itself."
+        }
+      ]
+    },
+    {
+      "text": "Repeated red, green and blue blinking at startup: one or more Configs are corrupted. They cannot be recovered; you need a factory reset with the flash tool and to rebuild them.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#config-corruption",
+          "quote": "Repeated red, green, and blue blinking at startup: At startup, your XIM MATRIX will notify you if one or more of your Configs are corrupted."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#config-corruption",
+          "quote": "Unfortunately you won't be able to recover your Configs in this case. You will need to factory reset your XIM MATRIX using the flash tool and rebuild them."
+        }
+      ]
+    },
+    {
+      "text": "A solid white light while the MATRIX is not responding means there was a crash. Repeated yellow, cyan and purple blinking at startup means a hardware failure. Both are rare; XIM asks you to let them know.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#software-failure",
+          "quote": "Solid white light: If your XIM MATRIX is not responsive and is showing this type of light, it means there was a crash."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#hardware-failure",
+          "quote": "Repeated yellow, cyan, and purple blinking at startup: At startup, your XIM MATRIX does self-diagnostic hardware checks on itself."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#hardware-failure",
+          "quote": "Seeing this means there is a hardware failure. This notification is extremely rare. If you see it, please let us know."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#software-failure",
+          "quote": "This is rare, but, if it does happen, please let us know."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Seeing rapid purple blinking? Check for loose USB connections, faulty cables, hubs or other hardware.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#timing-error",
+          "quote": "Check for loose USB connections, faulty cables, hubs, or other hardware."
+        }
+      ]
+    },
+    {
+      "text": "Configs can be corrupted if the MATRIX loses power while saving, or if you restore a Config backup using an older firmware.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Warning-Lights/#config-corruption",
+          "quote": "Your Configs can be corrupted if your XIM MATRIX loses power while it is writing itself, or, if you restore a backup of your Configs using an older firmware."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Light notifications",
+      "settingId": "light-notifications",
+      "note": "Quick green, yellow or red flashes during play are aim notifications (ADS and maximum turn speed), not faults."
+    }
+  ],
+  "related": [
+    "light-notifications",
+    "firmware",
+    "config",
+    "output-type",
+    "polling-rate"
+  ]
+}

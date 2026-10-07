@@ -1,0 +1,175 @@
+{
+  "id": "polling-rate",
+  "name": "Polling Rate",
+  "aliases": [
+    "response rate",
+    "Check Rate"
+  ],
+  "summary": "How often your mouse reports. Manager can show whether the mouse really reaches the rate you set.",
+  "where": {
+    "text": "Not a MATRIX setting: you set the polling rate on your mouse. To see it, tap the mouse's device icon on the Dashboard. To check the rate your mouse really reaches, press and hold the mouse icon in Manager for 3 seconds and select Check Rate.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+        "quote": "Check to make sure your polling rate is actually saving to your mouse"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#input-devices",
+        "quote": "Click on one of the device icons to get more information about it (such as the polling rate of your mouse)."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+        "quote": "Press and hold the mouse icon for 3 seconds"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+        "quote": "Select Check Rate"
+      }
+    ]
+  },
+  "definition": {
+    "text": "The rate you set on your mouse. Manager can show it, and its response rate tool counts the non-zero values your mouse actually sends each second. A mouse may not respond at the rate you set.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#input-devices",
+        "quote": "Click on one of the device icons to get more information about it (such as the polling rate of your mouse)."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+        "quote": "The response rate tool is measuring the count of non-zero values coming from your mouse every second."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+        "quote": "Your mouse may not respond at the polling rate you set due to onboard memory setting issues or wireless interference."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Two common causes of a low rate: the setting not saving to the mouse, or wireless interference.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+          "quote": "Your mouse may not respond at the polling rate you set due to onboard memory setting issues or wireless interference."
+        }
+      ]
+    },
+    {
+      "text": "Wireless: an adapter in Port 1 sits close to the MATRIX's Bluetooth antenna. XIM recommends moving it away from the MATRIX with a USB extension. If that isn't possible, plug the adapter directly into Port 2 instead.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#wireless-usb-adapters",
+          "quote": "XIM MATRIX's compact design means that wireless USB adapters plugged into Port 1 are physically close to it's onboard Bluetooth antenna."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#wireless-usb-adapters",
+          "quote": "To ensure optimal wireless performance, it's recommended your wireless USB mouse adapter be placed physically away from your XIM MATRIX by using a USB extension."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#wireless-usb-adapters",
+          "quote": "If that isn't possible in your setup, plug your wireless adapter directly into Port 2 instead."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Check Rate: hold the mouse icon in Manager for 3 seconds, select Check Rate, move the mouse in circles without stopping, and read the value.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+          "quote": "Press and hold the mouse icon for 3 seconds"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+          "quote": "Select Check Rate"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+          "quote": "Move your mouse continuously in circles"
+        }
+      ]
+    },
+    {
+      "text": "If the value isn't close to your polling rate, check the rate is really saving to the mouse. For wireless mice, reduce interference.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+          "quote": "Check to make sure your polling rate is actually saving to your mouse, or"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#measuring-response-rate",
+          "quote": "For wireless mice, make adjustments in your environment to reduce interference"
+        }
+      ]
+    },
+    {
+      "text": "Check XIM's Hardware Compatibility List. Some mice are reported as not working, or only usable at certain polling rates.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-hardware-compatibility",
+          "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+          "quote": "Below is a list of USB hardware that users have reported to be not working."
+        },
+        {
+          "source": "xim-hardware-compatibility",
+          "url": "https://community.xim.tech/pub/xim-matrix-official-hardware-compatibility-list",
+          "quote": "Zaunkoenig M2K (usable at 1000hz or less)",
+          "note": "One example of a mouse listed as usable only at certain rates."
+        }
+      ]
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Response (smoothing)",
+      "settingId": "response",
+      "note": "A Standard smoothing setting for fast aim. Not the mouse response rate."
+    },
+    {
+      "name": "Update rate (MATRIX output)",
+      "statement": {
+        "text": "How fast the MATRIX updates your console or PC, set in the Config's output connection mode. The guide's SAB checklist says to keep it at Standard, the default. It is not your mouse's polling rate.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#standard-update-rate-only",
+            "quote": "When configuring the output connection mode of your Config, you can choose how fast you want your XIM MATRIX to update your console. Keep this value at \"Standard\" (which is default)."
+          }
+        ],
+        "caveat": "XIM Central's 2023 videos call this update rate the MATRIX's \"polling rate\"."
+      }
+    }
+  ],
+  "related": [
+    "mouse-dpi",
+    "response",
+    "warning-lights"
+  ]
+}

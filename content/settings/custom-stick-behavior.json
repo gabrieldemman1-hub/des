@@ -1,0 +1,130 @@
+{
+  "id": "custom-stick-behavior",
+  "name": "Custom Stick Behavior",
+  "aliases": [],
+  "summary": "Replaces the game's built-in stick aim mechanics with your own aiming curve.",
+  "where": {
+    "text": "Edit your Config (pencil icon). With the thumbstick aiming source selected, press the \"...\" in the thumbstick aim settings and change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+        "quote": "To enable aiming with the thumbstick, make sure the thumbstick aiming source is selected."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+        "quote": "Additional flexibility is available for crafting your own thumbstick aiming experience. Press the \"...\" to access"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+        "quote": "change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+      }
+    ]
+  },
+  "definition": {
+    "text": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+        "quote": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "The default is Native: the game's built-in stick aim mechanics. Custom lets you draw the stick's aim response in the Aiming Curve Editor.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+          "quote": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+          "quote": "Additional flexibility is available for crafting your own thumbstick aiming experience."
+        }
+      ]
+    },
+    {
+      "text": "Velocity Mapping only applies to thumbstick aim when Custom Stick Behavior is on.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+          "quote": "For thumbstick aim, velocity mapping only applies when using custom stick behavior."
+        }
+      ]
+    },
+    {
+      "text": "The same menu lets you aim with the left stick instead, or invert the stick's axes.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+          "quote": "If you prefer to aim with the left stick, change your aiming stick here. You can also flip aiming directions of the stick by using the axis inversion setting."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Only if you use Simulate Analog Behavior (SAB): don't use any curve other than the default linear.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-aiming-curves",
+          "quote": "Do not use any aiming curves other than the default linear."
+        }
+      ],
+      "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Only for thumbstick aim. It unlocks a stick curve, so the same trade-offs as the Aiming Curve apply.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+          "quote": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+        }
+      ],
+      "reasoning": "Custom Stick Behavior's purpose is to \"provide your own aim response curve\" through the Aiming Curve Editor."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "Custom game settings",
+      "settingId": "sync-custom",
+      "note": "With Custom sync, you copy your game's aim settings into your Config. Unrelated to Custom Stick Behavior."
+    },
+    {
+      "name": "Simulate Analog Behavior",
+      "settingId": "simulate-analog-behavior",
+      "note": "SAB makes the MATRIX's stick output look more analog to the game. It is not an aim curve."
+    }
+  ],
+  "related": [
+    "aiming-curve",
+    "velocity-mapping",
+    "thumbstick-aim",
+    "deadzone"
+  ]
+}

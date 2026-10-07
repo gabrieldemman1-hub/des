@@ -1,0 +1,183 @@
+{
+  "id": "velocity-calibration",
+  "name": "Velocity Calibration",
+  "aliases": [
+    "Reticle Velocity Calibration",
+    "calibration"
+  ],
+  "summary": "Teaches the MATRIX how the reticle behaves in your game. You do full horizontal turns and, on controller output, also aim from straight down to straight up. Required for mouse-and-keyboard output. For controller output it is an optional, advanced tool that XIM discourages.",
+  "where": {
+    "text": "Edit your Config (pencil icon). For controller output: scroll down, press the \"...\", then Reticle Velocity Calibration.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Velocity-Calibration/#preparing-calibration",
+        "quote": "Edit your Config by pressing the pencil icon. Scroll down and select the \"...\" and then Reticle Velocity Calibration."
+      }
+    ]
+  },
+  "definition": {
+    "text": "Velocity Calibration is only required for Mouse and Keyboard Output Configs. It teaches the MATRIX how the reticle behaves in your game.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Velocity-Calibration/#velocity-calibration",
+        "quote": "Velocity Calibration is only required when using a Mouse and Keyboard Output Config. It is used to teach your XIM MATRIX how the reticle behaves in the game you are playing."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "Controller output doesn't need it: the Smart Translator already knows how fast the game's reticle moves. You can still calibrate if you want to use different in-game values.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#controller-output-configs",
+          "quote": "Like all XIM gaming adapters, XIM MATRIX features Smart Translators that understand everything about a game's aiming system. This includes reticle velocity behavior so Velocity Calibration is not needed. However, there are scenarios where you may want to provide your own calibration."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "Performing your own velocity calibration will allow you to augment the Smart Translator's behavior so you can use different in-game values."
+        }
+      ]
+    },
+    {
+      "text": "On controller output, the settings it lets you change are horizontal and vertical sensitivity, zoom (ADS) sensitivity and field of view. Deadzone and Aiming Technique must stay at their required values.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "Horizontal and Vertical Sensitivity"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "Zoom (ADS) Sensitivity"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "Field of View (FoV)"
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "This method doesn't support modifying all game settings including Deadzone and Aiming Technique. Those must still be set to their required values."
+        }
+      ]
+    },
+    {
+      "text": "On controller output there are four calibrations: Hip X, Hip Y, ADS X and ADS Y. X is a full turn. Y goes from pointing straight down to straight up.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#preparing-calibration",
+          "quote": "There are four different types of velocity calibration: Hip X, Hip Y, ADS X, ADS Y. If your game doesn't have an ADS mode, then, it'll only be X and Y."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#performing-y-calibration",
+          "quote": "Vertical (Y) calibration is the same process as horizontal (X) calibration except you will start with your reticle pointing straight down (at your \"feet\") and end pointing straight up (at the \"ceiling\")."
+        }
+      ]
+    },
+    {
+      "text": "Once done, you only redo it if you change in-game settings that affect aim, such as sensitivity or FOV.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#performing-y-calibration",
+          "quote": "Once complete, you never have to perform this process again unless you change any in-game settings that affect aim behavior (such as aim sensitivity, FOV, etc.)."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "Controller output (Primer's scope): XIM discourages manual calibration, because it may not produce accurate results. With Standard sync you don't calibrate.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Game-Settings/#manual",
+          "quote": "Manual reticle velocity calibration for Configs that output as controller may not produce accurate results and is thus discouraged from being used."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#controller-output-configs",
+          "quote": "Like all XIM gaming adapters, XIM MATRIX features Smart Translators that understand everything about a game's aiming system. This includes reticle velocity behavior so Velocity Calibration is not needed. However, there are scenarios where you may want to provide your own calibration."
+        }
+      ]
+    },
+    {
+      "text": "If you calibrate anyway, XIM recommends setting Thumbstick Aim Sensitivity to 100/100 (%), because sensitivity then comes from the in-game settings.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "It's recommended that your XIM Thumbstick Aim Sensitivity be set to 100/100 (%) when using Velocity Calibration since you will now be customizing sensitivity using in-game settings."
+        }
+      ]
+    },
+    {
+      "text": "Calibration may fail if your values are very different from the required ones.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#required-in-game-settings",
+          "quote": "Velocity calibration may unsuccessful if you use values that are significantly different than those that are required."
+        }
+      ]
+    },
+    {
+      "text": "The quickest check afterwards is a cm/360 test with a mouse.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Velocity-Calibration/#validating-calibration",
+          "quote": "There are different ways to validate that your calibration is correct. The quickest way is to use a mouse and verify it's cm/360 setting is accurate."
+        }
+      ]
+    },
+    {
+      "text": "Only if you use SAB: after lowering your in-game sensitivity, a Config without custom in-game settings can be recalibrated with Velocity Calibration.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#lower-in-game-sensitivity",
+          "quote": "If you are using a Config that doesn't support custom in-game aim settings, you can recalibrate your aim by performing a Velocity Calibration."
+        }
+      ],
+      "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+    }
+  ],
+  "aimStyles": [],
+  "confusions": [
+    {
+      "name": "Velocity Mapping",
+      "settingId": "velocity-mapping",
+      "note": "Decides how your top aim speed maps onto the game's maximum turn speed. It is not a calibration."
+    }
+  ],
+  "related": [
+    "sync-manual",
+    "game-settings-sync",
+    "smart-translation",
+    "output-type",
+    "simulate-analog-behavior",
+    "sensitivity",
+    "velocity-mapping"
+  ]
+}

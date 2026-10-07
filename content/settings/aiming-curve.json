@@ -1,0 +1,220 @@
+{
+  "id": "aiming-curve",
+  "name": "Aiming Curve",
+  "aliases": [
+    "Aiming Curves",
+    "curve",
+    "aim response curve"
+  ],
+  "summary": "Maps how fast you move to how fast the reticle moves. The default is a straight line.",
+  "where": {
+    "text": "Edit your Config (pencil icon). For mouse or motion aim: in Mouse Aim or Motion Aim, press the \"...\" for additional options, which include the Aiming Curve. For thumbstick aim: in Thumbstick Aim, press the \"...\", change from Native to Custom Stick Behavior, then use the Aiming Curve Editor.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Dashboard/#config-edit",
+        "quote": "To edit the current Config, press the pencil icon."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#motion-aim",
+        "quote": "Press the \"...\" for additional options like setting an Aiming Curve, adjusting Y Scale (vertical only sensitivity), and applying aim Quantization."
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+        "quote": "Additional flexibility is available for crafting your own thumbstick aiming experience. Press the \"...\" to access:"
+      },
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#custom-stick-behavior",
+        "quote": "To switch from using the default native built-in aim mechanics of the game and instead provide your own aim response curve, change from Native to Custom Stick Behavior. Then use the Aiming Curve Editor."
+      }
+    ]
+  },
+  "definition": {
+    "text": "A curve represents how your reticle speed transitions from 0 to 100% velocity (bottom left of the curve to upper right).",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+        "quote": "A curve represents how your reticle speed transitions from 0 to 100% velocity (bottom left of the curve to upper right)."
+      }
+    ]
+  },
+  "plainWords": [
+    {
+      "text": "With the default linear curve, speed in equals speed out.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "In the linear case, speed in produces the same exact speed out. The default curve is linear (a straight diagonal line)."
+        }
+      ]
+    },
+    {
+      "text": "A MATRIX curve replaces the game's own curve instead of stacking on top of it. The curve you draw is the response you get in game.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "XIM MATRIX has the ability to provide true customizable stick aiming curves through its proprietary aim translation technology."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "Meaning, it's not applying aim curves on top of the game's existing curves (producing incorrect and unintuitive aim behavior like other input devices). Rather, the curves you author will be the aim response you experience in game."
+        }
+      ]
+    },
+    {
+      "text": "You can draw any shape, from a simple acceleration curve to multi-zone curves. Presets cover common ones.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "You can craft any curve you want: such as a simple acceleration curve or a more complex multiple zone curves. Presets are included for more common curves."
+        }
+      ]
+    },
+    {
+      "text": "Velocity Mapping decides how the curve's range maps onto real reticle speed.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#velocity-mapping",
+          "quote": "Velocity Mapping is a feature that allows you to further craft your aiming experience. It focuses on how your custom aiming curves and thumbstick aim maps to reticle velocity since both have a constrained range."
+        }
+      ]
+    },
+    {
+      "text": "You can reuse a curve in other games for a consistent feel.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "You can take your curves and apply to other games to produce a consistent aiming experience between games."
+        }
+      ]
+    }
+  ],
+  "feel": [],
+  "guidance": [
+    {
+      "text": "The default is linear. cm/360 is only exact with a linear curve, so keep it linear when you check your sensitivity.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "In the linear case, speed in produces the same exact speed out. The default curve is linear (a straight diagonal line)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "You are testing with a linear aiming curve (not a custom one)"
+        }
+      ]
+    },
+    {
+      "text": "Start with Sensitivity alone. Change other values, like the curve, only if necessary.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+          "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+        }
+      ]
+    },
+    {
+      "text": "Only if you use Simulate Analog Behavior (SAB): don't use any curve other than the default linear.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#no-aiming-curves",
+          "quote": "Do not use any aiming curves other than the default linear."
+        }
+      ],
+      "caveat": "Applies only when Simulate Analog Behavior (SAB) is on. SAB is a controller-output feature for games with extra input requirements."
+    }
+  ],
+  "aimStyles": [
+    {
+      "text": "Depends on the shape. For example, a curve that sits below the straight line at low speed but still reaches full speed at the top gives finer control on slow movements (tracking, precision holds) while keeping full speed for snaps and big turns. The cost: cm/360 no longer matches physically.",
+      "confidence": "reasoned",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "A curve represents how your reticle speed transitions from 0 to 100% velocity (bottom left of the curve to upper right)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "In the linear case, speed in produces the same exact speed out. The default curve is linear (a straight diagonal line)."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#aiming-curves",
+          "quote": "You can craft any curve you want: such as a simple acceleration curve or a more complex multiple zone curves. Presets are included for more common curves."
+        },
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+          "quote": "An accurate cm/360 means that your mouse behavior physically matches your sensitivity setting when using a linear (default) aim response curve."
+        }
+      ],
+      "reasoning": "A curve maps input speed to reticle speed from 0 to 100%, and linear is one-to-one. A curve that outputs less than linear at low input speed but still reaches full speed at the top makes slow movements finer without lowering the top speed. The guide lists presets and \"a simple acceleration curve\" but doesn't define their shapes or recommend one. cm/360 accuracy needs a linear curve."
+    }
+  ],
+  "confusions": [
+    {
+      "name": "The game's own response curve",
+      "settingId": "required-game-settings",
+      "note": "The in-game curve setting. Leave it as XIM requires. A MATRIX curve replaces the game's response rather than adding to it."
+    },
+    {
+      "name": "Elite 2 controller stick curve",
+      "statement": {
+        "text": "A curve set on an Xbox Elite 2 controller itself, not in the MATRIX. XIM says to have it off when you check cm/360.",
+        "confidence": "official",
+        "citations": [
+          {
+            "source": "xim-guide",
+            "url": "https://guide.xim.tech/Troubleshooting-Mice/#validating-cm360-accuracy",
+            "quote": "If using an Elite 2 on Xbox, make sure you don't have a controller stick curve enabled"
+          }
+        ]
+      }
+    }
+  ],
+  "related": [
+    "velocity-mapping",
+    "custom-stick-behavior",
+    "sensitivity",
+    "quantization",
+    "simulate-analog-behavior",
+    "y-scale",
+    "smart-translation"
+  ]
+}

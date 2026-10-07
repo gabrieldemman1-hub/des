@@ -1,4 +1,4 @@
-// Pure helpers for `npm run verify:citations`: find citations in the knowledge JSON, turn a
+// Pure helpers for `npm run verify:citations`: find citations in the content JSON, turn a
 // fetched page into plain text, and normalise text so a verbatim quote can be compared.
 import { decodeHTML } from 'entities';
 
@@ -180,7 +180,7 @@ export function pageText(body, contentType) {
 
 /**
  * @param {string} normalizedPage Output of `pageText`.
- * @param {string} quote          The raw quote from the knowledge file.
+ * @param {string} quote          The raw quote from the content file.
  */
 export function quoteFound(normalizedPage, quote) {
   const needle = normalizeText(quote);

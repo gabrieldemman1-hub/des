@@ -1,0 +1,445 @@
+---
+/**
+ * The Tuning page: dials that explain. Each dial has two ends, in XIM's words, and shows which
+ * way to move each setting toward them, with the sentence that says so. The slider only picks
+ * which end to read about; without a script both ends show, and nothing the reader sets is kept.
+ */
+import { dials, settingById } from '../../content/index';
+import type { Dial, DialLever, Statement } from '../../content/schema';
+import NotesList from '../components/NotesList.astro';
+import StatementView from '../components/StatementView.astro';
+import Layout from '../layouts/Layout.astro';
+import { AIMING_SOURCE, MOVE } from '../lib/labels';
+import { Notes } from '../lib/notes';
+import { settingPath } from '../lib/paths';
+
+const ENDS = ['a', 'b'] as const;
+type End = (typeof ENDS)[number];
+
+/** The levers that move toward one end, with the move. */
+const toward = (dial: Dial, end: End) => dial.levers.flatMap((l) => (l[end] ? [{ lever: l, move: l[end]! }] : []));
+const statementsToward = (dial: Dial, end: End): Statement[] => toward(dial, end).map(({ move }) => move.statement);
+const sourcesOf = (lever: DialLever) => lever.aimingSources?.map((s) => AIMING_SOURCE[s]).join(' and ');
+
+/** What the reader can slide to, in reading order: one end, where to start, the other end. */
+const readings = (dial: Dial) => [
+  { end: 'a', title: `Toward “${dial.ends.a}”`, moves: toward(dial, 'a') },
+  { end: 'start', title: 'Where to start', moves: [] },
+  { end: 'b', title: `Toward “${dial.ends.b}”`, moves: toward(dial, 'b') },
+];
+
+// Footnotes run down the page in the order the sections print.
+const notes = new Notes();
+for (const dial of dials) {
+  notes.add(dial.intro, ...statementsToward(dial, 'a'), dial.start, ...statementsToward(dial, 'b'), ...dial.notes);
+}
+---
+
+<Layout
+  title="Tuning"
+  description="Four dials that show which way each XIM MATRIX setting moves, in XIM's words, with the evidence."
+>
+  <article class="page">
+    <header class="head">
+      <h1>Tuning</h1>
+      <p class="lede">
+        Four dials. Each has two ends, in XIM’s words, and shows which way to move each setting toward them. The slider
+        picks which end to read about. Nothing you set here is kept, and Primer gives no numbers that XIM doesn’t.
+      </p>
+    </header>
+
+    {
+      dials.map((dial) => (
+        <section class="dial" id={`dial-${dial.id}`} aria-labelledby={`dial-${dial.id}-name`}>
+          <header class="dial-head">
+            <p class="label">
+              Dial <span class="mono n">{dial.order}</span>
+            </p>
+            <h2 id={`dial-${dial.id}-name`}>{dial.name}</h2>
+            <p class="summary">{dial.summary}</p>
+          </header>
+
+          <StatementView statement={dial.intro} notes={notes} />
+
+          <div class="control" data-end-a={dial.ends.a} data-end-b={dial.ends.b} hidden>
+            <div class="ends" aria-hidden="true">
+              <span>{dial.ends.a}</span>
+              <span>{dial.ends.b}</span>
+            </div>
+            <input
+              class="slider"
+              type="range"
+              min="0"
+              max="2"
+              step="1"
+              value="1"
+              aria-label={`${dial.name}: which end to read about`}
+              aria-valuetext="Where to start"
+            />
+            <p class="readout" aria-live="polite" />
+          </div>
+
+          <table class="moves">
+            <caption class="visually-hidden">Which way each setting moves on the {dial.name} dial</caption>
+            <thead>
+              <tr>
+                <th scope="col">Setting</th>
+                <th scope="col" class="col-a">
+                  {dial.ends.a}
+                </th>
+                <th scope="col" class="col-b">
+                  {dial.ends.b}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {dial.levers.map((lever) => {
+                const setting = settingById(lever.settingId)!;
+                return (
+                  <tr>
+                    <th scope="row">
+                      <a href={settingPath(setting.id)}>{setting.name}</a>
+                      {lever.aimingSources && <span class="for">{' '}{sourcesOf(lever)} aim</span>}
+                    </th>
+                    {ENDS.map((end) => {
+                      const move = lever[end];
+                      return (
+                        <td class={`col-${end}`}>
+                          {move ? (
+                            MOVE[move.direction]
+                          ) : (
+                            <span class="none" aria-label="No direction given">
+                              —
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+
+          {readings(dial).map((reading) => (
+            <div class="reading" data-end={reading.end}>
+              <h3 class="label">{reading.title}</h3>
+              {reading.end === 'start' ? (
+                <StatementView statement={dial.start} notes={notes} />
+              ) : (
+                <ol class="levers">
+                  {reading.moves.map(({ lever, move }) => {
+                    const setting = settingById(lever.settingId)!;
+                    return (
+                      <li>
+                        <p class="lever-head">
+                          <a href={settingPath(setting.id)}>{setting.name}</a>
+                          <span class="visually-hidden">: </span>
+                          <span class="dir">{MOVE[move.direction]}</span>
+                        </p>
+                        {lever.aimingSources && <p class="for">For {sourcesOf(lever)} aim</p>}
+                        <StatementView statement={move.statement} notes={notes} />
+                      </li>
+                    );
+                  })}
+                </ol>
+              )}
+            </div>
+          ))}
+
+          {dial.notes.length > 0 && (
+            <div class="dial-notes">
+              <h3 class="label">Before you move anything</h3>
+              <div class="statements">
+                {dial.notes.map((statement) => (
+                  <StatementView statement={statement} notes={notes} />
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      ))
+    }
+
+    <NotesList notes={notes} />
+  </article>
+</Layout>
+
+<script>
+  // The slider picks which end to read about. It keeps nothing: every visit starts in the middle.
+  const END_BY_VALUE = ['a', 'start', 'b'];
+  for (const control of document.querySelectorAll<HTMLElement>('.control')) {
+    const dial = control.closest<HTMLElement>('.dial');
+    const slider = control.querySelector<HTMLInputElement>('input');
+    const readout = control.querySelector<HTMLElement>('.readout');
+    if (!dial || !slider || !readout) continue;
+    const labels = [control.dataset.endA ?? '', 'Where to start', control.dataset.endB ?? ''];
+    const show = () => {
+      const index = Number(slider.value);
+      const end = END_BY_VALUE[index] ?? 'start';
+      for (const reading of dial.querySelectorAll<HTMLElement>('.reading')) reading.hidden = reading.dataset.end !== end;
+      for (const cell of dial.querySelectorAll<HTMLElement>('.col-a, .col-b')) {
+        cell.classList.toggle('is-on', cell.classList.contains(`col-${end}`));
+      }
+      const label = labels[index] ?? '';
+      slider.setAttribute('aria-valuetext', label);
+      readout.textContent = label;
+    };
+    slider.addEventListener('input', show);
+    control.hidden = false;
+    show();
+  }
+</script>
+
+<style>
+  .page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 11vw, 3.6rem);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  .lede {
+    font-size: 1.1rem;
+    color: var(--ink-2);
+  }
+
+  .dial {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    padding-top: 1.2rem;
+    border-top: 1.5px solid var(--rule-strong);
+    scroll-margin-top: 1rem;
+  }
+
+  .dial-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+
+  .dial-head .n {
+    color: var(--cobalt);
+    letter-spacing: 0;
+  }
+
+  .dial-head h2 {
+    font-size: clamp(1.9rem, 8vw, 2.5rem);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+
+  .summary {
+    font-style: italic;
+    color: var(--ink-2);
+  }
+
+  /* The slider: a rule with a cobalt thumb, the two ends named above it, the choice read below. */
+  .control {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+    padding-top: 0.5rem;
+  }
+
+  .control[hidden] {
+    display: none;
+  }
+
+  .ends {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font: 700 0.82rem/1.2 var(--f-label);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .ends span:last-child {
+    text-align: right;
+  }
+
+  .slider {
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    appearance: none;
+    background: transparent;
+  }
+
+  .slider::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--rule-strong);
+  }
+
+  .slider::-moz-range-track {
+    height: 2px;
+    background: var(--rule-strong);
+  }
+
+  .slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    margin-top: -12px;
+    border: 2px solid var(--paper);
+    border-radius: 50%;
+    background: var(--cobalt);
+    box-shadow: 0 0 0 1.5px var(--cobalt);
+  }
+
+  .slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--paper);
+    border-radius: 50%;
+    background: var(--cobalt);
+    box-shadow: 0 0 0 1.5px var(--cobalt);
+  }
+
+  .slider:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 4px;
+  }
+
+  .readout {
+    min-height: 1.3em;
+    text-align: center;
+    font: 700 0.95rem/1.3 var(--f-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cobalt);
+  }
+
+  @media (forced-colors: active) {
+    .slider {
+      appearance: auto;
+    }
+  }
+
+  /* The table of moves: every setting, which way toward each end. */
+  .moves {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .moves th,
+  .moves td {
+    padding: 0.5rem 0.4rem;
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .moves th:first-child {
+    width: 40%;
+    padding-left: 0;
+  }
+
+  .moves thead th {
+    font: 700 0.76rem/1.25 var(--f-label);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .moves tbody th {
+    font: 700 1.05rem/1.2 var(--f-label);
+    letter-spacing: 0.02em;
+  }
+
+  .moves tbody th a {
+    text-decoration: none;
+  }
+
+  .moves tbody .for {
+    display: block;
+    font: 400 0.82rem/1.3 var(--f-read);
+    letter-spacing: 0;
+    color: var(--ink-3);
+  }
+
+  .moves td {
+    font: 700 0.9rem/1.3 var(--f-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cobalt);
+  }
+
+  .moves td .none {
+    color: var(--ink-3);
+  }
+
+  .moves .is-on {
+    background: var(--cobalt-tint);
+  }
+
+  .reading,
+  .dial-notes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .reading[hidden] {
+    display: none;
+  }
+
+  .reading > h3,
+  .dial-notes > h3 {
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .levers {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .levers li {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .lever-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.7rem;
+    font: 700 1.25rem/1.2 var(--f-label);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .dir {
+    color: var(--cobalt);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+  }
+
+  .levers .for {
+    color: var(--ink-3);
+    font-size: 0.9rem;
+  }
+
+  .statements {
+    display: grid;
+    gap: 0.9rem;
+  }
+</style>

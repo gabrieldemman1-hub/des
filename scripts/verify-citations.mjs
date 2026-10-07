@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Checks that every citation's quote appears verbatim on the page it cites.
 //
-//   npm run verify:citations            check every citation in knowledge/**/*.json
+//   npm run verify:citations            check every citation in content/**/*.json
 //   npm run verify:citations -- --verbose   also list the citations that pass
 //   npm run verify:citations -- --dir <path>  check another folder (e.g. a test fixture)
 //
@@ -23,12 +23,12 @@ const repoRoot = fileURLToPath(new URL('..', import.meta.url));
 const args = process.argv.slice(2);
 const verbose = args.includes('--verbose');
 const dirArg = args.indexOf('--dir');
-const knowledgeDir = dirArg !== -1 && args[dirArg + 1] ? resolve(args[dirArg + 1]) : join(repoRoot, 'knowledge');
+const contentDir = dirArg !== -1 && args[dirArg + 1] ? resolve(args[dirArg + 1]) : join(repoRoot, 'content');
 
 const CONCURRENCY = 4;
 const TIMEOUT_MS = 30_000;
 const ATTEMPTS = 2;
-const USER_AGENT = 'Mozilla/5.0 (compatible; DialedCitationCheck/0.1)';
+const USER_AGENT = 'Mozilla/5.0 (compatible; PrimerCitationCheck/0.1)';
 
 /** @param {string} dir @returns {Promise<string[]>} */
 async function jsonFiles(dir) {
@@ -117,7 +117,7 @@ async function main() {
   /** @type {string[]} */
   const fileErrors = [];
 
-  for (const path of await jsonFiles(knowledgeDir)) {
+  for (const path of await jsonFiles(contentDir)) {
     const file = display(path);
     try {
       citations.push(...collectCitations(file, JSON.parse(await readFile(path, 'utf8'))));
@@ -171,7 +171,7 @@ async function main() {
       (fileErrors.length ? `, ${fileErrors.length} unreadable file(s)` : '') +
       '.',
   );
-  if (citations.length === 0 && fileErrors.length === 0) console.log('No citations in the knowledge base yet.');
+  if (citations.length === 0 && fileErrors.length === 0) console.log('No citations in content/ yet.');
 
   await dispatcher.close();
   process.exitCode = failures > 0 || fileErrors.length > 0 ? 1 : 0;

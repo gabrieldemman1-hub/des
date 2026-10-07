@@ -1,0 +1,164 @@
+---
+/**
+ * One aim style: what it asks of the settings, which settings to move and which way, and the
+ * Destiny 2 weapon types that fire that way.
+ */
+import { aimStyles, settingById } from '../../../content/index';
+import type { AimStyle } from '../../../content/schema';
+import NotesList from '../../components/NotesList.astro';
+import StatementView from '../../components/StatementView.astro';
+import Layout from '../../layouts/Layout.astro';
+import { AIMING_SOURCE, DIRECTION } from '../../lib/labels';
+import { Notes } from '../../lib/notes';
+import { home, settingPath } from '../../lib/paths';
+
+export function getStaticPaths() {
+  return aimStyles.map((style) => ({ params: { id: style.id }, props: { style } }));
+}
+
+interface Props {
+  style: AimStyle;
+}
+
+const { style } = Astro.props;
+const notes = new Notes().add(
+  style.favours,
+  ...style.levers.map((l) => l.statement),
+  ...style.weapons.map((w) => w.mapping),
+);
+---
+
+<Layout title={style.name} description={`The ${style.name.toLowerCase()} aim style: ${style.description}`}>
+  <article class="style">
+    <header class="head">
+      <p class="label"><a href={`${home()}#chapter-aim-styles`}>Weapon aim style</a></p>
+      <h1>{style.name}</h1>
+      <p class="summary">{style.description}</p>
+    </header>
+
+    <section aria-labelledby="favours">
+      <h2 id="favours" class="label">What it asks of your settings</h2>
+      <StatementView statement={style.favours} notes={notes} />
+    </section>
+
+    <section aria-labelledby="levers">
+      <h2 id="levers" class="label">Settings to move</h2>
+      <ol class="levers">
+        {
+          style.levers.map((lever) => {
+            const setting = settingById(lever.settingId)!;
+            return (
+              <li>
+                <p class="lever-head">
+                  <a href={settingPath(setting.id)}>{setting.name}</a>
+                  <span class="visually-hidden">: </span>
+                  <span class="dir">{DIRECTION[lever.direction]}</span>
+                </p>
+                {lever.aimingSources && (
+                  <p class="for">For {lever.aimingSources.map((s) => AIMING_SOURCE[s]).join(' and ')} aim</p>
+                )}
+                <StatementView statement={lever.statement} notes={notes} />
+              </li>
+            );
+          })
+        }
+      </ol>
+    </section>
+
+    {
+      style.weapons.length > 0 && (
+        <section aria-labelledby="weapons">
+          <h2 id="weapons" class="label">
+            Destiny 2 weapons that aim this way
+          </h2>
+          <div class="weapons">
+            {style.weapons.map((w) => (
+              <StatementView statement={w.mapping} notes={notes} lead={w.name} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <NotesList notes={notes} />
+  </article>
+</Layout>
+
+<style>
+  .style {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.6rem;
+  }
+
+  section {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  section > h2 {
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+  }
+
+  .head .label a {
+    color: var(--ink-3);
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 11vw, 3.6rem);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  .summary {
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--ink-2);
+  }
+
+  .levers {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .levers li {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .lever-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.7rem;
+    font: 700 1.25rem/1.2 var(--f-label);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .dir {
+    color: var(--cobalt);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+  }
+
+  .for {
+    color: var(--ink-3);
+    font-size: 0.9rem;
+  }
+
+  .weapons {
+    display: grid;
+    gap: 0.9rem;
+  }
+</style>

@@ -1,0 +1,91 @@
+{
+  "id": "sensitivity",
+  "order": 1,
+  "name": "Sensitivity",
+  "summary": "How far the mouse travels for a full turn. XIM says to start here.",
+  "ends": {
+    "a": "Faster aiming speed",
+    "b": "Slower aiming speed"
+  },
+  "intro": {
+    "text": "Mouse sensitivity is set in cm/360: the distance, in centimetres, for a full turn. A lower number is a shorter distance, so a faster turn.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+        "quote": "Mouse sensitivity is in cm/360 or \"distance (in centimeters) to perform a full turn\". That means, lower values produce faster aiming speeds."
+      }
+    ]
+  },
+  "start": {
+    "text": "XIM says to start with Sensitivity alone, and to change other values only if you need to. There is no right set of values; it is preference.",
+    "confidence": "official",
+    "citations": [
+      {
+        "source": "xim-guide",
+        "url": "https://guide.xim.tech/Aim-Settings/#mouse-aim",
+        "quote": "Always start with just adjusting Sensitivity. Change other values only if necessary. There is no \"right\" set of values. It is preference that matches your gaming style."
+      }
+    ]
+  },
+  "levers": [
+    {
+      "settingId": "sensitivity",
+      "aimingSources": ["mouse"],
+      "a": {
+        "direction": "lower",
+        "statement": {
+          "text": "Lower the cm/360 for a faster aiming speed.",
+          "confidence": "official",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+              "quote": "That means, lower values produce faster aiming speeds."
+            }
+          ]
+        }
+      },
+      "b": {
+        "direction": "raise",
+        "statement": {
+          "text": "Raise the cm/360 for a slower aiming speed: a longer distance for the same turn.",
+          "confidence": "reasoned",
+          "citations": [
+            {
+              "source": "xim-guide",
+              "url": "https://guide.xim.tech/Aim-Settings/#real-world-units",
+              "quote": "Mouse sensitivity is in cm/360 or \"distance (in centimeters) to perform a full turn\". That means, lower values produce faster aiming speeds."
+            }
+          ],
+          "reasoning": "XIM states the effect of lower values. cm/360 is the distance for one full turn, so a higher value is a longer distance for the same turn: slower."
+        }
+      }
+    }
+  ],
+  "notes": [
+    {
+      "text": "Thumbstick aim is not set in cm/360. Depending on the Config it is set in the game, or as a percentage of the game's maximum turn speed.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Aim-Settings/#thumbstick-aim",
+          "quote": "Depending on the type of Config, thumbstick sensitivity may be set through your in-game aim ettings, or, specified as a percentage (%) of maximum turn speed split between X and Y."
+        }
+      ]
+    },
+    {
+      "text": "If a game requires Simulate Analog Behavior, XIM's checklist says not to go faster than 20 cm/360.",
+      "confidence": "official",
+      "citations": [
+        {
+          "source": "xim-guide",
+          "url": "https://guide.xim.tech/Simulate-Analog-Behavior/#ensure-mouse-sensitivity",
+          "quote": "Make sure your mouse sensitivity isn't faster than 20 cm/360."
+        }
+      ]
+    }
+  ]
+}
