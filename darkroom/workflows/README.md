@@ -15,6 +15,7 @@ showing it). Presets are read when Darkroom starts, so restart it after editing.
 |---|---|---|
 | `txt2img_checkpoint.json` | Text → Image | `checkpoints/<any SD1.5 / SDXL / Pony / Illustrious checkpoint>` (dropdown lists them) |
 | `txt2img_checkpoint_clipskip2.json` | Text → Image | same, with `CLIPSetLastLayer -2` for Pony V6 / NoobAI (Euler a defaults) |
+| `img2img_checkpoint.json` | Image → Image | same checkpoint, starting from your photo (`ImageScale` → `VAEEncode`, denoise = Strength slider) |
 | `img2vid_wan22_5b.json` | Image → Video | `diffusion_models/wan2.2_ti2v_5B_fp16.safetensors`, `text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors`, `vae/wan2.2_vae.safetensors` |
 | `img2vid_wan22_14b.json` | Image → Video | `diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors` + `wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors`, `text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors`, `vae/wan_2.1_vae.safetensors` (two-expert, 24 GB class GPU) |
 | `img2vid_wan21_14b.json` | Image → Video | `diffusion_models/wan2.1_i2v_480p_14B_fp8_e4m3fn.safetensors`, `text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors`, `vae/wan_2.1_vae.safetensors`, `clip_vision/clip_vision_h.safetensors` |
@@ -54,6 +55,7 @@ between presets from the dropdown.
 | `{{MODEL}}` | The file picked in the Model dropdown (see `_meta.model`) | text |
 | `{{SAMPLER}}` `{{SCHEDULER}}` | Advanced ▸ sampler / scheduler | text |
 | `{{IMAGE}}` | The source image, after Darkroom uploads it to `ComfyUI/input/darkroom/` | text |
+| `{{DENOISE}}` | The Strength slider (image → image), 0.05 to 1.0, usually the KSampler `denoise` | float |
 | `{{FRAMES}}` `{{FPS}}` | Video length and frame rate | int |
 | `{{FILENAME_PREFIX}}` | `darkroom/<mode>` so ComfyUI's own copy lands in `ComfyUI/output/darkroom/` | text |
 
@@ -65,7 +67,7 @@ A preset may use any subset. Controls whose token is absent are hidden automatic
 ```jsonc
 "_meta": {
   "name": "Shown in the dropdown",
-  "mode": "txt2img",                 // or "img2vid" (which tab it belongs to)
+  "mode": "txt2img",                 // or "img2img" / "img2vid" (which tab it belongs to)
   "order": 10,                       // sort order inside the tab (lower first)
   "description": "One or two sentences shown under the dropdown.",
   "notes": ["Free-form comments. JSON has no comment syntax; put yours here."],
@@ -82,10 +84,11 @@ A preset may use any subset. Controls whose token is absent are hidden automatic
   // Show/hide form controls (defaults: everything on except sampler/frames/fps).
   "controls": { "prompt": true, "negative": true, "steps": true, "cfg": true, "seed": true,
                 "size": true, "model": true, "sampler": false, "frames": false, "fps": false },
+  //   (the Strength slider appears automatically when the graph uses {{DENOISE}})
 
   // Initial values the first time this preset is used (the form remembers your last values).
   "defaults": { "steps": 28, "cfg": 6.0, "width": 1024, "height": 1024, "frames": 81, "fps": 16,
-                "sampler": "dpmpp_2m", "scheduler": "karras", "negative": "lowres, ..." },
+                "strength": 0.6, "sampler": "dpmpp_2m", "scheduler": "karras", "negative": "lowres, ..." },
 
   // Darkroom snaps width/height to size_step and clamps to [size_min, size_max];
   // frames_rule "4n+1" (Wan) or "8n+1" (LTX) snaps the frame count.

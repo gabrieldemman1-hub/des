@@ -489,6 +489,7 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
         style: str = Form("none"),
         frames: str = Form(""),
         fps: str = Form(""),
+        strength: str = Form(""),
         source: str = Form(""),
         image: UploadFile | None = File(None),
     ):
@@ -519,6 +520,7 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
         height_v = _snap(_int(height, int(defaults["height"]), 16, 16384, "Height"), cons["size_step"], cons["size_min"], cons["size_max"])
         frames_v = _snap_frames(_int(frames, int(defaults["frames"]), 1, 4096, "Frames"), cons.get("frames_rule"), cons["frames_min"], cons["frames_max"])
         fps_v = _int(fps, int(defaults["fps"]), 1, 120, "FPS")
+        strength_v = round(_float(strength, float(defaults["strength"]), 0.05, 1.0, "Strength"), 3)
         sampler_v = sampler.strip() or str(defaults["sampler"])
         scheduler_v = scheduler.strip() or str(defaults["scheduler"])
 
@@ -537,11 +539,11 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
                     raise HTTPException(400, f"No model files found for {selector['node_class']}. Put a model in the right ComfyUI/models folder and press refresh.")
                 model_v = choices[0]
 
-        # Source image for image -> video.
+        # Source image for image -> image and image -> video.
         image_bytes: bytes | None = None
         image_ext = ".png"
         source_name = ""
-        if template.mode == "img2vid":
+        if template.mode in ("img2vid", "img2img"):
             if image is not None and image.filename:
                 image_bytes = await image.read()
                 image_ext = Path(image.filename).suffix.lower() or ".png"
@@ -588,6 +590,7 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
                 "scheduler": scheduler_v,
                 "frames": frames_v,
                 "fps": fps_v,
+                "strength": strength_v if template.mode == "img2img" else None,
                 "source_image": source_name,
             },
         )
@@ -607,6 +610,7 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
             "SCHEDULER": scheduler_v,
             "FRAMES": frames_v,
             "FPS": fps_v,
+            "DENOISE": strength_v,
             "FILENAME_PREFIX": f"darkroom/{template.mode}",
             "IMAGE": "",  # filled in after upload
         }
@@ -683,6 +687,8 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
                     "scheduler": job.params["scheduler"],
                     "frames": job.params["frames"],
                     "fps": job.params["fps"],
+                    "strength": job.params["strength"],
+                    "source_image": job.params["source_image"],
                     "file": job.results[0]["file"] if job.results else None,
                 },
             )

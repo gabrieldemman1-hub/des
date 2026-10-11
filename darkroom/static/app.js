@@ -6,8 +6,12 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const PREFS_KEY = 'darkroom.prefs.v1';      // localStorage: non-sensitive settings per preset (sizes, steps, model...)
   const SESSION_KEY = 'darkroom.session.v1';  // sessionStorage: prompt text + seed, gone when the browser closes
-  const VALUE_FIELDS = ['prompt', 'negative', 'steps', 'cfg', 'width', 'height', 'frames', 'fps', 'sampler', 'scheduler', 'model', 'style'];
-  const SETTING_FIELDS = ['steps', 'cfg', 'width', 'height', 'frames', 'fps', 'sampler', 'scheduler', 'model', 'style'];
+  const VALUE_FIELDS = ['prompt', 'negative', 'steps', 'cfg', 'width', 'height', 'frames', 'fps', 'strength', 'sampler', 'scheduler', 'model', 'style'];
+  const SETTING_FIELDS = ['steps', 'cfg', 'width', 'height', 'frames', 'fps', 'strength', 'sampler', 'scheduler', 'model', 'style'];
+  const MODES = ['txt2img', 'img2img', 'img2vid'];
+  const SOURCE_MODES = ['img2img', 'img2vid'];
+  const MODE_NAMES = { txt2img: 'text-to-image', img2img: 'image-to-image', img2vid: 'image-to-video' };
+  const MODE_BADGES = { txt2img: 'IMG', img2img: 'I2I', img2vid: 'VID' };
 
   const el = {
     conn: $('#conn'), connText: $('#conn-text'), offline: $('#offline-banner'), offlineDetail: $('#offline-detail'), templateProblems: $('#template-problems'),
@@ -17,12 +21,13 @@
     fieldPrompt: $('#field-prompt'), prompt: $('#prompt'), promptLabel: $('#prompt-label'), noPromptNote: $('#no-prompt-note'),
     fieldNegative: $('#field-negative'), negative: $('#negative'), style: $('#style'),
     steps: $('#steps'), cfg: $('#cfg'), seed: $('#seed'), seedDice: $('#seed-dice'), seedLock: $('#seed-lock'), width: $('#width'), height: $('#height'), frames: $('#frames'), fps: $('#fps'),
-    fields: { steps: $('#field-steps'), cfg: $('#field-cfg'), seed: $('#field-seed'), width: $('#field-width'), height: $('#field-height'), frames: $('#field-frames'), fps: $('#field-fps') },
+    strength: $('#strength'), strengthValue: $('#strength-value'),
+    fields: { steps: $('#field-steps'), cfg: $('#field-cfg'), seed: $('#field-seed'), width: $('#field-width'), height: $('#field-height'), frames: $('#field-frames'), fps: $('#field-fps'), strength: $('#field-strength') },
     sizePresets: $('#size-presets'), sizeHelp: $('#size-help'), advanced: $('#advanced'), sampler: $('#sampler'), scheduler: $('#scheduler'),
     generate: $('#generate'), cancel: $('#cancel'), status: $('#status'), barFill: $('#bar-fill'), statusLabel: $('#status-label'), statusDetail: $('#status-detail'),
     viewer: $('#viewer'), viewerEmpty: $('#viewer-empty'), livePreview: $('#live-preview'), resultImg: $('#result-img'), resultVideo: $('#result-video'),
     resultMeta: $('#result-meta'), resultPrompt: $('#result-prompt'), resultChips: $('#result-chips'),
-    btnDownload: $('#btn-download'), btnOpen: $('#btn-open'), btnToVideo: $('#btn-to-video'), btnReuse: $('#btn-reuse'), btnCopy: $('#btn-copy'), btnDelete: $('#btn-delete'),
+    btnDownload: $('#btn-download'), btnOpen: $('#btn-open'), btnToImage: $('#btn-to-image'), btnToVideo: $('#btn-to-video'), btnReuse: $('#btn-reuse'), btnCopy: $('#btn-copy'), btnDelete: $('#btn-delete'),
     galleryGrid: $('#gallery-grid'), galleryEmpty: $('#gallery-empty'), galleryMore: $('#gallery-more'), galleryCount: $('#gallery-count'), galleryRefresh: $('#gallery-refresh'), segBtns: $$('.seg-btn'), outputsDir: $('#outputs-dir'),
     historyList: $('#history-list'), historyEmpty: $('#history-empty'), historyClear: $('#history-clear'),
     toasts: $('#toasts'), toastTpl: $('#toast-tpl'),
@@ -32,7 +37,7 @@
   const state = {
     options: null,
     mode: 'txt2img',
-    workflowId: { txt2img: null, img2vid: null },
+    workflowId: { txt2img: null, img2img: null, img2vid: null },
     job: null,
     pollTimer: null,
     statusTimer: null,
@@ -145,7 +150,7 @@
     state.workflowId[state.mode] = chosen ? chosen.id : null;
     el.workflow.disabled = list.length === 0;
     if (!chosen) {
-      el.wfDesc.textContent = `No ${state.mode === 'txt2img' ? 'text-to-image' : 'image-to-video'} workflow found in darkroom/workflows/.`;
+      el.wfDesc.textContent = `No ${MODE_NAMES[state.mode]} workflow found in darkroom/workflows/.`;
       el.generate.disabled = true;
       return;
     }
@@ -173,11 +178,13 @@
     show(el.fields.height, c.size);
     show(el.fields.frames, c.frames);
     show(el.fields.fps, c.fps);
+    show(el.fields.strength, c.strength);
     show(el.advanced, c.sampler);
     show(el.fieldModel, c.model && !!t.model);
 
     el.promptLabel.textContent = state.mode === 'img2vid' ? 'Motion prompt' : 'Prompt';
-    el.prompt.placeholder = state.mode === 'img2vid' ? 'Describe the motion: camera, movement, mood…' : 'Describe the image you want…';
+    el.prompt.placeholder = state.mode === 'img2vid' ? 'Describe the motion: camera, movement, mood…'
+      : state.mode === 'img2img' ? 'Describe the result; the photo sets the composition…' : 'Describe the image you want…';
 
     const step = cons.size_step || 8;
     el.width.step = el.height.step = step;
@@ -201,6 +208,8 @@
     el.height.value = pick('height') ?? 1024;
     el.frames.value = pick('frames') ?? 81;
     el.fps.value = pick('fps') ?? 16;
+    el.strength.value = pick('strength') ?? 0.6;
+    updateStrengthLabel();
     if (saved.seed !== undefined) el.seed.value = saved.seed;
     el.seedLock.checked = !!saved.seedLock;
     if (saved.style && Array.from(el.style.options).some((o) => o.value === saved.style)) el.style.value = saved.style;
@@ -238,10 +247,14 @@
     state.applying = false;
   }
 
+  function updateStrengthLabel() {
+    el.strengthValue.textContent = Number(el.strength.value).toFixed(2);
+  }
+
   function renderSizePresets(t) {
     el.sizePresets.textContent = '';
     const sizes = t.sizes || [];
-    show(el.sizePresets, t.controls.size && (sizes.length > 0 || state.mode === 'img2vid'));
+    show(el.sizePresets, t.controls.size && (sizes.length > 0 || SOURCE_MODES.includes(state.mode)));
     for (const [w, h] of sizes) {
       const b = document.createElement('button');
       b.type = 'button';
@@ -250,7 +263,7 @@
       b.addEventListener('click', () => { el.width.value = w; el.height.value = h; markActiveSize(); saveValues(); });
       el.sizePresets.appendChild(b);
     }
-    if (state.mode === 'img2vid') {
+    if (SOURCE_MODES.includes(state.mode)) {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'chip';
@@ -301,14 +314,14 @@
   }
 
   function setMode(mode) {
-    if (!['txt2img', 'img2vid'].includes(mode)) return;
+    if (!MODES.includes(mode)) return;
     state.mode = mode;
     el.tabs.forEach((tab) => {
       const on = tab.dataset.mode === mode;
       tab.classList.toggle('is-active', on);
       tab.setAttribute('aria-selected', on ? 'true' : 'false');
     });
-    show(el.fieldSource, mode === 'img2vid');
+    show(el.fieldSource, SOURCE_MODES.includes(mode));
     state.prefs.mode = mode;
     savePrefs();
     populateWorkflows();
@@ -321,13 +334,14 @@
     state.source = { file, galleryName: null, url: URL.createObjectURL(file) };
     renderSource(file.name);
   }
-  function setSourceGallery(record) {
+  function setSourceGallery(record, targetMode) {
     if (state.source.url && state.source.file) URL.revokeObjectURL(state.source.url);
     state.source = { file: null, galleryName: record.file, url: record.url };
     renderSource(record.file);
-    if (state.mode !== 'img2vid') setMode('img2vid');
+    const mode = targetMode || (SOURCE_MODES.includes(state.mode) ? state.mode : 'img2img');
+    if (state.mode !== mode) setMode(mode);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    toast('Source image set', { msg: 'Add a motion prompt and press Generate.', kind: 'ok', timeout: 3500 });
+    toast('Source image set', { msg: mode === 'img2vid' ? 'Add a motion prompt and press Generate.' : 'Write a prompt, set the strength, and press Generate.', kind: 'ok', timeout: 3500 });
   }
   function renderSource(name) {
     el.sourcePreview.src = state.source.url;
@@ -364,8 +378,8 @@
       return;
     }
     if (t.controls.prompt && !el.prompt.value.trim()) { toast('Write a prompt first'); el.prompt.focus(); return; }
-    if (state.mode === 'img2vid' && !state.source.file && !state.source.galleryName) {
-      toast('Choose a source image', { msg: 'Drop one on the box above, paste it, or press “→ Video” on a gallery image.' });
+    if (SOURCE_MODES.includes(state.mode) && !state.source.file && !state.source.galleryName) {
+      toast('Choose a source image', { msg: 'Drop one on the box above, paste it, or press “→ Image” / “→ Video” on a gallery image.' });
       return;
     }
     const fd = new FormData();
@@ -549,8 +563,9 @@
     if (record.steps) chips.push(chip('steps', record.steps));
     if (record.cfg != null) chips.push(chip('cfg', record.cfg));
     if (record.kind !== 'image' && record.frames) chips.push(chip('frames', `${record.frames} @ ${record.fps || '?'}fps`));
+    if (record.mode === 'img2img' && record.strength != null) chips.push(chip('strength', record.strength));
     if (record.model) chips.push(chip('model', basename(record.model)));
-    if (record.sampler && record.mode === 'txt2img') chips.push(chip('sampler', `${record.sampler}/${record.scheduler || ''}`));
+    if (record.sampler && record.mode !== 'img2vid') chips.push(chip('sampler', `${record.sampler}/${record.scheduler || ''}`));
     if (record.workflow_name) chips.push(chip('workflow', record.workflow_name));
     if (record.style && record.style !== 'none') chips.push(chip('style', record.style));
     if (record.bytes) chips.push(chip('file', fmtBytes(record.bytes)));
@@ -560,6 +575,7 @@
     el.btnDownload.setAttribute('download', record.file);
     el.btnOpen.href = record.url;
     show(el.btnToVideo, record.kind === 'image' && state.options && state.options.workflows.some((w) => w.mode === 'img2vid'));
+    show(el.btnToImage, record.kind === 'image' && state.options && state.options.workflows.some((w) => w.mode === 'img2img'));
     show(el.btnCopy, !!record.prompt);
     show(el.resultMeta, true);
     $$('.thumb', el.galleryGrid).forEach((t) => t.classList.toggle('is-active', t.dataset.file === record.file));
@@ -575,6 +591,7 @@
     setIf(el.prompt, record.prompt); setIf(el.negative, record.negative);
     setIf(el.steps, record.steps); setIf(el.cfg, record.cfg); setIf(el.width, record.width); setIf(el.height, record.height);
     setIf(el.frames, record.frames); setIf(el.fps, record.fps);
+    if (record.strength != null) { el.strength.value = record.strength; updateStrengthLabel(); }
     if (record.sampler && Array.from(el.sampler.options).some((o) => o.value === record.sampler)) el.sampler.value = record.sampler;
     if (record.scheduler && Array.from(el.scheduler.options).some((o) => o.value === record.scheduler)) el.scheduler.value = record.scheduler;
     if (record.model && Array.from(el.model.options).some((o) => o.value === record.model)) el.model.value = record.model;
@@ -583,9 +600,9 @@
     state.applying = false;
     markActiveSize();
     saveValues();
-    if (mode === 'img2vid' && record.source_image) {
+    if (SOURCE_MODES.includes(mode) && record.source_image) {
       api(`/api/gallery/${encodeURIComponent(record.source_image)}/meta`)
-        .then((src) => setSourceGallery(src))
+        .then((src) => setSourceGallery(src, mode))
         .catch(() => toast('Source image not in the gallery', { msg: 'It was an uploaded file; pick it again.' }));
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -687,9 +704,13 @@
     dl.addEventListener('click', (e) => e.stopPropagation());
     actions.appendChild(dl);
     if (record.kind === 'image') {
+      const ti = document.createElement('button');
+      ti.type = 'button'; ti.title = 'Use as source for Image → Image'; ti.textContent = '→🖼';
+      ti.addEventListener('click', (e) => { e.stopPropagation(); setSourceGallery(record, 'img2img'); });
+      actions.appendChild(ti);
       const tv = document.createElement('button');
-      tv.type = 'button'; tv.title = 'Use as video source'; tv.textContent = '→🎞';
-      tv.addEventListener('click', (e) => { e.stopPropagation(); setSourceGallery(record); });
+      tv.type = 'button'; tv.title = 'Use as source for Image → Video'; tv.textContent = '→🎞';
+      tv.addEventListener('click', (e) => { e.stopPropagation(); setSourceGallery(record, 'img2vid'); });
       actions.appendChild(tv);
     }
     const del = document.createElement('button');
@@ -730,7 +751,7 @@
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'history-item';
-      const mode = document.createElement('span'); mode.className = 'h-mode'; mode.textContent = h.mode === 'img2vid' ? 'VID' : 'IMG';
+      const mode = document.createElement('span'); mode.className = 'h-mode'; mode.textContent = MODE_BADGES[h.mode] || 'IMG';
       const text = document.createElement('span'); text.className = 'h-text'; text.textContent = h.prompt || `(no prompt) ${h.file || ''}`;
       const meta = document.createElement('span'); meta.className = 'h-meta'; meta.textContent = [h.width && h.height ? `${h.width}×${h.height}` : '', h.seed != null ? `#${h.seed}` : ''].filter(Boolean).join(' ');
       b.append(mode, text, meta);
@@ -752,6 +773,7 @@
     if (h.style && Array.from(el.style.options).some((o) => o.value === h.style)) el.style.value = h.style;
     const setIf = (input, v) => { if (v !== undefined && v !== null && v !== '') input.value = v; };
     setIf(el.steps, h.steps); setIf(el.cfg, h.cfg); setIf(el.width, h.width); setIf(el.height, h.height); setIf(el.frames, h.frames); setIf(el.fps, h.fps);
+    if (h.strength != null) { el.strength.value = h.strength; updateStrengthLabel(); }
     if (h.sampler && Array.from(el.sampler.options).some((o) => o.value === h.sampler)) el.sampler.value = h.sampler;
     if (h.scheduler && Array.from(el.scheduler.options).some((o) => o.value === h.scheduler)) el.scheduler.value = h.scheduler;
     if (h.model && Array.from(el.model.options).some((o) => o.value === h.model)) el.model.value = h.model;
@@ -811,6 +833,7 @@
   el.refreshModels.addEventListener('click', async () => { el.refreshModels.disabled = true; await loadOptions({ fresh: true }); el.refreshModels.disabled = false; toast('Model list refreshed', { kind: 'ok', timeout: 2500 }); });
   el.form.addEventListener('submit', (e) => { e.preventDefault(); generate(); });
   el.form.addEventListener('input', saveValues);
+  el.strength.addEventListener('input', updateStrengthLabel);
   el.form.addEventListener('change', (e) => { saveValues(); if (e.target === el.width || e.target === el.height) markActiveSize(); });
   el.cancel.addEventListener('click', cancelJob);
   el.seedDice.addEventListener('click', () => { el.seed.value = String(Math.floor(Math.random() * 4294967296)); el.seedLock.checked = true; saveValues(); });
@@ -821,7 +844,7 @@
   document.addEventListener('drop', (e) => {
     e.preventDefault();
     const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-    if (f && f.type.startsWith('image/')) { setSourceFile(f); if (state.mode !== 'img2vid') setMode('img2vid'); }
+    if (f && f.type.startsWith('image/')) { setSourceFile(f); if (!SOURCE_MODES.includes(state.mode)) setMode('img2img'); }
   });
 
   el.dropzone.addEventListener('click', () => el.image.click());
@@ -837,11 +860,12 @@
     if (!file) return;
     e.preventDefault();
     setSourceFile(new File([file], file.name || 'pasted.png', { type: file.type }));
-    if (state.mode !== 'img2vid') setMode('img2vid');
+    if (!SOURCE_MODES.includes(state.mode)) setMode('img2img');
   });
   el.clearSource.addEventListener('click', clearSource);
 
-  el.btnToVideo.addEventListener('click', () => state.current && setSourceGallery(state.current));
+  el.btnToImage.addEventListener('click', () => state.current && setSourceGallery(state.current, 'img2img'));
+  el.btnToVideo.addEventListener('click', () => state.current && setSourceGallery(state.current, 'img2vid'));
   el.btnReuse.addEventListener('click', () => state.current && reuseSettings(state.current));
   el.btnCopy.addEventListener('click', async () => {
     if (!state.current) return;
@@ -877,10 +901,10 @@
       state.gallery.kind = state.prefs.galleryKind;
       el.segBtns.forEach((x) => x.classList.toggle('is-active', x.dataset.kind === state.gallery.kind));
     }
-    const mode = state.prefs.mode === 'img2vid' ? 'img2vid' : 'txt2img';
+    const mode = MODES.includes(state.prefs.mode) ? state.prefs.mode : 'txt2img';
     state.mode = mode;
     el.tabs.forEach((tab) => { const on = tab.dataset.mode === mode; tab.classList.toggle('is-active', on); tab.setAttribute('aria-selected', on ? 'true' : 'false'); });
-    show(el.fieldSource, mode === 'img2vid');
+    show(el.fieldSource, SOURCE_MODES.includes(mode));
     await pollStatus();
     await loadOptions({ quiet: true });
     loadGallery();

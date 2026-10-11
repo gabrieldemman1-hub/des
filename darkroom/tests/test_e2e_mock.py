@@ -180,6 +180,22 @@ def test_img2vid_wan22_14b_two_stage(env):
     assert job["params"]["frames"] == 9 and job["results"][0]["kind"] in ("video", "animation")
 
 
+def test_img2img_from_gallery_with_strength(env):
+    src = env.c.get("/api/gallery?kind=image").json()["items"][0]
+    job = run_job(env.c, mode="img2img", workflow="img2img_checkpoint", prompt="same scene, oil painting", steps="2", strength="0.7", width="768", height="512", source=src["file"])
+    assert job["status"] == "done", job.get("error")
+    p = job["params"]
+    assert p["strength"] == 0.7 and p["source_image"] == src["file"] and p["model"] == "mock_sdxl_v1.safetensors"
+    (rec,) = job["results"]
+    assert rec["kind"] == "image" and rec["mode"] == "img2img" and rec["width"] == 768 and rec["height"] == 512
+    assert env.c.get("/api/history").json()["items"][0]["strength"] == 0.7
+    # strength is clamped, and a source image is required
+    assert run_job(env.c, mode="img2img", workflow="img2img_checkpoint", prompt="x", steps="1", strength="5", source=src["file"])["params"]["strength"] == 1.0
+    assert "source image" in env.c.post("/api/generate", data={"mode": "img2img", "workflow": "img2img_checkpoint", "prompt": "x"}).json()["error"]["message"].lower()
+    # txt2img jobs record no strength
+    assert run_job(env.c, mode="txt2img", workflow="txt2img_checkpoint", prompt="x", steps="1")["params"]["strength"] is None
+
+
 def test_img2vid_from_upload_svd_without_prompt(env):
     job = run_job(env.c, mode="img2vid", workflow="img2vid_svd", prompt="", steps="2", frames="7", fps="6", files={"image": ("my upload.png", png(), "image/png")})
     assert job["status"] == "done", job.get("error")
@@ -352,7 +368,7 @@ def test_offline_comfy_is_explained(offline):
     assert s["online"] is False and "not reachable" in s["error"]["message"] and "Start ComfyUI" in s["error"]["hint"]
     assert "Looked for it at" in s["error"]["hint"]
     o = offline.get("/api/options").json()
-    assert o["online"] is False and len(o["workflows"]) == 6 and o["models"] == {}
+    assert o["online"] is False and len(o["workflows"]) == 7 and o["models"] == {}
     job = run_job(offline, mode="txt2img", workflow="txt2img_checkpoint", prompt="x", steps="1", model="whatever.safetensors")
     assert job["status"] == "error" and "not reachable" in job["error"]["message"]
     r = offline.post("/api/generate", data={"mode": "txt2img", "workflow": "txt2img_checkpoint", "prompt": "x"})

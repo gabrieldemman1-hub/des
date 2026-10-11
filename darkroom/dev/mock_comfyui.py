@@ -49,12 +49,12 @@ CHOICES: dict[tuple[str, str], list[str]] = {
 }
 KNOWN_CLASSES = {
     "CheckpointLoaderSimple", "UNETLoader", "ImageOnlyCheckpointLoader", "CLIPLoader", "VAELoader", "CLIPVisionLoader", "LoadImage",
-    "CLIPTextEncode", "CLIPSetLastLayer", "CLIPVisionEncode", "EmptyLatentImage", "KSampler", "KSamplerAdvanced", "VAEDecode", "SaveImage", "PreviewImage", "ModelSamplingSD3",
+    "CLIPTextEncode", "CLIPSetLastLayer", "CLIPVisionEncode", "EmptyLatentImage", "ImageScale", "VAEEncode", "KSampler", "KSamplerAdvanced", "VAEDecode", "SaveImage", "PreviewImage", "ModelSamplingSD3",
     "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning", "VideoLinearCFGGuidance", "CreateVideo", "SaveVideo",
     "SaveAnimatedWEBP", "SaveAnimatedPNG", "SaveWEBM", "LoraLoader", "LoraLoaderModelOnly",
 }
 ORDER = ["CheckpointLoaderSimple", "UNETLoader", "ImageOnlyCheckpointLoader", "CLIPLoader", "VAELoader", "CLIPVisionLoader", "LoraLoader", "LoraLoaderModelOnly",
-         "LoadImage", "CLIPSetLastLayer", "CLIPTextEncode", "CLIPVisionEncode", "EmptyLatentImage", "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning",
+         "LoadImage", "ImageScale", "VAEEncode", "CLIPSetLastLayer", "CLIPTextEncode", "CLIPVisionEncode", "EmptyLatentImage", "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning",
          "ModelSamplingSD3", "VideoLinearCFGGuidance", "KSampler", "KSamplerAdvanced", "VAEDecode", "CreateVideo", "SaveImage", "PreviewImage", "SaveVideo", "SaveAnimatedWEBP", "SaveAnimatedPNG", "SaveWEBM"]
 
 
@@ -212,7 +212,7 @@ class Mock:
 
     def _size_of(self, prompt: dict[str, Any]) -> tuple[int, int]:
         for n in prompt.values():
-            if n["class_type"] in ("EmptyLatentImage", "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning"):
+            if n["class_type"] in ("EmptyLatentImage", "ImageScale", "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning"):
                 return int(n["inputs"].get("width", 512)), int(n["inputs"].get("height", 512))
         return 512, 512
 
@@ -269,7 +269,9 @@ class Mock:
         w, h = min(w, 1024), min(h, 1024)
         seed = self._seed_of(prompt)
         text = next((str(n["inputs"].get("text", "")) for n in prompt.values() if n["class_type"] == "CLIPTextEncode"), "")
-        img = self._annotate(self._canvas(w, h, seed), ["MOCK ComfyUI", f"seed {seed}  {w}x{h}", text[:60]])
+        source = self._source_image(prompt)
+        base_img = self._canvas(w, h, seed, t=0.5, source=source) if source is not None else self._canvas(w, h, seed)
+        img = self._annotate(base_img, ["MOCK ComfyUI" + (" (img2img)" if source is not None else ""), f"seed {seed}  {w}x{h}", text[:60]])
         base = self.temp if temp else self.output
         name, sub = self._next_name(str(node["inputs"].get("filename_prefix", "ComfyUI")), "png", base)
         img.save(base / sub / name if sub else base / name)

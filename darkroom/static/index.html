@@ -30,6 +30,7 @@
     <section class="panel controls" aria-label="Generation settings">
       <div class="tabs" role="tablist">
         <button type="button" class="tab is-active" role="tab" data-mode="txt2img" aria-selected="true">Text → Image</button>
+        <button type="button" class="tab" role="tab" data-mode="img2img" aria-selected="false">Image → Image</button>
         <button type="button" class="tab" role="tab" data-mode="img2vid" aria-selected="false">Image → Video</button>
       </div>
 
@@ -51,7 +52,7 @@
           <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose a source image">
             <img id="source-preview" class="hidden" alt="Source image preview">
             <div id="dropzone-text" class="dropzone-text">
-              <strong>Drop an image here</strong>, click to browse, paste from the clipboard,<br>or pick one in the gallery below (“→ Video”).
+              <strong>Drop an image here</strong>, click to browse, paste from the clipboard,<br>or pick one in the gallery below (“→ Image” / “→ Video”).
             </div>
             <input type="file" id="image" accept="image/png,image/jpeg,image/webp,image/bmp" hidden>
           </div>
@@ -93,6 +94,11 @@
           <div class="field" id="field-height"><label for="height">Height</label><input type="number" id="height" min="16" max="16384" step="8" inputmode="numeric"></div>
           <div class="field" id="field-frames"><label for="frames">Frames</label><input type="number" id="frames" min="1" max="4096" inputmode="numeric"></div>
           <div class="field" id="field-fps"><label for="fps">FPS</label><input type="number" id="fps" min="1" max="120" inputmode="numeric"></div>
+          <div class="field field--wide" id="field-strength">
+            <label for="strength">Strength <span id="strength-value" class="value">0.55</span></label>
+            <input type="range" id="strength" min="0.1" max="1" step="0.05">
+            <p class="hint">Low keeps the photo and changes style and details; high keeps only the rough composition.</p>
+          </div>
         </div>
         <div id="size-presets" class="chips" aria-label="Size presets"></div>
         <p id="size-help" class="hint"></p>
@@ -136,6 +142,7 @@
         <div class="row row--wrap">
           <a id="btn-download" class="btn btn--primary btn--sm" download>Download</a>
           <a id="btn-open" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">Open full size</a>
+          <button type="button" id="btn-to-image" class="btn btn--ghost btn--sm">→ Image</button>
           <button type="button" id="btn-to-video" class="btn btn--ghost btn--sm">→ Video</button>
           <button type="button" id="btn-reuse" class="btn btn--ghost btn--sm">Reuse settings</button>
           <button type="button" id="btn-copy" class="btn btn--ghost btn--sm">Copy prompt</button>

@@ -27,11 +27,11 @@ VALUES = {"MODEL": "a.safetensors", "SEED": 7, "STEPS": 20, "CFG": 6.5, "PROMPT"
 def test_shipped_templates_load_cleanly():
     templates, problems = load_templates(ROOT / "workflows")
     assert problems == []
-    assert {"txt2img_checkpoint", "txt2img_checkpoint_clipskip2", "img2vid_wan22_5b", "img2vid_wan22_14b", "img2vid_wan21_14b", "img2vid_svd"} <= set(templates)
+    assert {"txt2img_checkpoint", "txt2img_checkpoint_clipskip2", "img2img_checkpoint", "img2vid_wan22_5b", "img2vid_wan22_14b", "img2vid_wan21_14b", "img2vid_svd"} <= set(templates)
     for t in templates.values():
         assert t.tokens() <= set(KNOWN_TOKENS)
         pub = t.to_public()
-        assert "graph" not in pub and pub["mode"] in ("txt2img", "img2vid")
+        assert "graph" not in pub and pub["mode"] in ("txt2img", "img2img", "img2vid")
 
 
 def test_render_replaces_tokens_with_typed_values(tmp_path):
@@ -138,3 +138,12 @@ def test_non_numeric_defaults_rejected(tmp_path):
     bad["_meta"]["defaults"] = {"steps": "twenty"}
     with pytest.raises(TemplateError, match="defaults.steps"):
         load_template(write(tmp_path, "t.json", bad))
+
+
+def test_img2img_template_controls():
+    templates, _ = load_templates(ROOT / "workflows")
+    t = templates["img2img_checkpoint"]
+    assert t.mode == "img2img" and t.controls["strength"] is True and t.controls["model"] is True
+    assert {"IMAGE", "DENOISE", "PROMPT", "MODEL"} <= t.tokens()
+    graph = t.render({"PROMPT": "p", "NEGATIVE": "n", "SEED": 1, "STEPS": 2, "CFG": 3.0, "WIDTH": 512, "HEIGHT": 512, "MODEL": "m", "SAMPLER": "euler", "SCHEDULER": "normal", "IMAGE": "darkroom/x.png", "DENOISE": 0.55, "FILENAME_PREFIX": "darkroom/img2img"})
+    assert graph["3"]["inputs"]["denoise"] == 0.55 and graph["12"]["inputs"]["pixels"] == ["11", 0]

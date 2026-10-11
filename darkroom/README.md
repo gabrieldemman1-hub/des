@@ -79,6 +79,11 @@ actually has), write the prompt and negative prompt, set steps / CFG / size, pre
 **Generate** (or Ctrl/⌘ + Enter). The progress bar follows ComfyUI's sampler; when the job
 is done the image appears in the viewer and in the gallery, already saved to disk.
 
+**Image → Image.** Start from a photo: drop it on the box, paste it, or press **→ Image** on a
+gallery image, write a prompt and set the **Strength** slider (0.3 to 0.5 keeps the photo and
+changes style and details, 0.7 to 0.9 keeps only the rough composition). "⟷ match source" picks a
+size with the photo's aspect ratio; otherwise it is center-cropped.
+
 **Image → Video.** Drop an image on the box, paste one from the clipboard, or press **→ Video**
 on any gallery image, then write a *motion prompt* ("slow push-in, hair moving in the wind").
 Frames and FPS are per preset (Wan 2.2: 121 frames at 24 fps ≈ 5 s). The result plays in the

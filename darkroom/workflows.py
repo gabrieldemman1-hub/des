@@ -31,8 +31,8 @@ TO POINT DARKROOM AT A DIFFERENT WORKFLOW / MODEL
   ``KNOWN_TOKENS`` below), e.g. the KSampler's ``seed`` -> ``"{{SEED}}"``,
   the positive CLIPTextEncode's ``text`` -> ``"{{PROMPT}}"``.
 * Add a ``"_meta"`` block (copy one from an existing template).  Set
-  ``"mode"`` to ``"txt2img"`` or ``"img2vid"`` so it shows up under the right
-  tab.  If the graph loads a model through a node whose choices ComfyUI can
+  ``"mode"`` to ``"txt2img"``, ``"img2img"`` or ``"img2vid"`` so it shows up
+  under the right tab.  If the graph loads a model through a node whose choices ComfyUI can
   list (CheckpointLoaderSimple/ckpt_name, UNETLoader/unet_name, ...), point
   ``"_meta.model"`` at that node class + input and use ``"{{MODEL}}"`` for
   its value; the UI will then offer a live dropdown of installed files.
@@ -66,13 +66,14 @@ KNOWN_TOKENS: dict[str, str] = {
     "MODEL": "Model filename chosen in the Model dropdown (str).",
     "SAMPLER": "KSampler sampler_name (str).",
     "SCHEDULER": "KSampler scheduler (str).",
-    "IMAGE": "Source image for image -> video, as uploaded to ComfyUI's input folder (str).",
+    "IMAGE": "Source image for image -> image / image -> video, as uploaded to ComfyUI's input folder (str).",
+    "DENOISE": "Image -> image strength: KSampler denoise, 0.05-1.0 (float). Low keeps the photo, high follows the prompt.",
     "FRAMES": "Number of video frames (int).",
     "FPS": "Video frames per second (int).",
     "FILENAME_PREFIX": "Prefix ComfyUI uses for its own copy of the output (str).",
 }
 
-MODES = ("txt2img", "img2vid")
+MODES = ("txt2img", "img2img", "img2vid")
 
 # What the form shows by default; a template's _meta.controls can override.
 DEFAULT_CONTROLS = {
@@ -86,6 +87,7 @@ DEFAULT_CONTROLS = {
     "sampler": False,
     "frames": False,
     "fps": False,
+    "strength": False,
 }
 
 DEFAULT_DEFAULTS = {
@@ -97,6 +99,7 @@ DEFAULT_DEFAULTS = {
     "fps": 16,
     "sampler": "euler",
     "scheduler": "normal",
+    "strength": 0.6,
     "negative": "",
     "prompt": "",
 }
@@ -153,6 +156,7 @@ class Template:
             controls["fps"] = False
         if "PROMPT" not in toks:
             controls["prompt"] = False
+        controls["strength"] = "DENOISE" in toks
         return controls
 
     @property
@@ -281,8 +285,8 @@ def _validate(template: Template) -> None:
             f"{p}: placeholder(s) {sorted(loose)} must be written exactly like {{{{SEED}}}}: upper-case, no spaces. "
             f"Known tokens: {sorted(KNOWN_TOKENS)}"
         )
-    if template.mode == "img2vid" and "IMAGE" not in template.tokens():
-        raise TemplateError(f"{p}: an img2vid template must use \"{{{{IMAGE}}}}\" in its LoadImage node")
+    if template.mode in ("img2vid", "img2img") and "IMAGE" not in template.tokens():
+        raise TemplateError(f"{p}: an {template.mode} template must use \"{{{{IMAGE}}}}\" in its LoadImage node")
     sel = template.model_selector  # also validates the shape of _meta.model
     if "MODEL" in template.tokens() and sel is None:
         raise TemplateError(
@@ -297,7 +301,7 @@ def _validate(template: Template) -> None:
             f"{p}: _meta.model points at {sel['node_class']}.{sel['input']} but no such node has \"{{{{MODEL}}}}\" "
             "as that input (copy-pasted _meta from another preset?)"
         )
-    for key in ("steps", "cfg", "width", "height", "frames", "fps"):
+    for key in ("steps", "cfg", "width", "height", "frames", "fps", "strength"):
         val = (template.meta.get("defaults") or {}).get(key)
         if val is not None and not isinstance(val, (int, float)):
             raise TemplateError(f"{p}: _meta.defaults.{key} must be a number, got {val!r}")

@@ -1,0 +1,56 @@
+{
+  "_meta": {
+    "name": "Checkpoint, from a photo (SD 1.5 / SDXL / Pony / Illustrious)",
+    "mode": "img2img",
+    "order": 10,
+    "description": "Image-to-image: your source photo is resized to the chosen size, encoded, and reworked with the prompt. Strength 0.3-0.5 keeps the photo and changes style/details; 0.7-0.9 keeps only the rough composition.",
+    "notes": [
+      "ComfyUI's classic img2img graph in API format: LoadImage -> ImageScale (to width x height, center crop) -> VAEEncode -> KSampler with denoise = {{DENOISE}} (the Strength slider).",
+      "Use the '⟷ match source' size chip to keep the photo's aspect ratio; otherwise it is center-cropped to the size you set.",
+      "Pony V6 checkpoints want CLIP skip 2: insert a CLIPSetLastLayer node as in txt2img_checkpoint_clipskip2.json.",
+      "For inpainting or ControlNet, export your own ComfyUI workflow (API) and tokenise it the same way; keep {{IMAGE}} on the LoadImage node and \"mode\": \"img2img\"."
+    ],
+    "requires": [
+      "ComfyUI/models/checkpoints/<any SD1.5, SDXL, Pony or Illustrious checkpoint>.safetensors"
+    ],
+    "model": { "node_class": "CheckpointLoaderSimple", "input": "ckpt_name" },
+    "sampler": { "node_class": "KSampler" },
+    "controls": { "sampler": true },
+    "defaults": {
+      "steps": 28,
+      "cfg": 6.0,
+      "width": 1024,
+      "height": 1024,
+      "strength": 0.55,
+      "sampler": "dpmpp_2m",
+      "scheduler": "karras",
+      "negative": "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, jpeg artifacts, signature, watermark, blurry"
+    },
+    "constraints": { "size_step": 8, "size_min": 256, "size_max": 2048 },
+    "sizes": [[1024, 1024], [832, 1216], [1216, 832], [896, 1152], [1152, 896], [768, 768], [512, 768]]
+  },
+
+  "4": { "class_type": "CheckpointLoaderSimple", "inputs": { "ckpt_name": "{{MODEL}}" } },
+  "10": { "class_type": "LoadImage", "inputs": { "image": "{{IMAGE}}" } },
+  "11": { "class_type": "ImageScale", "inputs": { "image": ["10", 0], "upscale_method": "lanczos", "width": "{{WIDTH}}", "height": "{{HEIGHT}}", "crop": "center" } },
+  "12": { "class_type": "VAEEncode", "inputs": { "pixels": ["11", 0], "vae": ["4", 2] } },
+  "6": { "class_type": "CLIPTextEncode", "inputs": { "text": "{{PROMPT}}", "clip": ["4", 1] } },
+  "7": { "class_type": "CLIPTextEncode", "inputs": { "text": "{{NEGATIVE}}", "clip": ["4", 1] } },
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": "{{SEED}}",
+      "steps": "{{STEPS}}",
+      "cfg": "{{CFG}}",
+      "sampler_name": "{{SAMPLER}}",
+      "scheduler": "{{SCHEDULER}}",
+      "denoise": "{{DENOISE}}",
+      "model": ["4", 0],
+      "positive": ["6", 0],
+      "negative": ["7", 0],
+      "latent_image": ["12", 0]
+    }
+  },
+  "8": { "class_type": "VAEDecode", "inputs": { "samples": ["3", 0], "vae": ["4", 2] } },
+  "9": { "class_type": "SaveImage", "inputs": { "filename_prefix": "{{FILENAME_PREFIX}}", "images": ["8", 0] } }
+}
