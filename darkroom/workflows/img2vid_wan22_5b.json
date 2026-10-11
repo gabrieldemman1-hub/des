@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "name": "Wan 2.2 5B (image + motion prompt, 24 fps)",
+    "mode": "img2vid",
+    "order": 10,
+    "description": "Wan 2.2 TI2V-5B: the lightest current model that animates an image AND follows a text motion prompt. ~5 s clips at 24 fps, fits in ~8-12 GB VRAM with fp16 weights. Output is an .mp4.",
+    "notes": [
+      "Official ComfyUI Wan 2.2 5B image-to-video graph in API format. The Model dropdown lists ComfyUI/models/diffusion_models (UNETLoader).",
+      "Model files (from the ComfyUI Wan 2.2 docs): wan2.2_ti2v_5B_fp16.safetensors -> models/diffusion_models; umt5_xxl_fp8_e4m3fn_scaled.safetensors -> models/text_encoders; wan2.2_vae.safetensors -> models/vae.",
+      "Width/height must be multiples of 32 for this VAE; frames must be 4n+1 (121 = 5 s at 24 fps). Darkroom snaps your values automatically.",
+      "Low VRAM: reduce to 832x480 and 49-81 frames first; steps 20 is already the official default.",
+      "If your ComfyUI is older and lacks CreateVideo/SaveVideo, replace nodes 11+12 with a single SaveAnimatedWEBP node (see img2vid_svd.json for the shape) or update ComfyUI."
+    ],
+    "requires": [
+      "ComfyUI/models/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors",
+      "ComfyUI/models/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "ComfyUI/models/vae/wan2.2_vae.safetensors"
+    ],
+    "model": { "node_class": "UNETLoader", "input": "unet_name", "default": "wan2.2_ti2v_5B_fp16.safetensors" },
+    "sampler": { "node_class": "KSampler" },
+    "controls": { "frames": true, "fps": true, "sampler": false },
+    "defaults": {
+      "steps": 20,
+      "cfg": 5.0,
+      "width": 1280,
+      "height": 704,
+      "frames": 121,
+      "fps": 24,
+      "sampler": "uni_pc",
+      "scheduler": "simple",
+      "negative": "overexposed, static, blurred details, subtitles, style, artwork, painting, still image, overall gray, worst quality, low quality, jpeg artifacts, ugly, mutilated, extra fingers, poorly drawn hands, poorly drawn face, deformed, disfigured, malformed limbs, fused fingers, motionless, cluttered background, three legs, many people in the background, walking backwards"
+    },
+    "constraints": { "size_step": 32, "size_min": 256, "size_max": 1920, "frames_rule": "4n+1", "frames_min": 5, "frames_max": 241 },
+    "sizes": [[1280, 704], [704, 1280], [832, 480], [480, 832], [960, 544], [544, 960]]
+  },
+
+  "1": { "class_type": "UNETLoader", "inputs": { "unet_name": "{{MODEL}}", "weight_dtype": "default" } },
+  "2": { "class_type": "CLIPLoader", "inputs": { "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors", "type": "wan" } },
+  "3": { "class_type": "VAELoader", "inputs": { "vae_name": "wan2.2_vae.safetensors" } },
+  "4": { "class_type": "LoadImage", "inputs": { "image": "{{IMAGE}}" } },
+  "5": { "class_type": "CLIPTextEncode", "inputs": { "text": "{{PROMPT}}", "clip": ["2", 0] } },
+  "6": { "class_type": "CLIPTextEncode", "inputs": { "text": "{{NEGATIVE}}", "clip": ["2", 0] } },
+  "7": {
+    "class_type": "Wan22ImageToVideoLatent",
+    "inputs": { "vae": ["3", 0], "width": "{{WIDTH}}", "height": "{{HEIGHT}}", "length": "{{FRAMES}}", "batch_size": 1, "start_image": ["4", 0] }
+  },
+  "8": { "class_type": "ModelSamplingSD3", "inputs": { "model": ["1", 0], "shift": 8.0 } },
+  "9": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": "{{SEED}}",
+      "steps": "{{STEPS}}",
+      "cfg": "{{CFG}}",
+      "sampler_name": "{{SAMPLER}}",
+      "scheduler": "{{SCHEDULER}}",
+      "denoise": 1.0,
+      "model": ["8", 0],
+      "positive": ["5", 0],
+      "negative": ["6", 0],
+      "latent_image": ["7", 0]
+    }
+  },
+  "10": { "class_type": "VAEDecode", "inputs": { "samples": ["9", 0], "vae": ["3", 0] } },
+  "11": { "class_type": "CreateVideo", "inputs": { "images": ["10", 0], "fps": "{{FPS}}" } },
+  "12": { "class_type": "SaveVideo", "inputs": { "video": ["11", 0], "filename_prefix": "{{FILENAME_PREFIX}}", "format": "mp4", "codec": "h264" } }
+}

@@ -1,0 +1,163 @@
+{
+  "_meta": {
+    "name": "Stable Video Diffusion XT (no prompt, low VRAM)",
+    "mode": "img2vid",
+    "order": 30,
+    "description": "SVD-XT animates the image on its own: there is NO motion prompt, you only steer it with motion_bucket_id in the template. 25 frames at 1024x576, runs in ~8-10 GB VRAM. Output is an animated .webp (no extra ComfyUI dependencies). FPS here is the playback speed of the file.",
+    "notes": [
+      "Official ComfyUI SVD example in API format. Prompt/negative boxes are hidden because this model has no text input.",
+      "Model file: svd_xt.safetensors (25 frames, stabilityai/stable-video-diffusion-img2vid-xt, not gated) -> ComfyUI/models/checkpoints. svd_xt_1_1.safetensors is the same architecture (gated download); svd.safetensors is the 14-frame variant: set frames to 14 for it.",
+      "The conditioning fps inside node 3 stays at 6 (what SVD-XT was trained with); the FPS box only sets the playback speed of the saved .webp (official example: 10).",
+      "More motion: raise motion_bucket_id in node 3 (default 127, try 180). Less flicker: lower it. augmentation_level adds noise to the input (0.0-0.2 = less faithful, more motion).",
+      "This preset shows the SaveAnimatedWEBP output route. Swap node 7 for CreateVideo + SaveVideo (see the Wan presets) to get .mp4 instead."
+    ],
+    "requires": [
+      "ComfyUI/models/checkpoints/svd_xt.safetensors (or svd_xt_1_1.safetensors / svd.safetensors)"
+    ],
+    "model": {
+      "node_class": "ImageOnlyCheckpointLoader",
+      "input": "ckpt_name",
+      "default": "svd_xt.safetensors"
+    },
+    "sampler": {
+      "node_class": "KSampler"
+    },
+    "controls": {
+      "prompt": false,
+      "negative": false,
+      "frames": true,
+      "fps": true,
+      "sampler": false
+    },
+    "defaults": {
+      "steps": 20,
+      "cfg": 2.5,
+      "width": 1024,
+      "height": 576,
+      "frames": 25,
+      "fps": 10,
+      "sampler": "euler",
+      "scheduler": "karras"
+    },
+    "constraints": {
+      "size_step": 8,
+      "size_min": 256,
+      "size_max": 1024,
+      "frames_min": 2,
+      "frames_max": 50
+    },
+    "sizes": [
+      [
+        1024,
+        576
+      ],
+      [
+        576,
+        1024
+      ],
+      [
+        768,
+        768
+      ]
+    ]
+  },
+  "1": {
+    "class_type": "ImageOnlyCheckpointLoader",
+    "inputs": {
+      "ckpt_name": "{{MODEL}}"
+    }
+  },
+  "2": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "{{IMAGE}}"
+    }
+  },
+  "3": {
+    "class_type": "SVD_img2vid_Conditioning",
+    "inputs": {
+      "clip_vision": [
+        "1",
+        1
+      ],
+      "init_image": [
+        "2",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ],
+      "width": "{{WIDTH}}",
+      "height": "{{HEIGHT}}",
+      "video_frames": "{{FRAMES}}",
+      "motion_bucket_id": 127,
+      "fps": 6,
+      "augmentation_level": 0.0
+    }
+  },
+  "4": {
+    "class_type": "VideoLinearCFGGuidance",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "min_cfg": 1.0
+    }
+  },
+  "5": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": "{{SEED}}",
+      "steps": "{{STEPS}}",
+      "cfg": "{{CFG}}",
+      "sampler_name": "{{SAMPLER}}",
+      "scheduler": "{{SCHEDULER}}",
+      "denoise": 1.0,
+      "model": [
+        "4",
+        0
+      ],
+      "positive": [
+        "3",
+        0
+      ],
+      "negative": [
+        "3",
+        1
+      ],
+      "latent_image": [
+        "3",
+        2
+      ]
+    }
+  },
+  "6": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "5",
+        0
+      ],
+      "vae": [
+        "1",
+        2
+      ]
+    }
+  },
+  "7": {
+    "class_type": "SaveAnimatedWEBP",
+    "inputs": {
+      "images": [
+        "6",
+        0
+      ],
+      "filename_prefix": "{{FILENAME_PREFIX}}",
+      "fps": "{{FPS}}",
+      "lossless": false,
+      "quality": 90,
+      "method": "default"
+    }
+  }
+}

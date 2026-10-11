@@ -1,0 +1,7 @@
+# Your generations stay on your machine.
+outputs/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
