@@ -1,0 +1,38 @@
+[
+  { "id": "none", "name": "None (prompt as written)", "prompt": "{prompt}", "negative": "{negative}" },
+  {
+    "id": "photoreal",
+    "name": "Photoreal",
+    "description": "RAW-photo look: natural skin, soft light, shallow depth of field.",
+    "prompt": "{prompt}, photorealistic, RAW photo, natural skin texture, detailed, soft natural light, 85mm lens, shallow depth of field",
+    "negative": "{negative}, cartoon, anime, 3d render, illustration, painting, plastic skin, airbrushed"
+  },
+  {
+    "id": "cinematic",
+    "name": "Cinematic",
+    "description": "Film still: dramatic lighting, grain, color grade.",
+    "prompt": "{prompt}, cinematic still, dramatic lighting, film grain, anamorphic, color graded, high detail",
+    "negative": "{negative}, flat lighting, oversaturated, cartoon"
+  },
+  {
+    "id": "glamour",
+    "name": "Soft glamour",
+    "description": "Warm, soft, boudoir-style lighting.",
+    "prompt": "{prompt}, soft lighting, glamour photography, warm tones, smooth skin, bokeh, elegant",
+    "negative": "{negative}, harsh shadows, noisy, grainy, lowres"
+  },
+  {
+    "id": "noir",
+    "name": "Low-key noir",
+    "description": "High-contrast black and white, moody.",
+    "prompt": "{prompt}, low-key lighting, chiaroscuro, black and white, high contrast, film noir, moody",
+    "negative": "{negative}, flat, bright, oversaturated"
+  },
+  {
+    "id": "anime",
+    "name": "Anime / Illustrious",
+    "description": "Quality tags for Illustrious / NoobAI / Pony style checkpoints.",
+    "prompt": "masterpiece, best quality, very aesthetic, absurdres, {prompt}",
+    "negative": "{negative}, lowres, worst quality, bad quality, sketch, monochrome"
+  }
+]

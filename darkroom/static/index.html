@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Privacy: the browser may only talk to this server. No fonts, scripts, images or
+       requests from anywhere else can load, even by accident. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; style-src 'self'; script-src 'self'; form-action 'self'; base-uri 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Darkroom</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><img src="/static/icon.svg" alt="" width="26" height="26"><span>Darkroom</span></div>
+    <div id="conn" class="conn conn--checking" title="ComfyUI connection"><span class="dot"></span><span id="conn-text">Checking ComfyUI…</span></div>
+  </header>
+
+  <div id="offline-banner" class="banner hidden" role="alert">
+    <strong>ComfyUI is not running.</strong>
+    <span id="offline-detail">Start ComfyUI, wait for <code>To see the GUI go to: http://127.0.0.1:8188</code>, and this banner will disappear by itself.</span>
+  </div>
+  <div id="template-problems" class="banner banner--warn hidden" role="alert"></div>
+
+  <main class="layout">
+    <!-- ───────────── controls ───────────── -->
+    <section class="panel controls" aria-label="Generation settings">
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab is-active" role="tab" data-mode="txt2img" aria-selected="true">Text → Image</button>
+        <button type="button" class="tab" role="tab" data-mode="img2vid" aria-selected="false">Image → Video</button>
+      </div>
+
+      <form id="gen-form" autocomplete="off" novalidate>
+        <div class="field">
+          <label for="workflow">Workflow</label>
+          <select id="workflow"></select>
+          <p id="wf-desc" class="hint"></p>
+        </div>
+
+        <div class="field" id="field-model">
+          <label for="model">Model <button type="button" id="refresh-models" class="icon-btn" title="Re-read model folders from ComfyUI" aria-label="Refresh model list">↻</button></label>
+          <select id="model"></select>
+          <p id="model-hint" class="hint hidden"></p>
+        </div>
+
+        <div class="field" id="field-source">
+          <label>Source image</label>
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Choose a source image">
+            <img id="source-preview" class="hidden" alt="Source image preview">
+            <div id="dropzone-text" class="dropzone-text">
+              <strong>Drop an image here</strong>, click to browse, paste from the clipboard,<br>or pick one in the gallery below (“→ Video”).
+            </div>
+            <input type="file" id="image" accept="image/png,image/jpeg,image/webp,image/bmp" hidden>
+          </div>
+          <div class="row row--between">
+            <span id="source-name" class="hint"></span>
+            <button type="button" id="clear-source" class="btn btn--ghost btn--sm hidden">Remove</button>
+          </div>
+        </div>
+
+        <div class="field" id="field-prompt">
+          <label for="prompt" id="prompt-label">Prompt</label>
+          <textarea id="prompt" rows="4" placeholder="Describe the image you want…" spellcheck="false"></textarea>
+        </div>
+        <p id="no-prompt-note" class="hint hidden">This workflow has no text input: it animates the source image on its own.</p>
+
+        <div class="field" id="field-negative">
+          <label for="negative">Negative prompt</label>
+          <textarea id="negative" rows="2" placeholder="What to avoid…" spellcheck="false"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="style">Style</label>
+          <select id="style"></select>
+        </div>
+
+        <div class="params">
+          <div class="field" id="field-steps"><label for="steps">Steps</label><input type="number" id="steps" min="1" max="500" inputmode="numeric"></div>
+          <div class="field" id="field-cfg"><label for="cfg">CFG</label><input type="number" id="cfg" min="0" max="100" step="0.5" inputmode="decimal"></div>
+          <div class="field field--wide" id="field-seed">
+            <label for="seed">Seed</label>
+            <div class="seed-row">
+              <input type="text" id="seed" inputmode="numeric" placeholder="random" aria-describedby="seed-help">
+              <button type="button" id="seed-dice" class="icon-btn" title="Pick a new random seed now">🎲</button>
+              <label class="check" title="Keep this exact seed for the next generations"><input type="checkbox" id="seed-lock"> Fixed</label>
+            </div>
+          </div>
+          <div class="field" id="field-width"><label for="width">Width</label><input type="number" id="width" min="16" max="16384" step="8" inputmode="numeric"></div>
+          <div class="field" id="field-height"><label for="height">Height</label><input type="number" id="height" min="16" max="16384" step="8" inputmode="numeric"></div>
+          <div class="field" id="field-frames"><label for="frames">Frames</label><input type="number" id="frames" min="1" max="4096" inputmode="numeric"></div>
+          <div class="field" id="field-fps"><label for="fps">FPS</label><input type="number" id="fps" min="1" max="120" inputmode="numeric"></div>
+        </div>
+        <div id="size-presets" class="chips" aria-label="Size presets"></div>
+        <p id="size-help" class="hint"></p>
+
+        <details id="advanced" class="advanced">
+          <summary>Advanced</summary>
+          <div class="params">
+            <div class="field"><label for="sampler">Sampler</label><select id="sampler"></select></div>
+            <div class="field"><label for="scheduler">Scheduler</label><select id="scheduler"></select></div>
+          </div>
+          <p class="hint">The sampler and scheduler are passed to the KSampler node when the workflow uses the <code>{{SAMPLER}}</code> / <code>{{SCHEDULER}}</code> tokens. Everything else (LoRAs, shift, denoise…) lives in the workflow JSON.</p>
+        </details>
+
+        <div class="actions">
+          <button type="submit" id="generate" class="btn btn--primary">Generate</button>
+          <button type="button" id="cancel" class="btn btn--danger hidden">Cancel</button>
+        </div>
+        <p class="hint hint--kbd">Ctrl/⌘ + Enter generates.</p>
+
+        <div id="status" class="status hidden" aria-live="polite">
+          <div class="bar"><div id="bar-fill" class="bar-fill"></div></div>
+          <div class="status-text"><span id="status-label">Queued</span><span id="status-detail"></span></div>
+        </div>
+      </form>
+    </section>
+
+    <!-- ───────────── result ───────────── -->
+    <section class="panel result" aria-label="Result">
+      <div id="viewer" class="viewer">
+        <div id="viewer-empty" class="viewer-empty">
+          <div class="viewer-empty-icon">◐</div>
+          <p>Your result shows up here.</p>
+        </div>
+        <img id="live-preview" class="hidden" alt="Live preview from ComfyUI">
+        <img id="result-img" class="hidden" alt="Generated image">
+        <video id="result-video" class="hidden" controls loop playsinline preload="metadata"></video>
+      </div>
+      <div id="result-meta" class="meta hidden">
+        <p id="result-prompt" class="meta-prompt"></p>
+        <div id="result-chips" class="chips chips--meta"></div>
+        <div class="row row--wrap">
+          <a id="btn-download" class="btn btn--primary btn--sm" download>Download</a>
+          <a id="btn-open" class="btn btn--ghost btn--sm" target="_blank" rel="noopener">Open full size</a>
+          <button type="button" id="btn-to-video" class="btn btn--ghost btn--sm">→ Video</button>
+          <button type="button" id="btn-reuse" class="btn btn--ghost btn--sm">Reuse settings</button>
+          <button type="button" id="btn-copy" class="btn btn--ghost btn--sm">Copy prompt</button>
+          <button type="button" id="btn-delete" class="btn btn--ghost btn--sm btn--danger-text">Delete</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── gallery ───────────── -->
+    <section class="panel gallery" aria-label="Gallery">
+      <header class="panel-head">
+        <h2>Gallery <span id="gallery-count" class="count"></span></h2>
+        <div class="row">
+          <div class="seg" role="group" aria-label="Filter">
+            <button type="button" class="seg-btn is-active" data-kind="">All</button>
+            <button type="button" class="seg-btn" data-kind="image">Images</button>
+            <button type="button" class="seg-btn" data-kind="video">Videos</button>
+          </div>
+          <button type="button" id="gallery-refresh" class="icon-btn" title="Refresh gallery" aria-label="Refresh gallery">↻</button>
+        </div>
+      </header>
+      <div id="gallery-grid" class="thumbs"></div>
+      <p id="gallery-empty" class="hint hidden">Nothing yet. Everything you generate is saved here automatically.</p>
+      <div class="row row--center"><button type="button" id="gallery-more" class="btn btn--ghost btn--sm hidden">Load more</button></div>
+      <p class="hint">Files live in <code id="outputs-dir">./outputs</code> next to a <code>.json</code> with the full settings.</p>
+    </section>
+
+    <!-- ───────────── history ───────────── -->
+    <section class="panel history" aria-label="Recent prompts">
+      <header class="panel-head">
+        <h2>Recent prompts</h2>
+        <button type="button" id="history-clear" class="btn btn--ghost btn--sm">Clear</button>
+      </header>
+      <ul id="history-list" class="history-list"></ul>
+      <p id="history-empty" class="hint">The last 20 prompts will be listed here. Click one to load it.</p>
+    </section>
+  </main>
+
+  <div id="toasts" class="toasts" aria-live="assertive"></div>
+  <template id="toast-tpl"><div class="toast"><div class="toast-body"><strong class="toast-title"></strong><div class="toast-msg"></div><div class="toast-hint"></div></div><button type="button" class="toast-close" aria-label="Dismiss">×</button></div></template>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
