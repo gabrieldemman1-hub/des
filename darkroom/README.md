@@ -20,7 +20,9 @@ make, and swappable workflow presets. Everything runs on your machine; nothing l
   For video, the Wan 2.2 5B files (see [workflows/README.md](workflows/README.md)).
   Pony-family checkpoints: use the "CLIP skip 2" preset and the "Pony score tags" style.
 * **Python 3.10 or newer** for Darkroom itself (any Python; it does not need to be ComfyUI's).
-  On Windows, tick "Add python.exe to PATH" in the python.org installer.
+  3.11 to 3.14 are the safe choices. On Windows, tick "Add python.exe to PATH" in the python.org
+  installer. If pip ever says *Building wheel for … did not run successfully*, your Python is
+  newer than a library supports: install Python 3.13, delete `.venv`, and run again.
 
 Darkroom's own dependencies, all local libraries ([requirements.txt](requirements.txt)):
 `fastapi`, `uvicorn`, `httpx`, `websockets`, `python-multipart`, `pillow`.
