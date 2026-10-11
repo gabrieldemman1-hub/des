@@ -91,7 +91,7 @@ code { font-family: var(--mono); font-size: 0.86em; background: var(--panel-3); 
 
 /* ---- form ----------------------------------------------------------------- */
 .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; min-width: 0; }
-.field > label, .field > legend { font-size: 12.5px; font-weight: 600; color: var(--muted); letter-spacing: 0.3px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.field > label, .field > legend, .label-row > label { font-size: 12.5px; font-weight: 600; color: var(--muted); letter-spacing: 0.3px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
 input[type="text"], input[type="number"], select, textarea {
   width: 100%; font: inherit; color: var(--text); background: var(--panel-2); border: 1px solid var(--border); border-radius: var(--radius-sm);
   padding: 10px 12px; min-height: 44px; transition: border-color 0.15s;
@@ -222,3 +222,23 @@ input[type="range"] { width: 100%; min-height: 32px; padding: 0; border: 0; back
 .toast-msg { white-space: pre-wrap; word-break: break-word; max-height: 160px; overflow: auto; }
 .toast-hint { color: var(--muted); font-size: 13px; margin-top: 4px; }
 .toast-close { appearance: none; border: 0; background: transparent; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; padding: 0 2px; }
+
+/* ---- prompt expander ---- */
+.label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.label-row > label { margin: 0; }
+.prompt-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-height: 0; }
+.prompt-tools:empty { display: none; }
+.prompt-tools .check { font-size: 12.5px; }
+.prompt-tools .hint { flex: 1 1 100%; }
+.muted { color: var(--muted); font-weight: normal; }
+#expand.is-busy { opacity: .6; pointer-events: none; }
+
+/* ---- cloud engine ---- */
+.tab--cloud { color: var(--cloud, #e0b25a); }
+.cloud-banner { border: 1px solid rgba(224, 178, 90, 0.45); background: rgba(224, 178, 90, 0.08); color: var(--text); border-radius: 10px; padding: 10px 12px; margin: 0 0 14px; font-size: 13px; line-height: 1.45; display: grid; gap: 8px; }
+.cloud-banner b { color: #e9c67a; }
+.cloud-estimate { color: #e9c67a; font-weight: 600; }
+.chips--checks { gap: 14px; }
+#generate.is-cloud { background: linear-gradient(135deg, #c98a2b, #e0b25a); color: #1b1408; }
+.badge--cloud { left: auto; right: 6px; background: rgba(224, 178, 90, 0.9); color: #1b1408; }
+.field > label.check { text-transform: none; font-weight: 500; letter-spacing: 0; }

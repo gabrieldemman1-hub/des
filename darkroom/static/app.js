@@ -8,10 +8,13 @@
   const SESSION_KEY = 'darkroom.session.v1';  // sessionStorage: prompt text + seed, gone when the browser closes
   const VALUE_FIELDS = ['prompt', 'negative', 'steps', 'cfg', 'width', 'height', 'frames', 'fps', 'strength', 'sampler', 'scheduler', 'model', 'style'];
   const SETTING_FIELDS = ['steps', 'cfg', 'width', 'height', 'frames', 'fps', 'strength', 'sampler', 'scheduler', 'model', 'style'];
-  const MODES = ['txt2img', 'img2img', 'img2vid'];
+  const CLOUD_SELECTS = ['cloudModel', 'duration', 'resolution', 'aspect', 'frameModel', 'frameSize'];   // value inputs
+  const CLOUD_CHECKS = ['durationAuto', 'audio', 'fps60', 'enhance'];                                   // checkboxes
+  const CLOUD_FORM = { cloudModel: 'cloud_model', duration: 'duration', resolution: 'resolution', aspect: 'aspect', frameModel: 'frame_model', frameSize: 'frame_size', audio: 'audio', fps60: 'fps60', enhance: 'enhance' };
+  const MODES = ['txt2img', 'img2img', 'img2vid', 'cloudvid'];
   const SOURCE_MODES = ['img2img', 'img2vid'];
-  const MODE_NAMES = { txt2img: 'text-to-image', img2img: 'image-to-image', img2vid: 'image-to-video' };
-  const MODE_BADGES = { txt2img: 'IMG', img2img: 'I2I', img2vid: 'VID' };
+  const MODE_NAMES = { txt2img: 'text-to-image', img2img: 'image-to-image', img2vid: 'image-to-video', cloudvid: 'cloud video' };
+  const MODE_BADGES = { txt2img: 'IMG', img2img: 'I2I', img2vid: 'VID', cloudvid: '☁' };
 
   const el = {
     conn: $('#conn'), connText: $('#conn-text'), offline: $('#offline-banner'), offlineDetail: $('#offline-detail'), templateProblems: $('#template-problems'),
@@ -19,6 +22,11 @@
     fieldModel: $('#field-model'), model: $('#model'), modelHint: $('#model-hint'), refreshModels: $('#refresh-models'),
     fieldSource: $('#field-source'), dropzone: $('#dropzone'), sourcePreview: $('#source-preview'), image: $('#image'), sourceName: $('#source-name'), clearSource: $('#clear-source'),
     fieldPrompt: $('#field-prompt'), prompt: $('#prompt'), promptLabel: $('#prompt-label'), noPromptNote: $('#no-prompt-note'),
+    expand: $('#expand'), expandUndo: $('#expand-undo'), expandLlmWrap: $('#expand-llm-wrap'), expandLlm: $('#expand-llm'), expandLlmName: $('#expand-llm-name'), expandNote: $('#expand-note'),
+    tabCloud: $('#tab-cloud'), cloudBanner: $('#cloud-banner'), cloudAccount: $('#cloud-account'), cloudAccountRefresh: $('#cloud-account-refresh'),
+    cloudFrame: $('#cloud-frame'), framePrompt: $('#frame-prompt'), expandFrame: $('#expand-frame'), frameModel: $('#frame-model'), frameSize: $('#frame-size'),
+    cloudVideo: $('#cloud-video'), cloudModel: $('#cloud-model'), duration: $('#duration'), durationAuto: $('#duration-auto'), resolution: $('#resolution'), fieldAspect: $('#field-aspect'), aspect: $('#aspect'),
+    audio: $('#audio'), fps60: $('#fps60'), enhance: $('#enhance'), cloudEstimate: $('#cloud-estimate'),
     fieldNegative: $('#field-negative'), negative: $('#negative'), style: $('#style'),
     steps: $('#steps'), cfg: $('#cfg'), seed: $('#seed'), seedDice: $('#seed-dice'), seedLock: $('#seed-lock'), width: $('#width'), height: $('#height'), frames: $('#frames'), fps: $('#fps'),
     strength: $('#strength'), strengthValue: $('#strength-value'),
@@ -49,6 +57,10 @@
     session: loadSession(),
     applying: false,
     submitting: false,
+    director: null,       // from /api/status: which prompt expanders are available
+    promptBefore: null,   // the text replaced by the last "Expand", for Undo
+    cloud: null,          // from /api/options: prices and choices when a SpicyAPI key is configured
+    cloudAccount: null,   // balance etc., fetched when the Cloud tab is opened
   };
 
   // ---- small helpers ----------------------------------------------------------
@@ -136,6 +148,19 @@
     }
     const styles = state.options.styles || [];
     fillSelect(el.style, styles.map((s) => s.id), el.style.value || (state.prefs.style || 'none'), { labels: (id) => (styles.find((s) => s.id === id) || {}).name || id });
+    state.cloud = state.options.cloud && state.options.cloud.configured ? state.options.cloud : null;
+    show(el.tabCloud, !!state.cloud);
+    if (state.cloud) {
+      const c = state.cloud;
+      fillSelect(el.cloudModel, c.video_models.map((m) => m.id), el.cloudModel.value || 'spicy-motion-3', { labels: (id) => { const m = c.video_models.find((x) => x.id === id); return `${m.label} · $${m.usd_per_second['720P'].toFixed(2)}/s at 720P`; } });
+      fillSelect(el.frameModel, c.frame_models.map((m) => m.id), el.frameModel.value || 'spicy-image-1', { labels: (id) => { const m = c.frame_models.find((x) => x.id === id); return `${m.label} · $${m.usd.toFixed(2)}`; } });
+      fillSelect(el.frameSize, c.frame_sizes, el.frameSize.value || '832*1216', { labels: (s) => s.replace('*', '×') });
+      fillSelect(el.resolution, c.resolutions, el.resolution.value || '720P');
+      fillSelect(el.aspect, [''].concat(c.aspect_ratios), el.aspect.value || '', { labels: (a) => a || 'auto (model picks)' });
+      el.duration.min = c.duration.min; el.duration.max = c.duration.max;
+    } else if (state.mode === 'cloudvid') {
+      setMode('txt2img');
+    }
     const problems = state.options.template_problems || [];
     el.templateProblems.textContent = problems.length ? 'Some workflow files were skipped:\n' + problems.join('\n') : '';
     show(el.templateProblems, problems.length > 0);
@@ -168,6 +193,9 @@
     const saved = { ...(((state.prefs.values || {})[t.id]) || {}), ...(((state.session.texts || {})[t.id]) || {}) };
 
     el.wfDesc.textContent = t.description || '';
+    state.promptBefore = null;
+    show(el.expandUndo, false);
+    show(el.expandNote, false);
     show(el.fieldPrompt, c.prompt);
     show(el.noPromptNote, !c.prompt);
     show(el.fieldNegative, c.negative);
@@ -181,9 +209,16 @@
     show(el.fields.strength, c.strength);
     show(el.advanced, c.sampler);
     show(el.fieldModel, c.model && !!t.model);
+    const cloud = t.engine === 'spicy';
+    const frameKind = cloud && t.cloud && t.cloud.kind === 'frame';
+    show(el.cloudFrame, frameKind);
+    show(el.cloudVideo, cloud);
+    show(el.fieldAspect, cloud && !frameKind);
+    el.generate.classList.toggle('is-cloud', cloud);
 
-    el.promptLabel.textContent = state.mode === 'img2vid' ? 'Motion prompt' : 'Prompt';
-    el.prompt.placeholder = state.mode === 'img2vid' ? 'Describe the motion: camera, movement, mood…'
+    el.promptLabel.textContent = state.mode === 'img2vid' || cloud ? 'Motion prompt' : 'Prompt';
+    el.prompt.placeholder = cloud ? (frameKind ? 'What happens in the clip: motion, camera, pacing, any spoken line in quotes…' : 'The whole clip: who, where, what happens, camera, light, sound…')
+      : state.mode === 'img2vid' ? 'Describe the motion: camera, movement, mood…'
       : state.mode === 'img2img' ? 'Describe the result; the photo sets the composition…' : 'Describe the image you want…';
 
     const step = cons.size_step || 8;
@@ -213,6 +248,15 @@
     if (saved.seed !== undefined) el.seed.value = saved.seed;
     el.seedLock.checked = !!saved.seedLock;
     if (saved.style && Array.from(el.style.options).some((o) => o.value === saved.style)) el.style.value = saved.style;
+    if (cloud) {
+      const cv = saved.cloud || {};
+      const defaults = { cloudModel: d.cloud_model, duration: d.duration, resolution: d.resolution, aspect: d.aspect, frameModel: d.frame_model, frameSize: d.frame_size, durationAuto: false, audio: d.audio !== false, fps60: !!d.fps60, enhance: !!d.enhance };
+      for (const k of CLOUD_SELECTS) { const v = cv[k] !== undefined ? cv[k] : defaults[k]; if (v !== undefined && v !== null) el[k].value = v; }
+      for (const k of CLOUD_CHECKS) el[k].checked = cv[k] !== undefined ? !!cv[k] : !!defaults[k];
+      el.framePrompt.value = saved.frame_prompt !== undefined ? saved.frame_prompt : (d.frame_prompt || '');
+      el.duration.disabled = el.durationAuto.checked;
+      updateEstimate();
+    }
 
     // Model dropdown: live list from ComfyUI for the node this preset loads its model with.
     if (t.model) {
@@ -302,6 +346,11 @@
     if (!t) return;
     const values = {};
     for (const k of SETTING_FIELDS) values[k] = el[k].value;
+    if (t.engine === 'spicy') {
+      values.cloud = {};
+      for (const k of CLOUD_SELECTS) values.cloud[k] = el[k].value;
+      for (const k of CLOUD_CHECKS) values.cloud[k] = el[k].checked;
+    }
     state.prefs.values = state.prefs.values || {};
     state.prefs.values[t.id] = values;
     state.prefs.workflow = { ...(state.prefs.workflow || {}), [state.mode]: t.id };
@@ -309,8 +358,51 @@
     state.prefs.style = el.style.value;
     savePrefs();
     state.session.texts = state.session.texts || {};
-    state.session.texts[t.id] = { prompt: el.prompt.value, negative: el.negative.value, seed: el.seed.value, seedLock: el.seedLock.checked };
+    state.session.texts[t.id] = { prompt: el.prompt.value, negative: el.negative.value, seed: el.seed.value, seedLock: el.seedLock.checked, frame_prompt: el.framePrompt.value };
     saveSession();
+  }
+
+  // ---- cloud engine (SpicyAPI) ------------------------------------------------
+  function cloudEstimate() {
+    const t = currentTemplate();
+    if (!t || t.engine !== 'spicy' || !state.cloud) return null;
+    const c = state.cloud;
+    const model = c.video_models.find((m) => m.id === el.cloudModel.value) || c.video_models[0];
+    const res = el.resolution.value || '720P';
+    const rate = model.usd_per_second[res] || model.usd_per_second['720P'];
+    const auto = el.durationAuto.checked;
+    const seconds = auto ? c.duration.max : clamp(Number(el.duration.value) || 5, c.duration.min, c.duration.max);
+    let video = seconds * rate;
+    if (el.fps60.checked) video *= 1 + (c.fps60_surcharge || 0.2);
+    const frameKind = t.cloud && t.cloud.kind === 'frame';
+    const frame = frameKind ? ((c.frame_models.find((m) => m.id === el.frameModel.value) || {}).usd || 0) : 0;
+    const total = video + frame + 0.001 * (frameKind ? 2 : 1);
+    const bits = [`${seconds} s × $${rate.toFixed(2)} at ${res}`];
+    if (el.fps60.checked) bits.push('+20 % for 60 fps');
+    if (frameKind) bits.push(`+ $${frame.toFixed(2)} first frame`);
+    if (auto) bits.push('auto: 30 s debited first, unused seconds refunded');
+    return { usd: total, text: bits.join(', '), auto };
+  }
+
+  function updateEstimate() {
+    const est = cloudEstimate();
+    if (!est) { el.generate.textContent = el.generate.disabled && state.job ? 'Generating…' : 'Generate'; return; }
+    el.cloudEstimate.textContent = `Estimated cost: $${est.usd.toFixed(2)} (${est.text}). SpicyAPI shows the exact amount after the task starts.`;
+    if (!(state.job && state.job.active)) el.generate.textContent = `Generate in the cloud · ~$${est.usd.toFixed(2)}`;
+  }
+
+  async function loadCloudAccount() {
+    if (!state.cloud) return;
+    el.cloudAccount.textContent = 'Checking your SpicyAPI balance…';
+    try {
+      const a = await api('/api/cloud/account');
+      state.cloudAccount = a;
+      const bal = a.balance_usd != null ? `Balance $${Number(a.balance_usd).toFixed(2)}` : 'Balance unknown';
+      el.cloudAccount.textContent = `${bal}${a.sandbox ? ' · SANDBOX key (fixtures, nothing is billed)' : ''}${a.email ? ' · ' + a.email : ''}`;
+    } catch (e) {
+      state.cloudAccount = null;
+      el.cloudAccount.textContent = `SpicyAPI not reachable: ${e.message}${e.hint ? ' — ' + e.hint : ''}`;
+    }
   }
 
   function setMode(mode) {
@@ -322,6 +414,8 @@
       tab.setAttribute('aria-selected', on ? 'true' : 'false');
     });
     show(el.fieldSource, SOURCE_MODES.includes(mode));
+    show(el.cloudBanner, mode === 'cloudvid');
+    if (mode === 'cloudvid' && state.cloudAccount === null) loadCloudAccount();
     state.prefs.mode = mode;
     savePrefs();
     populateWorkflows();
@@ -361,23 +455,118 @@
     el.image.value = '';
   }
 
+  // ---- prompt expander -------------------------------------------------------
+  function renderDirector() {
+    const d = state.director || {};
+    const llm = d.llm || null;
+    show(el.expandLlmWrap, !!llm);
+    el.expandLlmName.textContent = llm ? `(${llm.model}${llm.vision ? ', sees the image' : ''})` : '';
+    if (llm && state.prefs.expandLlm !== undefined) el.expandLlm.checked = !!state.prefs.expandLlm;
+    else if (llm && state.prefs.expandLlm === undefined) el.expandLlm.checked = true;  // a model is running: use it by default
+  }
+
+  // What the expander should write for the current preset: sentence prompts for video (Wan) and
+  // natural-language image models, comma tags for SDXL / Pony / Illustrious presets.
+  function directorTarget(t) {
+    if (t && t.engine === 'spicy') return 'wan3';   // hosted Wan 3.0 class: timed beats, dialogue, inline negatives
+    if (state.mode === 'img2vid') return 'wan';      // local Wan 2.x: short, silent
+    return t && t.prompt_style === 'natural' ? 'image' : 'sdxl';
+  }
+
+  async function expandPrompt() {
+    const t = currentTemplate();
+    if (!t) return;
+    const text = el.prompt.value.trim();
+    const hasSource = SOURCE_MODES.includes(state.mode) && (state.source.file || state.source.galleryName);
+    if (!text && !hasSource) { toast('Write a few words first', { msg: 'Expand turns a short idea into a full prompt; it needs something to start from.' }); el.prompt.focus(); return; }
+    const fd = new FormData();
+    fd.append('prompt', text);
+    fd.append('mode', state.mode);
+    fd.append('style', el.style.value || 'none');
+    fd.append('target', directorTarget(t));
+    const frames = Number(el.frames.value) || 0, fps = Number(el.fps.value) || 0;
+    const cloud = t.engine === 'spicy';
+    fd.append('duration', cloud ? String(el.durationAuto.checked ? 10 : (Number(el.duration.value) || 5)) : state.mode === 'img2vid' && frames && fps ? String(frames / fps) : '5');
+    fd.append('audio', cloud && el.audio.checked ? '1' : '0');
+    const useLlm = !el.expandLlmWrap.classList.contains('hidden') && el.expandLlm.checked;
+    fd.append('use_llm', useLlm ? '1' : '0');
+    if (hasSource && state.source.file) fd.append('image', state.source.file, state.source.file.name);
+    else if (hasSource && state.source.galleryName) fd.append('source', state.source.galleryName);
+    el.expand.classList.add('is-busy');
+    el.expand.textContent = useLlm ? '✨ Asking the local LLM…' : '✨ Expanding…';
+    try {
+      const res = await api('/api/director', { method: 'POST', body: fd });
+      state.promptBefore = el.prompt.value;
+      el.prompt.value = res.prompt || '';
+      saveValues();
+      show(el.expandUndo, true);
+      const notes = res.notes || [];
+      el.expandNote.textContent = [`Expanded with ${res.source === 'rules' ? 'the built-in rules' : 'the local LLM ' + res.source.replace(/^llm:/, '')}.`, ...notes].join(' ');
+      show(el.expandNote, true);
+      el.prompt.focus();
+      el.prompt.setSelectionRange(0, 0);
+      el.prompt.scrollTop = 0;
+    } catch (e) {
+      toastError(e, e.status === 503 ? 'No local LLM found' : 'Could not expand the prompt');
+    } finally {
+      el.expand.classList.remove('is-busy');
+      el.expand.textContent = '✨ Expand';
+    }
+  }
+
+  async function expandFramePrompt() {
+    const text = el.framePrompt.value.trim();
+    if (!text) { toast('Write a few words for the frame first'); el.framePrompt.focus(); return; }
+    const fd = new FormData();
+    fd.append('prompt', text); fd.append('mode', 'cloudvid'); fd.append('style', el.style.value || 'none'); fd.append('target', 'image'); fd.append('audio', '0');
+    fd.append('use_llm', !el.expandLlmWrap.classList.contains('hidden') && el.expandLlm.checked ? '1' : '0');
+    el.expandFrame.classList.add('is-busy');
+    try {
+      const res = await api('/api/director', { method: 'POST', body: fd });
+      el.framePrompt.value = res.prompt || text;
+      saveValues();
+      toast('Frame prompt expanded', { msg: (res.notes || []).join(' '), kind: 'ok', timeout: 4000 });
+    } catch (e) {
+      toastError(e, e.status === 503 ? 'No local LLM found' : 'Could not expand the frame prompt');
+    } finally {
+      el.expandFrame.classList.remove('is-busy');
+    }
+  }
+
+  function undoExpand() {
+    if (state.promptBefore === null) return;
+    el.prompt.value = state.promptBefore;
+    state.promptBefore = null;
+    show(el.expandUndo, false);
+    show(el.expandNote, false);
+    saveValues();
+  }
+
   // ---- generation ------------------------------------------------------------
   function setBusy(busy) {
     el.generate.disabled = busy;
     el.generate.textContent = busy ? 'Generating…' : 'Generate';
     show(el.cancel, busy);
     el.viewer.classList.toggle('is-busy', busy);
+    if (!busy) updateEstimate();
   }
 
   async function generate() {
     const t = currentTemplate();
     if (!t) { toast('No workflow preset selected'); return; }
     if (state.submitting || (state.job && state.job.active)) return;
-    if (state.online === false) {
+    const cloud = t.engine === 'spicy';
+    if (!cloud && state.online === false) {
       toast('ComfyUI is not running', { msg: el.offlineDetail.textContent, kind: 'error' });
       return;
     }
-    if (t.controls.prompt && !el.prompt.value.trim()) { toast('Write a prompt first'); el.prompt.focus(); return; }
+    if (t.controls.prompt && !el.prompt.value.trim()) { toast(cloud ? 'Write a motion prompt first' : 'Write a prompt first'); el.prompt.focus(); return; }
+    if (cloud && t.cloud.kind === 'frame' && !el.framePrompt.value.trim()) { toast('Write a frame prompt first', { msg: 'It describes the first picture; the motion prompt describes what happens.' }); el.framePrompt.focus(); return; }
+    if (cloud) {
+      const est = cloudEstimate();
+      const msg = `Send these prompts to SpicyAPI over the internet and spend about $${est.usd.toFixed(2)}${est.auto ? ' (up to $' + est.usd.toFixed(2) + ' debited, unused seconds refunded)' : ''} from your prepaid balance?\n\nThe clip takes 1-5 minutes and is saved to your gallery.`;
+      if (!window.confirm(msg)) return;
+    }
     if (SOURCE_MODES.includes(state.mode) && !state.source.file && !state.source.galleryName) {
       toast('Choose a source image', { msg: 'Drop one on the box above, paste it, or press “→ Image” / “→ Video” on a gallery image.' });
       return;
@@ -387,14 +576,18 @@
     fd.append('workflow', t.id);
     for (const k of VALUE_FIELDS) fd.append(k, k === 'model' ? (t.model ? el.model.value : '') : el[k].value);
     fd.append('seed', el.seedLock.checked ? el.seed.value : '');
-    if (state.source.file) fd.append('image', state.source.file, state.source.file.name);
+    if (cloud) {
+      for (const [k, name] of Object.entries(CLOUD_FORM)) fd.append(name, el[k].type === 'checkbox' ? (el[k].checked ? '1' : '0') : el[k].value);
+      if (el.durationAuto.checked) fd.set('duration', '-1');
+      fd.append('frame_prompt', t.cloud.kind === 'frame' ? el.framePrompt.value : '');
+    } else if (state.source.file) fd.append('image', state.source.file, state.source.file.name);
     else if (state.source.galleryName) fd.append('source', state.source.galleryName);
 
     state.submitting = true;
     setBusy(true);
     el.status.classList.remove('is-error', 'is-done');
     show(el.status, true);
-    setProgress({ label: 'Sending to ComfyUI…', value: 0, max: 0 });
+    setProgress({ label: cloud ? 'Sending to SpicyAPI…' : 'Sending to ComfyUI…', value: 0, max: 0 });
     try {
       const job = await api('/api/generate', { method: 'POST', body: fd });
       startJob(job);
@@ -402,7 +595,7 @@
       setBusy(false);
       el.status.classList.add('is-error');
       setProgress({ label: 'Not started', value: 0, max: 0 }, e.message);
-      toastError(e, e.status === 503 ? 'ComfyUI is not running' : 'Could not start the job');
+      toastError(e, e.status === 503 && !cloud ? 'ComfyUI is not running' : 'Could not start the job');
     } finally {
       state.submitting = false;
     }
@@ -467,12 +660,13 @@
     show(el.livePreview, false);
     if (job.status === 'done') {
       el.status.classList.add('is-done');
-      setProgress({ label: 'Done', value: 1, max: 1 }, `${Math.round(job.elapsed || 0)}s · seed ${job.params.seed}`);
+      const cost = job.cost_usd != null ? ` · $${Number(job.cost_usd).toFixed(2)}` : '';
+      setProgress({ label: 'Done', value: 1, max: 1 }, `${Math.round(job.elapsed || 0)}s · seed ${job.params.seed}${cost}`);
       const results = job.results || [];
       if (results.length) {
-        showResult(results[0]);
-        for (const r of results.slice().reverse()) prependGalleryItem(r);
-        toast('Saved to gallery', { msg: results.map((r) => r.file).join('\n'), kind: 'ok' });
+        showResult(results[results.length - 1]);  // the video of a frame+video job, else the single result
+        for (const r of results) prependGalleryItem(r);
+        toast('Saved to gallery', { msg: results.map((r) => r.file).join('\n') + (cost ? `\nSpicyAPI charged${cost.slice(2)}` : ''), kind: 'ok' });
         setTimeout(() => el.viewer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
       }
       if (job.warnings && job.warnings.length) {
@@ -480,8 +674,10 @@
       }
       loadHistory();
     } else if (job.status === 'cancelled') {
-      setProgress({ label: 'Cancelled', value: 0, max: 1 });
+      const label = (job.progress && job.progress.label && job.progress.label !== 'Cancelled') ? job.progress.label : 'Cancelled';
+      setProgress({ label: 'Cancelled', value: 0, max: 1 }, label === 'Cancelled' ? '' : label.replace(/^Cancelled\.\s*/, ''));
       el.bar.classList.remove('is-indeterminate');
+      if (job.engine === 'spicy' && job.cloud_task_id) toast('Stopped waiting', { msg: label, kind: 'error', timeout: 12000 });
       restoreViewer();
     } else {
       el.status.classList.add('is-error');
@@ -562,10 +758,15 @@
     if (record.width && record.height) chips.push(chip('size', `${record.width}×${record.height}`));
     if (record.steps) chips.push(chip('steps', record.steps));
     if (record.cfg != null) chips.push(chip('cfg', record.cfg));
-    if (record.kind !== 'image' && record.frames) chips.push(chip('frames', `${record.frames} @ ${record.fps || '?'}fps`));
+    if (record.kind !== 'image' && record.frames && record.engine !== 'spicy') chips.push(chip('frames', `${record.frames} @ ${record.fps || '?'}fps`));
     if (record.mode === 'img2img' && record.strength != null) chips.push(chip('strength', record.strength));
     if (record.model) chips.push(chip('model', basename(record.model)));
     if (record.sampler && record.mode !== 'img2vid') chips.push(chip('sampler', `${record.sampler}/${record.scheduler || ''}`));
+    if (record.engine === 'spicy') {
+      chips.push(chip('engine', '☁ SpicyAPI'));
+      if (record.kind === 'video' && record.duration != null) chips.push(chip('clip', `${record.duration}s ${record.resolution || ''}${record.fps === 60 ? ' 60fps' : ''}`.trim()));
+      if (record.cost_usd != null) chips.push(chip('cost', `$${Number(record.cost_usd).toFixed(2)}`));
+    }
     if (record.workflow_name) chips.push(chip('workflow', record.workflow_name));
     if (record.style && record.style !== 'none') chips.push(chip('style', record.style));
     if (record.bytes) chips.push(chip('file', fmtBytes(record.bytes)));
@@ -597,6 +798,7 @@
     if (record.model && Array.from(el.model.options).some((o) => o.value === record.model)) el.model.value = record.model;
     if (record.style && Array.from(el.style.options).some((o) => o.value === record.style)) el.style.value = record.style;
     if (record.seed != null) { el.seed.value = record.seed; el.seedLock.checked = true; }
+    applyCloudValues(record);
     state.applying = false;
     markActiveSize();
     saveValues();
@@ -697,6 +899,13 @@
       badge.textContent = record.kind === 'video' ? '▶ video' : '▶ anim';
       card.appendChild(badge);
     }
+    if (record.engine === 'spicy') {
+      const cb = document.createElement('span');
+      cb.className = 'badge badge--cloud';
+      cb.textContent = '☁';
+      cb.title = 'Made in the cloud (SpicyAPI)';
+      card.appendChild(cb);
+    }
     const actions = document.createElement('div');
     actions.className = 'thumb-actions';
     const dl = document.createElement('a');
@@ -777,11 +986,25 @@
     if (h.sampler && Array.from(el.sampler.options).some((o) => o.value === h.sampler)) el.sampler.value = h.sampler;
     if (h.scheduler && Array.from(el.scheduler.options).some((o) => o.value === h.scheduler)) el.scheduler.value = h.scheduler;
     if (h.model && Array.from(el.model.options).some((o) => o.value === h.model)) el.model.value = h.model;
+    applyCloudValues(h);
     state.applying = false;
     markActiveSize();
     saveValues();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     el.prompt.focus();
+  }
+
+  function applyCloudValues(r) {
+    if (!r || r.engine !== 'spicy' || !state.cloud) return;
+    const setSel = (sel, v) => { if (v != null && Array.from(sel.options).some((o) => o.value === String(v))) sel.value = String(v); };
+    setSel(el.cloudModel, r.model); setSel(el.resolution, r.resolution); setSel(el.aspect, r.aspect || ''); setSel(el.frameModel, r.frame_model); setSel(el.frameSize, r.frame_size);
+    el.durationAuto.checked = r.duration === -1;
+    if (r.duration != null && r.duration !== -1) el.duration.value = r.duration;
+    el.duration.disabled = el.durationAuto.checked;
+    if (r.audio != null) el.audio.checked = !!r.audio;
+    el.fps60.checked = r.fps === 60;
+    if (r.frame_prompt) el.framePrompt.value = r.frame_prompt;
+    updateEstimate();
   }
 
   // ---- connection status -------------------------------------------------------
@@ -818,6 +1041,7 @@
       show(el.offline, true);
     }
     if (s.outputs_dir) el.outputsDir.textContent = s.outputs_dir;
+    if (s.director !== undefined) { state.director = s.director; renderDirector(); }
     const lanHint = document.getElementById('lan-hint');
     if (lanHint) {
       const urls = s.lan_urls || [];
@@ -863,6 +1087,15 @@
     if (!SOURCE_MODES.includes(state.mode)) setMode('img2img');
   });
   el.clearSource.addEventListener('click', clearSource);
+  el.expand.addEventListener('click', expandPrompt);
+  el.expandFrame.addEventListener('click', expandFramePrompt);
+  el.cloudAccountRefresh.addEventListener('click', loadCloudAccount);
+  el.durationAuto.addEventListener('change', () => { el.duration.disabled = el.durationAuto.checked; });
+  [el.cloudModel, el.duration, el.durationAuto, el.resolution, el.aspect, el.fps60, el.frameModel, el.audio, el.enhance].forEach((n) => n.addEventListener('change', updateEstimate));
+  el.duration.addEventListener('input', updateEstimate);
+  el.expandUndo.addEventListener('click', undoExpand);
+  el.expandLlm.addEventListener('change', () => { state.prefs.expandLlm = el.expandLlm.checked; savePrefs(); });
+  el.prompt.addEventListener('input', () => show(el.expandNote, false));  // Undo stays available while editing
 
   el.btnToImage.addEventListener('click', () => state.current && setSourceGallery(state.current, 'img2img'));
   el.btnToVideo.addEventListener('click', () => state.current && setSourceGallery(state.current, 'img2vid'));
@@ -905,8 +1138,10 @@
     state.mode = mode;
     el.tabs.forEach((tab) => { const on = tab.dataset.mode === mode; tab.classList.toggle('is-active', on); tab.setAttribute('aria-selected', on ? 'true' : 'false'); });
     show(el.fieldSource, SOURCE_MODES.includes(mode));
+    show(el.cloudBanner, mode === 'cloudvid');
     await pollStatus();
     await loadOptions({ quiet: true });
+    if (state.mode === 'cloudvid' && state.cloud) loadCloudAccount();
     loadGallery();
     loadHistory();
     resumeActiveJob();

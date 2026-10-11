@@ -96,7 +96,12 @@ A preset may use any subset. Controls whose token is absent are hidden automatic
                    "frames_rule": null, "frames_min": 1, "frames_max": 1024 },
 
   // Quick-pick size chips.
-  "sizes": [[1024, 1024], [832, 1216], [1216, 832]]
+  "sizes": [[1024, 1024], [832, 1216], [1216, 832]],
+
+  // How the ✨ Expand button should write for this preset: "tags" (SDXL / Pony / Illustrious
+  // comma lists, the default for image presets) or "natural" (sentence prompts: Flux, Chroma,
+  // Qwen-Image; the default for video presets).
+  "prompt_style": "tags"
 }
 ```
 

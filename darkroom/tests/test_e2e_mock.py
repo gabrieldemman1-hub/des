@@ -73,7 +73,7 @@ def env(tmp_path_factory):
 def offline(tmp_path_factory):
     """A Darkroom pointed at a port where nothing listens."""
     aport = free_port()
-    app = ServerThread(create_app(comfy_url=f"http://127.0.0.1:{free_port()}", outputs_dir=tmp_path_factory.mktemp("out2"), probe_urls=(f"http://127.0.0.1:{free_port()}",)), aport)
+    app = ServerThread(create_app(comfy_url=f"http://127.0.0.1:{free_port()}", outputs_dir=tmp_path_factory.mktemp("out2"), probe_urls=(f"http://127.0.0.1:{free_port()}",), llm_url=f"http://127.0.0.1:{free_port()}/v1"), aport)
     app.start()
     wait_for(f"http://127.0.0.1:{aport}/api/status")
     client = httpx.Client(base_url=f"http://127.0.0.1:{aport}", timeout=30)
@@ -373,3 +373,88 @@ def test_offline_comfy_is_explained(offline):
     assert job["status"] == "error" and "not reachable" in job["error"]["message"]
     r = offline.post("/api/generate", data={"mode": "txt2img", "workflow": "txt2img_checkpoint", "prompt": "x"})
     assert r.status_code == 503 and "Start ComfyUI" in r.json()["error"]["hint"]  # not a misleading "no model files"
+
+
+# ---- prompt director -----------------------------------------------------------------
+from mock_llm import create_mock_llm  # noqa: E402
+
+
+@pytest.fixture(scope="module")
+def llm_env(tmp_path_factory):
+    """Darkroom + mock ComfyUI + a mock *vision* LLM on a loopback port."""
+    data = tmp_path_factory.mktemp("mock_llm")
+    outputs = tmp_path_factory.mktemp("outputs_llm")
+    mport, lport, aport = free_port(), free_port(), free_port()
+    mock = ServerThread(create_mock_app(data, step_delay=0.01), mport)
+    llm_app = create_mock_llm(vision=True)
+    llm = ServerThread(llm_app, lport)
+    app = ServerThread(create_app(comfy_url=f"http://127.0.0.1:{mport}", outputs_dir=outputs, llm_url=f"http://127.0.0.1:{lport}/v1"), aport)
+    mock.start(); llm.start(); app.start()
+    wait_for(f"http://127.0.0.1:{mport}/system_stats")
+    wait_for(f"http://127.0.0.1:{lport}/v1/models")
+    wait_for(f"http://127.0.0.1:{aport}/api/status")
+    client = httpx.Client(base_url=f"http://127.0.0.1:{aport}", timeout=30)
+    yield SimpleNamespace(c=client, llm=llm_app, outputs=outputs)
+    client.close(); app.stop(); llm.stop(); mock.stop()
+
+
+def test_status_reports_local_llm(llm_env):
+    d = llm_env.c.get("/api/status").json()["director"]
+    assert d["rules"] is True and d["llm_configured"] is True
+    assert d["llm"]["model"] == "mock-vl:7b" and d["llm"]["vision"] is True
+
+
+def test_director_rules_path(env):
+    r = env.c.post("/api/director", data={"prompt": "she turns and smiles, then waves", "mode": "img2vid", "style": "none", "duration": "8", "use_llm": "0"})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["source"] == "rules" and "turns and smiles" in body["prompt"] and body["beats"] == 2
+    assert "Negative prompt list" not in body["prompt"]            # img2vid = local Wan: separate negative field
+    r = env.c.post("/api/director", data={"prompt": "she turns and smiles", "mode": "cloudvid", "style": "none", "duration": "8", "audio": "1", "use_llm": "0"})
+    assert "Negative prompt list" in r.json()["prompt"] and "No dialogue." in r.json()["prompt"]
+    r = env.c.post("/api/director", data={"prompt": "portrait, freckles", "mode": "txt2img", "style": "photoreal", "use_llm": "0"})
+    assert r.json()["prompt"].startswith("portrait, freckles, ")
+
+
+def test_director_refuses_minors_and_empty(env):
+    r = env.c.post("/api/director", data={"prompt": "a teen on a bed", "mode": "txt2img"})
+    assert r.status_code == 400 and "adults" in r.json()["error"]["message"]
+    assert env.c.post("/api/director", data={"prompt": "   ", "mode": "txt2img"}).status_code == 400
+
+
+def test_director_llm_path_and_fallbacks(llm_env):
+    c = llm_env.c
+    body = c.post("/api/director", data={"prompt": "she stretches on the bed", "mode": "img2vid", "style": "glamour", "duration": "8", "audio": "1", "use_llm": "1"}).json()
+    assert body["source"] == "llm:mock-vl:7b" and "stretches on the bed" in body["prompt"] and body["beats"] == 2
+    call = llm_env.llm.state.calls[-1]
+    assert call["model"] == "mock-vl:7b" and call["messages"][0]["role"] == "system"
+    assert call["keep_alive"] == 0 and call["options"]["num_ctx"] == 8192   # Ollama native path: VRAM is released after the answer
+    assert "2 beat(s)" in call["messages"][0]["content"] and "8 seconds" in call["messages"][1]["content"]
+    # Reasoning tags are stripped.
+    body = c.post("/api/director", data={"prompt": "THINK she waves", "mode": "img2vid", "use_llm": "1"}).json()
+    assert "<think>" not in body["prompt"] and body["source"].startswith("llm:")
+    # A refusal or a one-word answer falls back to the rules, with a note saying so.
+    for word in ("REFUSE she waves", "SHORT she waves"):
+        body = c.post("/api/director", data={"prompt": word, "mode": "img2vid", "use_llm": "1"}).json()
+        assert body["source"] == "rules" and body["notes"] and "she waves" in body["prompt"]
+
+
+def test_director_describes_source_image_with_vision_model(llm_env):
+    buf = io.BytesIO()
+    Image.new("RGB", (64, 96), (200, 120, 90)).save(buf, format="PNG")
+    r = llm_env.c.post("/api/director", data={"prompt": "she looks up", "mode": "img2vid", "use_llm": "1", "duration": "5"}, files={"image": ("src.png", buf.getvalue(), "image/png")})
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["image_description"] and "[image seen]" in body["image_description"]
+    assert body["prompt"].startswith("Starting from the pose in the reference image")
+    describe_call = [k for k in llm_env.llm.state.calls if k["messages"][-1].get("images")][-1]
+    assert describe_call["messages"][-1]["images"][0].startswith("iVBOR")   # raw base64 PNG, no data: prefix (Ollama native shape)
+    assert describe_call["model"] == "mock-vl:7b"
+
+
+def test_director_without_llm_server(offline):
+    # No LLM anywhere: rules still work, the LLM path explains itself with a 503 + hint.
+    r = offline.post("/api/director", data={"prompt": "she waves", "mode": "img2vid", "use_llm": "0"})
+    assert r.status_code == 200 and r.json()["source"] == "rules"
+    r = offline.post("/api/director", data={"prompt": "she waves", "mode": "img2vid", "use_llm": "1"})
+    assert r.status_code == 503 and "Ollama" in r.json()["error"]["hint"]

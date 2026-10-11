@@ -32,6 +32,15 @@
         <button type="button" class="tab is-active" role="tab" data-mode="txt2img" aria-selected="true">Text → Image</button>
         <button type="button" class="tab" role="tab" data-mode="img2img" aria-selected="false">Image → Image</button>
         <button type="button" class="tab" role="tab" data-mode="img2vid" aria-selected="false">Image → Video</button>
+        <button type="button" class="tab tab--cloud hidden" role="tab" data-mode="cloudvid" aria-selected="false" id="tab-cloud" title="Paid cloud video on SpicyAPI (only this tab uses the internet)">☁ Cloud video</button>
+      </div>
+
+      <div id="cloud-banner" class="cloud-banner hidden" role="note">
+        <div><strong>☁ Cloud mode.</strong> Prompts written in this tab are sent over the internet to <b>SpicyAPI</b> (Wayfinity Ltd), which renders them on Alibaba Cloud in Singapore and charges your prepaid balance. Finished clips are downloaded to your gallery. Nothing else in Darkroom leaves this PC.</div>
+        <div class="row row--between">
+          <span id="cloud-account" class="hint">Checking your SpicyAPI balance…</span>
+          <button type="button" id="cloud-account-refresh" class="icon-btn" title="Re-check balance" aria-label="Re-check balance">↻</button>
+        </div>
       </div>
 
       <form id="gen-form" autocomplete="off" novalidate>
@@ -62,15 +71,55 @@
           </div>
         </div>
 
+        <div class="field hidden" id="cloud-frame">
+          <div class="label-row">
+            <label for="frame-prompt">Frame prompt <span class="muted">(what the first picture shows)</span></label>
+            <button type="button" id="expand-frame" class="btn btn--ghost btn--sm" title="Expand the frame prompt into a full image description">✨ Expand</button>
+          </div>
+          <textarea id="frame-prompt" rows="3" placeholder="Who and where: a woman in her thirties, red dress, hotel room at night, warm lamp light, three-quarter shot…" spellcheck="false"></textarea>
+          <div class="params">
+            <div class="field"><label for="frame-model">Frame model</label><select id="frame-model"></select></div>
+            <div class="field"><label for="frame-size">Frame size</label><select id="frame-size"></select></div>
+          </div>
+          <p class="hint">SpicyAPI animates only pictures it rendered itself, so the first frame is made there (a few cents) and saved to your gallery too.</p>
+        </div>
+
         <div class="field" id="field-prompt">
-          <label for="prompt" id="prompt-label">Prompt</label>
+          <div class="label-row">
+            <label for="prompt" id="prompt-label">Prompt</label>
+            <button type="button" id="expand" class="btn btn--ghost btn--sm" title="Rewrite a few words into a full, structured prompt (subject → motion → camera → light → sound). You can edit the result before generating.">✨ Expand</button>
+          </div>
           <textarea id="prompt" rows="4" placeholder="Describe the image you want…" spellcheck="false"></textarea>
+          <div class="prompt-tools">
+            <label class="check hidden" id="expand-llm-wrap" title="Rewrite with the language model running on this PC (Ollama / LM Studio) instead of the built-in rules"><input type="checkbox" id="expand-llm"> use local LLM <span id="expand-llm-name" class="muted"></span></label>
+            <button type="button" id="expand-undo" class="btn btn--ghost btn--sm hidden" title="Put the prompt back as it was before expanding">↶ Undo</button>
+            <span id="expand-note" class="hint hidden"></span>
+          </div>
         </div>
         <p id="no-prompt-note" class="hint hidden">This workflow has no text input: it animates the source image on its own.</p>
 
         <div class="field" id="field-negative">
           <label for="negative">Negative prompt</label>
           <textarea id="negative" rows="2" placeholder="What to avoid…" spellcheck="false"></textarea>
+        </div>
+
+        <div class="field hidden" id="cloud-video">
+          <div class="params">
+            <div class="field field--wide"><label for="cloud-model">Video model</label><select id="cloud-model"></select></div>
+            <div class="field">
+              <label for="duration">Duration (s)</label>
+              <input type="number" id="duration" min="2" max="30" step="1" inputmode="numeric">
+              <label class="check" title="Smart duration: the model picks the length (2-30 s). SpicyAPI debits 30 s first and refunds the unused part."><input type="checkbox" id="duration-auto"> auto</label>
+            </div>
+            <div class="field"><label for="resolution">Resolution</label><select id="resolution"></select></div>
+            <div class="field" id="field-aspect"><label for="aspect">Aspect ratio</label><select id="aspect"></select></div>
+          </div>
+          <div class="chips chips--checks">
+            <label class="check" title="Speech, music and sound effects generated with the clip; dialogue in quotes in the prompt is spoken"><input type="checkbox" id="audio" checked> sound</label>
+            <label class="check" title="Interpolate the finished clip to 60 fps (+20 % of the price; the clip is also sent to fal.ai for this step)"><input type="checkbox" id="fps60"> 60 fps</label>
+            <label class="check" title="Let SpicyAPI's own rewriter expand the prompt as well (you cannot see its version). Usually off when you used ✨ Expand."><input type="checkbox" id="enhance"> SpicyAPI enhance</label>
+          </div>
+          <p id="cloud-estimate" class="hint cloud-estimate"></p>
         </div>
 
         <div class="field">

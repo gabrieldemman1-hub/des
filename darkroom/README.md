@@ -10,6 +10,11 @@ make, and swappable workflow presets. Everything runs on your machine; nothing l
   Darkroom itself, so even a future mistake cannot phone home.
 * Listens on `127.0.0.1` only. Results are saved to `./outputs` with the prompt and seed next to
   them.
+* **✨ Expand** turns a few words into a full, structured prompt, with built-in rules or with a
+  language model running on your own PC (Ollama / LM Studio). Nothing is applied silently.
+* Optional and **off by default**: a *Cloud video* tab for SpicyAPI's Spicy Motion 3 (a paid,
+  hosted Wan 3.0-class video model). It exists only when you start Darkroom with an API key, and
+  only that tab uses the internet. See [Cloud video](#cloud-video-optional-paid).
 
 ![two modes, gallery, history](docs/screenshot-desktop.png)
 
@@ -97,6 +102,14 @@ unchanged settings comes back instantly as the same image (Darkroom still saves 
 **Style.** A preset that wraps your prompt ("{prompt}, cinematic still, film grain…"). Edit or
 add styles in `presets/styles.json` (read once at start-up; restart Darkroom afterwards).
 
+**✨ Expand.** Rewrites a short prompt into the long, ordered form the models were trained on:
+who and where → what happens, as motion beats in time order → camera → light → sound → style.
+The result lands in the prompt box for you to edit; **Undo** puts your words back. The built-in
+rules add only neutral camera and light defaults and never new content. If a local LLM is running
+(see [Expanding prompts with a local LLM](#expanding-prompts-with-a-local-llm)) a **use local
+LLM** box appears and the rewrite gets much better. Video presets get sentence prompts, SDXL /
+Pony presets get comma tags; `prompt_style` in a preset's `_meta` switches that.
+
 **Gallery.** Every result is saved as
 `outputs/<date>-<time>_<mode>_<prompt snippet>_<seed>.<png|mp4|webp>` plus a `.json` with the
 full settings. Thumbnails, filter by images/videos, download, delete, use as video source.
@@ -121,6 +134,117 @@ networks). Note that there is no login: anyone on that Wi-Fi can open it while i
 so use it on your home network only. A VPN on the PC that blocks local-network access can also
 block the phone; allow LAN access in the VPN's settings or disconnect it.
 
+## Expanding prompts with a local LLM
+
+Hosted services quietly run every prompt through a language model before generating: "woman
+walks to the window" becomes a paragraph with motion beats, camera, light and sound, and the
+video models are trained on captions written that way. That expansion is a large part of why
+their output looks good. Darkroom does the same step on your PC. The rules-only version always
+works; with [Ollama](https://ollama.com/download/windows) installed it uses a real model:
+
+```powershell
+# one-time, in PowerShell (no admin needed). Darkroom finds Ollama at 127.0.0.1:11434 by itself.
+ollama pull dolphin3:8b                                  # default: follows instructions, ~5 GB
+ollama pull mistral-nemo:12b                             # optional: better prose, ~7 GB, slower
+ollama pull huihui_ai/qwen2.5-vl-abliterated:7b          # optional: *looks at the source image* first
+```
+
+Tick **use local LLM** next to the prompt and press ✨ Expand. Darkroom asks Ollama to unload the
+model right after each answer (`keep_alive: 0`), so ComfyUI gets its VRAM back; a rewrite takes
+about five to ten seconds on an RTX 4060 Ti. LM Studio (port 1234), llama.cpp's `llama-server`
+(8080 / 9931) and KoboldCpp (5001) are detected too, as any OpenAI-compatible server is with
+`--llm http://127.0.0.1:<port>/v1`. `--llm-model <tag>` picks a specific model, `--llm off`
+hides the option. Darkroom refuses an LLM address that is not on this machine unless you add
+`--llm-allow-remote`.
+
+Why these models: stock Qwen, Llama and Gemma are tuned to refuse adult requests. Dolphin and
+Mistral-Nemo follow the system prompt as written; the `huihui_ai/*-abliterated` builds are the
+same base models with the refusal behaviour removed. If a model still refuses or answers in two
+words, Darkroom says so and falls back to the rules.
+
+Privacy: Ollama's tray app checks `ollama.com` for updates once an hour; running `ollama serve`
+from a terminal instead does not, and nothing about your prompts is sent anywhere either way.
+Model downloads obviously use the internet. `setx OLLAMA_NO_CLOUD 1` turns off Ollama's optional
+cloud features for good measure.
+
+The rules and the system prompts live in [director.py](director.py). They follow Alibaba's
+published Wan 3.0 prompt guide (timed beats, "fixed camera, position unchanged", dialogue as
+`She says in a soft voice: "…". Lip sync.`, `No dialogue.` / `No background music.` when you
+want silence, a closing `Negative prompt list:` because Wan 3.0 has no negative-prompt field) and
+the prompt-extension prompts shipped in the open-source Wan repositories, minus the part of those
+prompts that silently replaces adult content with something else.
+
+## Cloud video (optional, paid)
+
+**Off unless you ask for it.** Start Darkroom with a [SpicyAPI](https://www.spicyapi.com) key and
+a fourth tab, **☁ Cloud video**, appears. Only that tab talks to the internet: your prompts go to
+SpicyAPI (Wayfinity Ltd, Cyprus), which renders them on Alibaba Cloud in Singapore and bills a
+prepaid balance. Finished clips are downloaded into your gallery like everything else. Without a
+key nothing in Darkroom can reach the internet.
+
+```bat
+run.bat --spicy-key sk-spicy-xxxxxxxx         :: Windows (or: set SPICYAPI_KEY=sk-spicy-... then run.bat)
+./run.sh --spicy-key sk-spicy-xxxxxxxx        # macOS / Linux
+```
+
+What you get: **Spicy Motion 3** (and *3 Fast*), by every published parameter Alibaba's Wan 3.0
+served with adult content allowed: 2 to 30 s clips, 480p / 720p / 1080p, speech, sound effects
+and music written into the prompt, 60 fps on request. Two presets:
+
+* **Text → Video.** The whole clip from your prompt; pick an aspect ratio or let the model choose.
+* **Frame + Video.** A first picture is rendered on SpicyAPI from a *frame prompt* ($0.06 to
+  $0.09), then animated with the *motion prompt*.
+
+**Your own images cannot be used.** SpicyAPI animates only images it generated itself and rejects
+uploads, local files and other URLs before charging, as a stated policy, not a bug. So the
+Image → Video tab stays local (ComfyUI, Wan 2.2) and the cloud tab is for text or for frames
+made there.
+
+Before any money is spent, Darkroom runs each prompt through SpicyAPI's `/v1/moderations`
+pre-check ($0.001). A prompt it would refuse stops right there with the reason, is not charged,
+and does not count against your account, which matters: refusals of real generation requests in
+the severe categories (minors, real people, non-consent, bestiality) are permanent strikes, an
+account is flagged at three and suspended at ten. Sandbox keys and "dry runs" count too, which is
+why the pre-check is the only probe Darkroom uses. The estimated price is on the Generate button
+and a confirmation asks before sending. **Cancel** only stops waiting; SpicyAPI keeps rendering and
+billing the task and the clip stays in your SpicyAPI library.
+
+| Setting | Notes |
+|---|---|
+| Duration | 2 to 30 s. **auto** lets the model choose; SpicyAPI debits 30 s first and refunds the unused seconds. |
+| Resolution / price | Spicy Motion 3: $0.10 / $0.20 / $0.40 per second at 480p / 720p / 1080p. Fast tier: $0.14 / $0.28 / $0.56. A 10 s 720p clip is $2.00. |
+| Aspect ratio | Text → Video only (16:9, 9:16, 1:1, 4:3, 3:4, 21:9, or auto). A first frame sets the shape itself. |
+| sound | Speech, effects and music generated with the clip. Lines in quotes in the prompt are spoken; `No dialogue.` keeps it quiet. |
+| 60 fps | Interpolation after rendering, +20 % of the price. The clip is also sent to fal.ai (US) for this step. |
+| SpicyAPI enhance | Their own prompt rewriter (you cannot see its version). Off by default: use ✨ Expand instead, which writes the prompt in Wan's official format and keeps your content. |
+| Seed | Reproducibility seed, same as the local tabs. |
+
+Prompting that works on this model, from Alibaba's guide and SpicyAPI's own notes: one action per
+five seconds, state the camera even when it is still, write spoken lines in quotes with who says
+them, say `No background music.` unless you want some, and keep clips short (5 to 10 s) and chain
+them from a consistent first frame rather than asking for one long take. ✨ Expand does all of
+this for you.
+
+Before signing up, know the terms: prepaid only, $50 minimum top-up by card or crypto, no free
+credits (a **Sandbox** key, ticked when you create it, returns example clips for free and is the
+right way to try the tab); in the UK, France, Germany, Italy, Australia, Brazil and 27 US states
+a one-time age check is required after the first top-up, and SpicyAPI forbids using a VPN for it;
+the terms describe the service as intended for businesses, though nothing forbids a private user.
+Data: SpicyAPI keeps request records (first 500 characters of each prompt, parameters, IP, links
+to outputs) for the life of the account plus six years, outputs while the account exists, and
+states that Alibaba Cloud processes prompts and media under its own terms "which may allow it to
+use it to improve its own models". Prices and rules are theirs and change; the numbers above are
+from October 2026.
+
+Why not Alibaba's own API, at half the price? Alibaba Model Studio runs every prompt, input image
+and output video through its content moderation and refuses explicit content
+(`DataInspectionFailed`); fal.ai, which also serves Wan 3.0, sits on the same models. SpicyAPI's
+markup pays for the permission and their own screening layer.
+
+For development there is a fake SpicyAPI: `python dev/mock_spicyapi.py --port 8787`, then
+`python app.py --spicy-key sk-spicy-test --spicy-url http://127.0.0.1:8787/v1`. Nothing leaves
+the machine; see the magic words at the top of that file.
+
 ## Swapping models and workflows
 
 The Model dropdown already covers "same workflow, different checkpoint". For anything else
@@ -135,13 +259,17 @@ the mechanism in the code.
 ```
 app.py              the web server (FastAPI) and the /api routes; python app.py starts it
 comfy_client.py     the ComfyUI client: /prompt, /ws progress + previews, /history, /view, /upload
+director.py         ✨ Expand: rule-based prompt rewriting + the optional local-LLM rewriter
+spicy_client.py     the optional cloud engine (SpicyAPI); loaded only with --spicy-key
 workflows.py        loads workflows/*.json and fills the {{TOKENS}}
 storage.py          outputs/ gallery, sidecar JSON, thumbnails, prompt history
 workflows/          the presets (API-format ComfyUI graphs) and their README
 presets/styles.json style presets
 static/             the page: index.html, style.css, app.js (no build step, no dependencies)
 dev/mock_comfyui.py a fake ComfyUI for trying the UI without a GPU (optional)
-tests/              pytest suite (unit tests + an end-to-end run against the mock)
+dev/mock_llm.py     a fake Ollama / OpenAI-compatible chat server for tests
+dev/mock_spicyapi.py a fake SpicyAPI for tests and for trying the cloud tab for free
+tests/              pytest suite (unit tests + end-to-end runs against the mocks)
 outputs/            your results (created on first run, ignored by git)
 ```
 
@@ -156,6 +284,12 @@ outputs/            your results (created on first run, ignored by git)
 | **Finished but produced no files** | The workflow has no `SaveImage` / `SaveVideo` node (a `PreviewImage` is not enough). |
 | Model dropdown is empty | ComfyUI is offline, or the folder named in the preset's `requires` is empty. |
 | Live preview never appears | Your ComfyUI ignores the per-job preview request; start it with `--preview-method auto`. Everything else works without it. |
+| **No local LLM server found** | Ollama / LM Studio is not running on this PC (Darkroom looks at 127.0.0.1 ports 11434, 1234, 8080, 9931, 5001). Start it, or untick *use local LLM*; the rules-only Expand always works. |
+| **The local model refused** / answered in two words | Pick a model that follows the system prompt (`ollama pull dolphin3:8b`) or pass `--llm-model`; Darkroom already fell back to the rules. |
+| **SpicyAPI rejected the API key** | The key is wrong, revoked, or the terms were not accepted in the dashboard. Create a key at spicyapi.com → dashboard → API keys and restart Darkroom with it. |
+| **Blocked by SpicyAPI's content screen** / **screen is unsure** | Their pre-check refused the prompt (nothing charged, no strike). Make every person unmistakably adult and consenting, avoid real people's names, then try again. |
+| **Insufficient balance** / **spend limit reached** | Top up at spicyapi.com ($50 minimum) or raise the monthly limit in their dashboard. Nothing was charged. |
+| Cloud task **withheld** after rendering | SpicyAPI's output check refused the finished clip; the charge is refunded. Change the prompt or the first frame. |
 
 ComfyUI also keeps its own copy of each result in `ComfyUI/output/darkroom/` and the uploaded
 source images in `ComfyUI/input/darkroom/` (the Desktop app: under its chosen base folder,
@@ -166,8 +300,13 @@ clear those ComfyUI folders yourself whenever you like.
 
 * Darkroom binds to `127.0.0.1`. `--lan` (or `--host 0.0.0.0`) lets other devices on your
   network use it, without any login; only do that on a network you trust.
-* The server makes exactly one kind of outbound connection: to the ComfyUI URL you configured.
-  It ignores `HTTP_PROXY`-style environment variables so that cannot be redirected.
+* Without a SpicyAPI key the server talks to exactly two things, both on this machine: the
+  ComfyUI URL you configured and, if one is running, a local LLM server on `127.0.0.1`. Both
+  clients ignore `HTTP_PROXY`-style environment variables so that cannot be redirected.
+* With `--spicy-key`, the **Cloud video** tab, and only it, sends prompts to `api.spicyapi.com`
+  and downloads the results. The status pill and the other tabs never contact the cloud; the
+  balance check when you open that tab and pressing its Generate button do. The key is read from
+  the command line or `SPICYAPI_KEY`, is never sent to the browser, and never appears in logs.
 * The browser page cannot load anything from anywhere but Darkroom (CSP `default-src 'self'`).
 * No telemetry anywhere in the stack. (This is also why Darkroom is a small FastAPI app rather
   than Gradio or Streamlit: both send usage analytics by default unless you remember to turn
@@ -191,6 +330,8 @@ clear those ComfyUI folders yourself whenever you like.
 
 ```sh
 .venv/bin/pip install pytest
-.venv/bin/python -m pytest             # unit tests + end-to-end test against the mock server
+.venv/bin/python -m pytest             # unit tests + end-to-end tests against the three mocks
 .venv/bin/python dev/mock_comfyui.py   # fake ComfyUI on :8188 to click around without a GPU
+.venv/bin/python dev/mock_llm.py       # fake Ollama on :11434 (✨ Expand with "use local LLM")
+.venv/bin/python dev/mock_spicyapi.py  # fake SpicyAPI on :8787 (then --spicy-key sk-spicy-test --spicy-url http://127.0.0.1:8787/v1)
 ```

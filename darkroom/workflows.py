@@ -216,6 +216,9 @@ class Template:
             "sizes": [list(map(int, s)) for s in (self.meta.get("sizes") or []) if isinstance(s, (list, tuple)) and len(s) == 2],
             "sampler_node": (self.meta.get("sampler") or {}).get("node_class", "KSampler"),
             "tokens": sorted(self.tokens()),
+            # How the prompt expander should write for this preset: "tags" (SDXL / Pony / Illustrious
+            # comma lists) or "natural" (sentence prompts: Wan, Flux, Chroma, Qwen-Image).
+            "prompt_style": "natural" if self.meta.get("prompt_style") == "natural" or (self.mode == "img2vid" and self.meta.get("prompt_style") != "tags") else "tags",
         }
 
     # ---- rendering -----------------------------------------------------------
