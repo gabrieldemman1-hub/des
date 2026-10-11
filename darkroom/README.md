@@ -36,8 +36,8 @@ Darkroom's own dependencies, all local libraries ([requirements.txt](requirement
 # git checkout
 cd ComfyUI && python main.py
 # Windows portable build: double-click run_nvidia_gpu.bat
-# Desktop app: just open it. It listens on http://127.0.0.1:8000 (not 8188), so start
-# Darkroom with  ./run.sh --comfy http://127.0.0.1:8000   (or set COMFY_URL=http://127.0.0.1:8000)
+# Desktop app: just open it. It listens on http://127.0.0.1:8000 (not 8188); Darkroom
+# checks both ports by itself, so no flag is needed. Any other address: --comfy http://host:port
 ```
 
 Keep ComfyUI on `127.0.0.1` (its default). Do not start it with `--listen`: ComfyUI has no login,
@@ -129,7 +129,7 @@ outputs/            your results (created on first run, ignored by git)
 
 | Message | What it means |
 |---|---|
-| **ComfyUI is not reachable at http://127.0.0.1:8188** | ComfyUI is not running, still loading, or on another port. ComfyUI Desktop uses port 8000: `./run.sh --comfy http://127.0.0.1:8000`. If the console of a git/portable ComfyUI prints another port, use that. |
+| **ComfyUI is not reachable at http://127.0.0.1:8188** | ComfyUI is not running, still loading, or on another port. Darkroom also checks port 8000 (the Desktop app) by itself; for any other port start it with `./run.sh --comfy http://127.0.0.1:<port>` (the port is in ComfyUI's console or its browser address bar). |
 | **Value not in list … ckpt_name: 'x' not in […]** | The preset's model file is not installed (or sits in the wrong `models/` subfolder). Pick another model in the dropdown or download the file; press ↻ next to Model after copying files. |
 | **Node 'X' not found. The custom node may not be installed** (older ComfyUI: *Cannot execute because node X does not exist*) | Your ComfyUI is too old for that node (the video presets need CreateVideo/SaveVideo/Wan22ImageToVideoLatent: update ComfyUI) or a custom node is missing. |
 | **… out of memory** | Lower width/height, frames or steps; close other GPU apps; use fp8 weights or the smaller preset. |

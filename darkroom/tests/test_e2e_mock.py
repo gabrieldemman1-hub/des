@@ -73,7 +73,7 @@ def env(tmp_path_factory):
 def offline(tmp_path_factory):
     """A Darkroom pointed at a port where nothing listens."""
     aport = free_port()
-    app = ServerThread(create_app(comfy_url=f"http://127.0.0.1:{free_port()}", outputs_dir=tmp_path_factory.mktemp("out2")), aport)
+    app = ServerThread(create_app(comfy_url=f"http://127.0.0.1:{free_port()}", outputs_dir=tmp_path_factory.mktemp("out2"), probe_urls=(f"http://127.0.0.1:{free_port()}",)), aport)
     app.start()
     wait_for(f"http://127.0.0.1:{aport}/api/status")
     client = httpx.Client(base_url=f"http://127.0.0.1:{aport}", timeout=30)
@@ -313,9 +313,27 @@ def test_page_is_self_contained(env):
     assert env.c.get("/docs").status_code == 404 and env.c.get("/openapi.json").status_code == 404
 
 
+def test_autodetects_comfy_on_another_loopback_port(env, tmp_path_factory):
+    """Configured for a dead port, but ComfyUI (the mock) answers on another: Darkroom switches by itself."""
+    aport = free_port()
+    app = ServerThread(create_app(comfy_url=f"http://127.0.0.1:{free_port()}", outputs_dir=tmp_path_factory.mktemp("out3"), probe_urls=("http://127.0.0.1:1", env.mock_url)), aport)
+    app.start()
+    wait_for(f"http://127.0.0.1:{aport}/api/status")
+    try:
+        with httpx.Client(base_url=f"http://127.0.0.1:{aport}", timeout=30) as c:
+            s = c.get("/api/status").json()
+            assert s["online"] is True and s["comfy_url"] == env.mock_url and s["switched_to"] == env.mock_url
+            s2 = c.get("/api/status").json()
+            assert s2["online"] is True and "switched_to" not in s2
+            assert c.get("/api/options").json()["models"]["CheckpointLoaderSimple.ckpt_name"]
+    finally:
+        app.stop()
+
+
 def test_offline_comfy_is_explained(offline):
     s = offline.get("/api/status").json()
     assert s["online"] is False and "not reachable" in s["error"]["message"] and "Start ComfyUI" in s["error"]["hint"]
+    assert "Looked for it at" in s["error"]["hint"]
     o = offline.get("/api/options").json()
     assert o["online"] is False and len(o["workflows"]) == 6 and o["models"] == {}
     job = run_job(offline, mode="txt2img", workflow="txt2img_checkpoint", prompt="x", steps="1", model="whatever.safetensors")

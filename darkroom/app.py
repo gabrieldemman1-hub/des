@@ -53,6 +53,9 @@ log = logging.getLogger("darkroom")
 
 # ---- configuration (CLI flags / env vars override these) -----------------------
 DEFAULT_COMFY_URL = os.environ.get("COMFY_URL", "http://127.0.0.1:8188")
+# While ComfyUI is unreachable at the configured URL, these loopback addresses are tried too
+# (8188 = git / portable ComfyUI, 8000 = the ComfyUI Desktop app). Never anything off-machine.
+DEFAULT_PROBE_URLS = ("http://127.0.0.1:8188", "http://127.0.0.1:8000")
 DEFAULT_HOST = os.environ.get("DARKROOM_HOST", "127.0.0.1")  # localhost only; see README before changing
 DEFAULT_PORT = int(os.environ.get("DARKROOM_PORT", "8585"))
 DEFAULT_OUTPUTS = Path(os.environ.get("DARKROOM_OUTPUTS", str(HERE / "outputs")))
@@ -256,10 +259,12 @@ def _image_size(data: bytes) -> tuple[int, int] | None:
 
 
 # ---- application ------------------------------------------------------------------
-def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAULT_OUTPUTS, workflows_dir: Path = WORKFLOWS_DIR, allowed_hosts: tuple[str, ...] = ()) -> FastAPI:
+def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAULT_OUTPUTS, workflows_dir: Path = WORKFLOWS_DIR, allowed_hosts: tuple[str, ...] = (), probe_urls: tuple[str, ...] = DEFAULT_PROBE_URLS) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         app.state.comfy = ComfyClient(comfy_url)
+        app.state.probe_urls = probe_urls
+        app.state.probe_lock = asyncio.Lock()
         app.state.storage = Storage(outputs_dir)
         app.state.templates, app.state.template_problems = load_templates(workflows_dir)
         for problem in app.state.template_problems:
@@ -340,6 +345,28 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
 
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
+    async def _find_comfy_elsewhere(app: FastAPI) -> str | None:
+        """ComfyUI is not at the configured URL: look at the other loopback ports and switch if one answers."""
+        async with app.state.probe_lock:
+            current = app.state.comfy.base_url
+            for url in app.state.probe_urls:
+                try:
+                    candidate = ComfyClient.normalize_url(url)[0]
+                except ValueError:
+                    continue
+                if candidate == current:
+                    continue
+                probe = ComfyClient(candidate, connect_timeout=1.0)
+                if await probe.is_online():
+                    old = app.state.comfy
+                    app.state.comfy = probe
+                    app.state.comfy_url = candidate
+                    log.info("ComfyUI did not answer at %s but is running at %s; using that.", current, candidate)
+                    await old.aclose()
+                    return candidate
+                await probe.aclose()
+        return None
+
     # ---- status / options --------------------------------------------------------
     @app.get("/api/status")
     async def api_status(request: Request):
@@ -354,8 +381,21 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
         try:
             stats = await comfy.system_stats()
         except ComfyError as e:
-            info["error"] = e.to_dict()
-            return info
+            found = await _find_comfy_elsewhere(request.app)
+            if found is None:
+                err = e.to_dict()
+                tried = [request.app.state.comfy_url] + [u for u in request.app.state.probe_urls if ComfyClient.normalize_url(u)[0] != request.app.state.comfy_url]
+                err["hint"] = f"Looked for it at {', '.join(tried)}. " + (err.get("hint") or "")
+                info["error"] = err
+                return info
+            comfy = request.app.state.comfy
+            info["comfy_url"] = found
+            info["switched_to"] = found
+            try:
+                stats = await comfy.system_stats()
+            except ComfyError as e2:
+                info["error"] = e2.to_dict()
+                return info
         info["online"] = True
         system = stats.get("system") or {}
         devices = stats.get("devices") or []

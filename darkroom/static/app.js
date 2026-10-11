@@ -781,6 +781,7 @@
       el.connText.textContent = 'Darkroom server unreachable';
       show(el.offline, false);
     } else if (state.online) {
+      if (s.switched_to) toast('Found ComfyUI', { msg: `It is running at ${s.switched_to}; using that from now on.`, kind: 'ok', timeout: 6000 });
       const bits = ['ComfyUI online'];
       if (s.device && s.device.name) bits.push(String(s.device.name).replace(/^cuda:\d+\s*/i, '').split(':')[0].trim().slice(0, 28));
       const q = s.queue ? (s.queue.running + s.queue.pending) : 0;
