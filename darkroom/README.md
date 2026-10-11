@@ -101,6 +101,21 @@ Click one to load it.
 
 **Cancel** interrupts the running job in ComfyUI or removes it from its queue.
 
+## Using it from your phone
+
+Darkroom listens only on the PC by default. To use it from a phone or tablet on the same Wi-Fi,
+start it with `--lan`:
+
+```sh
+./run.sh --lan          # Windows: run.bat --lan
+```
+
+It prints a `Phone -> http://192.168.x.y:8585` line (the same address is shown under the
+gallery); open that in the phone's browser. Allow Darkroom if Windows Firewall asks (private
+networks). Note that there is no login: anyone on that Wi-Fi can open it while it runs this way,
+so use it on your home network only. A VPN on the PC that blocks local-network access can also
+block the phone; allow LAN access in the VPN's settings or disconnect it.
+
 ## Swapping models and workflows
 
 The Model dropdown already covers "same workflow, different checkpoint". For anything else
@@ -144,8 +159,8 @@ clear those ComfyUI folders yourself whenever you like.
 
 ## Privacy notes
 
-* Darkroom binds to `127.0.0.1`. Starting it with `--host 0.0.0.0` would let other devices on
-  your network use it; don't, unless that is what you want.
+* Darkroom binds to `127.0.0.1`. `--lan` (or `--host 0.0.0.0`) lets other devices on your
+  network use it, without any login; only do that on a network you trust.
 * The server makes exactly one kind of outbound connection: to the ComfyUI URL you configured.
   It ignores `HTTP_PROXY`-style environment variables so that cannot be redirected.
 * The browser page cannot load anything from anywhere but Darkroom (CSP `default-src 'self'`).

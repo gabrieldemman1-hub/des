@@ -330,6 +330,23 @@ def test_autodetects_comfy_on_another_loopback_port(env, tmp_path_factory):
         app.stop()
 
 
+def test_lan_mode_reports_phone_urls(env, tmp_path_factory):
+    from app import lan_addresses
+
+    aport = free_port()
+    app = ServerThread(create_app(comfy_url=env.mock_url, outputs_dir=tmp_path_factory.mktemp("out4"), allowed_hosts=("0.0.0.0",), port=aport), aport)
+    app.start()
+    wait_for(f"http://127.0.0.1:{aport}/api/status")
+    try:
+        with httpx.Client(base_url=f"http://127.0.0.1:{aport}", timeout=30) as c:
+            s = c.get("/api/status", headers={"Host": f"192.168.1.50:{aport}"}).json()  # any Host is fine in LAN mode
+            assert s["online"] is True
+            assert s["lan_urls"] == [f"http://{ip}:{aport}" for ip in lan_addresses()]
+            assert env.c.get("/api/status").json()["lan_urls"] == []  # default (loopback) mode advertises nothing
+    finally:
+        app.stop()
+
+
 def test_offline_comfy_is_explained(offline):
     s = offline.get("/api/status").json()
     assert s["online"] is False and "not reachable" in s["error"]["message"] and "Start ComfyUI" in s["error"]["hint"]

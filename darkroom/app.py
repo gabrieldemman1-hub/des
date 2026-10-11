@@ -27,6 +27,7 @@ import math
 import mimetypes
 import os
 import secrets
+import socket
 import threading
 import time
 import traceback
@@ -142,6 +143,23 @@ class JobStore:
 
 
 # ---- helpers ---------------------------------------------------------------------
+def lan_addresses() -> list[str]:
+    """This machine's IPv4 addresses on the local network (for opening Darkroom from a phone)."""
+    ips: set[str] = set()
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.connect(("10.255.255.255", 1))  # no packet is sent; it only picks the outbound interface
+            ips.add(s.getsockname()[0])
+    except OSError:
+        pass
+    try:
+        for info in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
+            ips.add(info[4][0])
+    except OSError:
+        pass
+    return sorted(ip for ip in ips if not ip.startswith("127.") and not ip.startswith("169.254."))
+
+
 def load_styles() -> list[dict[str, Any]]:
     path = PRESETS_DIR / "styles.json"
     try:
@@ -259,7 +277,9 @@ def _image_size(data: bytes) -> tuple[int, int] | None:
 
 
 # ---- application ------------------------------------------------------------------
-def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAULT_OUTPUTS, workflows_dir: Path = WORKFLOWS_DIR, allowed_hosts: tuple[str, ...] = (), probe_urls: tuple[str, ...] = DEFAULT_PROBE_URLS) -> FastAPI:
+def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAULT_OUTPUTS, workflows_dir: Path = WORKFLOWS_DIR, allowed_hosts: tuple[str, ...] = (), probe_urls: tuple[str, ...] = DEFAULT_PROBE_URLS, port: int = 0) -> FastAPI:
+    any_host = any(h in ("0.0.0.0", "::") for h in allowed_hosts)  # the user chose to expose it on the LAN
+
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         app.state.comfy = ComfyClient(comfy_url)
@@ -273,6 +293,7 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
         app.state.jobs = JobStore()
         app.state.comfy_url = comfy_url
         app.state.outputs_dir = Path(outputs_dir).resolve()
+        app.state.lan_urls = [f"http://{ip}:{port}" for ip in lan_addresses()] if any_host and port else []
         log.info("Outputs folder: %s", app.state.outputs_dir)
         log.info("Workflow presets: %s", ", ".join(app.state.templates) or "(none!)")
         try:
@@ -290,7 +311,6 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
     # form posts). Only answer when the browser believes it is talking to Darkroom, and only accept
     # state-changing requests from Darkroom's own page.
     local_hosts = {"127.0.0.1", "localhost", "::1"} | {h.lower() for h in allowed_hosts if h}
-    any_host = any(h in ("0.0.0.0", "::") for h in allowed_hosts)  # the user chose to expose it on the LAN
 
     @app.middleware("http")
     async def local_only(request: Request, call_next):
@@ -377,6 +397,7 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
             "outputs_dir": str(request.app.state.outputs_dir),
             "template_problems": request.app.state.template_problems,
             "active_jobs": [j.id for j in request.app.state.jobs.active()],
+            "lan_urls": request.app.state.lan_urls,
         }
         try:
             stats = await comfy.system_stats()
@@ -798,6 +819,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Darkroom: private local frontend for ComfyUI")
     p.add_argument("--comfy", default=DEFAULT_COMFY_URL, help=f"ComfyUI base URL (default {DEFAULT_COMFY_URL})")
     p.add_argument("--host", default=DEFAULT_HOST, help="Interface to listen on (default 127.0.0.1 = this machine only)")
+    p.add_argument("--lan", action="store_const", const="0.0.0.0", dest="host", help="Also reachable from phones/tablets on your Wi-Fi (same as --host 0.0.0.0)")
     p.add_argument("--port", type=int, default=DEFAULT_PORT, help=f"Port for the Darkroom UI (default {DEFAULT_PORT})")
     p.add_argument("--outputs", default=str(DEFAULT_OUTPUTS), help="Folder for results + gallery (default ./outputs)")
     p.add_argument("--no-browser", action="store_true", help="Do not open the UI in your browser on start")
@@ -813,10 +835,12 @@ def main(argv: list[str] | None = None) -> None:
     except ValueError as e:
         sys.exit(f"error: {e}")
     url = f"http://{'127.0.0.1' if args.host in ('0.0.0.0', '::') else args.host}:{args.port}"
+    lan = [f"http://{ip}:{args.port}" for ip in lan_addresses()] if args.host in ("0.0.0.0", "::") else []
     if args.host not in ("127.0.0.1", "localhost", "::1"):
-        log.warning("Listening on %s: other devices on your network can open Darkroom. Keep 127.0.0.1 for private use.", args.host)
-    app = create_app(comfy_url=args.comfy, outputs_dir=Path(args.outputs), allowed_hosts=(args.host,))
-    print(f"\n  Darkroom  ->  {url}\n  ComfyUI   ->  {args.comfy}\n  Outputs   ->  {Path(args.outputs).resolve()}\n", flush=True)
+        log.warning("Listening on %s: anyone on your network can open Darkroom (there is no login). Use 127.0.0.1 for private use.", args.host)
+    app = create_app(comfy_url=args.comfy, outputs_dir=Path(args.outputs), allowed_hosts=(args.host,), port=args.port)
+    phone = ("\n  Phone     ->  " + "  or  ".join(lan) + "  (same Wi-Fi; allow it if Windows Firewall asks)") if lan else ""
+    print(f"\n  Darkroom  ->  {url}{phone}\n  ComfyUI   ->  {args.comfy}\n  Outputs   ->  {Path(args.outputs).resolve()}\n", flush=True)
     if not args.no_browser:
         threading.Timer(1.2, lambda: webbrowser.open(url)).start()
     uvicorn.run(app, host=args.host, port=args.port, log_level="info" if args.verbose else "warning", access_log=args.verbose, server_header=False)

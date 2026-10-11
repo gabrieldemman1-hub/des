@@ -796,6 +796,12 @@
       show(el.offline, true);
     }
     if (s.outputs_dir) el.outputsDir.textContent = s.outputs_dir;
+    const lanHint = document.getElementById('lan-hint');
+    if (lanHint) {
+      const urls = s.lan_urls || [];
+      lanHint.textContent = urls.length ? `On a phone on the same Wi-Fi, open ${urls.join(' or ')}` : '';
+      show(lanHint, urls.length > 0);
+    }
     if (state.online && was === false) loadOptions({ quiet: true });  // back online: refresh the model lists
   }
 
