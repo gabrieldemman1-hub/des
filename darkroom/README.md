@@ -139,8 +139,8 @@ source images in `ComfyUI/input/darkroom/`; delete those folders whenever you li
   It ignores `HTTP_PROXY`-style environment variables so that cannot be redirected.
 * The browser page cannot load anything from anywhere but Darkroom (CSP `default-src 'self'`).
 * No telemetry anywhere in the stack. (This is also why Darkroom is a small FastAPI app rather
-  than Gradio or Streamlit, whose defaults include usage analytics and, for Gradio, Google
-  Fonts.)
+  than Gradio or Streamlit: both send usage analytics by default unless you remember to turn
+  them off, and Gradio versions before 6.17 also pulled fonts and a script from CDNs.)
 * ComfyUI itself has no telemetry; the ComfyUI *Manager* custom node does fetch its node
   registry from the internet, which is unrelated to Darkroom.
 * A short safety negative (`child, minor, underage, loli, shota`) is appended to every job

@@ -199,17 +199,31 @@ class ComfyClient:
         if cached and time.monotonic() - cached[0] < max_age:
             return cached[1]
         info = await self.object_info(node_class)
-        choices: list[str] = []
-        for section in ("required", "optional"):
-            spec = ((info.get("input") or {}).get(section) or {}).get(input_name)
-            if isinstance(spec, list) and spec and isinstance(spec[0], list):
-                choices = [str(c) for c in spec[0]]
-                break
-            if isinstance(spec, list) and spec and isinstance(spec[0], dict) and isinstance(spec[0].get("options"), list):
-                choices = [str(c) for c in spec[0]["options"]]  # COMBO with options dict (newer schema)
-                break
+        choices = self.choices_from_info(info, input_name)
         self._choices_cache[key] = (time.monotonic(), choices)
         return choices
+
+    @staticmethod
+    def choices_from_info(info: dict[str, Any], input_name: str) -> list[str]:
+        """Pull a combo input's options out of an /object_info entry.
+
+        Three shapes exist: classic nodes ``[[choices...], {opts}]`` (or just
+        ``[[choices...]]``), V3 nodes ``["COMBO", {"options": [...], ...}]``,
+        and the occasional ``[{"options": [...]}]``.
+        """
+        for section in ("required", "optional"):
+            spec = ((info.get("input") or {}).get(section) or {}).get(input_name)
+            if not isinstance(spec, list) or not spec:
+                continue
+            head = spec[0]
+            opts = spec[1] if len(spec) > 1 and isinstance(spec[1], dict) else {}
+            if isinstance(head, list):
+                return [str(c) for c in head]
+            if isinstance(opts.get("options"), list):
+                return [str(c) for c in opts["options"]]
+            if isinstance(head, dict) and isinstance(head.get("options"), list):
+                return [str(c) for c in head["options"]]
+        return []
 
     async def queue_state(self) -> dict[str, Any]:
         return (await self._get("/queue")).json()
