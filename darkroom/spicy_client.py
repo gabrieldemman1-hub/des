@@ -32,6 +32,7 @@ Swapping the service: this module is the only place that knows the HTTP shapes.
 from __future__ import annotations
 
 import asyncio
+import ipaddress
 import logging
 import time
 from typing import Any, Awaitable, Callable
@@ -51,7 +52,8 @@ FRAME_MODELS = {
     "spicy-image-photo-1": {"label": "Spicy Image Photo 1", "usd": 0.08},
     "spicy-image-1-pro": {"label": "Spicy Image 1 Pro", "usd": 0.09},
 }
-FRAME_SIZES = ("832*1216", "1216*832", "1024*1024", "1024*1536", "1536*1024", "1080*1920", "1920*1080", "1280*1280", "1152*2048", "2048*1152")
+FRAME_SIZES = ("832*1216", "1216*832", "1024*1024", "1024*1536", "1536*1024", "1080*1920", "1920*1080", "1280*1280", "1440*1440", "1152*2048", "2048*1152")  # the eleven sizes every image model accepts
+MAX_IMAGE_PROMPT_CHARS = 4000
 RESOLUTIONS = ("480P", "720P", "1080P")
 ASPECT_RATIOS = ("16:9", "9:16", "1:1", "4:3", "3:4", "21:9")
 DURATION_MIN, DURATION_MAX = 2, 30
@@ -68,6 +70,19 @@ STATUS_LABELS = {"queued": "Queued at SpicyAPI", "processing": "Rendering at Spi
 def is_loopback(url: str) -> bool:
     host = (urlsplit(url).hostname or "").lower().strip("[]")
     return host in ("127.0.0.1", "localhost", "::1") or host.startswith("127.")
+
+
+def is_public_https(url: str) -> bool:
+    """True for an https URL whose host is a public name or address (never loopback / LAN / link-local)."""
+    parts = urlsplit(url)
+    host = (parts.hostname or "").lower().strip("[]")
+    if parts.scheme != "https" or not host or host == "localhost":
+        return False
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        return "." in host  # a DNS name
+    return not (ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast or ip.is_unspecified)
 
 
 def estimate_cost(model: str, duration: int, resolution: str, *, fps60: bool = False, frame_model: str | None = None) -> dict[str, Any]:
@@ -226,6 +241,8 @@ class SpicyClient:
 
     async def generate_image(self, model: str, prompt: str, size: str, *, seed: int | None = None, enhance_prompt: bool = False) -> dict[str, Any]:
         """One first frame.  Synchronous on their side (10-30 s).  Returns {url, cost_usd, id}."""
+        if len(prompt) > MAX_IMAGE_PROMPT_CHARS:
+            raise SpicyRejected(f"Frame prompt is longer than {MAX_IMAGE_PROMPT_CHARS} characters", "Shorten the frame prompt.", status=400)
         body: dict[str, Any] = {"model": model, "prompt": prompt, "size": size, "n": 1}
         if enhance_prompt:
             body["enhance_prompt"] = True
@@ -305,11 +322,15 @@ class SpicyClient:
             await asyncio.sleep(poll)
 
     async def download(self, url: str) -> bytes:
-        """Fetch a finished output.  Only SpicyAPI's own hosts (or the configured base host) are allowed."""
+        """Fetch a finished output from the URL the API returned.
+
+        Outputs live on SpicyAPI's CDN (cdn.spicyapi.com today); any public https host is
+        accepted so a CDN change cannot strand finished clips, but a URL pointing back into
+        this machine or the LAN is refused (the only other host allowed is the configured
+        base host, for the development mock)."""
         host = (urlsplit(url).hostname or "").lower()
-        allowed = host == self.host or host.endswith(".spicyapi.com") or host == "spicyapi.com"
-        if not allowed:
-            raise SpicyUnavailable(f"Refusing to download from an unexpected host: {host}", "SpicyAPI's outputs live on its own CDN; this looks like a changed API.")
+        if not (host == self.host or is_public_https(url)):
+            raise SpicyUnavailable(f"Refusing to download from an unexpected address: {host or url}", "SpicyAPI's outputs live on its public CDN; this looks like a changed API.")
         try:
             r = await self._dl.get(url)
         except httpx.HTTPError as e:
