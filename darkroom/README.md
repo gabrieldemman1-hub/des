@@ -18,6 +18,7 @@ make, and swappable workflow presets. Everything runs on your machine; nothing l
 * **ComfyUI** installed and working (desktop app, portable build, or a git checkout) with at
   least one model, e.g. an SDXL / Pony / Illustrious checkpoint in `ComfyUI/models/checkpoints`.
   For video, the Wan 2.2 5B files (see [workflows/README.md](workflows/README.md)).
+  Pony-family checkpoints: use the "CLIP skip 2" preset and the "Pony score tags" style.
 * **Python 3.10 or newer** for Darkroom itself (any Python; it does not need to be ComfyUI's).
 
 Darkroom's own dependencies, all local libraries ([requirements.txt](requirements.txt)):
@@ -76,7 +77,8 @@ viewer; the source frame becomes its gallery thumbnail.
 
 **Seed.** Empty = a new random seed each time. The seed that was used is shown after every job;
 tick **Fixed** to keep it, 🎲 picks a new fixed one. **Reuse settings** on a result restores
-everything including the seed.
+everything including the seed. Note that ComfyUI caches node results: a fixed seed with
+unchanged settings comes back instantly as the same image (Darkroom still saves a new copy).
 
 **Style.** A preset that wraps your prompt ("{prompt}, cinematic still, film grain…"). Edit or
 add styles in `presets/styles.json`.

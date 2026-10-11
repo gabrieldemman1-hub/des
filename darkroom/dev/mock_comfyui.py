@@ -49,12 +49,12 @@ CHOICES: dict[tuple[str, str], list[str]] = {
 }
 KNOWN_CLASSES = {
     "CheckpointLoaderSimple", "UNETLoader", "ImageOnlyCheckpointLoader", "CLIPLoader", "VAELoader", "CLIPVisionLoader", "LoadImage",
-    "CLIPTextEncode", "CLIPVisionEncode", "EmptyLatentImage", "KSampler", "KSamplerAdvanced", "VAEDecode", "SaveImage", "PreviewImage", "ModelSamplingSD3",
+    "CLIPTextEncode", "CLIPSetLastLayer", "CLIPVisionEncode", "EmptyLatentImage", "KSampler", "KSamplerAdvanced", "VAEDecode", "SaveImage", "PreviewImage", "ModelSamplingSD3",
     "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning", "VideoLinearCFGGuidance", "CreateVideo", "SaveVideo",
     "SaveAnimatedWEBP", "SaveAnimatedPNG", "SaveWEBM", "LoraLoader", "LoraLoaderModelOnly",
 }
 ORDER = ["CheckpointLoaderSimple", "UNETLoader", "ImageOnlyCheckpointLoader", "CLIPLoader", "VAELoader", "CLIPVisionLoader", "LoraLoader", "LoraLoaderModelOnly",
-         "LoadImage", "CLIPTextEncode", "CLIPVisionEncode", "EmptyLatentImage", "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning",
+         "LoadImage", "CLIPSetLastLayer", "CLIPTextEncode", "CLIPVisionEncode", "EmptyLatentImage", "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning",
          "ModelSamplingSD3", "VideoLinearCFGGuidance", "KSampler", "KSamplerAdvanced", "VAEDecode", "CreateVideo", "SaveImage", "PreviewImage", "SaveVideo", "SaveAnimatedWEBP", "SaveAnimatedPNG", "SaveWEBM"]
 
 

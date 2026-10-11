@@ -143,6 +143,13 @@ def test_txt2img_end_to_end(env):
     assert h[0]["prompt"] == "A quiet Portrait" and h[0]["seed"] == 12345 and h[0]["style"] == "cinematic"
 
 
+def test_clipskip_preset_and_pony_style(env):
+    job = run_job(env.c, mode="txt2img", workflow="txt2img_checkpoint_clipskip2", prompt="portrait", steps="1", style="pony")
+    assert job["status"] == "done", job.get("error")
+    assert job["params"]["final_prompt"].startswith("score_9, score_8_up") and job["params"]["final_prompt"].endswith("portrait")
+    assert job["params"]["sampler"] == "euler_ancestral"
+
+
 def test_random_seed_when_empty(env):
     a = run_job(env.c, mode="txt2img", workflow="txt2img_checkpoint", prompt="seed test", steps="1")
     b = run_job(env.c, mode="txt2img", workflow="txt2img_checkpoint", prompt="seed test", steps="1", seed="-1")
@@ -241,7 +248,7 @@ def test_offline_comfy_is_explained(offline):
     s = offline.get("/api/status").json()
     assert s["online"] is False and "not reachable" in s["error"]["message"] and "Start ComfyUI" in s["error"]["hint"]
     o = offline.get("/api/options").json()
-    assert o["online"] is False and len(o["workflows"]) == 5 and o["models"] == {}
+    assert o["online"] is False and len(o["workflows"]) == 6 and o["models"] == {}
     job = run_job(offline, mode="txt2img", workflow="txt2img_checkpoint", prompt="x", steps="1", model="whatever.safetensors")
     assert job["status"] == "error" and "not reachable" in job["error"]["message"]
     assert offline.post("/api/generate", data={"mode": "txt2img", "workflow": "txt2img_checkpoint", "prompt": "x"}).status_code == 400  # no model list available

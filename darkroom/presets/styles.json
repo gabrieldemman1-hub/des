@@ -1,5 +1,10 @@
 [
-  { "id": "none", "name": "None (prompt as written)", "prompt": "{prompt}", "negative": "{negative}" },
+  {
+    "id": "none",
+    "name": "None (prompt as written)",
+    "prompt": "{prompt}",
+    "negative": "{negative}"
+  },
   {
     "id": "photoreal",
     "name": "Photoreal",
@@ -34,5 +39,12 @@
     "description": "Quality tags for Illustrious / NoobAI / Pony style checkpoints.",
     "prompt": "masterpiece, best quality, very aesthetic, absurdres, {prompt}",
     "negative": "{negative}, lowres, worst quality, bad quality, sketch, monochrome"
+  },
+  {
+    "id": "pony",
+    "name": "Pony score tags",
+    "description": "Pony Diffusion V6 XL quality tags in front of the prompt (use with the CLIP skip 2 preset).",
+    "prompt": "score_9, score_8_up, score_7_up, score_6_up, score_5_up, score_4_up, {prompt}",
+    "negative": "{negative}, score_6, score_5, score_4"
   }
 ]

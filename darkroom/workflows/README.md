@@ -14,6 +14,7 @@ showing it). Presets are read when Darkroom starts, so restart it after editing.
 | File | Mode | Model files it expects (ComfyUI/models/…) |
 |---|---|---|
 | `txt2img_checkpoint.json` | Text → Image | `checkpoints/<any SD1.5 / SDXL / Pony / Illustrious checkpoint>` (dropdown lists them) |
+| `txt2img_checkpoint_clipskip2.json` | Text → Image | same, with `CLIPSetLastLayer -2` for Pony V6 / NoobAI (Euler a defaults) |
 | `img2vid_wan22_5b.json` | Image → Video | `diffusion_models/wan2.2_ti2v_5B_fp16.safetensors`, `text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors`, `vae/wan2.2_vae.safetensors` |
 | `img2vid_wan22_14b.json` | Image → Video | `diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors` + `wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors`, `text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors`, `vae/wan_2.1_vae.safetensors` (two-expert, 24 GB class GPU) |
 | `img2vid_wan21_14b.json` | Image → Video | `diffusion_models/wan2.1_i2v_480p_14B_fp8_e4m3fn.safetensors`, `text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors`, `vae/wan_2.1_vae.safetensors`, `clip_vision/clip_vision_h.safetensors` |
@@ -109,6 +110,15 @@ loader and re-wire MODEL/CLIP through it, export (API), add `_meta`. The exporte
 and the KSampler's `model` becomes `["10", 0]`, both CLIPTextEncode `clip` inputs `["10", 1]`.
 Use `{{MODEL}}` with `"model": {"node_class": "LoraLoader", "input": "lora_name"}` if you would
 rather pick the *LoRA* from the dropdown and hard-code the checkpoint.
+
+**CLIP skip.** Pony Diffusion V6 XL needs CLIP skip 2. Insert a *CLIPSetLastLayer* node between the
+checkpoint's CLIP output and both text encoders (this is exactly what `txt2img_checkpoint_clipskip2.json` does):
+
+```json
+"10": { "class_type": "CLIPSetLastLayer", "inputs": { "clip": ["4", 1], "stop_at_clip_layer": -2 } }
+```
+
+and point both CLIPTextEncode `clip` inputs at `["10", 0]`.
 
 **Video output nodes.** Any of these work; Darkroom finds the produced file whatever node saved it:
 
