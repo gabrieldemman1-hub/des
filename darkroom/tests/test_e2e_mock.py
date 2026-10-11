@@ -166,6 +166,13 @@ def test_img2vid_from_gallery_image(env):
     assert env.c.get("/api/gallery?kind=video").json()["items"][0]["file"] == rec["file"] or ext == ".webp"
 
 
+def test_img2vid_wan22_14b_two_stage(env):
+    src = env.c.get("/api/gallery?kind=image").json()["items"][0]
+    job = run_job(env.c, mode="img2vid", workflow="img2vid_wan22_14b", prompt="camera orbits slowly", steps="99", frames="9", fps="16", source=src["file"])
+    assert job["status"] == "done", job.get("error")
+    assert job["params"]["frames"] == 9 and job["results"][0]["kind"] in ("video", "animation")
+
+
 def test_img2vid_from_upload_svd_without_prompt(env):
     job = run_job(env.c, mode="img2vid", workflow="img2vid_svd", prompt="", steps="2", frames="7", fps="6", files={"image": ("my upload.png", png(), "image/png")})
     assert job["status"] == "done", job.get("error")
@@ -234,7 +241,7 @@ def test_offline_comfy_is_explained(offline):
     s = offline.get("/api/status").json()
     assert s["online"] is False and "not reachable" in s["error"]["message"] and "Start ComfyUI" in s["error"]["hint"]
     o = offline.get("/api/options").json()
-    assert o["online"] is False and len(o["workflows"]) == 4 and o["models"] == {}
+    assert o["online"] is False and len(o["workflows"]) == 5 and o["models"] == {}
     job = run_job(offline, mode="txt2img", workflow="txt2img_checkpoint", prompt="x", steps="1", model="whatever.safetensors")
     assert job["status"] == "error" and "not reachable" in job["error"]["message"]
     assert offline.post("/api/generate", data={"mode": "txt2img", "workflow": "txt2img_checkpoint", "prompt": "x"}).status_code == 400  # no model list available

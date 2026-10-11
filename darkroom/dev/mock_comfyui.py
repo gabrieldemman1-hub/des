@@ -39,7 +39,7 @@ from PIL import Image, ImageDraw
 
 CHOICES: dict[tuple[str, str], list[str]] = {
     ("CheckpointLoaderSimple", "ckpt_name"): ["mock_sdxl_v1.safetensors", "mock_illustrious_xl.safetensors", "mock_sd15.safetensors"],
-    ("UNETLoader", "unet_name"): ["wan2.2_ti2v_5B_fp16.safetensors", "wan2.1_i2v_480p_14B_fp8_e4m3fn.safetensors"],
+    ("UNETLoader", "unet_name"): ["wan2.2_ti2v_5B_fp16.safetensors", "wan2.1_i2v_480p_14B_fp8_e4m3fn.safetensors", "wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors", "wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors"],
     ("ImageOnlyCheckpointLoader", "ckpt_name"): ["svd_xt_1_1.safetensors"],
     ("KSampler", "sampler_name"): ["euler", "euler_ancestral", "dpmpp_2m", "dpmpp_2m_sde", "dpmpp_sde", "uni_pc", "ddim", "lcm"],
     ("KSampler", "scheduler"): ["normal", "karras", "exponential", "sgm_uniform", "simple", "ddim_uniform", "beta"],
@@ -49,13 +49,13 @@ CHOICES: dict[tuple[str, str], list[str]] = {
 }
 KNOWN_CLASSES = {
     "CheckpointLoaderSimple", "UNETLoader", "ImageOnlyCheckpointLoader", "CLIPLoader", "VAELoader", "CLIPVisionLoader", "LoadImage",
-    "CLIPTextEncode", "CLIPVisionEncode", "EmptyLatentImage", "KSampler", "VAEDecode", "SaveImage", "PreviewImage", "ModelSamplingSD3",
+    "CLIPTextEncode", "CLIPVisionEncode", "EmptyLatentImage", "KSampler", "KSamplerAdvanced", "VAEDecode", "SaveImage", "PreviewImage", "ModelSamplingSD3",
     "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning", "VideoLinearCFGGuidance", "CreateVideo", "SaveVideo",
     "SaveAnimatedWEBP", "SaveAnimatedPNG", "SaveWEBM", "LoraLoader", "LoraLoaderModelOnly",
 }
 ORDER = ["CheckpointLoaderSimple", "UNETLoader", "ImageOnlyCheckpointLoader", "CLIPLoader", "VAELoader", "CLIPVisionLoader", "LoraLoader", "LoraLoaderModelOnly",
          "LoadImage", "CLIPTextEncode", "CLIPVisionEncode", "EmptyLatentImage", "WanImageToVideo", "Wan22ImageToVideoLatent", "SVD_img2vid_Conditioning",
-         "ModelSamplingSD3", "VideoLinearCFGGuidance", "KSampler", "VAEDecode", "CreateVideo", "SaveImage", "PreviewImage", "SaveVideo", "SaveAnimatedWEBP", "SaveAnimatedPNG", "SaveWEBM"]
+         "ModelSamplingSD3", "VideoLinearCFGGuidance", "KSampler", "KSamplerAdvanced", "VAEDecode", "CreateVideo", "SaveImage", "PreviewImage", "SaveVideo", "SaveAnimatedWEBP", "SaveAnimatedPNG", "SaveWEBM"]
 
 
 class Mock:
@@ -165,8 +165,10 @@ class Mock:
             cls = node["class_type"]
             await self.send(cid, "executing", {"node": nid, "display_node": nid, "prompt_id": pid})
             await asyncio.sleep(self.step_delay)
-            if cls == "KSampler":
+            if cls in ("KSampler", "KSamplerAdvanced"):
                 steps = int(node["inputs"].get("steps", 20))
+                if cls == "KSamplerAdvanced":  # only the steps this stage actually runs
+                    steps = max(1, min(int(node["inputs"].get("end_at_step", steps)), steps) - int(node["inputs"].get("start_at_step", 0)))
                 if "SLOW" in text:
                     steps = max(steps, 60)
                 for i in range(1, steps + 1):
@@ -216,8 +218,8 @@ class Mock:
 
     def _seed_of(self, prompt: dict[str, Any]) -> int:
         for n in prompt.values():
-            if n["class_type"] == "KSampler":
-                return int(n["inputs"].get("seed", 0))
+            if n["class_type"] in ("KSampler", "KSamplerAdvanced"):
+                return int(n["inputs"].get("seed", n["inputs"].get("noise_seed", 0)))
         return 0
 
     def _source_image(self, prompt: dict[str, Any]) -> Image.Image | None:

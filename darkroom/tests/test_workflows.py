@@ -27,7 +27,7 @@ VALUES = {"MODEL": "a.safetensors", "SEED": 7, "STEPS": 20, "CFG": 6.5, "PROMPT"
 def test_shipped_templates_load_cleanly():
     templates, problems = load_templates(ROOT / "workflows")
     assert problems == []
-    assert {"txt2img_checkpoint", "img2vid_wan22_5b", "img2vid_wan21_14b", "img2vid_svd"} <= set(templates)
+    assert {"txt2img_checkpoint", "img2vid_wan22_5b", "img2vid_wan22_14b", "img2vid_wan21_14b", "img2vid_svd"} <= set(templates)
     for t in templates.values():
         assert t.tokens() <= set(KNOWN_TOKENS)
         pub = t.to_public()
@@ -103,3 +103,5 @@ def test_controls_follow_tokens():
     wan = templates["img2vid_wan22_5b"]
     assert wan.model_selector["node_class"] == "UNETLoader"
     assert wan.constraints["frames_rule"] == "4n+1" and wan.constraints["size_step"] == 32
+    big = templates["img2vid_wan22_14b"]
+    assert big.model_selector is None and big.controls["model"] is False and big.controls["steps"] is False

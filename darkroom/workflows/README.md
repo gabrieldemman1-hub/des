@@ -15,6 +15,7 @@ showing it). Presets are read when Darkroom starts, so restart it after editing.
 |---|---|---|
 | `txt2img_checkpoint.json` | Text → Image | `checkpoints/<any SD1.5 / SDXL / Pony / Illustrious checkpoint>` (dropdown lists them) |
 | `img2vid_wan22_5b.json` | Image → Video | `diffusion_models/wan2.2_ti2v_5B_fp16.safetensors`, `text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors`, `vae/wan2.2_vae.safetensors` |
+| `img2vid_wan22_14b.json` | Image → Video | `diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors` + `wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors`, `text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors`, `vae/wan_2.1_vae.safetensors` (two-expert, 24 GB class GPU) |
 | `img2vid_wan21_14b.json` | Image → Video | `diffusion_models/wan2.1_i2v_480p_14B_fp8_e4m3fn.safetensors`, `text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors`, `vae/wan_2.1_vae.safetensors`, `clip_vision/clip_vision_h.safetensors` |
 | `img2vid_svd.json` | Image → Video | `checkpoints/svd_xt_1_1.safetensors` (no text prompt; animated .webp output) |
 
