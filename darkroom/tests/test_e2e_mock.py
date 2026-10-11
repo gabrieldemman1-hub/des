@@ -222,6 +222,62 @@ def test_validation_errors(env):
     assert job["status"] == "error" and "not in list" in job["error"]["message"] and "not installed" in job["error"]["hint"]
 
 
+def test_input_edge_cases(env):
+    c = env.c
+    base = {"mode": "txt2img", "workflow": "txt2img_checkpoint", "prompt": "x"}
+    assert c.post("/api/generate", data={**base, "steps": "1e400"}).status_code == 400
+    assert c.post("/api/generate", data={**base, "cfg": "nan"}).status_code == 400
+    assert c.post("/api/generate", data={**base, "seed": str(2**53)}).status_code == 400
+    assert c.post("/api/generate", data={**base, "seed": str(2**53 - 1), "steps": "1"}).status_code == 200
+    (env.outputs / "favourites").mkdir(exist_ok=True)
+    r = c.post("/api/generate", data={"mode": "img2vid", "workflow": "img2vid_wan22_5b", "prompt": "x", "source": "favourites"})
+    assert r.status_code == 404
+    # Presets without a Model dropdown never record a stale model name.
+    src = c.get("/api/gallery?kind=image").json()["items"][0]
+    job = run_job(c, mode="img2vid", workflow="img2vid_wan22_14b", prompt="m", steps="1", frames="5", source=src["file"], model="wan2.2_ti2v_5B_fp16.safetensors")
+    assert job["status"] == "done" and job["params"]["model"] == ""
+    # The video filter includes animated webp results (SVD preset).
+    kinds = {i["kind"] for i in c.get("/api/gallery?kind=video").json()["items"]}
+    assert "animation" in kinds
+
+
+def test_local_only_protection(env):
+    c = env.c
+    port = c.base_url.port
+    assert c.get("/api/status", headers={"Host": f"evil.example:{port}"}).status_code == 421
+    assert c.get("/api/status", headers={"Host": f"localhost:{port}"}).status_code == 200
+    assert c.get("/api/status", headers={"Host": f"[::1]:{port}"}).status_code == 200
+    data = {"mode": "txt2img", "workflow": "txt2img_checkpoint", "prompt": "csrf", "steps": "1"}
+    assert c.post("/api/generate", data=data, headers={"Origin": "http://attacker.example"}).status_code == 403
+    assert c.post("/api/generate", data=data, headers={"Origin": "null"}).status_code == 403
+    assert c.post("/api/generate", data=data, headers={"Sec-Fetch-Site": "cross-site"}).status_code == 403
+    assert c.post("/api/generate", data=data, headers={"Origin": f"http://127.0.0.1:{port}"}).status_code == 200
+    assert c.delete("/api/gallery/x.png", headers={"Origin": "http://attacker.example"}).status_code == 403
+    # An oversized upload is refused from its Content-Length alone, before any body is read.
+    with socket.create_connection(("127.0.0.1", port), timeout=5) as sock:
+        sock.sendall(
+            f"POST /api/generate HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nContent-Type: multipart/form-data; boundary=x\r\n"
+            f"Content-Length: {500 * 1024 * 1024}\r\n\r\n".encode()
+        )
+        status_line = sock.recv(64).split(b"\r\n")[0]
+    assert b"413" in status_line, status_line
+
+
+def test_v3_combo_choices_through_the_mock(env):
+    import asyncio
+
+    from comfy_client import ComfyClient
+
+    async def go():
+        client = ComfyClient(env.mock_url)
+        try:
+            return await client.input_choices("UpscaleModelLoader", "model_name")
+        finally:
+            await client.aclose()
+
+    assert asyncio.run(go()) == ["4x_mock_upscaler.pth"]
+
+
 def test_gallery_safety_and_delete(env):
     c = env.c
     for bad in ("../app.py", "..%2Fapp.py", ".hidden.png", "a%2Fb.png"):
@@ -251,4 +307,5 @@ def test_offline_comfy_is_explained(offline):
     assert o["online"] is False and len(o["workflows"]) == 6 and o["models"] == {}
     job = run_job(offline, mode="txt2img", workflow="txt2img_checkpoint", prompt="x", steps="1", model="whatever.safetensors")
     assert job["status"] == "error" and "not reachable" in job["error"]["message"]
-    assert offline.post("/api/generate", data={"mode": "txt2img", "workflow": "txt2img_checkpoint", "prompt": "x"}).status_code == 400  # no model list available
+    r = offline.post("/api/generate", data={"mode": "txt2img", "workflow": "txt2img_checkpoint", "prompt": "x"})
+    assert r.status_code == 503 and "Start ComfyUI" in r.json()["error"]["hint"]  # not a misleading "no model files"

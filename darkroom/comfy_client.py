@@ -23,7 +23,8 @@ import json
 import time
 import uuid
 from dataclasses import dataclass, field
-from typing import Any, Awaitable, Callable
+from typing import Any, Callable
+from urllib.parse import urlsplit, urlunsplit
 
 import httpx
 
@@ -131,20 +132,30 @@ def _bytes_to_data_url(data: bytes, mime: str) -> str:
 
 class ComfyClient:
     def __init__(self, base_url: str = "http://127.0.0.1:8188", *, connect_timeout: float = 3.0, preview_method: str | None = "auto"):
-        self.base_url = base_url.rstrip("/")
+        self.base_url, self.ws_url = self.normalize_url(base_url)
         # Asked per job via extra_data so live previews work without restarting ComfyUI
         # with --preview-method. "auto" = cheap latent2rgb previews; None = server default.
         self.preview_method = preview_method
-        if self.base_url.startswith("https://"):
-            self.ws_url = "wss://" + self.base_url[len("https://"):] + "/ws"
-        else:
-            self.ws_url = "ws://" + self.base_url[len("http://"):] + "/ws"
         self._http = httpx.AsyncClient(
             base_url=self.base_url,
             timeout=httpx.Timeout(connect=connect_timeout, read=120.0, write=60.0, pool=10.0),
             trust_env=False,  # never pick up HTTP(S)_PROXY from the environment: stay on localhost
         )
         self._choices_cache: dict[tuple[str, str], tuple[float, list[str]]] = {}
+
+    @staticmethod
+    def normalize_url(base_url: str) -> tuple[str, str]:
+        """Accept 'http://host:port', 'host:port' or 'http://host:port/'; return (http base, websocket url)."""
+        raw = (base_url or "").strip()
+        if "://" not in raw:
+            raw = "http://" + raw
+        parts = urlsplit(raw)
+        if parts.scheme not in ("http", "https") or not parts.hostname:
+            raise ValueError(f"ComfyUI URL must look like http://host:port, got {base_url!r}")
+        path = parts.path.rstrip("/")
+        http_url = urlunsplit((parts.scheme, parts.netloc, path, "", ""))
+        ws_url = urlunsplit(("wss" if parts.scheme == "https" else "ws", parts.netloc, path + "/ws", "", ""))
+        return http_url, ws_url
 
     async def aclose(self) -> None:
         await self._http.aclose()
@@ -155,7 +166,8 @@ class ComfyClient:
             f"ComfyUI is not reachable at {self.base_url}",
             hint="Start ComfyUI first (python main.py in the ComfyUI folder, or run_nvidia_gpu.bat for the "
                  "portable build) and wait until it prints 'To see the GUI go to: http://127.0.0.1:8188'. "
-                 "If it listens somewhere else, start Darkroom with --comfy http://host:port.",
+                 "The ComfyUI Desktop app listens on port 8000 instead: start Darkroom with --comfy http://127.0.0.1:8000. "
+                 "Any other address: --comfy http://host:port.",
             details=str(exc),
         )
 
@@ -240,7 +252,7 @@ class ComfyClient:
         pending = sorted(q.get("queue_pending", []), key=lambda it: it[0] if it else 0)
         for i, item in enumerate(pending):
             if len(item) > 1 and item[1] == prompt_id:
-                return i + 1 + len(q.get("queue_running", []))
+                return i + len(q.get("queue_running", []))  # jobs ahead of it: the running one + earlier pending ones
         return None
 
     # ---- uploads -------------------------------------------------------------
@@ -293,13 +305,19 @@ class ComfyClient:
             lines.append(str(err["details"]))
         message = "ComfyUI rejected the workflow: " + top + ("\n" + "\n".join(lines) if lines else "")
         hint = None
+        etype = str(err.get("type", ""))
+        emsg = str(err.get("message", "")).lower()
         if "value_not_in_list" in types:
             hint = ("A model file named in the workflow is not installed in ComfyUI. Pick a different model in the "
                     "dropdown, or download the file into the right ComfyUI/models/... folder (see darkroom/workflows/README.md).")
-        elif "required_input_missing" in types or "return_type_mismatch" in types:
+        elif "required_input_missing" in types or "return_type_mismatch" in types or "bad_linked_input" in types:
             hint = "The workflow template is missing or mis-wiring an input. Check the template JSON (darkroom/workflows/)."
-        elif "invalid_prompt" in str(err.get("type", "")) and "class_type" in str(err.get("details", "")).lower():
-            hint = "ComfyUI does not have one of the node types this workflow uses. Update ComfyUI or install the custom node."
+        elif etype in ("missing_node_type", "invalid_prompt") and ("not found" in emsg or "does not exist" in emsg or "class_type" in emsg):
+            hint = ("Your ComfyUI does not have one of the node types this workflow uses. Core nodes such as CreateVideo, "
+                    "SaveVideo or Wan22ImageToVideoLatent need a recent ComfyUI: update it, or swap the node in the template "
+                    "(see workflows/README.md). For a third-party node, install the custom node.")
+        elif etype == "prompt_no_outputs":
+            hint = "The workflow has no SaveImage / SaveVideo node. Add one to the template."
         return ComfyRejected(message[:4000], hint=hint, details=body)
 
     async def interrupt(self, prompt_id: str | None = None) -> None:
@@ -378,8 +396,15 @@ class ComfyClient:
             cls = node_classes.get(str(node), "")
             return NODE_LABELS.get(cls, cls or "Working")
 
+        ws_url = f"{self.ws_url}?clientId={client_id}"
+        ws_kwargs: dict[str, Any] = dict(max_size=None, open_timeout=5, ping_interval=20, ping_timeout=20)
         try:
-            ws_ctx = ws_connect(f"{self.ws_url}?clientId={client_id}", max_size=None, open_timeout=5, ping_interval=20, ping_timeout=20)
+            try:
+                # websockets >= 15 would otherwise honour HTTP(S)_PROXY / the OS proxy for ws:// too;
+                # the local socket must never leave the machine (mirrors httpx trust_env=False).
+                ws_ctx = ws_connect(ws_url, proxy=None, **ws_kwargs)
+            except TypeError:  # older websockets: no proxy support at all, nothing to disable
+                ws_ctx = ws_connect(ws_url, **ws_kwargs)
             ws = await ws_ctx.__aenter__()
         except (OSError, InvalidURI, InvalidHandshake, asyncio.TimeoutError, ConnectionClosed) as e:
             raise self._unavailable(e) from e
@@ -393,24 +418,45 @@ class ComfyClient:
             if pos is not None:
                 on_event("position", {"position": pos})
 
-            idle_checks = 0
+            started = False  # execution_start seen for our prompt
+            gone_checks = 0
+            last_check = time.monotonic()
+
+            async def liveness_check() -> None:
+                """Catch the end if a message was missed, and notice a job that was removed from the queue."""
+                nonlocal finished, error, gone_checks, last_check
+                last_check = time.monotonic()
+                entry = await self.history(prompt_id)
+                status = (entry or {}).get("status") or {}
+                if entry and (status.get("completed") or status.get("status_str") == "success" or (entry.get("outputs") and not status)):
+                    finished = True
+                    return
+                if entry and status.get("status_str") == "error":
+                    error = self._error_from_history(entry)
+                    finished = True
+                    return
+                pos = await self.queue_position(prompt_id)
+                if pos is not None:
+                    gone_checks = 0
+                    on_event("position", {"position": pos})
+                elif not started:
+                    # Not in history, not in the queue, never started: someone removed it from ComfyUI's queue
+                    # (trash icon / "Clear queue" in the ComfyUI window). ComfyUI sends no message for that.
+                    gone_checks += 1
+                    if gone_checks >= 2:
+                        error = ComfyError(
+                            "The job disappeared from ComfyUI's queue before it ran",
+                            hint="It was removed from the queue in the ComfyUI window (delete / Clear queue). Press Generate again.",
+                        )
+                        finished = True
+
             while not finished:
                 try:
                     msg = await asyncio.wait_for(ws.recv(), timeout=5.0)
                 except asyncio.TimeoutError:
                     # Nothing for 5 s: make sure we did not miss the end (e.g. after a reconnect).
-                    idle_checks += 1
-                    if idle_checks % 2 == 0:
-                        entry = await self.history(prompt_id)
-                        if entry and (entry.get("status") or {}).get("completed") or (entry and entry.get("outputs") and not entry.get("status")):
-                            finished = True
-                        elif entry and (entry.get("status") or {}).get("status_str") == "error":
-                            error = self._error_from_history(entry)
-                            finished = True
-                        else:
-                            pos = await self.queue_position(prompt_id)
-                            if pos is not None:
-                                on_event("position", {"position": pos})
+                    if time.monotonic() - last_check >= 9.0:
+                        await liveness_check()
                     continue
                 except ConnectionClosed:
                     # Websocket dropped (ComfyUI restarted / proxy): finish by polling history.
@@ -445,20 +491,28 @@ class ComfyClient:
                     if remaining is not None:
                         pos = await self.queue_position(prompt_id)
                         if pos is not None:
+                            gone_checks = 0
                             on_event("position", {"position": pos})
+                    if not started and time.monotonic() - last_check >= 9.0:
+                        await liveness_check()  # other clients' traffic must not starve the vanished-job check
                     continue
                 if pid != prompt_id:
+                    if not started and time.monotonic() - last_check >= 9.0:
+                        await liveness_check()
                     continue  # another client's job
                 if mtype == "execution_start":
+                    started = True
                     on_event("position", {"position": 0})
                     on_event("progress", {"value": 0, "max": 0, "node": None, "label": "Starting"})
                 elif mtype == "executing":
+                    started = True
                     node = data.get("node")
                     if node is None:
                         finished = True  # the authoritative "all done" signal
                     else:
                         on_event("progress", {"value": 0, "max": 0, "node": str(node), "label": label_for(node)})
                 elif mtype == "progress":
+                    started = True
                     node = data.get("node")
                     on_event("progress", {"value": int(data.get("value", 0)), "max": int(data.get("max", 0)), "node": str(node) if node is not None else None, "label": label_for(node)})
                 elif mtype == "execution_success":

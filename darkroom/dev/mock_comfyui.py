@@ -113,8 +113,8 @@ class Mock:
             if not isinstance(node, dict) or "class_type" not in node:
                 return {"error": {"type": "invalid_prompt", "message": f"Cannot execute because node {nid} does not have a class_type.", "details": f"Node ID '#{nid}'", "extra_info": {}}, "node_errors": {}}
             cls = node["class_type"]
-            if cls not in KNOWN_CLASSES:
-                return {"error": {"type": "invalid_prompt", "message": f"Cannot execute because node {cls} does not exist.", "details": f"Node ID '#{nid}'", "extra_info": {}}, "node_errors": {}}
+            if cls not in KNOWN_CLASSES:  # same shape as current ComfyUI's validate_prompt
+                return {"error": {"type": "missing_node_type", "message": f"Node '{cls}' not found. The custom node may not be installed.", "details": f"Node ID '#{nid}'", "extra_info": {"node_id": nid, "class_type": cls, "node_title": cls}}, "node_errors": {}}
             if cls.startswith("Save") or cls == "PreviewImage":
                 has_output = True
             errors = []
@@ -334,6 +334,8 @@ def create_mock_app(data_dir: Path, step_delay: float = 0.15) -> FastAPI:
 
     @app.get("/object_info/{node_class}")
     async def object_info(node_class: str):
+        if node_class == "UpscaleModelLoader":  # a V3-API node: combos are ["COMBO", {"options": [...]}]
+            return {node_class: {"input": {"required": {"model_name": ["COMBO", {"options": ["4x_mock_upscaler.pth"], "default": "4x_mock_upscaler.pth"}]}}, "name": node_class, "output": ["UPSCALE_MODEL"], "output_node": False}}
         required = {inp: [choices, {}] for (cls, inp), choices in CHOICES.items() if cls == node_class}
         if not required and node_class not in KNOWN_CLASSES:
             return {}

@@ -68,3 +68,41 @@ def test_execution_error_hints():
     assert oom.message.startswith("KSampler failed") and "memory" in oom.hint.lower()
     interrupted = ComfyClient._error_from_history({"status": {"status_str": "error", "messages": [["execution_start", {}], ["execution_interrupted", {"prompt_id": "x"}]]}})
     assert interrupted.__class__.__name__ == "ComfyInterrupted"
+
+
+def test_normalize_url_variants():
+    assert ComfyClient.normalize_url("http://127.0.0.1:8188") == ("http://127.0.0.1:8188", "ws://127.0.0.1:8188/ws")
+    assert ComfyClient.normalize_url("127.0.0.1:8188/") == ("http://127.0.0.1:8188", "ws://127.0.0.1:8188/ws")
+    assert ComfyClient.normalize_url("localhost:8000") == ("http://localhost:8000", "ws://localhost:8000/ws")
+    assert ComfyClient.normalize_url("https://host.local/comfy/") == ("https://host.local/comfy", "wss://host.local/comfy/ws")
+    for bad in ("", "ftp://x", "http://"):
+        with pytest.raises(ValueError):
+            ComfyClient.normalize_url(bad)
+
+
+def test_queue_position_counts_jobs_ahead(monkeypatch):
+    c = ComfyClient("http://127.0.0.1:1")
+    state = {"queue_running": [[1, "run", {}, {}, []]], "queue_pending": [[3, "b", {}, {}, []], [2, "a", {}, {}, []]]}
+
+    async def fake_queue_state():
+        return state
+
+    monkeypatch.setattr(c, "queue_state", fake_queue_state)
+    assert asyncio.run(c.queue_position("run")) == 0
+    assert asyncio.run(c.queue_position("a")) == 1  # only the running job is ahead
+    assert asyncio.run(c.queue_position("b")) == 2
+    assert asyncio.run(c.queue_position("zzz")) is None
+    state["queue_running"] = []
+    assert asyncio.run(c.queue_position("a")) == 0 + 0 or asyncio.run(c.queue_position("a")) == 0
+    asyncio.run(c.aclose())
+
+
+def test_rejection_hints_for_missing_node_and_no_outputs():
+    c = ComfyClient("http://127.0.0.1:1")
+    missing = {"error": {"type": "missing_node_type", "message": "Node 'SaveVideo' not found. The custom node may not be installed.", "details": "Node ID '#14'", "extra_info": {}}, "node_errors": {}}
+    assert "update it" in c._rejection(missing, {}).hint
+    old_style = {"error": {"type": "invalid_prompt", "message": "Cannot execute because node SaveVideo does not exist.", "details": "Node ID '#14'", "extra_info": {}}, "node_errors": {}}
+    assert "update it" in c._rejection(old_style, {}).hint
+    no_out = {"error": {"type": "prompt_no_outputs", "message": "Prompt has no outputs", "details": "", "extra_info": {}}, "node_errors": {}}
+    assert "SaveImage" in c._rejection(no_out, {}).hint
+    asyncio.run(c.aclose())

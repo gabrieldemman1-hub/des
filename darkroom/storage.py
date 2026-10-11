@@ -22,6 +22,7 @@ import os
 import re
 import threading
 import time
+import unicodedata
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -41,8 +42,14 @@ HISTORY_LIMIT = 20
 _SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 
 
+class StorageError(Exception):
+    """A file could not be removed or written (locked, permissions...)."""
+
+
 def slugify(text: str, max_len: int = 40) -> str:
-    text = re.sub(r"[^a-z0-9]+", "-", (text or "").lower()).strip("-")
+    # Fold accents to ASCII (café -> cafe) so file names stay portable across OSes and shells.
+    text = unicodedata.normalize("NFKD", text or "").encode("ascii", "ignore").decode("ascii")
+    text = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
     if len(text) > max_len:
         text = text[:max_len].rsplit("-", 1)[0] or text[:max_len]
     return text or "untitled"
@@ -68,6 +75,7 @@ class Storage:
         self.root.mkdir(parents=True, exist_ok=True)
         self.thumbs.mkdir(parents=True, exist_ok=True)
         self._lock = threading.Lock()
+        self._records: dict[str, tuple[float, int, dict[str, Any]]] = {}  # name -> (mtime, size, record)
 
     # ---- naming / paths ------------------------------------------------------
     def resolve(self, name: str) -> Path:
@@ -116,11 +124,17 @@ class Storage:
                 pass
         self._write_sidecar(path, record)
         self._make_thumb(path, kind, poster)
+        self._records.pop(path.name, None)
         return self.record(path)
 
+    @staticmethod
+    def _write_json_atomic(path: Path, data: Any) -> None:
+        tmp = path.with_suffix(path.suffix + ".part")
+        tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+        os.replace(tmp, path)
+
     def _write_sidecar(self, path: Path, record: dict[str, Any]) -> None:
-        side = path.with_suffix(".json")
-        side.write_text(json.dumps(record, indent=2, ensure_ascii=False), encoding="utf-8")
+        self._write_json_atomic(path.with_suffix(".json"), record)
 
     def _make_thumb(self, path: Path, kind: str, poster: bytes | None) -> Path | None:
         if Image is None:
@@ -151,16 +165,17 @@ class Storage:
             return None
         return self._make_thumb(path, kind, None)
 
-    def record(self, path: Path) -> dict[str, Any]:
+    def record(self, path: Path, st: os.stat_result | None = None) -> dict[str, Any]:
         side = path.with_suffix(".json")
         rec: dict[str, Any] = {}
-        if side.exists():
-            try:
-                rec = json.loads(side.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                rec = {}
         try:
-            st = path.stat()
+            rec = json.loads(side.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            rec = {}
+        if not isinstance(rec, dict):
+            rec = {}
+        try:
+            st = st or path.stat()
         except OSError:
             return {}
         kind = rec.get("kind") or kind_for(path.suffix)
@@ -177,23 +192,55 @@ class Storage:
         )
         return rec
 
+    def _cached_record(self, path: Path) -> dict[str, Any] | None:
+        """record() with a per-file cache keyed on (mtime, size), so listing is cheap for big galleries."""
+        try:
+            st = path.stat()
+        except OSError:
+            return None  # deleted between iterdir() and here
+        hit = self._records.get(path.name)
+        if hit and hit[0] == st.st_mtime and hit[1] == st.st_size:
+            return hit[2]
+        rec = self.record(path, st)
+        if rec:
+            self._records[path.name] = (st.st_mtime, st.st_size, rec)
+        return rec or None
+
     def list_items(self, limit: int = 60, offset: int = 0, kind: str | None = None) -> dict[str, Any]:
-        files = [p for p in self.root.iterdir() if p.is_file() and p.suffix.lower() in MEDIA_EXT and not p.name.startswith(".")]
-        files.sort(key=lambda p: p.stat().st_mtime, reverse=True)
-        records = [self.record(p) for p in files]
-        records = [r for r in records if r]
-        if kind:
-            records = [r for r in records if r.get("kind") == kind]
+        entries = []
+        for p in self.root.iterdir():
+            if p.name.startswith(".") or p.suffix.lower() not in MEDIA_EXT:
+                continue
+            try:
+                st = p.stat()
+            except OSError:
+                continue
+            if not os.path.isfile(p):
+                continue
+            entries.append((st.st_mtime, p))
+        entries.sort(key=lambda e: e[0], reverse=True)
+        kinds = {"video", "animation"} if kind == "video" else ({kind} if kind else None)
+        records = []
+        for _, p in entries:
+            rec = self._cached_record(p)
+            if rec and (kinds is None or rec.get("kind") in kinds):
+                records.append(rec)
         total = len(records)
         return {"items": records[offset: offset + limit], "total": total, "offset": offset, "limit": limit}
 
     def delete(self, name: str) -> None:
         path = self.resolve(name)
+        self._records.pop(path.name, None)
+        failed = []
         for p in (path, path.with_suffix(".json"), self.thumbs / (path.stem + ".jpg")):
             try:
                 p.unlink()
             except FileNotFoundError:
                 pass
+            except OSError as e:  # e.g. Windows: the file is open in another program
+                failed.append(f"{p.name}: {e.strerror or e}")
+        if failed:
+            raise StorageError("; ".join(failed))
 
     # ---- prompt history ------------------------------------------------------
     def history(self) -> list[dict[str, Any]]:
@@ -209,7 +256,7 @@ class Storage:
             key = (entry.get("mode"), (entry.get("prompt") or "").strip(), (entry.get("negative") or "").strip())
             items = [i for i in items if (i.get("mode"), (i.get("prompt") or "").strip(), (i.get("negative") or "").strip()) != key]
             items.insert(0, {**entry, "ts": time.time()})
-            self.history_path.write_text(json.dumps(items[:HISTORY_LIMIT], indent=2, ensure_ascii=False), encoding="utf-8")
+            self._write_json_atomic(self.history_path, items[:HISTORY_LIMIT])
 
     def clear_history(self) -> None:
         with self._lock:

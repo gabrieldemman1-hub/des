@@ -105,3 +105,36 @@ def test_controls_follow_tokens():
     assert wan.constraints["frames_rule"] == "4n+1" and wan.constraints["size_step"] == 32
     big = templates["img2vid_wan22_14b"]
     assert big.model_selector is None and big.controls["model"] is False and big.controls["steps"] is False
+
+
+def test_loose_placeholders_rejected(tmp_path):
+    bad = json.loads(json.dumps(MINIMAL))
+    bad["6"]["inputs"]["text"] = "{{prompt}}"
+    with pytest.raises(TemplateError, match="upper-case"):
+        load_template(write(tmp_path, "t.json", bad))
+    bad["6"]["inputs"]["text"] = "{{ PROMPT }}"
+    with pytest.raises(TemplateError, match="upper-case"):
+        load_template(write(tmp_path, "t2.json", bad))
+
+
+def test_model_token_requires_matching_meta(tmp_path):
+    no_meta = json.loads(json.dumps(MINIMAL))
+    del no_meta["_meta"]["model"]
+    with pytest.raises(TemplateError, match="_meta.model"):
+        load_template(write(tmp_path, "t.json", no_meta))
+    wrong_node = json.loads(json.dumps(MINIMAL))
+    wrong_node["_meta"]["model"] = {"node_class": "UNETLoader", "input": "unet_name"}
+    with pytest.raises(TemplateError, match="no such node"):
+        load_template(write(tmp_path, "t2.json", wrong_node))
+    # A hard-coded file with a leftover _meta.model is harmless: the dropdown is simply not shown.
+    no_token = json.loads(json.dumps(MINIMAL))
+    no_token["4"]["inputs"]["ckpt_name"] = "fixed.safetensors"
+    t = load_template(write(tmp_path, "t3.json", no_token))
+    assert t.model_selector is None and t.controls["model"] is False
+
+
+def test_non_numeric_defaults_rejected(tmp_path):
+    bad = json.loads(json.dumps(MINIMAL))
+    bad["_meta"]["defaults"] = {"steps": "twenty"}
+    with pytest.raises(TemplateError, match="defaults.steps"):
+        load_template(write(tmp_path, "t.json", bad))

@@ -20,6 +20,7 @@ make, and swappable workflow presets. Everything runs on your machine; nothing l
   For video, the Wan 2.2 5B files (see [workflows/README.md](workflows/README.md)).
   Pony-family checkpoints: use the "CLIP skip 2" preset and the "Pony score tags" style.
 * **Python 3.10 or newer** for Darkroom itself (any Python; it does not need to be ComfyUI's).
+  On Windows, tick "Add python.exe to PATH" in the python.org installer.
 
 Darkroom's own dependencies, all local libraries ([requirements.txt](requirements.txt)):
 `fastapi`, `uvicorn`, `httpx`, `websockets`, `python-multipart`, `pillow`.
@@ -33,8 +34,13 @@ Darkroom's own dependencies, all local libraries ([requirements.txt](requirement
 # git checkout
 cd ComfyUI && python main.py
 # Windows portable build: double-click run_nvidia_gpu.bat
-# Desktop app: just open it; its server also listens on 127.0.0.1:8188 by default
+# Desktop app: just open it. It listens on http://127.0.0.1:8000 (not 8188), so start
+# Darkroom with  ./run.sh --comfy http://127.0.0.1:8000   (or set COMFY_URL=http://127.0.0.1:8000)
 ```
+
+Keep ComfyUI on `127.0.0.1` (its default). Do not start it with `--listen`: ComfyUI has no login,
+and it keeps its own copy of every Darkroom result and source image, so on `0.0.0.0` anyone on your
+network could read them.
 
 Live previews of the sampling steps appear in Darkroom automatically: it asks ComfyUI for
 cheap latent previews per job. (Only very old ComfyUI builds ignore that request; there, start
@@ -52,16 +58,17 @@ or by hand:
 
 ```sh
 cd darkroom
-python -m venv .venv
+python3 -m venv .venv                            # Windows: py -3 -m venv .venv
 .venv/bin/pip install -r requirements.txt        # Windows: .venv\Scripts\pip install -r requirements.txt
-python app.py
+.venv/bin/python app.py                          # Windows: .venv\Scripts\python app.py
 ```
 
 Your browser opens `http://127.0.0.1:8585`. The green dot top-right means ComfyUI is reachable;
 a red banner tells you when it is not and what to do.
 
-Options: `python app.py --comfy http://127.0.0.1:8188 --port 8585 --outputs ./outputs --no-browser`.
-The same can be set with the `COMFY_URL`, `DARKROOM_PORT`, `DARKROOM_OUTPUTS` environment variables.
+Options: `./run.sh --comfy http://127.0.0.1:8188 --port 8585 --outputs ./outputs --no-browser`
+(`run.bat` passes options through the same way). The same can be set with the `COMFY_URL`,
+`DARKROOM_PORT`, `DARKROOM_OUTPUTS` environment variables.
 
 ## Using it
 
@@ -81,7 +88,7 @@ everything including the seed. Note that ComfyUI caches node results: a fixed se
 unchanged settings comes back instantly as the same image (Darkroom still saves a new copy).
 
 **Style.** A preset that wraps your prompt ("{prompt}, cinematic still, film grain…"). Edit or
-add styles in `presets/styles.json`.
+add styles in `presets/styles.json` (read once at start-up; restart Darkroom afterwards).
 
 **Gallery.** Every result is saved as
 `outputs/<date>-<time>_<mode>_<prompt snippet>_<seed>.<png|mp4|webp>` plus a `.json` with the
@@ -120,16 +127,18 @@ outputs/            your results (created on first run, ignored by git)
 
 | Message | What it means |
 |---|---|
-| **ComfyUI is not reachable at http://127.0.0.1:8188** | ComfyUI is not running, still loading, or listening elsewhere. Check its console; if it says another port or `0.0.0.0`, start Darkroom with `--comfy http://host:port`. |
+| **ComfyUI is not reachable at http://127.0.0.1:8188** | ComfyUI is not running, still loading, or on another port. ComfyUI Desktop uses port 8000: `./run.sh --comfy http://127.0.0.1:8000`. If the console of a git/portable ComfyUI prints another port, use that. |
 | **Value not in list … ckpt_name: 'x' not in […]** | The preset's model file is not installed (or sits in the wrong `models/` subfolder). Pick another model in the dropdown or download the file; press ↻ next to Model after copying files. |
-| **Cannot execute because node X does not exist** | Your ComfyUI is too old for that node (update it) or a custom node is missing. |
+| **Node 'X' not found. The custom node may not be installed** (older ComfyUI: *Cannot execute because node X does not exist*) | Your ComfyUI is too old for that node (the video presets need CreateVideo/SaveVideo/Wan22ImageToVideoLatent: update ComfyUI) or a custom node is missing. |
 | **… out of memory** | Lower width/height, frames or steps; close other GPU apps; use fp8 weights or the smaller preset. |
 | **Finished but produced no files** | The workflow has no `SaveImage` / `SaveVideo` node (a `PreviewImage` is not enough). |
 | Model dropdown is empty | ComfyUI is offline, or the folder named in the preset's `requires` is empty. |
 | Live preview never appears | Your ComfyUI ignores the per-job preview request; start it with `--preview-method auto`. Everything else works without it. |
 
 ComfyUI also keeps its own copy of each result in `ComfyUI/output/darkroom/` and the uploaded
-source images in `ComfyUI/input/darkroom/`; delete those folders whenever you like.
+source images in `ComfyUI/input/darkroom/` (the Desktop app: under its chosen base folder,
+`Documents/ComfyUI` by default). Darkroom's Delete only removes its own copy in `./outputs`;
+clear those ComfyUI folders yourself whenever you like.
 
 ## Privacy notes
 
@@ -141,8 +150,17 @@ source images in `ComfyUI/input/darkroom/`; delete those folders whenever you li
 * No telemetry anywhere in the stack. (This is also why Darkroom is a small FastAPI app rather
   than Gradio or Streamlit: both send usage analytics by default unless you remember to turn
   them off, and Gradio versions before 6.17 also pulled fonts and a script from CDNs.)
-* ComfyUI itself has no telemetry; the ComfyUI *Manager* custom node does fetch its node
-  registry from the internet, which is unrelated to Darkroom.
+* The ComfyUI *server* (git checkout / portable build) has no telemetry. The ComfyUI **Desktop**
+  app includes crash reporting and an optional "Send anonymous usage metrics" setting: decline it
+  at install or turn it off in its settings. The ComfyUI *Manager* custom node fetches its node
+  registry from the internet. None of this involves Darkroom.
+* Your browser is the one component Darkroom does not control. Chrome and Edge, for example,
+  contact their vendor's autofill service for any page that has a form, and do other profile-level
+  background traffic. Use Firefox or Safari, or turn off "Save and fill addresses / payment
+  methods" in Chrome's Autofill settings, if that matters to you.
+* The page remembers your settings per preset in the browser: numbers and model names in
+  `localStorage`, prompt text and seed only in `sessionStorage` (gone when the browser closes).
+  The **Clear** button under Recent prompts also forgets the remembered prompt text.
 * A short safety negative (`child, minor, underage, loli, shota`) is appended to every job
   server-side (`ALWAYS_NEGATIVE` in `app.py`). It costs nothing for adult content and keeps
   models from drifting somewhere illegal. For adults, depicting adults.

@@ -66,7 +66,7 @@ code { font-family: var(--mono); font-size: 0.86em; background: var(--panel-3); 
   grid-template-areas: "controls result" "controls gallery" "controls history";
   align-items: start;
 }
-.panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; min-width: 0; }
+.panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; min-width: 0; scroll-margin-top: 70px; }
 .controls { grid-area: controls; position: sticky; top: 70px; max-height: calc(100vh - 86px); overflow: auto; overscroll-behavior: contain; }
 .result { grid-area: result; }
 .gallery { grid-area: gallery; }
@@ -77,7 +77,7 @@ code { font-family: var(--mono); font-size: 0.86em; background: var(--panel-3); 
 
 @media (max-width: 920px) {
   .layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "controls" "result" "gallery" "history"; padding: 12px; gap: 12px; }
-  .controls { position: static; max-height: none; }
+  .controls { position: static; max-height: none; overflow: visible; }  /* overflow:auto would scope the sticky Generate row */
   .panel { padding: 14px; }
   /* Keep Generate reachable while scrolling through the form on a phone. */
   .actions { position: sticky; bottom: 0; z-index: 5; margin: 6px -14px 0; padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); background: linear-gradient(to top, var(--panel) 70%, rgba(21, 23, 28, 0)); }
@@ -176,7 +176,7 @@ input[type="number"] { -moz-appearance: textfield; }
 .status.is-done .bar-fill { background: var(--ok); }
 
 /* ---- viewer --------------------------------------------------------------- */
-.viewer { position: relative; min-height: 320px; display: flex; align-items: center; justify-content: center; background: #0a0b0e; border-radius: var(--radius-sm); border: 1px solid var(--border); overflow: hidden; }
+.viewer { position: relative; min-height: 320px; scroll-margin-top: 70px; display: flex; align-items: center; justify-content: center; background: #0a0b0e; border-radius: var(--radius-sm); border: 1px solid var(--border); overflow: hidden; }
 .viewer img, .viewer video { max-width: 100%; max-height: min(78vh, 900px); display: block; object-fit: contain; }
 #live-preview { opacity: 0.9; filter: saturate(0.9); }
 .viewer-empty { text-align: center; color: var(--muted); padding: 40px 20px; }

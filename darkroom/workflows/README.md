@@ -146,5 +146,10 @@ Darkroom shows ComfyUI's own validation message. The common ones:
   in the wrong folder. Pick another in the dropdown or download it to the listed folder.
 * `Required input is missing` / `Return type mismatch` – a link in the JSON points at the wrong
   node or slot; re-export from ComfyUI rather than editing links by hand.
-* `Cannot execute because node X does not exist` – a custom node is not installed in ComfyUI.
-* `uses {{FOO}} but no value was provided` (from Darkroom) – a typo in a token name.
+* `Node 'X' not found. The custom node may not be installed` (older ComfyUI: `Cannot execute
+  because node X does not exist`) – your ComfyUI is too old for a core node (CreateVideo,
+  SaveVideo, Wan22ImageToVideoLatent…: update it) or a custom node is not installed.
+* `<file>.json: unknown token(s) ['PROMT']. Known tokens: [...]` or `placeholder(s) ... must be
+  written exactly like {{SEED}}` (from Darkroom, in the yellow banner at the top of the page and
+  in the console) – a typo in a token name; the preset is skipped until you fix the file and
+  restart.

@@ -4,8 +4,10 @@
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-  const PREFS_KEY = 'darkroom.prefs.v1';
+  const PREFS_KEY = 'darkroom.prefs.v1';      // localStorage: non-sensitive settings per preset (sizes, steps, model...)
+  const SESSION_KEY = 'darkroom.session.v1';  // sessionStorage: prompt text + seed, gone when the browser closes
   const VALUE_FIELDS = ['prompt', 'negative', 'steps', 'cfg', 'width', 'height', 'frames', 'fps', 'sampler', 'scheduler', 'model', 'style'];
+  const SETTING_FIELDS = ['steps', 'cfg', 'width', 'height', 'frames', 'fps', 'sampler', 'scheduler', 'model', 'style'];
 
   const el = {
     conn: $('#conn'), connText: $('#conn-text'), offline: $('#offline-banner'), offlineDetail: $('#offline-detail'), templateProblems: $('#template-problems'),
@@ -39,7 +41,9 @@
     source: { file: null, galleryName: null, url: null },
     current: null,
     prefs: loadPrefs(),
+    session: loadSession(),
     applying: false,
+    submitting: false,
   };
 
   // ---- small helpers ----------------------------------------------------------
@@ -65,6 +69,12 @@
 
   function loadPrefs() {
     try { return JSON.parse(localStorage.getItem(PREFS_KEY) || '{}') || {}; } catch (e) { return {}; }
+  }
+  function loadSession() {
+    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}') || {}; } catch (e) { return {}; }
+  }
+  function saveSession() {
+    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(state.session)); } catch (e) { /* fine */ }
   }
   let saveTimer = null;
   function savePrefs() {
@@ -150,7 +160,7 @@
     const c = t.controls;
     const cons = t.constraints || {};
     const d = t.defaults || {};
-    const saved = ((state.prefs.values || {})[t.id]) || {};
+    const saved = { ...(((state.prefs.values || {})[t.id]) || {}), ...(((state.session.texts || {})[t.id]) || {}) };
 
     el.wfDesc.textContent = t.description || '';
     show(el.fieldPrompt, c.prompt);
@@ -214,6 +224,8 @@
           : `ComfyUI lists no files for ${t.model.node_class}. Put a model in the folder named under "requires" in the workflow file, then press ↻.`;
         show(el.modelHint, true);
       }
+    } else {
+      fillSelect(el.model, [], null);  // no dropdown for this preset: never send a stale model name
     }
 
     // Sampler / scheduler (Advanced).
@@ -276,15 +288,16 @@
     const t = currentTemplate();
     if (!t) return;
     const values = {};
-    for (const k of VALUE_FIELDS) values[k] = el[k].value;
-    values.seed = el.seed.value;
-    values.seedLock = el.seedLock.checked;
+    for (const k of SETTING_FIELDS) values[k] = el[k].value;
     state.prefs.values = state.prefs.values || {};
     state.prefs.values[t.id] = values;
     state.prefs.workflow = { ...(state.prefs.workflow || {}), [state.mode]: t.id };
     state.prefs.mode = state.mode;
     state.prefs.style = el.style.value;
     savePrefs();
+    state.session.texts = state.session.texts || {};
+    state.session.texts[t.id] = { prompt: el.prompt.value, negative: el.negative.value, seed: el.seed.value, seedLock: el.seedLock.checked };
+    saveSession();
   }
 
   function setMode(mode) {
@@ -345,7 +358,11 @@
   async function generate() {
     const t = currentTemplate();
     if (!t) { toast('No workflow preset selected'); return; }
-    if (state.job && state.job.active) return;
+    if (state.submitting || (state.job && state.job.active)) return;
+    if (state.online === false) {
+      toast('ComfyUI is not running', { msg: el.offlineDetail.textContent, kind: 'error' });
+      return;
+    }
     if (t.controls.prompt && !el.prompt.value.trim()) { toast('Write a prompt first'); el.prompt.focus(); return; }
     if (state.mode === 'img2vid' && !state.source.file && !state.source.galleryName) {
       toast('Choose a source image', { msg: 'Drop one on the box above, paste it, or press “→ Video” on a gallery image.' });
@@ -354,11 +371,12 @@
     const fd = new FormData();
     fd.append('mode', state.mode);
     fd.append('workflow', t.id);
-    for (const k of VALUE_FIELDS) fd.append(k, el[k].value);
+    for (const k of VALUE_FIELDS) fd.append(k, k === 'model' ? (t.model ? el.model.value : '') : el[k].value);
     fd.append('seed', el.seedLock.checked ? el.seed.value : '');
     if (state.source.file) fd.append('image', state.source.file, state.source.file.name);
     else if (state.source.galleryName) fd.append('source', state.source.galleryName);
 
+    state.submitting = true;
     setBusy(true);
     el.status.classList.remove('is-error', 'is-done');
     show(el.status, true);
@@ -371,6 +389,8 @@
       el.status.classList.add('is-error');
       setProgress({ label: 'Not started', value: 0, max: 0 }, e.message);
       toastError(e, e.status === 503 ? 'ComfyUI is not running' : 'Could not start the job');
+    } finally {
+      state.submitting = false;
     }
   }
 
@@ -445,14 +465,29 @@
     } else if (job.status === 'cancelled') {
       setProgress({ label: 'Cancelled', value: 0, max: 1 });
       el.bar.classList.remove('is-indeterminate');
+      restoreViewer();
     } else {
       el.status.classList.add('is-error');
       const err = job.error || { message: 'Unknown error' };
       setProgress({ label: 'Failed', value: 0, max: 1 }, '');
       el.bar.classList.remove('is-indeterminate');
       toast('Generation failed', { msg: err.message, hint: err.hint || '', kind: 'error', timeout: 0 });
+      restoreViewer();
     }
     state.job = null;
+  }
+
+  // After a live preview was shown for a job that did not finish, put the previous result (or the empty state) back.
+  function restoreViewer() {
+    show(el.livePreview, false);
+    if (state.current) {
+      showResult(state.current);
+    } else {
+      stopVideo();
+      show(el.resultImg, false);
+      show(el.resultMeta, false);
+      show(el.viewerEmpty, true);
+    }
   }
 
   async function cancelJob() {
@@ -561,6 +596,7 @@
     } catch (e) { toastError(e, 'Could not delete'); return; }
     state.gallery.items = state.gallery.items.filter((r) => r.file !== record.file);
     state.gallery.total = Math.max(0, state.gallery.total - 1);
+    state.gallery.offset = Math.max(0, state.gallery.offset - 1);  // keep "Load more" aligned with the server
     renderGallery();
     if (state.current && state.current.file === record.file) {
       state.current = null;
@@ -575,27 +611,37 @@
   // ---- gallery -----------------------------------------------------------------
   async function loadGallery({ reset = true } = {}) {
     const g = state.gallery;
-    if (g.loading) return;
+    if (!reset && g.loading) return;  // one "Load more" at a time; a reset (filter change, refresh) always wins
+    const seq = (g.seq = (g.seq || 0) + 1);
     g.loading = true;
-    if (reset) { g.offset = 0; g.items = []; }
+    el.galleryMore.disabled = true;
+    const offset = reset ? 0 : g.offset;
     try {
-      const q = new URLSearchParams({ limit: g.limit, offset: g.offset });
+      const q = new URLSearchParams({ limit: g.limit, offset });
       if (g.kind) q.set('kind', g.kind);
       const data = await api(`/api/gallery?${q}`);
-      g.items = reset ? data.items : g.items.concat(data.items);
+      if (seq !== g.seq) return;  // superseded by a newer request
+      if (reset) {
+        g.items = data.items;
+      } else {
+        const seen = new Set(g.items.map((r) => r.file));
+        g.items = g.items.concat(data.items.filter((r) => !seen.has(r.file)));
+      }
       g.total = data.total;
-      g.offset = g.items.length;
+      g.offset = offset + data.items.length;
     } catch (e) {
-      toastError(e, 'Could not load the gallery');
+      if (seq === g.seq) toastError(e, 'Could not load the gallery');
     } finally {
-      g.loading = false;
+      if (seq === g.seq) { g.loading = false; el.galleryMore.disabled = false; }
     }
-    renderGallery();
+    if (seq === g.seq) renderGallery();
   }
+
+  const kindMatches = (kind, record) => !kind || record.kind === kind || (kind === 'video' && record.kind === 'animation');
 
   function prependGalleryItem(record) {
     const g = state.gallery;
-    if (g.kind && record.kind !== g.kind) return;
+    if (!kindMatches(g.kind, record)) return;
     if (g.items.some((r) => r.file === record.file)) return;
     g.items.unshift(record);
     g.total += 1;
@@ -758,7 +804,15 @@
   el.form.addEventListener('change', (e) => { saveValues(); if (e.target === el.width || e.target === el.height) markActiveSize(); });
   el.cancel.addEventListener('click', cancelJob);
   el.seedDice.addEventListener('click', () => { el.seed.value = String(Math.floor(Math.random() * 4294967296)); el.seedLock.checked = true; saveValues(); });
-  document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); generate(); } });
+  el.seed.addEventListener('input', () => { el.seedLock.checked = el.seed.value.trim() !== ''; });  // typing a seed means "use this seed"
+  document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && !el.generate.disabled) { e.preventDefault(); generate(); } });
+  // A file dropped anywhere else would make the browser navigate away from the app: catch it and use it as the source.
+  document.addEventListener('dragover', (e) => e.preventDefault());
+  document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f && f.type.startsWith('image/')) { setSourceFile(f); if (state.mode !== 'img2vid') setMode('img2vid'); }
+  });
 
   el.dropzone.addEventListener('click', () => el.image.click());
   el.dropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.image.click(); } });
@@ -795,8 +849,16 @@
   el.galleryRefresh.addEventListener('click', () => loadGallery());
   el.galleryMore.addEventListener('click', () => loadGallery({ reset: false }));
   el.historyClear.addEventListener('click', async () => {
-    if (!window.confirm('Clear the prompt history? Gallery files are not touched.')) return;
+    if (!window.confirm('Clear the prompt history and the prompt text this browser remembers? Gallery files are not touched.')) return;
     try { await api('/api/history', { method: 'DELETE' }); loadHistory(); } catch (e) { toastError(e); }
+    state.session = {};
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* fine */ }
+    state.applying = true;
+    el.prompt.value = '';
+    el.negative.value = (currentTemplate() && currentTemplate().defaults.negative) || '';
+    el.seed.value = '';
+    el.seedLock.checked = false;
+    state.applying = false;
   });
 
   // ---- start -------------------------------------------------------------------

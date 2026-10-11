@@ -88,3 +88,29 @@ def test_history_dedupes_and_keeps_last_20(tmp_path):
     assert s.history()[0]["prompt"] == "p20" and sum(1 for i in s.history() if i["prompt"] == "p20") == 1
     s.clear_history()
     assert s.history() == []
+
+
+def test_slugify_folds_accents():
+    assert slugify("café élégante") == "cafe-elegante"
+
+
+def test_video_filter_includes_animations_and_history_is_atomic(tmp_path):
+    s = Storage(tmp_path)
+    s.save(png_bytes(), ".png", {"mode": "txt2img", "prompt": "img", "seed": 1})
+    s.save(b"RIFF....WEBP", ".webp", {"mode": "img2vid", "prompt": "anim", "seed": 2, "kind": "animation"})
+    s.save(b"\x00\x00\x00\x18ftypmp42", ".mp4", {"mode": "img2vid", "prompt": "vid", "seed": 3})
+    kinds = sorted(i["kind"] for i in s.list_items(kind="video")["items"])
+    assert kinds == ["animation", "video"]
+    assert [i["kind"] for i in s.list_items(kind="image")["items"]] == ["image"]
+    s.add_history({"mode": "txt2img", "prompt": "p", "negative": ""})
+    assert s.history()[0]["prompt"] == "p" and not list(tmp_path.glob("*.part"))
+
+
+def test_list_items_survives_files_vanishing_and_uses_cache(tmp_path):
+    s = Storage(tmp_path)
+    a = s.save(png_bytes(), ".png", {"mode": "txt2img", "prompt": "a", "seed": 1})
+    first = s.list_items()["items"]
+    assert first[0]["file"] == a["file"]
+    assert s.list_items()["items"][0] is first[0]  # cached record object reused
+    (tmp_path / a["file"]).unlink()
+    assert s.list_items()["total"] == 0

@@ -14,14 +14,19 @@ Swapping models / workflows: see workflows.py and workflows/README.md.
 """
 from __future__ import annotations
 
+import sys
+
+if sys.version_info < (3, 10):  # the type annotations below need 3.10+
+    sys.exit(f"Darkroom needs Python 3.10 or newer; this is Python {sys.version.split()[0]}.")
+
 import argparse
 import asyncio
 import json
 import logging
+import math
 import mimetypes
 import os
 import secrets
-import sys
 import threading
 import time
 import traceback
@@ -32,14 +37,15 @@ from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import uvicorn
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
-from comfy_client import ComfyClient, ComfyError, ComfyInterrupted, OutputFile
-from storage import Storage
+from comfy_client import ComfyClient, ComfyError, ComfyInterrupted, ComfyUnavailable
+from storage import Storage, StorageError
 from workflows import Template, TemplateError, load_templates, ordered
 
 HERE = Path(__file__).resolve().parent
@@ -58,7 +64,9 @@ STATIC_DIR = HERE / "static"
 # and is a hard guard against the model drifting towards minors.  Keep it.
 ALWAYS_NEGATIVE = "child, minor, underage, loli, shota"
 
-MAX_SEED = 0xFFFFFFFFFFFFFFFF  # ComfyUI's KSampler seed range
+# ComfyUI accepts seeds up to 2**64-1, but JavaScript numbers are exact only up to 2**53-1 and the
+# browser must be able to show the seed back to you unchanged, so Darkroom caps it there.
+MAX_SEED = 2**53 - 1
 MAX_UPLOAD_BYTES = 64 * 1024 * 1024
 MAX_JOBS_KEPT = 200
 ALLOWED_IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp", ".bmp"}
@@ -162,8 +170,11 @@ def _int(value: str | None, default: int, lo: int, hi: int, name: str) -> int:
     if value is None or str(value).strip() == "":
         return default
     try:
-        v = int(float(str(value).strip()))
-    except ValueError:
+        f = float(str(value).strip())
+        if not math.isfinite(f):
+            raise ValueError
+        v = int(f)
+    except (ValueError, OverflowError):
         raise HTTPException(400, f"{name} must be a whole number") from None
     return max(lo, min(hi, v))
 
@@ -173,6 +184,8 @@ def _float(value: str | None, default: float, lo: float, hi: float, name: str) -
         return default
     try:
         v = float(str(value).strip())
+        if not math.isfinite(v):
+            raise ValueError
     except ValueError:
         raise HTTPException(400, f"{name} must be a number") from None
     return max(lo, min(hi, v))
@@ -241,7 +254,7 @@ def _image_size(data: bytes) -> tuple[int, int] | None:
 
 
 # ---- application ------------------------------------------------------------------
-def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAULT_OUTPUTS, workflows_dir: Path = WORKFLOWS_DIR) -> FastAPI:
+def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAULT_OUTPUTS, workflows_dir: Path = WORKFLOWS_DIR, allowed_hosts: tuple[str, ...] = ()) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         app.state.comfy = ComfyClient(comfy_url)
@@ -265,6 +278,33 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
 
     # docs_url/redoc_url/openapi_url disabled: FastAPI's /docs page would load Swagger UI from a CDN.
     app = FastAPI(title="Darkroom", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+
+    # Web pages from other sites can reach 127.0.0.1 through the user's browser (DNS rebinding, cross-site
+    # form posts). Only answer when the browser believes it is talking to Darkroom, and only accept
+    # state-changing requests from Darkroom's own page.
+    local_hosts = {"127.0.0.1", "localhost", "::1"} | {h.lower() for h in allowed_hosts if h}
+    any_host = any(h in ("0.0.0.0", "::") for h in allowed_hosts)  # the user chose to expose it on the LAN
+
+    @app.middleware("http")
+    async def local_only(request: Request, call_next):
+        host_header = request.headers.get("host", "")
+        try:
+            hostname = (urlsplit("//" + host_header).hostname or "").lower()
+        except ValueError:
+            hostname = ""
+        if not any_host and hostname not in local_hosts:
+            return JSONResponse({"error": {"message": "Request refused: unexpected Host header", "hint": "Open Darkroom as http://127.0.0.1:<port>."}}, status_code=421)
+        if request.method not in ("GET", "HEAD", "OPTIONS"):
+            origin = request.headers.get("origin")
+            if origin is not None and (urlsplit(origin).netloc or "").lower() != host_header.lower():
+                return JSONResponse({"error": {"message": "Request refused: cross-origin request"}}, status_code=403)
+            if request.headers.get("sec-fetch-site", "").lower() == "cross-site":
+                return JSONResponse({"error": {"message": "Request refused: cross-site request"}}, status_code=403)
+            if request.url.path == "/api/generate":
+                declared = request.headers.get("content-length", "")
+                if declared.isdigit() and int(declared) > MAX_UPLOAD_BYTES + 1024 * 1024:
+                    return JSONResponse({"error": {"message": "Source image is too large (64 MB max)"}}, status_code=413)
+        return await call_next(request)
 
     @app.middleware("http")
     async def no_store(request: Request, call_next):
@@ -419,13 +459,15 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
         sampler_v = sampler.strip() or str(defaults["sampler"])
         scheduler_v = scheduler.strip() or str(defaults["scheduler"])
 
-        model_v = model.strip()
         selector = template.model_selector
+        model_v = model.strip() if selector else ""  # presets without a Model dropdown record no model
         if selector and not model_v:
             model_v = selector.get("default") or ""
             if not model_v:
                 try:
                     choices = await request.app.state.comfy.input_choices(selector["node_class"], selector["input"])
+                except ComfyUnavailable:
+                    raise  # -> 503 with the "start ComfyUI" hint, not a misleading "no model files"
                 except ComfyError:
                     choices = []
                 if not choices:
@@ -446,16 +488,19 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
                     path = storage.resolve(source.strip())
                 except ValueError:
                     raise HTTPException(400, "Invalid gallery file") from None
-                if not path.exists():
+                if not path.is_file():
                     raise HTTPException(404, "That gallery image no longer exists")
-                image_bytes = path.read_bytes()
+                try:
+                    image_bytes = await asyncio.to_thread(path.read_bytes)
+                except OSError as e:
+                    raise HTTPException(500, f"Could not read {path.name}: {e.strerror or e}") from None
                 image_ext = path.suffix.lower()
                 source_name = path.name
             if not image_bytes:
                 raise HTTPException(400, "Choose a source image first (upload one or pick one from the gallery)")
             if len(image_bytes) > MAX_UPLOAD_BYTES:
                 raise HTTPException(413, "Source image is too large (64 MB max)")
-            if image_ext not in ALLOWED_IMAGE_EXT or _image_size(image_bytes) is None:
+            if image_ext not in ALLOWED_IMAGE_EXT or await asyncio.to_thread(_image_size, image_bytes) is None:
                 raise HTTPException(400, "Source must be a PNG, JPEG, WEBP or BMP image")
 
         job = Job(
@@ -484,7 +529,7 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
             },
         )
         if image_bytes:
-            job.source_thumb = _data_url_thumb(image_bytes)
+            job.source_thumb = await asyncio.to_thread(_data_url_thumb, image_bytes)  # PIL decode off the event loop
 
         values = {
             "PROMPT": final_prompt,
@@ -554,7 +599,8 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
                 poster = image_bytes if out.kind in ("video", "animation") else None
                 record = await asyncio.to_thread(storage.save, data, ext, meta, poster)
                 job.results.append(record)
-            storage.add_history(
+            await asyncio.to_thread(
+                storage.add_history,
                 {
                     "mode": job.mode,
                     "workflow": job.workflow_id,
@@ -572,7 +618,7 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
                     "frames": job.params["frames"],
                     "fps": job.params["fps"],
                     "file": job.results[0]["file"] if job.results else None,
-                }
+                },
             )
             job.status = "done"
             job.progress = {"value": 1, "max": 1, "label": "Done", "node": None}
@@ -614,8 +660,8 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
         job: Job | None = request.app.state.jobs.get(job_id)
         if not job:
             raise HTTPException(404, "Unknown job")
-        if job.status in ("done", "error", "cancelled"):
-            return job.to_dict()
+        if job.status in ("done", "error", "cancelled", "saving"):
+            return job.to_dict()  # 'saving' = ComfyUI is already finished; let the file land
         job.cancel_requested = True
         if job.prompt_id:
             try:
@@ -626,6 +672,8 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
                     await comfy.delete_queued(job.prompt_id)  # still waiting: just drop it from the queue
             except ComfyError as e:
                 log.warning("Cancel: %s", e)
+        if job.status in ("done", "error", "cancelled", "saving"):
+            return job.to_dict()  # it finished while we were talking to ComfyUI
         if job.task and not job.task.done():
             job.task.cancel()
         job.status = "cancelled"
@@ -669,9 +717,11 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
     async def api_gallery_delete(request: Request, name: str):
         storage: Storage = request.app.state.storage
         try:
-            storage.delete(name)
+            await asyncio.to_thread(storage.delete, name)
         except ValueError:
             raise HTTPException(400, "Invalid file name") from None
+        except StorageError as e:
+            raise HTTPException(409, f"Could not delete {name}: {e}. Close the program that has it open and try again.") from None
         return {"ok": True}
 
     @app.get("/api/thumbs/{name}")
@@ -713,10 +763,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s", datefmt="%H:%M:%S")
+    try:
+        args.comfy = ComfyClient.normalize_url(args.comfy)[0]
+    except ValueError as e:
+        sys.exit(f"error: {e}")
     url = f"http://{'127.0.0.1' if args.host in ('0.0.0.0', '::') else args.host}:{args.port}"
     if args.host not in ("127.0.0.1", "localhost", "::1"):
         log.warning("Listening on %s: other devices on your network can open Darkroom. Keep 127.0.0.1 for private use.", args.host)
-    app = create_app(comfy_url=args.comfy, outputs_dir=Path(args.outputs))
+    app = create_app(comfy_url=args.comfy, outputs_dir=Path(args.outputs), allowed_hosts=(args.host,))
     print(f"\n  Darkroom  ->  {url}\n  ComfyUI   ->  {args.comfy}\n  Outputs   ->  {Path(args.outputs).resolve()}\n", flush=True)
     if not args.no_browser:
         threading.Timer(1.2, lambda: webbrowser.open(url)).start()

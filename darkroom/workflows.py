@@ -51,6 +51,8 @@ from pathlib import Path
 from typing import Any
 
 TOKEN_RE = re.compile(r"\{\{([A-Z][A-Z0-9_]*)\}\}")
+# Anything that looks like a placeholder, so {{prompt}} / {{ SEED }} can be reported instead of sent to ComfyUI verbatim.
+LOOSE_TOKEN_RE = re.compile(r"\{\{\s*([A-Za-z0-9_]+)\s*\}\}")
 
 # Every token Darkroom knows how to fill.  A template may use any subset.
 KNOWN_TOKENS: dict[str, str] = {
@@ -259,10 +261,46 @@ def _validate(template: Template) -> None:
         raise TemplateError(
             f"{p}: unknown token(s) {sorted(unknown)}. Known tokens: {sorted(KNOWN_TOKENS)}"
         )
+    loose: set[str] = set()
+
+    def scan(obj: Any) -> None:
+        if isinstance(obj, dict):
+            for v in obj.values():
+                scan(v)
+        elif isinstance(obj, list):
+            for v in obj:
+                scan(v)
+        elif isinstance(obj, str):
+            for m in LOOSE_TOKEN_RE.finditer(obj):
+                if not TOKEN_RE.fullmatch(m.group(0)):
+                    loose.add(m.group(0))
+
+    scan(template.graph)
+    if loose:
+        raise TemplateError(
+            f"{p}: placeholder(s) {sorted(loose)} must be written exactly like {{{{SEED}}}}: upper-case, no spaces. "
+            f"Known tokens: {sorted(KNOWN_TOKENS)}"
+        )
     if template.mode == "img2vid" and "IMAGE" not in template.tokens():
         raise TemplateError(f"{p}: an img2vid template must use \"{{{{IMAGE}}}}\" in its LoadImage node")
-    # Trigger validation of _meta.model.
-    template.model_selector
+    sel = template.model_selector  # also validates the shape of _meta.model
+    if "MODEL" in template.tokens() and sel is None:
+        raise TemplateError(
+            f"{p}: the graph uses {{{{MODEL}}}} but _meta.model (node_class + input) is missing; add it, "
+            "or hard-code the file name in the node and drop the token"
+        )
+    if sel is not None and not any(
+        isinstance(n, dict) and n.get("class_type") == sel["node_class"] and (n.get("inputs") or {}).get(sel["input"]) == "{{MODEL}}"
+        for n in template.graph.values()
+    ):
+        raise TemplateError(
+            f"{p}: _meta.model points at {sel['node_class']}.{sel['input']} but no such node has \"{{{{MODEL}}}}\" "
+            "as that input (copy-pasted _meta from another preset?)"
+        )
+    for key in ("steps", "cfg", "width", "height", "frames", "fps"):
+        val = (template.meta.get("defaults") or {}).get(key)
+        if val is not None and not isinstance(val, (int, float)):
+            raise TemplateError(f"{p}: _meta.defaults.{key} must be a number, got {val!r}")
 
 
 def load_template(path: Path) -> Template:
