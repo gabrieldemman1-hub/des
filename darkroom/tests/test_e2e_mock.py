@@ -321,10 +321,10 @@ def test_autodetects_comfy_on_another_loopback_port(env, tmp_path_factory):
     wait_for(f"http://127.0.0.1:{aport}/api/status")
     try:
         with httpx.Client(base_url=f"http://127.0.0.1:{aport}", timeout=30) as c:
+            # (wait_for above already hit /api/status once, which is when the switch happens)
             s = c.get("/api/status").json()
-            assert s["online"] is True and s["comfy_url"] == env.mock_url and s["switched_to"] == env.mock_url
-            s2 = c.get("/api/status").json()
-            assert s2["online"] is True and "switched_to" not in s2
+            assert s["online"] is True and s["comfy_url"] == env.mock_url
+            assert "switched_to" not in s  # only reported on the call that switched
             assert c.get("/api/options").json()["models"]["CheckpointLoaderSimple.ckpt_name"]
     finally:
         app.stop()
