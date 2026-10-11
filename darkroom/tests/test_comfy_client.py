@@ -1,5 +1,6 @@
 import asyncio
 
+import httpx
 import pytest
 
 from comfy_client import ComfyClient, OutputFile, classify_output
@@ -105,4 +106,19 @@ def test_rejection_hints_for_missing_node_and_no_outputs():
     assert "update it" in c._rejection(old_style, {}).hint
     no_out = {"error": {"type": "prompt_no_outputs", "message": "Prompt has no outputs", "details": "", "extra_info": {}}, "node_errors": {}}
     assert "SaveImage" in c._rejection(no_out, {}).hint
+    asyncio.run(c.aclose())
+
+
+def test_queue_prompt_returns_partial_validation_warning(monkeypatch):
+    c = ComfyClient("http://127.0.0.1:1")
+    body = {"prompt_id": "abc", "number": 1, "node_errors": {"20": {"errors": [{"type": "value_not_in_list", "message": "Value not in list", "details": "lora_name: 'x' not in ['a']"}], "dependent_outputs": ["21"], "class_type": "LoraLoader"}}}
+
+    async def fake_post(path, payload):
+        return httpx.Response(200, json=body, request=httpx.Request("POST", "http://x" + path))
+
+    monkeypatch.setattr(c, "_post_json", fake_post)
+    pid, warning = asyncio.run(c.queue_prompt({"20": {"class_type": "LoraLoader", "inputs": {}}}, "cid"))
+    assert pid == "abc" and "LoraLoader (node 20)" in warning and "skipped" in warning
+    body["node_errors"] = {}
+    assert asyncio.run(c.queue_prompt({}, "cid")) == ("abc", None)
     asyncio.run(c.aclose())

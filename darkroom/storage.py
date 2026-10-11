@@ -26,6 +26,7 @@ import unicodedata
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 try:
     from PIL import Image
@@ -39,7 +40,17 @@ MEDIA_EXT = IMAGE_EXT | VIDEO_EXT | ANIMATION_EXT
 
 THUMB_SIZE = 400
 HISTORY_LIMIT = 20
-_SAFE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+
+
+def is_safe_name(name: str) -> bool:
+    """A single, visible file name inside the outputs folder (no paths, no hidden/control names).
+
+    Used by both the listing and the lookup, so a file is either fully usable (open, download,
+    delete, use as source) or not shown at all. Unicode names are fine.
+    """
+    if not name or name in (".", "..") or name.startswith(".") or name != name.strip() or len(name) > 255:
+        return False
+    return not any(c in "/\\\0" or ord(c) < 32 for c in name)
 
 
 class StorageError(Exception):
@@ -47,9 +58,9 @@ class StorageError(Exception):
 
 
 def slugify(text: str, max_len: int = 40) -> str:
-    # Fold accents to ASCII (café -> cafe) so file names stay portable across OSes and shells.
-    text = unicodedata.normalize("NFKD", text or "").encode("ascii", "ignore").decode("ascii")
-    text = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    """A short, file-name-safe snippet of the prompt; keeps non-Latin scripts (\\w is Unicode-aware)."""
+    text = unicodedata.normalize("NFKC", text or "").lower()
+    text = re.sub(r"[^\w]+", "-", text).strip("-_")
     if len(text) > max_len:
         text = text[:max_len].rsplit("-", 1)[0] or text[:max_len]
     return text or "untitled"
@@ -80,7 +91,7 @@ class Storage:
     # ---- naming / paths ------------------------------------------------------
     def resolve(self, name: str) -> Path:
         """Map a gallery file name to a path, refusing anything outside the folder."""
-        if not name or not _SAFE_NAME.match(name) or ".." in name:
+        if not is_safe_name(name):
             raise ValueError("invalid file name")
         path = (self.root / name).resolve()
         if path.parent != self.root:
@@ -185,9 +196,9 @@ class Storage:
                 "kind": kind,
                 "created": rec.get("created") or st.st_mtime,
                 "bytes": st.st_size,
-                "url": f"/api/gallery/{path.name}",
-                "download_url": f"/api/gallery/{path.name}?download=1",
-                "thumb_url": f"/api/thumbs/{path.name}" if (kind != "video" or (self.thumbs / (path.stem + '.jpg')).exists()) else None,
+                "url": f"/api/gallery/{quote(path.name)}",
+                "download_url": f"/api/gallery/{quote(path.name)}?download=1",
+                "thumb_url": f"/api/thumbs/{quote(path.name)}" if (kind != "video" or (self.thumbs / (path.stem + '.jpg')).exists()) else None,
             }
         )
         return rec
@@ -209,7 +220,7 @@ class Storage:
     def list_items(self, limit: int = 60, offset: int = 0, kind: str | None = None) -> dict[str, Any]:
         entries = []
         for p in self.root.iterdir():
-            if p.name.startswith(".") or p.suffix.lower() not in MEDIA_EXT:
+            if p.suffix.lower() not in MEDIA_EXT or not is_safe_name(p.name):
                 continue
             try:
                 st = p.stat()

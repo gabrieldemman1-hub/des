@@ -18,6 +18,8 @@ def test_slugify():
     assert slugify("A Woman in Red, smiling!") == "a-woman-in-red-smiling"
     assert slugify("") == "untitled"
     assert len(slugify("word " * 30)) <= 40
+    assert slugify("赤いドレスの女性、夜の街") == "赤いドレスの女性-夜の街"
+    assert slugify("Девушка в красном платье") == "девушка-в-красном-платье"
 
 
 def test_kind_for():
@@ -63,7 +65,7 @@ def test_list_newest_first_and_kind_filter(tmp_path):
     assert s.list_items(limit=1, offset=1)["items"][0]["file"] == a["file"]
 
 
-@pytest.mark.parametrize("bad", ["../app.py", "a/b.png", ".hidden.png", "", "..", "x\\y.png", "name with space.png"])
+@pytest.mark.parametrize("bad", ["../app.py", "a/b.png", ".hidden.png", "", "..", "x\\y.png", " leading-space.png", "ctrl\x01.png"])
 def test_resolve_rejects_unsafe_names(tmp_path, bad):
     s = Storage(tmp_path)
     with pytest.raises(ValueError):
@@ -90,8 +92,26 @@ def test_history_dedupes_and_keeps_last_20(tmp_path):
     assert s.history() == []
 
 
-def test_slugify_folds_accents():
-    assert slugify("café élégante") == "cafe-elegante"
+def test_slugify_keeps_accents_and_round_trips(tmp_path):
+    assert slugify("café élégante") == "café-élégante"
+    s = Storage(tmp_path)
+    rec = s.save(png_bytes(), ".png", {"mode": "txt2img", "prompt": "赤いドレス café", "seed": 9})
+    assert "赤いドレス-café" in rec["file"]
+    assert s.resolve(rec["file"]).exists() and "%E8%B5%A4" in rec["url"] and " " not in rec["url"]
+
+
+def test_hand_added_files_are_either_usable_or_hidden(tmp_path):
+    from storage import is_safe_name
+    s = Storage(tmp_path)
+    (tmp_path / "Screenshot 2026-01-01 (1).png").write_bytes(png_bytes())
+    (tmp_path / "Снимок.png").write_bytes(png_bytes())
+    (tmp_path / ".hidden.png").write_bytes(png_bytes())
+    (tmp_path / " spaced.png").write_bytes(png_bytes())
+    names = [i["file"] for i in s.list_items()["items"]]
+    assert set(names) == {"Screenshot 2026-01-01 (1).png", "Снимок.png"}
+    for n in names:
+        assert s.resolve(n).exists() and s.thumb_path(n) is not None
+    assert not is_safe_name("a/b.png") and not is_safe_name("x\\y.png") and not is_safe_name("bad\x00.png") and not is_safe_name("..")
 
 
 def test_video_filter_includes_animations_and_history_is_atomic(tmp_path):

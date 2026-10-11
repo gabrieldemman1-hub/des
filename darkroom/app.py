@@ -90,6 +90,7 @@ class Job:
     results: list[dict[str, Any]] = field(default_factory=list)
     finished: float | None = None
     cancel_requested: bool = False
+    warnings: list[str] = field(default_factory=list)  # e.g. ComfyUI skipped an output node that failed validation
     task: asyncio.Task | None = field(default=None, repr=False, compare=False)
     source_thumb: str | None = None  # data: URL of the img2vid source, for the UI
 
@@ -107,6 +108,7 @@ class Job:
             "progress": self.progress,
             "preview": self.preview if preview else None,
             "error": self.error,
+            "warnings": self.warnings,
             "results": self.results,
             "finished": self.finished,
             "elapsed": round((self.finished or time.time()) - self.created, 1),
@@ -559,6 +561,9 @@ def create_app(*, comfy_url: str = DEFAULT_COMFY_URL, outputs_dir: Path = DEFAUL
             if name == "queued":
                 job.prompt_id = data["prompt_id"]
                 job.progress = {"value": 0, "max": 0, "label": "Queued in ComfyUI", "node": None}
+            elif name == "warning":
+                job.warnings.append(data["message"])
+                log.warning("Job %s: %s", job.id, data["message"])
             elif name == "position":
                 job.position = data["position"]
                 if job.position == 0 and job.status == "queued":

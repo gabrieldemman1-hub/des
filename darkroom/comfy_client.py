@@ -272,7 +272,13 @@ class ComfyClient:
         return f"{sub}/{name}" if sub else name
 
     # ---- queueing ------------------------------------------------------------
-    async def queue_prompt(self, graph: dict[str, Any], client_id: str, *, extra_data: dict[str, Any] | None = None) -> str:
+    async def queue_prompt(self, graph: dict[str, Any], client_id: str, *, extra_data: dict[str, Any] | None = None) -> tuple[str, str | None]:
+        """Queue the graph. Returns (prompt_id, warning).
+
+        ComfyUI answers 200 with a non-empty ``node_errors`` when only *some* output nodes
+        failed validation: it then runs the rest and silently skips the broken branch. That
+        text is returned as ``warning`` so the UI can show it.
+        """
         payload: dict[str, Any] = {"prompt": graph, "client_id": client_id}
         if extra_data:
             payload["extra_data"] = extra_data
@@ -282,16 +288,17 @@ class ComfyClient:
             pid = body.get("prompt_id")
             if not pid:
                 raise ComfyError("ComfyUI accepted the job but returned no prompt_id", details=body)
-            return str(pid)
+            lines, _ = self._node_error_lines(body.get("node_errors") or {}, graph)
+            warning = ("ComfyUI skipped part of the workflow because it failed validation:\n" + "\n".join(lines)) if lines else None
+            return str(pid), warning
         try:
             body = r.json()
         except ValueError:
             body = {"error": {"message": r.text[:500]}}
         raise self._rejection(body, graph)
 
-    def _rejection(self, body: dict[str, Any], graph: dict[str, Any]) -> ComfyRejected:
-        err = body.get("error") or {}
-        node_errors = body.get("node_errors") or {}
+    @staticmethod
+    def _node_error_lines(node_errors: dict[str, Any], graph: dict[str, Any]) -> tuple[list[str], set[str]]:
         lines: list[str] = []
         types: set[str] = set()
         for nid, info in node_errors.items():
@@ -300,6 +307,11 @@ class ComfyClient:
                 types.add(str(e.get("type", "")))
                 detail = str(e.get("details") or "").strip()
                 lines.append(f"{cls} (node {nid}): {e.get('message', 'invalid')}" + (f" - {detail}" if detail else ""))
+        return lines, types
+
+    def _rejection(self, body: dict[str, Any], graph: dict[str, Any]) -> ComfyRejected:
+        err = body.get("error") or {}
+        lines, types = self._node_error_lines(body.get("node_errors") or {}, graph)
         top = err.get("message") or "Prompt failed validation"
         if not lines and err.get("details"):
             lines.append(str(err["details"]))
@@ -380,9 +392,9 @@ class ComfyClient:
     async def run(self, graph: dict[str, Any], on_event: Event, *, node_classes: dict[str, str] | None = None) -> tuple[str, list[OutputFile]]:
         """Queue ``graph`` and follow it to the end over the websocket.
 
-        ``on_event(name, data)`` is called with: queued {prompt_id}, position
-        {position}, progress {value, max, node, label}, preview {data_url},
-        done {}.  Returns (prompt_id, output files).  Raises ComfyRejected /
+        ``on_event(name, data)`` is called with: queued {prompt_id}, warning
+        {message}, position {position}, progress {value, max, node, label},
+        preview {data_url}, done {}.  Returns (prompt_id, output files).  Raises ComfyRejected /
         ComfyExecutionError / ComfyInterrupted / ComfyUnavailable.
         """
         client_id = uuid.uuid4().hex
@@ -412,8 +424,10 @@ class ComfyClient:
         try:
             # Connect first, then queue, so no message can be missed.
             extra = {"preview_method": self.preview_method} if self.preview_method else None
-            prompt_id = await self.queue_prompt(graph, client_id, extra_data=extra)
+            prompt_id, warning = await self.queue_prompt(graph, client_id, extra_data=extra)
             on_event("queued", {"prompt_id": prompt_id})
+            if warning:
+                on_event("warning", {"message": warning})
             pos = await self.queue_position(prompt_id)
             if pos is not None:
                 on_event("position", {"position": pos})

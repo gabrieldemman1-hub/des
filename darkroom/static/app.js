@@ -461,6 +461,9 @@
         toast('Saved to gallery', { msg: results.map((r) => r.file).join('\n'), kind: 'ok' });
         setTimeout(() => el.viewer.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
       }
+      if (job.warnings && job.warnings.length) {
+        toast('Finished with warnings', { msg: job.warnings.join('\n'), hint: 'Part of the workflow was skipped by ComfyUI; check the template and the installed files.', kind: 'error', timeout: 0 });
+      }
       loadHistory();
     } else if (job.status === 'cancelled') {
       setProgress({ label: 'Cancelled', value: 0, max: 1 });

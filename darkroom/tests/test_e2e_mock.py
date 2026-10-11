@@ -263,6 +263,19 @@ def test_local_only_protection(env):
     assert b"413" in status_line, status_line
 
 
+def test_hand_added_gallery_file_with_spaces_is_fully_usable(env):
+    name = "my photo (1).png"
+    (env.outputs / name).write_bytes(png())
+    items = env.c.get("/api/gallery").json()["items"]
+    rec = next(i for i in items if i["file"] == name)
+    assert rec["url"] == "/api/gallery/my%20photo%20%281%29.png"
+    assert env.c.get(rec["url"]).status_code == 200 and env.c.get(rec["thumb_url"]).status_code == 200
+    job = run_job(env.c, mode="img2vid", workflow="img2vid_svd", prompt="", steps="1", frames="3", source=name)
+    assert job["status"] == "done" and job["params"]["source_image"] == name
+    assert env.c.delete("/api/gallery/my%20photo%20%281%29.png").status_code == 200
+    assert env.c.get(rec["url"]).status_code == 404
+
+
 def test_v3_combo_choices_through_the_mock(env):
     import asyncio
 
