@@ -40,7 +40,7 @@ from PIL import Image, ImageDraw
 CHOICES: dict[tuple[str, str], list[str]] = {
     ("CheckpointLoaderSimple", "ckpt_name"): ["mock_sdxl_v1.safetensors", "mock_illustrious_xl.safetensors", "mock_sd15.safetensors"],
     ("UNETLoader", "unet_name"): ["wan2.2_ti2v_5B_fp16.safetensors", "wan2.1_i2v_480p_14B_fp8_e4m3fn.safetensors", "wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors", "wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors"],
-    ("ImageOnlyCheckpointLoader", "ckpt_name"): ["svd_xt_1_1.safetensors"],
+    ("ImageOnlyCheckpointLoader", "ckpt_name"): ["svd_xt.safetensors", "svd_xt_1_1.safetensors"],
     ("KSampler", "sampler_name"): ["euler", "euler_ancestral", "dpmpp_2m", "dpmpp_2m_sde", "dpmpp_sde", "uni_pc", "ddim", "lcm"],
     ("KSampler", "scheduler"): ["normal", "karras", "exponential", "sgm_uniform", "simple", "ddim_uniform", "beta"],
     ("CLIPLoader", "clip_name"): ["umt5_xxl_fp8_e4m3fn_scaled.safetensors"],
