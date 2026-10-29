@@ -52,7 +52,12 @@ src/
   sw-template.js         the offline service worker (filled in at build time)
 scripts/                 verify-citations, icon generation
 tests/                   page rendering tests; WCAG AA contrast for every colour token
+public/visualizer/       Pastel Prism, a standalone music visualizer (see below)
 ```
+
+## Pastel Prism
+
+`public/visualizer/index.html` is a self-contained music visualizer, served at `/des/visualizer/`. It is a single HTML file with no build step and no dependencies beyond the browser: open it directly, or run the dev server and visit the path. It plays a built-in tune, an audio file you open or drop onto it, or the microphone, and draws five scenes (kaleidoscope, blobs, tunnel, flow field, ribbons) in pastel palettes on a cream or dusk ground. The pointer steers the centre, a click makes a ripple, dragging spins, the wheel shifts the hue, and keys 1 to 5, space, R, G, H and F switch scene, pause, shuffle, ground, controls and fullscreen.
 
 ## Publishing
 
